@@ -1,0 +1,59 @@
+.content {
+  display: flex;
+  // justify-content: space-between;
+}
+
+.button-area {
+  width: 230px;
+  margin-top: 100px;
+  margin-left: 50px;
+
+  .button-item {
+    width: 180px;
+    margin-top: 30px;
+    height: 30px;
+  }
+
+  .btn-border {
+    width: 180px;
+    height: 40px;
+  }
+}
+
+.title {
+  margin-top: 80px;
+}
+
+.img {
+  margin-top: 60px;
+  width: 500px;
+  height: 350px;
+}
+
+.explanation {
+  margin-top: 60px;
+}
+
+.contents-area {
+  width: 600px;
+}
+
+.detail-area {
+  margin-top: 100px;
+  width: 150px;
+
+  .ymd {
+    margin-top: 20px;
+  }
+
+  .price {
+    margin-top: 20px;
+  }
+
+  .area {
+    margin-top: 20px;
+  }
+
+
+
+}

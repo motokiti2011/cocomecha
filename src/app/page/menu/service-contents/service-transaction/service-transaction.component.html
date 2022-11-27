@@ -1,0 +1,72 @@
+<div class="maincontent">
+  <div class="sidmanu">
+    <app-side-menu></app-side-menu>
+  </div>
+
+
+  <div class="btn-area">
+    <input type="button" class="btn_item" on-click="onReturn()" value="詳細に戻る">
+    <input type="button" class="btn_item" on-click="onServiceList()" value="一覧に戻る">
+    <input type="button" class="btn_item" on-click="onQuestion()" value="質問">
+
+    <input type="button" class="btn_item" on-click="onOpenLevelSet()" value="メッセージ公開レベル設定">
+    <input type="button" class="btn_item" on-click="onMsgPrmReq()" value="メッセージ許可申請">
+    <p class="private-message">このサービスのメッセージは<br>非公開です。</p>
+
+    <div *ngId="authUserDiv">
+      <input type="button" class="btn_item" on-click="onOpenLevelSet()" value="メッセージ公開レベル設定">
+    </div>
+
+    <div *ngId="openDiv">
+      <input type="button" class="btn_item" on-click="onMsgPrmReq()" value="メッセージ許可申請">
+    </div>
+
+    <div *ngId="privateDiv">
+      <p class="private-message">このサービスのメッセージは<br>非公開です。</p>
+    </div>
+  </div>
+
+  <div class="main-area">
+    <div class="messages">
+      <app-transaction-message
+      [dispSlipId]="dispSlipId"
+      [adminUserDiv]="adminUserDiv"
+      [acsessUser]="acsessUser"
+      ></app-transaction-message>
+    </div>
+  </div>
+
+  <div class="sb-area">
+    <div class="sb-disp">
+      <p class="title">サービスタイトル</p>
+      <div class="item">{{dispTitle}}</div>
+    </div>
+
+    <div class="sb-disp">
+      <p class="title">日付</p>
+      <div class="item">{{dispYmd}}</div>
+    </div>
+
+    <div class="sb-disp">
+      <p class="title">価格</p>
+      <div class="item">{{dispPrice}}</div>
+    </div>
+
+    <div class="sb-disp">
+      <p class="title">地域</p>
+      <div class="item">{{dispArea}}</div>
+    </div>
+    <div class="sb-disp">
+      画像
+    </div>
+
+    <div class="sb-disp">
+      <p class="title">説明</p>
+      <div class="item">{{dispExplanation}}</div>
+    </div>
+  </div>
+
+</div>
+
+
+

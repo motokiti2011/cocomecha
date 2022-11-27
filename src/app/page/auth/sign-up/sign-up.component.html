@@ -1,0 +1,59 @@
+<p>sign-up works!</p>
+<div class="contents">
+  <form #myForm="ngForm" (ngSubmit)="show" novalidate>
+
+    <table border="1">
+
+      <tr>
+        <th>ログインID</th>
+        <th>
+          <input id="loginId"  name="loginId" type="text"
+          [(ngModel)]="user.loginId" #loginId="ngModel" required loginId /><br/>
+        </th>
+      </tr>
+      <span *ngIf="loginId.hasError('required')">ログインIDは必須です。</span>
+
+      <tr>
+        <th>パスワード</th>
+        <th>
+          <input id="passwd" name="passwd" type="password"
+          [(ngModel)]="user.passwd" required minlength="6" #passwd="ngModel"/><br/>
+          <span *ngIf="passwd.hasError('required')">パスワードは必須です。</span>
+        </th>
+      </tr>
+
+        <tr>
+          <th>メールアドレス</th>
+          <th>
+            <input id="mail" name="mail" type="email"
+            [(ngModel)]="user.mail" required minlength="6" #mail="ngModel"/><br/>
+            <span *ngIf="mail.hasError('required')">メールアドレスは必須です。</span>
+          </th>
+        </tr>
+
+        <tr>
+          <th>確認用メールアドレス</th>
+          <th>
+            <input id="confirmationMail" name="confirmationMail" type="email"
+            [(ngModel)]="user.confirmationMail" required minlength="6" #confirmationMail="ngModel"/><br/>
+            <span *ngIf="confirmationMail.hasError('required')">確認用メールアドレスは必須です。</span>
+          </th>
+        </tr>
+
+        <tr>
+          <th>ユーザー名</th>
+          <th>
+            <input id="name" name="name" type="text"
+            [(ngModel)]="user.name" required minlength="6" #name="ngModel"/><br/>
+            <span *ngIf="name.hasError('required')">ユーザー名は必須です。</span>
+          </th>
+        </tr>
+      </table>
+
+    <div class="content">
+      <input type="submit" value="送信"
+      [disabled]="myForm.invalid" />
+    </div>
+  </form>
+</div>
+<button (click)="goBack()">戻る</button>

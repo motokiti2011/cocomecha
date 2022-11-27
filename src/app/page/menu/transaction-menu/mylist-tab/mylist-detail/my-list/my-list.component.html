@@ -1,0 +1,56 @@
+
+<div class="disp-area">
+
+
+  <p class="title">お知らせ一覧</p>
+
+  <div class="transaction-count">
+    <p>現在取引中のサービスは{{transactionCountMsg}}</p>
+  </div>
+
+  <div class="list-option">
+    <div class="alert-message">
+      新着メッセージ・質問{{messageAlert}}
+    </div>
+    
+    <div>
+      <select class="select-btn" [(ngModel)]="selected" (change)="changeOrder()">
+        <option value="">並び順</option>
+        <option *ngFor="let item of orderMenu"
+        [value]="item.value"
+        [selected]="item.value === selected">{{item.value}}
+      </option>
+      </select>
+    </div>
+  </div>
+
+
+  <div class="service-contents">
+
+    <div class="item-list-heder">
+      <!-- <div class="heder-check" >
+        <input type="checkbox" 
+        [(ngModel)]="hedSelection"
+        (change)="bulkSelection()">
+      </div> -->
+      <div class="heder-read" >{{HEAD.readDiv}}</div>
+      <div class="heder-title" >{{HEAD.msgPage}}</div>
+      <div class="heder-message" >{{HEAD.adlessMsg}}</div>
+      <div class="heder-date" >{{HEAD.messageDate}}</div>
+    </div>
+
+    <div *ngFor="let content of detailList">
+      <div class="item-list">
+        <div class="item-read" >{{content.readDiv}}</div>
+        <!-- <div class="item-title" (click)="contentsDetail(content)" >{{content.serviceTitle}}</div> -->
+        <div class="item-message" >{{content.message}}</div>
+        <div class="item-date" >{{content.messageDate}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="delete-btn">
+    <button (click)="deleteCheck()" [disabled]="checkbutton">選択を削除する</button>
+  </div> -->
+
+</div>

@@ -1,0 +1,37 @@
+<!-- <p>login works!</p> -->
+<div id="modal-hedder">
+  <div id="modal-title">cocoメカ　ログイン</div>
+  <button id="close" mat-button (click)="onNoClick()">✖</button>
+</div>
+
+<div id="error-message">
+  
+</div>
+
+
+<div class="form">
+  <div>ユーザー名</div>
+  <input id="name" name="name" type="text" [(ngModel)]="data.mailaddress" />
+</div>
+
+<div class="form">
+  <div>パスワード</div>
+  <input id="passwd" name="passwd" type="password" [(ngModel)]="data.passwd" />
+</div>
+
+<div class="checkbox">
+  <input type="checkbox" [(ngModel)]="data.selected" [value] = "data.selected" />
+  次回から自動でログイン
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="data">ログイン</button>
+</div>
+
+<div class="name" (click)="reissuePasswd()">パスワードを忘れた方はこちら</div>
+<div class="name" (click)="newResister()">まだ登録がお済でない方はこちら</div>
+
+
+
+
+

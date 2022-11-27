@@ -1,0 +1,38 @@
+<!-- <p>取引メニュー画面</p> -->
+
+<div class="transaction-menu">
+  <aside>
+    <app-side-menu></app-side-menu>
+  </aside>
+
+  <article>
+
+    <div class="transaction-menu">
+ 
+      <div class="tab-area-base">
+
+        <ul class="tab-menu-base">
+          <ng-container *ngFor="let tab of tabs">
+            <li [class.current]="tab.current"
+            (click)="onClick($event)">{{tab.name}}</li>
+          </ng-container>
+        </ul>
+        
+        <!-- ngComponentOutlet で動的にコンポーネントを読み込む -->
+        <ng-container *ngComponentOutlet="currentTab"></ng-container>
+      </div>
+
+      <!-- <div>
+        <select class="select-btn" [(ngModel)]="selected" (change)="changeDisplay()">
+          <option *ngFor="let item of data"
+          [value]="item.value"
+          [selected]="item.value === selected">{{item.label}}
+        </option>
+        </select>
+      </div> -->
+
+
+    </div>
+
+  </article>
+</div>

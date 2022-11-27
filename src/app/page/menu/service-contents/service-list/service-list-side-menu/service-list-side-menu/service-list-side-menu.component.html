@@ -1,0 +1,49 @@
+<div class="button-item">
+  <p>地域</p>
+  <select class="area-select" name="area" [(ngModel)]="areaSelect" (change)="onArea()">
+    <option value="">未選択</option>
+    <option *ngFor="let area of areaData" [value]="area.prefectures" [selected]="area.prefectures === areaSelect">
+      {{area.prefectures}}</option>
+  </select>
+</div>
+
+<div class="button-item">
+  <p>作業内容</p>
+  <select class="category-select" name="category" [(ngModel)]="categorySelect" (change)="onWorkContents()">
+    <option value="">未選択</option>
+    <option *ngFor="let category of categoryData" [value]="category.category"
+      [selected]="category.category === categorySelect">{{category.category}}</option>
+  </select>
+</div>
+
+
+<div class="button-item">
+  <p>金額</p>
+  <ng-container *ngFor="let amount of serchAmount; index as i">
+    <label>
+      <input type="checkbox" name="amount{{i}}" [(ngModel)]="serchAmount[i].selected" [value]="amount.value1"
+        (change)="onAmount()">{{amount.label}}
+    </label><br />
+  </ng-container>
+</div>
+
+<div class="history-item">
+  <div *ngIf="userCertificationDiv" class="item-contents">
+    <p>お気に入り</p>
+    <div class="listarea" *ngFor="let data of favoriteList" (click)="onContentsDetail(data.id)">
+      {{data.title}}
+    </div>
+  </div>
+  <div *ngIf="userCertificationDiv">
+    <p class="link" (click)="listMenu()">お気に入り一覧へ</p>
+  </div>
+
+  <p>閲覧履歴</p>
+  <div class="listarea" *ngFor="let data of displayBrowsing" (click)="onContentsDetail(data.id)">
+    {{data.title}}
+  </div>
+
+  <div *ngIf="userCertificationDiv">
+    <p class="link" (click)="listMenu()">閲覧履歴一覧へ</p>
+  </div>
+</div>

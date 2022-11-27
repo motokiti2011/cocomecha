@@ -1,0 +1,77 @@
+/*まずはお決まりのボックスサイズ算出をborer-boxに */
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 62.5%;/*rem算出をしやすくするために*/
+}
+
+.image-area {
+  display: flex;
+}
+
+.line {
+  size: 10;
+}
+
+.containar {
+  display: flex;
+  justify-content: flex-start;
+  height:40vh;
+  width:100%;
+  margin: 10%;
+}
+
+
+.btn-solid {
+  text-align:center;
+  padding: 5vh 0;
+  font-size: xx-large;
+  color: #fff;
+  border-top: 4px solid #48ecc4;
+  border-right: 4px solid #0a5f4a;
+  border-bottom: 4px solid #0f745b;
+  border-left: 4px solid #8cf9de;
+  border-radius: 10px;
+  background: #0bd;
+  height: 5vh;
+  width: 25%;
+  margin:10vh
+}
+
+.btn-solid:hover {
+  color: #fff;
+  border-top: 4px solid #0f745b;
+  border-right: 4px solid #8cf9de;
+  border-bottom: 4px solid #48ecc4;
+  border-left: 4px solid #0a5f4a;
+}
+
+.item {
+  background: #0bd;
+  color: #fff;
+  margin: 6%;
+  padding: 5%;
+  height:20%;
+  // width:50%;
+  border-radius:75%;
+  line-height:50px;
+  text-align:center;
+}
+
+mat-dialog-container#modal-component {
+  border: 3px solid #262626;
+  border-radius: 11px;
+  background-color: #1a1a1a;
+  position: absolute;
+  top: 100px;
+  width:50%;
+  left: 20%;
+}
+

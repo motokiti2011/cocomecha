@@ -1,0 +1,42 @@
+
+<!-- <button (click)="goBack()">戻る</button> -->
+
+<div class="service-contents">
+  
+  <div>
+    <select class="select-btn" [(ngModel)]="selected" (change)="changeOrder()">
+      <option value="">並び順</option>
+      <option *ngFor="let item of orderMenu"
+      [value]="item.value"
+      [selected]="item.value === selected">{{item.value}}
+    </option>
+    </select>
+  </div>
+
+  <div class="contants">
+
+    <div class="item-list-heder">
+      <div class="heder-title" >{{HEAD.title}}</div>
+      <div class="heder-price" >{{HEAD.price}}</div>
+      <div class="heder-whet" >{{HEAD.whet}}</div>
+      <div class="heder-endDate" >{{HEAD.endDate}}</div>
+      <div class="heder-status" >{{HEAD.status}}</div>
+    </div>
+
+    <div *ngFor="let content of detailList">
+      <div class="item-list">
+        <div class="item-title" (click)="contentsDetail(content.slipNo)" >{{content.title}}</div>
+        <div class="item-price" >{{content.price}}</div>
+        <div class="item-whet" >{{content.whet}}</div>
+        <div class="item-endDate" >{{content.endDate}}</div>
+        <div class="item-status" >{{content.transactionStatus}}</div>
+      </div>
+    </div>
+    
+  </div>
+
+</div>
+
+<div class="delete-btn">
+  <button (click)="deleteCheck()" [disabled]="checkbutton">選択を削除する</button>
+</div>

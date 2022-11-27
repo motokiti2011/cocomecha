@@ -1,0 +1,62 @@
+
+.maincontent {
+  margin-top: 8vh;
+  display: flex;
+}
+
+.sidmanu {
+  width: 150px;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.btn-area {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn_item {
+  width: 180px;
+  height: 40px;
+  margin-top: 20px;
+}
+
+.private-message {
+  margin-top: 60px;
+}
+
+.main-area {
+  width: 550px;
+  height: 600px;
+  border:2px solid;
+  border-color: black;
+  border-radius: 10px 10px 10px 10px;
+
+  .messages {
+    margin-top: 20px;
+    margin-left: 20px;
+    width: 500px;
+    height: 460px;
+  }
+}
+
+.sb-area {
+  width: 200px;
+  margin-left: 30px;
+
+  .sb-disp {
+    margin-top: 30px;
+  }
+
+  .title {
+    font-size: 12px;
+  }
+
+  .item {
+    margin-left: 20px;
+    font-size: 18px;
+  }
+
+}
+

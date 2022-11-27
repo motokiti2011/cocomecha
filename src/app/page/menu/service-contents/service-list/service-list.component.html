@@ -1,0 +1,57 @@
+<div class="service-menu wrapper">
+
+  <aside>
+    <app-service-list-side-menu 
+      [serchArea]="serchArea"
+      [serchCategory]="serchCategory"
+      [favoriteList]="favoriteList"
+      (chengeArea)="onAreaChenge($event)"
+      (chengeCateogry)="onCategoryChenge($event)"
+      (chengeAmount)="onAmountChenge($event)"
+    ></app-service-list-side-menu>
+  </aside>
+
+  <article>
+    <div class="head-disp">
+      <p>{{displayCount}}件がヒット</p>
+      <p class="margin">{{displayCount}}～{{displayCount}}件を表示</p>
+      <select class="displayList" [(ngModel)]="selected" (change)="onDisplayList()">
+        <option *ngFor="let item of displayData" [value]="item.value" [disabled]="item.disabled"
+          [selected]="item.value === selected">{{item.label}}</option>
+      </select>
+    </div>
+
+    <div class="serch-area">
+      <input id="serch" name="serch" class="serch-form" type="serch" placeholder="キーワードを入力してください。" />
+      <div class="button-serch">
+        <input type="button" class="btn-serch" on-click="onSerch()" value="絞り込み">
+      </div>
+    </div>
+
+    <div class="contants">
+      <div *ngFor="let contents of displayContentsList">
+        <div class="item" (click)="onContentsSelect(contents)">{{contents.title}}</div>
+        <div class="title" (click)="onContentsSelect(contents)">{{contents.title}}</div>
+        <div *ngIf="userCertificationDiv">
+          <div [ngClass]="contents.favoriteFlg? 'favorite':'anfavorite'" (click)="onContentFavorite(contents)">★</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-index">
+      <div class="buttom-area">
+        <div class="buttom-base" (click)="onContentsForward()">前へ</div>
+
+        <ng-container *ngFor="let index of pageIndex">
+          <div [class.buttom-base]="index!=currentIndex" [class.index]="index==currentIndex"
+            (click)="onContentsIndex(index)">{{index}}</div>
+        </ng-container>
+
+        <div class="buttom-base" (click)="onContentsNext()">次へ</div>
+      </div>
+    </div>
+
+    <button (click)="goBack()">戻る</button>
+  </article>
+
+</div><!-- /.service-menu-->

@@ -1,0 +1,12 @@
+<div class="head-display">
+  <div class="menu" (click)="cocomecha()">coco-mecha</div>
+
+  <div class="btn-list">
+    <input type="button" class="btn-border" on-click="onLogin()" value="{{loginUser}}" >
+    <div *ngIf="authUser">
+      <input type="button" class="btn-border" on-click="onLogout()" value="ログアウト">
+    </div>
+    <input type="button" class="btn-border" on-click="onClickHelp()" value="ヘルプ">
+  </div>
+
+</div>

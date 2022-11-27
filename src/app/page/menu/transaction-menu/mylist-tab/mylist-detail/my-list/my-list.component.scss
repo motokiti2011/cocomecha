@@ -1,0 +1,108 @@
+.disp-area {
+  height: 600px;
+  // background-color: #97cdf3;
+}
+
+.title {
+  margin-top: 20px;
+
+}
+
+
+.transaction-count {
+  height: 50px;
+  margin-top: 50px;
+  margin-left: 50px;
+}
+
+.service-contents {
+  margin-top: 2%;
+  margin-left: 5%;
+}
+
+.alert-message {
+  width: 400px;
+  margin-left: 70px;
+}
+
+
+.list-option {
+  display: flex;
+  // justify-content: space-between;
+}
+
+
+.item-list-heder {
+  display: flex;
+  height: 2em;
+  text-align: center;
+  font-size: 1.5em;
+
+  .heder-read {
+    border: 1px solid #000;
+    width: 100px;
+    background-color: #97cdf3;
+    padding-top: 0.6em;
+  }
+
+  .heder-title {
+    border: 1px solid #000;
+    width: 200px;
+    background-color: #97cdf3;
+    padding-top: 0.6em;
+  }
+
+
+  .heder-message {
+    border: 1px solid #000;
+    width: 450px;
+    background-color: #97cdf3;
+    padding-top: 0.6em;
+  }
+
+  .heder-date {
+    border: 1px solid #000;
+    width: 80px;
+    background-color: #97cdf3;
+    padding-top: 0.6em;
+  }
+}
+
+
+.item-list {
+  display: flex;
+  height: 3em;
+  text-align: center;
+
+  .item-read {
+    border: 1px solid #000;
+    width: 100px;
+    padding-top: 1.4em;
+  }
+
+  .item-title {
+    border: 1px solid #000;
+    width: 200px;
+    padding-top: 1.4em;
+    cursor:pointer;
+    color: blue;
+  }
+
+
+  .item-message {
+    border: 1px solid #000;
+    width: 450px;
+    padding-top: 1.4em;
+  }
+
+  .item-date {
+    border: 1px solid #000;
+    width: 80px;
+    padding-top: 1.4em;
+  }
+}
+
+.delete-btn {
+  margin-top: 5vh;
+  margin-left: 7vh;
+}

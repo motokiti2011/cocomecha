@@ -1,0 +1,72 @@
+.map-area {
+  display: flex;
+  margin-top: 3vh;
+}
+
+.area-name {
+  margin-left: 10vh;
+}
+
+.disp {
+  display: flex;
+  margin: 50px;
+}
+
+.prefectures {
+  display: flex;
+  margin-bottom: 20px;
+  .prefecture-name2 {
+    margin-right: 36px;
+  }
+  .prefecture-name3 {
+    margin-right: 20px;
+  }
+}
+
+.service-contents {
+  margin-top: 50px;
+}
+
+.name {
+  cursor:pointer;
+  margin-left: 10px;
+  color: blue;
+}
+
+.contents {
+  display: flex;
+  margin-left: 50px;
+}
+
+.category {
+  margin-left: 30px;
+  margin-bottom: 10px;
+}
+
+
+.content {
+  cursor:pointer;
+  margin-left: 50px;
+  margin-bottom: 10px;
+  color: blue;
+}
+
+.content1 {
+  cursor:pointer;
+  margin-left: 114px;
+  margin-bottom: 10px;
+  color: blue;
+}
+
+.content2 {
+  cursor:pointer;
+  margin-left: 50px;
+  margin-bottom: 10px;
+  color: blue;
+}
+.content3 {
+  cursor:pointer;
+  margin-left: 65px;
+  margin-bottom: 10px;
+  color: blue;
+}

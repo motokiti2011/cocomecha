@@ -1,0 +1,27 @@
+<!-- <p class="close" closeModal()>✖</p> -->
+<div class="head">
+  <p class="title">質問板</p>
+  <div class="close-button" (click)="closeModal()">✖</div>
+</div>
+
+<div class="disp-area">
+  <div *ngIf ="dispDiv; else elseContent">
+    <div *ngFor="let list of questionList" >
+      <div class="question-contents">
+        <div class="index">No.{{list.id}}</div>
+        <div class="sender">質問者：{{list.senderName}}</div>
+        <div class="question">質問内容</div>
+        <div class="sender-text">{{list.senderText}}</div>
+        <div class="anser">解答：{{list.anserText}}</div>
+      </div>
+    </div>    
+  </div>
+  <ng-template #elseContent>
+    <div class="none">{{noneMessage}}</div>
+  </ng-template>
+</div>
+
+<div class="form">
+  <input class="form-question" type="text" [(ngModel)]="sernderQuestion" (change)="sendQuest()" placeholder="質問はこちらに記入してください。" />
+  <input type="button" class="submit-button" value="投稿する" (click)="onSendQuestion()" [disabled]="isDisabled" />
+</div>

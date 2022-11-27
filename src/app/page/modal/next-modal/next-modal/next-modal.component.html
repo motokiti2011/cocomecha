@@ -1,0 +1,14 @@
+<div id="modal-hedder">
+  <div id="modal-title">{{data.title}}</div>
+  <div id="modal-message">{{data.message}}</div>
+</div>
+
+<div class="mat-dialog-actions">
+  <div *ngFor="let next of data.nextActionList">
+    <div class="btn btn-solid"
+      (click)="nextAction(next)">{{next.nextAction}}
+    </div>
+  </div>
+</div>  
+
+
