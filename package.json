@@ -20,7 +20,11 @@
     "@angular/platform-browser": "~13.2.0",
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
+    "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "@types/lodash.isnil": "^4.0.7",
+    "amazon-cognito-identity-js": "^6.0.1",
+    "aws-sdk": "^2.1268.0",
+    "bootstrap": "^4.5.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
