@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { TransactionMenuService } from '../../../transaction-menu.service';
 import { TansactionCompleteService } from '../tansaction-complete.service';
@@ -67,7 +67,7 @@ export class TansactionCompleteComponent implements OnInit {
     private router: Router,
     private service: TransactionMenuService,
     private compService: TansactionCompleteService,
-    private auth: AuthService,
+    private auth: AuthUserService,
     public modal: MatDialog,
 
   ) { }

@@ -5,7 +5,7 @@ import { loginUser } from 'src/app/entity/loginUser';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthUserService {
 
   private _user$
 

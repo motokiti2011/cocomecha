@@ -17,6 +17,8 @@ import {
   HttpClientModule,
   HttpClientJsonpModule,
 } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { ServiceListComponent } from './page/menu/service-contents/service-list/service-list.component';
 import { MainMenuComponent } from './page/menu/main-menu/main-menu.component';
 import { SideMenuComponent } from './page/menu/side-menu/side-menu.component';
@@ -98,6 +100,7 @@ const ROUTE_TABLE: Routes = [
     HttpClientModule,
     HttpClientJsonpModule,
     BrowserModule,
+    NgbModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     MatButtonModule,

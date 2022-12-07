@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { TransactionMessageService } from './transaction-message.service';
 import { dispSlipComment } from 'src/app/entity/slipMessageInfo';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { isNil as _isNil, find as _find } from 'lodash';
 
 @Component({
@@ -36,7 +36,7 @@ export class TransactionMessageComponent implements OnInit {
   @Input() acsessUser = { userId: '', userName: '' };
 
   constructor(
-    private auth: AuthService,
+    private auth: AuthUserService,
     private service: TransactionMessageService,
   ) { }
 

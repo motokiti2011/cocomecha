@@ -14,7 +14,7 @@ import {
   isNil as _isNil,
 } from 'lodash';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
@@ -64,7 +64,7 @@ export class BrowsingHistoryComponent implements OnInit {
     private router: Router,
     private service: TransactionMenuService,
     private browsingHistoryService: BrowsingHistoryService,
-    private auth: AuthService,
+    private auth: AuthUserService,
     public modal: MatDialog,
   ) { }
 

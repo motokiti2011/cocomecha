@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ServiceTransactionService } from './service-transaction.service';
 // import { AuthService } from 'src/app/auth/auth.service';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { messageOpenLevel, openLevel } from 'src/app/entity/messageOpenLevel';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { QuestionBoardComponent } from 'src/app/page/modal/question-board/question-board/question-board.component';
@@ -48,7 +48,7 @@ export class ServiceTransactionComponent implements OnInit {
     private router: Router,
     private location: Location,
     private service: ServiceTransactionService,
-    private auth: AuthService,
+    private auth: AuthUserService,
     public questionBoardModal: MatDialog,
     public modal: MatDialog,
 

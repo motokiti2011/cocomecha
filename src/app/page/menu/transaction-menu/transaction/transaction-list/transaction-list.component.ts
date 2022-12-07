@@ -15,7 +15,7 @@ import {
 } from 'lodash';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 // import { ServiceContents } from 'src/app/mock-test';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
@@ -70,7 +70,7 @@ export class TransactionListComponent implements OnInit {
     private router: Router,
     private service: TransactionMenuService,
     private listService: TransactionListService,
-    private auth: AuthService,
+    private auth: AuthUserService,
     public modal: MatDialog,
   ) { }
 

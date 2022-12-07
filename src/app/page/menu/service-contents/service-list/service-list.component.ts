@@ -11,7 +11,7 @@ import {
 import { serviceContents } from 'src/app/entity/serviceContents';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { ServiceListcomponentService } from './service-listcomponent.service';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { loginUser } from 'src/app/entity/loginUser';
 import { serchSidAmount } from 'src/app/entity/serchSid';
@@ -79,7 +79,7 @@ export class ServiceListComponent implements OnInit {
     private location: Location,
     private service: ServiceListcomponentService,
     // private loading: LoadingSpinnerService,
-    private auth: AuthService,
+    private auth: AuthUserService,
   ) { }
 
   ngOnInit() {

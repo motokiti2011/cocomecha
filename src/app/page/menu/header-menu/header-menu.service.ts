@@ -30,23 +30,4 @@ export class HeaderMenuService {
 
   }
 
-  // authenticate(credentials: credentials, callback :any) {
-
-  //   const headers = new HttpHeaders(credentials ? {
-  //     authorization: 'Basic ' + btoa(credentials.loginid + ':' + credentials.password)
-  //   } : {});
-
-  //   this.http.get('http://localhost:8080/v1/login', { headers: headers }).subscribe(response => {
-  //     if (response) {
-  //       console.log(response)
-  //   // if (response['name']) {
-  //       this.authenticated = true;
-  //     } else {
-  //       this.authenticated = false;
-  //     }
-  //     return callback && callback();
-  //   });
-
-  // }
-
 }

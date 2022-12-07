@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { LoginComponent } from '../../modal/login/login.component';
 import { HeaderMenuService } from './header-menu.service';
 import { loginUser } from 'src/app/entity/loginUser';
-import { AuthService } from '../../auth/auth.service';
+import { AuthUserService } from '../../auth/authUser.service';
 
 @Component({
   selector: 'app-header-menu',
@@ -32,7 +32,7 @@ export class HeaderMenuComponent implements OnInit {
     private router: Router,
     private service: HeaderMenuService,
     public loginModal: MatDialog,
-    private authService: AuthService,
+    private authUserService: AuthUserService,
   ) { }
 
   ngOnInit(): void {
@@ -84,7 +84,7 @@ export class HeaderMenuComponent implements OnInit {
               this.loginUser = user.userName;
               this.authUser= true;
               // ログイン状態を保持する。
-              this.authService.login(responce);
+              this.authUserService.login(responce);
             }
           }); 
 
@@ -101,7 +101,7 @@ export class HeaderMenuComponent implements OnInit {
    */
   onClickHelp() {
     console.log('help');
-    this.authService.user$.subscribe(hoge => {
+    this.authUserService.user$.subscribe(hoge => {
       console.log(hoge);
     });
   }
@@ -111,8 +111,15 @@ export class HeaderMenuComponent implements OnInit {
    */
   onLogout() {
     this.authUser= false;
-    this.authService.logout;
+    this.authUserService.logout;
     this.loginUser = 'ログイン';
+  }
+
+  /**
+   * 新規登録ボタン押下時
+   */
+  onSinup() {
+    this.router.navigate(["sign-up-component"]);
   }
 
 

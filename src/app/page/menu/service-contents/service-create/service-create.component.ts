@@ -17,7 +17,7 @@ import { monthMap } from 'src/app/entity/month';
 import { nextActionButtonType, nextActionMessageType, nextActionTitleType } from 'src/app/entity/nextActionButtonType';
 import { ServiceCreateService } from './service-create.service';
 import { NextModalComponent } from 'src/app/page/modal/next-modal/next-modal/next-modal.component';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 
 
 @Component({
@@ -103,7 +103,7 @@ export class ServiceCreateComponent implements OnInit {
     private service: ServiceCreateService,
     public loginModal: MatDialog,
     private router: Router,
-    private auth:AuthService,
+    private auth:AuthUserService,
   ) { }
 
   ngOnInit(): void {

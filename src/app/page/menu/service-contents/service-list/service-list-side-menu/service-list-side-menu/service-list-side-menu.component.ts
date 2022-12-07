@@ -17,7 +17,7 @@ import { catchError, distinct, map, switchMap, tap } from "rxjs/operators";
 import { serchCategoryData } from 'src/app/entity/serchCategory';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import { serviceContents } from 'src/app/entity/serviceContents';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { browsingHistory } from 'src/app/entity/browsingHistory';
@@ -80,7 +80,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   ];
 
   constructor(
-    private auth: AuthService,
+    private auth: AuthUserService,
     private service: ServiceListcomponentService,
     private router: Router,
   ) { }

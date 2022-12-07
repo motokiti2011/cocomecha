@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { QuestionBoardService } from './question-board.service';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { isNil as _isNil } from 'lodash';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 
 @Component({
@@ -34,7 +34,7 @@ export class QuestionBoardComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: string,
     private service: QuestionBoardService,
-    private auth: AuthService,
+    private auth: AuthUserService,
   ) { }
 
   ngOnInit(): void {

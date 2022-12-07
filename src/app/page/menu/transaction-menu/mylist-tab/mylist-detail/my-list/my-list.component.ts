@@ -11,7 +11,7 @@ import {
   isNil as _isNil
 } from 'lodash';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { AuthService } from 'src/app/page/auth/auth.service';
+import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { userMyList,dispUserMyList } from 'src/app/entity/userMyList';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
@@ -75,7 +75,7 @@ export class MyListComponent implements OnInit {
     private router: Router,
     private service: TransactionMenuService,
     private mylistservice: MyListService,
-    private auth: AuthService,
+    private auth: AuthUserService,
     public modal: MatDialog,
   ) { }
 
