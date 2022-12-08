@@ -20,6 +20,7 @@ export class SignUpComponent implements OnInit {
   dispMsg: any = '';
   userInfo = { userId: '', userName: '', mailAdress: '' }
 
+  loading = false;
 
   user = {
     loginId: 'login',

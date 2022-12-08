@@ -3,7 +3,7 @@
     <div class="container">
       <div class="confirmation" *ngIf="!confirmationDiv">
         <div class="row">
-          <div class="col-2"></div>
+          <div class="col-3"></div>
           <div class="col-3">{{title}}
             <div *ngIf="!confirmationDiv">
               <p>登録する情報を入力してください</p>
@@ -16,7 +16,7 @@
     
         <form>
           <div class="form-row">
-            <div class="col-2"></div>
+            <div class="col-3"></div>
             <div class="col-4">
               <label>Eメール</label>
               <input type="email" class="form-control" placeholder="email" id="email" name="email" #email>
@@ -24,7 +24,7 @@
           </div>
     
           <div class="form-row">
-            <div class="col-2"></div>
+            <div class="col-3"></div>
             <div class="col-4">
               <label>ユーザーID</label>
               <input type="text" class="form-control" placeholder="ユーザーID" id="userid" name="userid" #userid>
@@ -32,7 +32,7 @@
           </div>
     
           <div class="form-row">
-            <div class="col-2"></div>
+            <div class="col-3"></div>
             <div class="col-4">
               <label>パスワード: </label>
               <input type="password" class="form-control" placeholder="password" id="password" name="password" #password>
@@ -41,7 +41,7 @@
         </form>
     
         <div class="row">
-          <div class="col-2"></div>
+          <div class="col-3"></div>
           <div class="col-3">
             <p class="error">{{dispMsg}}</p>
             <button type="submit" (click)="onSignup(email.value, password.value,userid.value)">送信</button>
@@ -161,4 +161,3 @@
     </div>
   </form>
 </div> -->
-<button (click)="goBack()">戻る</button>
