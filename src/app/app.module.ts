@@ -45,6 +45,7 @@ import { TransactionMessageComponent } from './page/menu/service-contents/servic
 import { OpenLevelComponent } from './page/modal/open-level/open-level/open-level.component';
 import { MessagePrmReqComponent } from './page/modal/message-prm-req/message-prm-req/message-prm-req.component';
 import { FavoriteComponent } from './page/menu/transaction-menu/favorite-tab/favorite/favorite.component';
+import { UserRegisterComponent } from './page/auth/user-register/user-register.component';
 
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
@@ -57,6 +58,7 @@ const ROUTE_TABLE: Routes = [
   { path: 'sign-up-component', component: SignUpComponent },
   { path: 'service-detail-component', component: ServiceDetailComponent },
   { path: 'service-transaction-component', component: ServiceTransactionComponent },
+  { path: 'user-resister-component', component: UserRegisterComponent },
 ]
 
 @NgModule({
@@ -87,6 +89,7 @@ const ROUTE_TABLE: Routes = [
     OpenLevelComponent,
     MessagePrmReqComponent,
     FavoriteComponent,
+    UserRegisterComponent,
   ],
   entryComponents: [
     TransactionListComponent,

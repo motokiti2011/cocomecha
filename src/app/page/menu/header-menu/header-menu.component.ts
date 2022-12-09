@@ -154,6 +154,13 @@ export class HeaderMenuComponent implements OnInit {
     this.router.navigate(["sign-up-component"]);
   }
 
+  /**
+   * ユーザー登録ボタン押下時
+   */
+  onUserResister() {
+    this.router.navigate(["user-resister-component"]);
+  }
+
 
 
 

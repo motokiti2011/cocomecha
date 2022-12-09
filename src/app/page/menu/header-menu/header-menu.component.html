@@ -2,10 +2,16 @@
   <div class="menu" (click)="cocomecha()">coco-mecha</div>
 
   <div class="btn-list">
+    
     <div *ngIf="!authUser">
       <input type="button" class="btn-border" on-click="onSinup()" value="新規登録">
     </div>
+
     <input type="button" class="btn-border" on-click="onLogin()" value="{{loginUser}}" >
+
+    <input type="button" class="btn-border" on-click="onUserResister()" value="ユーザー登録{{loginUser}}" >
+
+
     <div *ngIf="authUser">
       <input type="button" class="btn-border" on-click="onLogout()" value="ログアウト">
     </div>
