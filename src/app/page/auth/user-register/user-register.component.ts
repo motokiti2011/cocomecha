@@ -21,7 +21,7 @@ export class UserRegisterComponent implements OnInit {
   user: user = initUserInfo;
 
   inputData = {
-    useId: '',
+    userId: '',
     userName: '',
     mailAdress: '',
     TelNo1: '',
@@ -56,11 +56,30 @@ export class UserRegisterComponent implements OnInit {
     console.log(1);
   }
 
-  onResister() {
-    console.log(this.inputData);
-  }
 
   selectArea() {
+    console.log('県名選択：' + this.inputData.areaNo1);
+    const selectData = _find(this.areaData, detail => detail.prefectures === this.inputData.areaNo1);
+    if (!_isNil(selectData)) {
+      // this.inputData.areaNo1 = String(selectData.id);
+      this.user.areaNo1 = String(selectData.id);
+    } else {
+      // this.inputData.areaNo1 = '0';
+    }
+    console.log('実態値：' + this.user.areaNo1);
+  }
+
+
+  onResister() {
+    console.log(this.inputData);
+    if(_isNil(this.inputData.userId)
+    || _isNil(this.inputData.userName)
+    || _isNil(this.inputData.areaNo1)
+    || _isNil(this.inputData.mailAdress)) {
+      alert('必須項目です。');
+    }
+    alert('OK');
+
 
   }
 

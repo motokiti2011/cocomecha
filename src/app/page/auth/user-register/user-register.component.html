@@ -1,18 +1,22 @@
 
 <div class="contents">
-  
-  <div>ユーザーID</div>
-  <input id="name" name="name" type="text" [(ngModel)]="inputData.useId" />
-  
-  <div>ユーザー名</div>
-  <input id="name" name="name" type="text" [(ngModel)]="inputData.userName" />
 
-  
+  <div>ユーザーID</div>
+  <input id="id" type="text" [(ngModel)]="inputData.userId" />
+  <label class="mandatory">必須</label>
+
+  <div>ユーザー名</div>
+  <input id="name" type="text" [(ngModel)]="inputData.userName" />
+  <label class="mandatory">必須</label>
+
+
   <div>登録メールアドレス</div>
-  <input id="email" name="email" type="email" [(ngModel)]="inputData.mailAdress" />
+  <input id="email" type="email" [(ngModel)]="inputData.mailAdress" />
+  <label class="mandatory">必須</label>
 
   <div>電話番号</div>
-  <input id="email" name="email" type="email" [(ngModel)]="inputData.TelNo1" />
+  <input id="tel" type="tel" [(ngModel)]="inputData.TelNo1" />
+  <label class="mandatory">必須</label>
 
   <div>住所（都道府県）</div>
   <select class="area-select" name="area" [(ngModel)]="inputData.areaNo1" (change)="selectArea()">
@@ -21,23 +25,41 @@
       {{area.prefectures}}</option>
   </select>
 
-
-  <input id="email" name="email" type="email" [(ngModel)]="inputData.areaNo1" />
+  <!-- <input id="area" type="text" [(ngModel)]="inputData.areaNo1" /> -->
 
   <div>住所（市町村）</div>
-  <input id="email" name="email" type="email" [(ngModel)]="inputData.areaNo2" />
+  <input id="area" type="text" [(ngModel)]="inputData.areaNo2" />
+
 
   <div>住所その他</div>
-  <input id="email" name="email" type="email" [(ngModel)]="inputData.adress" />
+  <input id="area" type="text" [(ngModel)]="inputData.adress" />
+
 
   <div>郵便番号</div>
-  <input id="email" name="email" type="email" [(ngModel)]="inputData.postCode" />
+  <input id="postCode" type="text" [(ngModel)]="inputData.postCode" />
+
 
   <div>紹介文</div>
-  <input id="email" name="email" type="email" [(ngModel)]="inputData.introduction" />
+  <input id="introduction" type="text" [(ngModel)]="inputData.introduction" />
+
 
   <input type="button" class="btn" on-click="onResister()" value="登録">
+
+
 </div>
+
+
+
+<!-- <script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+<div class="h-adr">
+<span class="p-country-name" style="display:none;">Japan</span>
+〒<input type="text" class="p-postal-code" size="8" maxlength="8"><br>
+<input type="text" class="p-region"/><br>
+<input type="text" class="p-locality p-street-address p-extended-address"/><br>
+</div> -->
+
+
+
 
 
 
