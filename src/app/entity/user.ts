@@ -1,6 +1,6 @@
 export interface user {
   // ユーザーID
-  useId: string;
+  userId: string;
   // 有効無効区分
   userValidDiv: string;
   // 法人区分
@@ -40,7 +40,7 @@ export interface user {
 
 export const initUserInfo : user = {
       // ユーザーID
-      useId: '',
+      userId: '',
       // 有効無効区分
       userValidDiv: '0',
       // 法人区分

@@ -47,6 +47,8 @@ import { MessagePrmReqComponent } from './page/modal/message-prm-req/message-prm
 import { FavoriteComponent } from './page/menu/transaction-menu/favorite-tab/favorite/favorite.component';
 import { UserRegisterComponent } from './page/auth/user-register/user-register.component';
 
+import { POST_PROVIDER } from './page/service/interceptors/http-interceptors';
+
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
   { path: 'main_menu', component: MainMenuComponent },
@@ -119,6 +121,7 @@ const ROUTE_TABLE: Routes = [
     TransactionMenuService,
     // サービス依頼画面日付のMatarial部品日本語化
     {provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},
+    POST_PROVIDER,
   ],
   bootstrap: [AppComponent],
 })

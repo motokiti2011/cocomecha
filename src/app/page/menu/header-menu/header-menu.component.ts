@@ -143,6 +143,7 @@ export class HeaderMenuComponent implements OnInit {
    */
   onLogout() {
     this.authUser = false;
+    this.cognito.logout();
     this.authUserService.logout;
     this.loginUser = 'ログイン';
   }

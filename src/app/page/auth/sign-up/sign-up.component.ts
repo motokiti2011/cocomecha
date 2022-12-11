@@ -72,6 +72,7 @@ export class SignUpComponent implements OnInit {
         // if (err == errorMsg[1].message) {
         //   this.dispMsg = errorMsg[1].value;
         // }
+        console.log(err);
       });
   }
 

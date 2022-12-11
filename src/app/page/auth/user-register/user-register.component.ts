@@ -8,6 +8,7 @@ import {
   isNil as _isNil,
   cloneDeep as _cloneDeep,
 } from 'lodash';
+import { ApiSerchService } from '../../service/api-serch.service';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class UserRegisterComponent implements OnInit {
   areaSelect = '';
 
   constructor(
-    private location: Location
+    private location: Location,
+    private apiService: ApiSerchService
   ) { }
 
   ngOnInit(): void {
@@ -72,13 +74,28 @@ export class UserRegisterComponent implements OnInit {
 
   onResister() {
     console.log(this.inputData);
-    if(_isNil(this.inputData.userId)
-    || _isNil(this.inputData.userName)
-    || _isNil(this.inputData.areaNo1)
-    || _isNil(this.inputData.mailAdress)) {
+    if(_isNil(this.inputData.userId) || this.inputData.userId == '' 
+    || _isNil(this.inputData.userName) || this.inputData.userName == ''
+    || _isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == ''
+    || _isNil(this.inputData.mailAdress) || this.inputData.mailAdress == '') {
       alert('必須項目です。');
+    } else {
+      this.user.userId = this.inputData.userId;
+      this.user.userValidDiv = '0';
+      this.user.corporationDiv = '0';
+      this.user.userName = this.inputData.userName;
+      this.user.mailAdress = this.inputData.mailAdress;
+      this.user.TelNo1 = this.inputData.TelNo1;
+      this.user.areaNo1 = this.inputData.areaNo1;
+      this.user.areaNo2 = this.inputData.areaNo2;
+      this.user.adress = this.inputData.adress;
+      this.user.postCode = this.inputData.postCode;
+      this.user.introduction = this.inputData.introduction;
+
+      this.apiService.postUser(this.user).subscribe(result => {
+        alert(result);
+      })
     }
-    alert('OK');
 
 
   }

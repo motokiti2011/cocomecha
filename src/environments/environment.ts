@@ -20,6 +20,8 @@ export const environment = {
     bucketName: 'coco9-s3-1erwjsxo8kmbu-s3bucket-qurkd9uanh07',
   },
   EndPoint: {
+    apiVersion: '/v1',
+    apiGsiVersion: '/v1',
     /** APIエンドポイント */
     apiEmdPoint: 'https://j5l04n4uk7.execute-api.us-east-1.amazonaws.com/dev',
     /** GsiAPIエンドポイント */
