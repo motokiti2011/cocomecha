@@ -37,7 +37,7 @@ export class HeaderMenuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.authenticated();;
+    this.authenticated();
   }
 
   cocomecha() {
@@ -146,6 +146,7 @@ export class HeaderMenuComponent implements OnInit {
     this.cognito.logout();
     this.authUserService.logout;
     this.loginUser = 'ログイン';
+    this.authenticated();
   }
 
   /**
