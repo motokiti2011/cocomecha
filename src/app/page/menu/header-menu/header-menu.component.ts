@@ -6,6 +6,7 @@ import { HeaderMenuService } from './header-menu.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { AuthUserService } from '../../auth/authUser.service';
 import { CognitoService } from '../../auth/cognito.service';
+import { ApiSerchService } from '../../service/api-serch.service';
 
 
 @Component({
@@ -15,7 +16,9 @@ import { CognitoService } from '../../auth/cognito.service';
 })
 export class HeaderMenuComponent implements OnInit {
 
-  loginUser: string = 'ログイン';
+  loginUserName: string = 'ログイン';
+
+  temporaryUserDiv = false;
 
   login = {
     userName: '',
@@ -34,6 +37,7 @@ export class HeaderMenuComponent implements OnInit {
     public loginModal: MatDialog,
     private cognito: CognitoService,
     private authUserService: AuthUserService,
+    private apiService: ApiSerchService,
   ) { }
 
   ngOnInit(): void {
@@ -69,20 +73,25 @@ export class HeaderMenuComponent implements OnInit {
    * 認証情報からユーザー情報を取得
    * @param authUser
    */
-  private setAuthUser(authUser: string) {
+  private setAuthUser(userid: string) {
+
+
     // 認証済の場合表示するユーザー情報を取得
-    // this.apiService.getUser(authUser).subscribe(data => {
-    //   console.log(data);
-    //   if (data.Items[0]) {
-    //     this.loginUser = data.Items[0].userName;
-    //     this.unRegistered = false;
-    //     // Subjectにログイン状態を保持する。
-    //     this.auth.login(data.Items[0]);
-    //   } else {
-    //     this.loginUser = 'ユーザー情報未設定'
-    //     this.unRegistered = true;
-    //   }
-    // });
+    this.apiService.getUser(userid).subscribe(data => {
+      console.log(data);
+      if (data.Items[0]) {
+        this.loginUserName = data.Items[0].userName;
+        if(data.Items[0].userValidDiv == "99") {
+          // 仮登録ユーザーのためユーザー登録メッセージを表示
+          this.temporaryUserDiv = true;
+        } else {
+          this.temporaryUserDiv = false;
+        }
+
+      } else {
+        this.loginUserName = 'ユーザー情報未設定'
+      }
+    });
   }
 
 
@@ -145,7 +154,7 @@ export class HeaderMenuComponent implements OnInit {
     this.authUser = false;
     this.cognito.logout();
     this.authUserService.logout;
-    this.loginUser = 'ログイン';
+    this.loginUserName = 'ログイン';
     this.authenticated();
   }
 

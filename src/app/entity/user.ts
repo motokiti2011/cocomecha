@@ -1,7 +1,7 @@
 export interface user {
   // ユーザーID
   userId: string;
-  // 有効無効区分
+  // ユーザー状態
   userValidDiv: string;
   // 法人区分
   corporationDiv: string;

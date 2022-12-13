@@ -2,21 +2,23 @@
   <div class="menu" (click)="cocomecha()">coco-mecha</div>
 
   <div class="btn-list">
-    
+
     <div *ngIf="!authUser; else elseContent">
 
       <input type="button" class="btn-border" on-click="onSinup()" value="新規登録">
 
-      <input type="button" class="btn-border" on-click="onLogin()" value="{{loginUser}}" >
+      <input type="button" class="btn-border" on-click="onLogin()" value="{{loginUserName}}" >
 
     </div>
     <ng-template #elseContent>
 
-      <input type="button" class="btn-border" on-click="onUserResister()" value="ユーザー登録{{loginUser}}" >
-
+      <div *ngIf="temporaryUserDiv">
+        <p>ユーザー登録が未完了です。登録をしてください。</p>
+      </div>
+      <input type="button" class="btn-border" on-click="onUserResister()" value="ユーザー登録{{loginUserName}}" >
       <input type="button" class="btn-border" on-click="onLogout()" value="ログアウト">
 
-    </ng-template>  
+    </ng-template>
 
     <input type="button" class="btn-border" on-click="onClickHelp()" value="ヘルプ">
 

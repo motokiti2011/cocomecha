@@ -74,7 +74,7 @@ export class UserRegisterComponent implements OnInit {
 
   onResister() {
     console.log(this.inputData);
-    if(_isNil(this.inputData.userId) || this.inputData.userId == '' 
+    if(_isNil(this.inputData.userId) || this.inputData.userId == ''
     || _isNil(this.inputData.userName) || this.inputData.userName == ''
     || _isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == ''
     || _isNil(this.inputData.mailAdress) || this.inputData.mailAdress == '') {

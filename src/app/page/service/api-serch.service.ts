@@ -13,15 +13,15 @@ export class ApiSerchService {
   constructor(
     private http: HttpClient,
   ) { }
-  
+
 
   private apiEndPoint: string = environment.EndPoint.apiEmdPoint + environment.EndPoint.apiVersion + '/serch';
 
 
   /**
    * ユーザーIDからユーザー情報を取得する。
-   * @param userId 
-   * @returns 
+   * @param userId
+   * @returns
    */
   public getUser(userId: string): Observable<any> {
     // リクエストボディ生成
@@ -41,8 +41,8 @@ export class ApiSerchService {
 
     /**
      * CognitoユーザーIDをPKにユーザー情報をDynamoDBに登録する
-     * @param user 
-     * @returns 
+     * @param user
+     * @returns
      */
      public postUser(user: user): Observable<any> {
       // リクエストボディ生成
