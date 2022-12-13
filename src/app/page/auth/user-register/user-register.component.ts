@@ -8,6 +8,8 @@ import {
   isNil as _isNil,
   cloneDeep as _cloneDeep,
 } from 'lodash';
+
+import { AuthUserService } from '../authUser.service';
 import { ApiSerchService } from '../../service/api-serch.service';
 
 
@@ -39,11 +41,20 @@ export class UserRegisterComponent implements OnInit {
 
   constructor(
     private location: Location,
+    private auth: AuthUserService, 
     private apiService: ApiSerchService
   ) { }
 
   ngOnInit(): void {
+    this.auth.user$.subscribe(user => {
+      if(user == null) {
+        alert("ログインが必要です")
+        this.location.back();
+        return;
+      }
+      this.inputData.userId = user.userId;
 
+    });
   }
 
   /**

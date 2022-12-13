@@ -28,7 +28,8 @@ export class ApiSerchService {
     const body = {
       "OperationType": "QUERY",
       "Keys": {
-        "userId": userId
+        "userId": userId,
+        "userValidDiv": '0'
       }
     };
     return this.http.post<user>(this.apiEndPoint + '/userinfo', body).pipe(

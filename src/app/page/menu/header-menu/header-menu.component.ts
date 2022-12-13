@@ -16,7 +16,7 @@ import { ApiSerchService } from '../../service/api-serch.service';
 })
 export class HeaderMenuComponent implements OnInit {
 
-  loginUserName: string = 'ログイン';
+  loginUser: loginUser = {userId: '' , userName: 'ログイン'};
 
   temporaryUserDiv = false;
 
@@ -80,16 +80,20 @@ export class HeaderMenuComponent implements OnInit {
     this.apiService.getUser(userid).subscribe(data => {
       console.log(data);
       if (data.Items[0]) {
-        this.loginUserName = data.Items[0].userName;
-        if(data.Items[0].userValidDiv == "99") {
+
+        this.loginUser.userId = data.Items[0].userId;
+        this.loginUser.userName = data.Items[0].userName;
+
+        this.authUserService.login(this.loginUser);
+        if(data.Items[0].userName == undefined) {
           // 仮登録ユーザーのためユーザー登録メッセージを表示
           this.temporaryUserDiv = true;
         } else {
+          this.loginUser.userName = data.Items[0].userName;
           this.temporaryUserDiv = false;
         }
-
       } else {
-        this.loginUserName = 'ユーザー情報未設定'
+        this.loginUser.userName = 'ユーザー情報未設定'
       }
     });
   }
@@ -154,7 +158,7 @@ export class HeaderMenuComponent implements OnInit {
     this.authUser = false;
     this.cognito.logout();
     this.authUserService.logout;
-    this.loginUserName = 'ログイン';
+    this.loginUser.userName = 'ログイン';
     this.authenticated();
   }
 

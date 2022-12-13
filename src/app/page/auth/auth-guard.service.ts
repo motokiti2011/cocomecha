@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable, of} from 'rxjs';
-import {AuthService} from "./authUser.service";
+// import {AuthService} from "./authUser.service";
+import { AuthUserService } from './authUser.service';
 import {catchError, distinct, map, switchMap, tap} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 
@@ -11,7 +12,7 @@ import {HttpClient} from "@angular/common/http";
 export class AuthGuardService implements CanActivate {
 
   constructor(
-    private auth: AuthService,
+    private auth: AuthUserService,
     private http: HttpClient,
     private router: Router
   ) { }
