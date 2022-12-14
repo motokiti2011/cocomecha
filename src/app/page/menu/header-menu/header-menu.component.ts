@@ -29,7 +29,7 @@ export class HeaderMenuComponent implements OnInit {
   }
 
   // 認証有無フラグ
-  authUser = false;
+  authUserDiv = false;
 
   constructor(
     private router: Router,
@@ -59,13 +59,13 @@ export class HeaderMenuComponent implements OnInit {
 
     if (authUser !== null) {
       // ログイン状態の場合
-      this.authUser = true;
+      this.authUserDiv = true;
       const log = this.cognito.getCurrentUserIdToken();
       console.log(log);
       // 認証済の場合表示するユーザー情報を取得
       this.setAuthUser(authUser);
     } else {
-      this.authUser = false;
+      this.authUserDiv = false;
     }
   }
 
@@ -129,10 +129,9 @@ export class HeaderMenuComponent implements OnInit {
           }
           if(this.login.userName) {
             // ユーザー情報を取得
-
             // ログイン状態を保持する。
             // this.authUserService.login();
-            this.authUser = true;
+            this.authUserDiv = true;
           }
 
         }
@@ -155,7 +154,7 @@ export class HeaderMenuComponent implements OnInit {
    * ログアウト押下時
    */
   onLogout() {
-    this.authUser = false;
+    this.authUserDiv = false;
     this.cognito.logout();
     this.authUserService.logout;
     this.loginUser.userName = 'ログイン';
@@ -174,6 +173,13 @@ export class HeaderMenuComponent implements OnInit {
    */
   onUserResister() {
     this.router.navigate(["user-resister-component"]);
+  }
+
+  /**
+   * マイページ押下時イベント
+   */
+  onMypage() {
+    console.log("マイページ")
   }
 
 

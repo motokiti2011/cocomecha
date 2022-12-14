@@ -50,7 +50,7 @@ export class ApiSerchService {
       const body = {
         "OperationType": "PUT",
         "Keys": {
-          "useId": user.userId,
+          "userId": user.userId,
           "userValidDiv": user.userValidDiv,
           "corporationDiv": user.corporationDiv,
           "userName": user.userName,

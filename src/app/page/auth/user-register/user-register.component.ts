@@ -104,6 +104,7 @@ export class UserRegisterComponent implements OnInit {
       this.user.introduction = this.inputData.introduction;
 
       this.apiService.postUser(this.user).subscribe(result => {
+        // TODO 
         alert(result);
       })
     }
