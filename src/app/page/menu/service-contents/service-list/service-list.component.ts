@@ -15,6 +15,9 @@ import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { loginUser } from 'src/app/entity/loginUser';
 import { serchSidAmount } from 'src/app/entity/serchSid';
+import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
+
 
 @Component({
   selector: 'app-service-list',
@@ -46,9 +49,12 @@ export class ServiceListComponent implements OnInit {
   /** 表示順セレクトボタン */
   selected = 'defult';
   /** 検索条件：地域 */
-  serchArea = 0;
+  serchArea1 = '0';
+  /** 検索条件：詳細地域 */
+  serchArea2 = '0';
+
   /** 検索条件：カテゴリー  */
-  serchCategory = 0;
+  serchCategory = '0';
   /** 認証ユーザー情報有無フラグ */
   userCertificationDiv: boolean = false;
   /** お気に入り取得情報 */
@@ -80,6 +86,9 @@ export class ServiceListComponent implements OnInit {
     private service: ServiceListcomponentService,
     // private loading: LoadingSpinnerService,
     private auth: AuthUserService,
+    private apiService: ApiSerchService,
+    private apiGsiService: ApiGsiSerchService,
+
   ) { }
 
   ngOnInit() {
@@ -88,11 +97,11 @@ export class ServiceListComponent implements OnInit {
       // this.loading.show();
       // エリア情報選択時
       if (params['areaNum'] > 0) {
-        this.url = '/sercharea/' + params['areaNum'].toString();
-        this.serchArea = Number(params['areaNum']);
+        // this.url = '/serchArea1/' + params['areaNum'].toString();
+        this.serchArea1 = params['areaNum'];
       } else {
-        this.url = '/serchcategory/' + params['category'].toString();
-        this.serchCategory = Number(params['category'])
+        // this.url = '/serchcategory/' + params['category'].toString();
+        this.serchCategory = params['category'];
       }
       // 認証有無状態を判定する
       this.auth.user$.subscribe(userOrNull => {
@@ -124,7 +133,10 @@ export class ServiceListComponent implements OnInit {
    * 検索結果を元に伝票情報を取得する
    */
   getSlip(): Observable<slipDetailInfo[]> {
-    return this.service.serchSlip(this.url);
+
+    // return this.service.serchSlip(this.url);
+    return this.apiGsiService.serchSlip(this.serchArea1, this.serchArea2, this.serchCategory);
+
   }
 
   /**
@@ -362,12 +374,12 @@ export class ServiceListComponent implements OnInit {
    */
   onAreaChenge(e: string) {
     if(_isNil(e)) {
-      this.serchArea = 0;
+      this.serchArea1 = '0';
     } else {
-      this.serchArea = Number(e);
+      this.serchArea1 = e;
     }
 
-    this.service.getSidSerchSlip(String(this.serchArea), String(this.serchCategory)).subscribe(slip => {
+    this.service.getSidSerchSlip(String(this.serchArea1), String(this.serchCategory)).subscribe(slip => {
       this.seviceListSetting(slip);
       this.initSetServiceContents(slip);
       if (this.userCertificationDiv) {
@@ -386,11 +398,11 @@ export class ServiceListComponent implements OnInit {
    */
   onCategoryChenge(e: string) {
     if(_isNil(e)) {
-      this.serchCategory = 0;
+      this.serchCategory = '0';
     } else {
-      this.serchCategory = Number(e);
+      this.serchCategory = e;
     }
-    this.service.getSidSerchSlip(String(this.serchArea), String(this.serchCategory)).subscribe(slip => {
+    this.service.getSidSerchSlip(String(this.serchArea1), String(this.serchCategory)).subscribe(slip => {
       this.seviceListSetting(slip);
       this.initSetServiceContents(slip);
       if (this.userCertificationDiv) {
