@@ -5,6 +5,7 @@ import { map, catchError } from 'rxjs/operators';
 import { ModalData, nextActionButtonType, nextActionButtonTypeMap } from 'src/app/entity/nextActionButtonType';
 import { serviceContents } from 'src/app/entity/serviceContents';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
+import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,15 @@ export class ServiceCreateService {
 
   constructor(
     private http: HttpClient,
+    private apiService: ApiSerchService,
   ) { }
 
   private apiEndPoint: string = 'http://localhost:8080/v1/slipdetail/slippost';
 
   // 伝票情報を更新する
   public servicePost(contents: slipDetailInfo): Observable<number> {
-    return this.http.post(this.apiEndPoint, contents, { observe: 'response' }).pipe(
+
+    return this.apiService.postSlip(contents).pipe(
       // HTTPステータスコードを戻す
       map((res: HttpResponse<any>) => res.status),
       // エラー時もHTTPステータスコードを戻す
@@ -30,26 +33,6 @@ export class ServiceCreateService {
 
   public converSlipDetail(content: serviceContents): slipDetailInfo {
     const result: slipDetailInfo = {
-      // slipNo: '0',
-      // slipAdminUserId: content.useId,
-      // slipAdminUserName: '',
-      // title: content.title,
-      // category: String(content.category),
-      // areaNo1: String(content.area),
-      // price: String(content.price),
-      // bidMethod: String(content.bidMethod),
-      // bidderId: '0',
-      // bidEndDate: String(content.preferredTime),
-      // explanation: content.explanation,
-      // displayDiv: '0',
-      // preferredDate: String(content.preferredDate),
-      // preferredTime: String(content.preferredTime),
-      // completionDate: String(content.preferredDate),
-      // transactionCompletionDate: '0',
-      // deleteDiv: '0',
-      // imageUrlList: '',
-      // messageOpenLebel: '1'
-
       // 伝票番号
       slipNo: '0',
       // 削除区分
@@ -68,6 +51,8 @@ export class ServiceCreateService {
       slipAdminBaseId: '0',
       // 伝票管理拠点名
       slipAdminBaseName: '0',
+      // 管理者区分
+      adminDiv: '0',
       // タイトル
       title: content.title,
       // サービス地域1
@@ -106,8 +91,10 @@ export class ServiceCreateService {
       completionDate: String(content.preferredDate),
       // 取引完了日
       transactionCompletionDate: '0',
+      // サムネイルURL
+      thumbnailUrl: '',
       // 画像URLリスト
-      imageUrlList: '0',
+      imageUrlList: [],
       // メッセージ公開レベル
       messageOpenLebel: '1',
       // 更新ユーザーID

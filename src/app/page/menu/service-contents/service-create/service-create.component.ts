@@ -31,7 +31,23 @@ export class ServiceCreateComponent implements OnInit {
 
   /** 入力中データ情報 */
   inputData: serviceContents =
-    { id: '0', useId: '0' ,title: '', price: 0, area: 0, category: 0, bidMethod: 1, explanation: '', bidderId: 0, favoriteFlg:false ,registeredDate: 0, preferredDate: 0, preferredTime: 0, logicalDeleteFlag: 0, imageUrl:'' };
+    {
+      id: '0',
+      useId: '0',
+      title: '',
+      price: 0,
+      area: 0,
+      category: 0,
+      bidMethod: 1,
+      explanation: '',
+      bidderId: 0,
+      favoriteFlg:false,
+      registeredDate: 0,
+      preferredDate: 0,
+      preferredTime: 0,
+      logicalDeleteFlag: 0,
+      imageUrl:''
+    };
 
   /** 入札方式選択状態初期値 */
   selected = 1;

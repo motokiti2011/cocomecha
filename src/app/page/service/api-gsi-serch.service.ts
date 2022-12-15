@@ -15,7 +15,7 @@ export class ApiGsiSerchService {
     private http: HttpClient,
   ) { }
 
-  private apiEndPoint: string = environment.EndPoint.apiEmdPointGsi + environment.EndPoint.apiGsiVersion + '/serch';
+  private apiEndPoint: string = environment.EndPoint.apiEmdPointGsi + environment.EndPoint.apiGsiVersion + '/indexserch';
 
 
   /**
@@ -23,30 +23,61 @@ export class ApiGsiSerchService {
    * @param userId
    * @returns
    */
-  public serchSlip(serchArea1: string, serchArea2: string, serchCategory: string ): Observable<any> {
+  public initSerchSlip(serchArea1: string, serchArea2: string, serchCategory: string ): Observable<any> {
+
+    let operation = '';
 
     // 引数設定状況によって検索条件を組み合わせる
     if(serchArea1 == '0') {
-
+      operation = 'CATEGORY-INDEX';
+    } else {
+      operation = 'AREANO1-INDEX';
     }
-
-
 
     // リクエストボディ生成
     const body = {
-      "OperationType": "QUERY",
+      "OperationType": operation,
       "Keys": {
-        "userId": serchArea1,
-        "userValidDiv": '0'
+        "areaNo1": serchArea1,
+        "areaNo2": serchArea2,
+        "category": serchCategory
       }
     };
-    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/userinfo', body).pipe(
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: slipDetailInfo) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
+
+
+  /**
+   * ユーザーIDからお気に入り情報を取得
+   * @param userId
+   * @returns
+   */
+  public serchFavorite(userId: string ): Observable<any> {
+
+    // リクエストボディ生成
+    const body = {
+      "OperationType": 'USERID-INDEX',
+      "Keys": {
+        "userId": userId
+      }
+    };
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/userfavorite', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: slipDetailInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+
+
+
 
 
 

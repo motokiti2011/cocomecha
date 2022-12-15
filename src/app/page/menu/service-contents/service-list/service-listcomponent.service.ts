@@ -17,6 +17,10 @@ import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import { serchSidAmount } from 'src/app/entity/serchSid';
 import { monthMap } from 'src/app/entity/month';
+import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { noUndefined } from '@angular/compiler/src/util';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +33,7 @@ export class ServiceListcomponentService {
   constructor(
     private http: HttpClient,
     private jsonp: HttpClientJsonpModule,
+    private apiService: ApiSerchService,
   ) { }
 
   // private apiEndPoint: string = 'https://localhost:8080/v1/';
@@ -97,7 +102,7 @@ export class ServiceListcomponentService {
 
         // 合計ページ　- 現在のページ　=　後端のページ数
         const rearIndex = totalPage - currentPage;
-        // 7 - 後端のページ数 = 
+        // 7 - 後端のページ数 =
         const centerIndex = 7 - rearIndex;
         // 現在のページ - 現在のページから前方の表示数 = 開始ページ数
         const frontIndex = currentPage - centerIndex;
@@ -133,7 +138,7 @@ export class ServiceListcomponentService {
 
   /**
    * エリアIDから地域名を取得
-   * @param areaId 
+   * @param areaId
    * @returns 地域名
    */
   areaSelect(areaId: number): string {
@@ -147,7 +152,7 @@ export class ServiceListcomponentService {
   /**
    * カテゴリーIDから作業内容を取得
    * @param cotegoryId
-   * @returns カテゴリー名 
+   * @returns カテゴリー名
    */
   categorySelect(cotegoryId: number): string {
     const categoryData = _find(serchCategoryData, data => data.id == cotegoryId);
@@ -159,8 +164,8 @@ export class ServiceListcomponentService {
 
   /**
    * お気に入りされたフラグを操作する。
-   * @param id 
-   * @param contentsList 
+   * @param id
+   * @param contentsList
    */
   favoriteSetting(id: string, contentsList: serviceContents[]): serviceContents[] {
     const index = _findIndex(contentsList, content => content.id == id);
@@ -175,8 +180,8 @@ export class ServiceListcomponentService {
 
   /**
    * 金額情報と一致するコンテンツを取得
-   * @param standardSlip 
-   * @param amount 
+   * @param standardSlip
+   * @param amount
    */
   public serchAmtContent(standardSlip: slipDetailInfo[], amount: serchSidAmount[]): slipDetailInfo[] {
     let result: slipDetailInfo[] = [];
@@ -194,8 +199,8 @@ export class ServiceListcomponentService {
 
   /**
    * 金額絞り込み範囲の伝票情報を取得
-   * @param amt 
-   * @param slip 
+   * @param amt
+   * @param slip
    */
   private amtBetween(amt: serchSidAmount, slipDetail: slipDetailInfo[]): slipDetailInfo[] {
     let list: slipDetailInfo[] = [];
@@ -211,8 +216,8 @@ export class ServiceListcomponentService {
 
   /**
    * サービスの希望日から残り期間を設定します。
-   * @param content 
-   * @returns 
+   * @param content
+   * @returns
    */
   private getWhet(content: serviceContents): string {
 
@@ -281,7 +286,7 @@ export class ServiceListcomponentService {
 
   /**
    * 伝票情報の重複を排除する
-   * @param slipDetail 
+   * @param slipDetail
    */
   private slipUniq(slipDetail: slipDetailInfo[]): slipDetailInfo[] {
     let list: slipDetailInfo[] = [];
@@ -298,44 +303,45 @@ export class ServiceListcomponentService {
 
   /***************************API関係*******************************************/
 
-  /**
-   * 伝票情報すべてを取得（テスト用）
-   * @returns 
-   */
-  getSlipDetail(): Observable<any> {
-    // let serchParams = [areaNum, category];
-    // let httpParams = new HttpParams().set('serchParamas', serchParams.join('/'));
-    // return this.http.get(`${this.apiEndPoint}?${httpParams.toString()}`, "callback");
-    return this.http.jsonp<any>(`${this.apiEndPoint + this.targetUrl + '/slipget'}`, "callback");
+  // /**
+  //  * 伝票情報すべてを取得（テスト用）
+  //  * @returns
+  //  */
+  // getSlipDetail(): Observable<any> {
+  //   return this.http.jsonp<any>(`${this.apiEndPoint + this.targetUrl + '/slipget'}`, "callback");
 
-  }
+  // }
 
-  /**
-   * 条件に一致する伝票情報を取得
-   * @param url 
-   * @returns 
-   */
-  serchSlip(url: string): Observable<slipDetailInfo[]> {
-    return this.http.get<slipDetailInfo[]>(`${this.apiEndPoint + this.targetUrl + url}`);
-    // return this.http.jsonp<slipDetail[]>(`${this.apiEndPoint + this.targetUrl + url}`, "callback");
-  }
+  // /**
+  //  * 条件に一致する伝票情報を取得
+  //  * @param url
+  //  * @returns
+  //  */
+  // serchSlip(url: string): Observable<slipDetailInfo[]> {
+  //   return this.http.get<slipDetailInfo[]>(`${this.apiEndPoint + this.targetUrl + url}`);
+  // }
 
   /**
    * サイドメニュー変更時の伝票取得処理
-   * @param area 
-   * @param category 
+   * @param area
+   * @param category
    */
   getSidSerchSlip(area: string, category: string): Observable<slipDetailInfo[]> {
+
     return this.http.get<slipDetailInfo[]>(`${this.apiEndPoint + this.targetUrl + '/serchcategory/' + area + '/' + category}`);
   }
 
   /**
    * お気に入り情報を取得
-   * @param userId 
-   * @returns 
+   * @param userId
+   * @returns
    */
   getFavorite(userId: string): Observable<userFavorite[]> {
     return this.http.get<userFavorite[]>(`${this.apiEndPoint + "favorite/getuserbyfavorite/" + userId}`);
+
+
+
+
   }
 
   /**
@@ -373,13 +379,13 @@ export class ServiceListcomponentService {
 
   /**
    * お気に入り情報を更新する
-   * @param serviceContents 
+   * @param serviceContents
    */
   public postFavorite(favoriteList: userFavorite[], contents: serviceContents, userid: string) {
     const data = this.createFavorite(contents, userid);
     // お気に入り情報がない場合
     if (favoriteList.length == 0) {
-      this.postFav(data).subscribe(st => {
+      this.apiService.postFavorite(data).subscribe(st => {
         console.log(st);
       });
     } else {
@@ -387,8 +393,8 @@ export class ServiceListcomponentService {
       if (_find(favoriteList, data => data.slipNo == contents.id)) {
         const id = _find(favoriteList, data => data.slipNo == contents.id)?.id
         // 存在する場合解除が必用なため削除する。
-        if (_isNil(id)) {
-          this.http.delete(this.apiEndPoint + 'favorite/deletefavorite/' + id, { observe: 'response' }).pipe(
+        if (id !== undefined) {
+          this.apiService.deleteFavorite(id).pipe(
             // HTTPステータスコードを戻す
             map((res: HttpResponse<any>) => res.status),
             // エラー時もHTTPステータスコードを戻す
@@ -396,22 +402,24 @@ export class ServiceListcomponentService {
           );
         }
       } else {
-        this.postFav(data).subscribe(st => {
+
+        this.apiService.postFavorite(data).subscribe(st => {
           console.log(st);
         });
+
       }
     }
   }
 
   /**
    * 更新用にお気に入り情報を作成する
-   * @param slipNo 
-   * @param userid 
-   * @returns 
+   * @param slipNo
+   * @param userid
+   * @returns
    */
   private createFavorite(contents: serviceContents, userid: string): userFavorite {
     return {
-      id: 0,
+      id: '0',
       userId: userid,
       slipNo: contents.id,
       title: contents.title,
@@ -424,8 +432,8 @@ export class ServiceListcomponentService {
 
   /**
    * 表示リスト内容にお気に入り情報を設定する。
-   * @param slip 
-   * @param favorite 
+   * @param slip
+   * @param favorite
    */
   public setFavorite(serviceSlip: serviceContents[], favorite: userFavorite[]): serviceContents[] {
     serviceSlip.forEach(slip => {
@@ -436,25 +444,25 @@ export class ServiceListcomponentService {
     return serviceSlip;
   }
 
-  /**
-   * お気に入り情報更新
-   * @param data 
-   * @returns 
-   */
-  private postFav(data: userFavorite): Observable<number> {
-    console.log(this.apiEndPoint + 'postfavorite');
-    return this.http.post(this.apiEndPoint + 'favorite/postfavorite', data, { observe: 'response' }).pipe(
-      // HTTPステータスコードを戻す
-      map((res: HttpResponse<any>) => res.status),
-      // エラー時もHTTPステータスコードを戻す
-      catchError((err: HttpErrorResponse) => of(err.status))
-    );
-  }
+  // /**
+  //  * お気に入り情報更新
+  //  * @param data
+  //  * @returns
+  //  */
+  // private postFav(data: userFavorite): Observable<number> {
+  //   console.log(this.apiEndPoint + 'postfavorite');
+  //   return this.http.post(this.apiEndPoint + 'favorite/postfavorite', data, { observe: 'response' }).pipe(
+  //     // HTTPステータスコードを戻す
+  //     map((res: HttpResponse<any>) => res.status),
+  //     // エラー時もHTTPステータスコードを戻す
+  //     catchError((err: HttpErrorResponse) => of(err.status))
+  //   );
+  // }
 
   /**
    * 閲覧履歴情報を取得
-   * @param userId 
-   * @returns 
+   * @param userId
+   * @returns
    */
   public getBrowsingHistory(userId: string): Observable<browsingHistory[]> {
     return this.http.get<browsingHistory[]>(`${this.apiEndPoint + "userbrowsinghistory/getuserbybrowsinghistory/" + userId}`);
@@ -463,9 +471,9 @@ export class ServiceListcomponentService {
 
   /**
    * 更新用に閲覧履歴情報を作成する
-   * @param contents 
-   * @param userid 
-   * @returns 
+   * @param contents
+   * @param userid
+   * @returns
    */
   private createBrowsingHistory(contents: serviceContents, userid: string): browsingHistory {
     return {
@@ -482,25 +490,26 @@ export class ServiceListcomponentService {
 
   /**
    * 閲覧履歴情報更新
-   * @param contents 
-   * @returns 
+   * @param contents
+   * @returns
    */
   public postBrowsingHistory(contents: serviceContents, userId: string) {
-    const data = this.createBrowsingHistory(contents, userId)
-    this.brPost(data).subscribe(result => {
-      console.log(result);
-    });
+
+    this.apiService.postHistory(this.createBrowsingHistory(contents, userId));
+    // this.brPost(data).subscribe(result => {
+    //   console.log(result);
+    // });
   }
 
-  private brPost(data: browsingHistory): Observable<number> {
-    return this.http.post(this.apiEndPoint + 'userbrowsinghistory/postuserbrowsinghistory', data, { observe: 'response' })
-      .pipe(
-        // HTTPステータスコードを戻す
-        map((res: HttpResponse<any>) => res.status),
-        // エラー時もHTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(err.status))
-      );
-  }
+  // private brPost(data: browsingHistory): Observable<number> {
+  //   return this.http.post(this.apiEndPoint + 'userbrowsinghistory/postuserbrowsinghistory', data, { observe: 'response' })
+  //     .pipe(
+  //       // HTTPステータスコードを戻す
+  //       map((res: HttpResponse<any>) => res.status),
+  //       // エラー時もHTTPステータスコードを戻す
+  //       catchError((err: HttpErrorResponse) => of(err.status))
+  //     );
+  // }
 
 
 

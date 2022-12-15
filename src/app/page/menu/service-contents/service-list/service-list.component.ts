@@ -97,10 +97,8 @@ export class ServiceListComponent implements OnInit {
       // this.loading.show();
       // エリア情報選択時
       if (params['areaNum'] > 0) {
-        // this.url = '/serchArea1/' + params['areaNum'].toString();
         this.serchArea1 = params['areaNum'];
       } else {
-        // this.url = '/serchcategory/' + params['category'].toString();
         this.serchCategory = params['category'];
       }
       // 認証有無状態を判定する
@@ -133,9 +131,7 @@ export class ServiceListComponent implements OnInit {
    * 検索結果を元に伝票情報を取得する
    */
   getSlip(): Observable<slipDetailInfo[]> {
-
-    // return this.service.serchSlip(this.url);
-    return this.apiGsiService.serchSlip(this.serchArea1, this.serchArea2, this.serchCategory);
+    return this.apiGsiService.initSerchSlip(this.serchArea1, this.serchArea2, this.serchCategory);
 
   }
 
@@ -203,7 +199,7 @@ export class ServiceListComponent implements OnInit {
 
   /**
    * 取得した伝票からサービス情報を設定する(既存条件から表示ステータスの変更のみ)
-   * @param slipDetail 
+   * @param slipDetail
    */
   private seviceListSetting(slipDetail: slipDetailInfo[]): void {
     slipDetail.forEach((content) => {
@@ -339,7 +335,7 @@ export class ServiceListComponent implements OnInit {
 
   /**
    * お気に入り登録処理
-   * @param contents 
+   * @param contents
    */
   onContentFavorite(contents: serviceContents) {
     console.log('お気に入り：' + contents.id);
@@ -383,7 +379,7 @@ export class ServiceListComponent implements OnInit {
       this.seviceListSetting(slip);
       this.initSetServiceContents(slip);
       if (this.userCertificationDiv) {
-        this.service.getFavorite(this.authUser.userId).subscribe(data => {
+        this.apiGsiService.serchFavorite(this.authUser.userId).subscribe(data => {
           this.favoriteList = this.service.favoriteUnuq(data);
           if (data.length > 0) {
             this.setFavorite();

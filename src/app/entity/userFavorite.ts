@@ -1,7 +1,7 @@
 /** ユーザーお気に入り情報 */
 export interface userFavorite {
   // ID
-  id: number;
+  id: string;
   // ユーザーID
   userId: string;
   // 伝票番号

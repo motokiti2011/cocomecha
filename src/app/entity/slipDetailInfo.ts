@@ -17,6 +17,8 @@ export interface slipDetailInfo {
   slipAdminBaseId: string;
   // 伝票管理拠点名
   slipAdminBaseName: string;
+  // 管理者区分（どの管理者IDを利用するかどうか）
+  adminDiv: string;
   // タイトル
   title: string;
   // サービス地域1
@@ -55,8 +57,10 @@ export interface slipDetailInfo {
   completionDate: string;
   // 取引完了日
   transactionCompletionDate: string;
+  // サムネイルURL
+  thumbnailUrl: string;
   // 画像URLリスト
-  imageUrlList: string;
+  imageUrlList: string[];
   // メッセージ公開レベル
   messageOpenLebel: string;
   // 更新ユーザーID
@@ -90,6 +94,8 @@ export const defaultSlip: slipDetailInfo = {
   slipAdminBaseId: '',
   // 伝票管理拠点名
   slipAdminBaseName: '',
+  // 管理者区分
+  adminDiv:'0',
   // タイトル
   title: '',
   // サービス地域1
@@ -128,8 +134,10 @@ export const defaultSlip: slipDetailInfo = {
   completionDate: '',
   // 取引完了日
   transactionCompletionDate: '',
+  // サムネイルURL
+  thumbnailUrl: '',
   // 画像URLリスト
-  imageUrlList: '',
+  imageUrlList: [],
   // メッセージ公開レベル
   messageOpenLebel: '',
   // 更新ユーザーID
