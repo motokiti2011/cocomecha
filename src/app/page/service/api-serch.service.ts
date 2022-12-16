@@ -130,7 +130,7 @@ export class ApiSerchService {
           "updated": new Date()
         }
       };
-      return this.http.post<browsingHistory>(this.apiEndPoint + '/browsinghistory', body).pipe(
+      return this.http.post<browsingHistory>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
         // 取得できた場合ユーザー情報を返却
         map((res: browsingHistory) => res),
         // エラー時HTTPステータスコードを戻す

@@ -111,7 +111,7 @@ export class HeaderMenuComponent implements OnInit {
       height: '450px',
       data: this.login
     });
-
+    // モーダルクローズ後
     dialogRef.afterClosed().subscribe(
       result => {
         console.log(result);
@@ -121,17 +121,21 @@ export class HeaderMenuComponent implements OnInit {
           if (this.login.reissuePasswd) {
             // パスワード画面に遷移
             this.router.navigate(["reissue_passwd_component"])
+            return;
           }
           if (this.login.newResister) {
             // 新規登録画面に遷移
             console.log("newResister");
             this.router.navigate(["sign-up-component"])
+            return;
           }
           if(this.login.userName) {
             // ユーザー情報を取得
             // ログイン状態を保持する。
             // this.authUserService.login();
-            this.authUserDiv = true;
+            // this.authUserDiv = true;
+            this.authenticated();
+            return;
           }
 
         }

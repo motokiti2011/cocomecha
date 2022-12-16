@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import {
@@ -42,7 +43,8 @@ export class UserRegisterComponent implements OnInit {
   constructor(
     private location: Location,
     private auth: AuthUserService, 
-    private apiService: ApiSerchService
+    private apiService: ApiSerchService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -106,6 +108,7 @@ export class UserRegisterComponent implements OnInit {
       this.apiService.postUser(this.user).subscribe(result => {
         // TODO 
         alert(result);
+        this.router.navigate(["/main_menu"])
       })
     }
 
