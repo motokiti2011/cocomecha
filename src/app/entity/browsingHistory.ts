@@ -1,6 +1,6 @@
 export interface browsingHistory {
   // ID
-  id: number;
+  id: string;
   // ユーザーID
   userId: string;
   // 伝票番号

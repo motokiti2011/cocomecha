@@ -36,9 +36,9 @@ export class ServiceListSideMenuComponent implements OnInit {
 
 
   /** 検索条件：地域 */
-  @Input() serchArea: number = 0;
+  @Input() serchArea1: string = '0';
   /** 検索条件：カテゴリー  */
-  @Input() serchCategory: number = 0;
+  @Input() serchCategory: string = '0';
   /** お気に入り表示情報*/
   @Input() favoriteList: userFavorite[] = [];
   // /** 閲覧履歴表示情報*/
@@ -67,7 +67,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   /** カテゴリーデータ一覧 */
   categoryData = serchCategoryData;
-  
+
   /** 金額チェックボックスデータ */
   serchAmount = [
     { label: '1円~1,000円', value1: '1',value2: '1000', selected: false },
@@ -87,16 +87,16 @@ export class ServiceListSideMenuComponent implements OnInit {
 
   ngOnInit(): void {
     // 地域のセレクトボックス初期選択処理
-    if (this.serchArea > 0) {
-      const initArea = _find(this.areaData, data => data.id == this.serchArea)?.prefectures;
+    if (this.serchArea1 != '0') {
+      const initArea = _find(this.areaData, data => data.id == Number(this.serchArea1))?.prefectures;
       if (initArea != undefined) {
         this.areaSelect = initArea;
       }
     }
 
     // 作業内容のセレクトボックス初期選択処理
-    if (this.serchCategory > 0) {
-      const initCategory = _find(this.categoryData, data => data.id == this.serchCategory)?.category;
+    if (this.serchCategory  != '0') {
+      const initCategory = _find(this.categoryData, data => data.id == Number(this.serchCategory))?.category;
       if (initCategory != undefined) {
         this.categorySelect = initCategory;
       }
@@ -118,7 +118,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   }
 
   /**
-   * 初期処理：閲覧履歴情報を取得し画面表示する 
+   * 初期処理：閲覧履歴情報を取得し画面表示する
    */
   private initListDisplay(userId: string| undefined):void {
     if(userId === undefined) {
@@ -132,7 +132,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   }
 
   /**
-   * エリア押下時 
+   * エリア押下時
    * 選択した地域情報をイベント発火させ親へと戻す
    */
   onArea() {
@@ -181,7 +181,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   /**
    * お気に入り、閲覧履歴コンテンツ押下時イベント
    */
-  onContentsDetail(slipNo: number ) {
+  onContentsDetail(slipNo: string ) {
     console.log(slipNo);
     this.router.navigate(["service-detail-component"], { queryParams: { serviceId: slipNo } });
   }

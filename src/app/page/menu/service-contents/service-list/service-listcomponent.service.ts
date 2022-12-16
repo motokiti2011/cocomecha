@@ -477,7 +477,7 @@ export class ServiceListcomponentService {
    */
   private createBrowsingHistory(contents: serviceContents, userid: string): browsingHistory {
     return {
-      id: 0,
+      id: '0',
       userId: userid,
       slipNo: contents.id,
       title: contents.title,
