@@ -110,6 +110,11 @@ export class ServiceListComponent implements OnInit {
       } else {
         this.serchCategory = params['category'];
       }
+      // 伝票を取得して設定する。
+      this.getSlip().subscribe(slip => {
+        this.seviceListSetting(slip);
+        this.initSetServiceContents(slip);
+      });
       // 認証有無状態を判定する
       this.auth.user$.subscribe(userOrNull => {
         if (userOrNull === null) {
@@ -120,20 +125,15 @@ export class ServiceListComponent implements OnInit {
           this.userCertificationDiv = true;
           this.authUser = userOrNull;
         }
-        this.getSlip().subscribe(slip => {
-          this.seviceListSetting(slip);
-
-          this.initSetServiceContents(slip);
-
-          if (this.userCertificationDiv) {
-            this.service.getFavorite(this.authUser.userId).subscribe(data => {
-              this.favoriteList = this.service.favoriteUnuq(data);
-              if (data.length > 0) {
-                this.setFavorite();
-              }
-            });
-          }
-        });
+        // ユーザー情報ある場合
+        if (this.userCertificationDiv) {
+          this.service.getFavorite(this.authUser.userId).subscribe(data => {
+            this.favoriteList = this.service.favoriteUnuq(data);
+            if (data.length > 0) {
+              this.setFavorite();
+            }
+          });
+        }
       });
     });
   }
