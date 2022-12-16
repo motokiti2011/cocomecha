@@ -27,7 +27,7 @@ export interface serviceContents {
   // 希望時間
   preferredTime:number;
   // 画像url
-  imageUrl: string;
+  thumbnailUrl: string;
   // 論理削除フラグ
   logicalDeleteFlag: number;
 }

@@ -98,11 +98,8 @@ export class ApiSerchService {
           "deleteDiv": data.deleteDiv,
           "category": data.category,
           "slipAdminUserId": data.slipAdminUserId,
-          "slipAdminUserName":data.slipAdminUserName,
           "slipAdminOffice": data.slipAdminOffice,
-          "slipAdminOfficeName": data.slipAdminOfficeName,
           "slipAdminBaseId": data.slipAdminBaseId,
-          "slipAdminBaseName": data.slipAdminBaseName,
           "adminDiv": data.adminDiv,
           "title": data.title,
           "areaNo1": data.areaNo1,
@@ -123,6 +120,7 @@ export class ApiSerchService {
           "preferredTime": data.preferredTime,
           "completionDate": data.completionDate,
           "transactionCompletionDate": data.transactionCompletionDate,
+          "thumbnailUrl": data.thumbnailUrl,
           "imageUrlList": data.imageUrlList,
           "messageOpenLebel": data.messageOpenLebel,
           "updateUserId": data.updateUserId,
@@ -130,9 +128,9 @@ export class ApiSerchService {
           "updated": new Date()
         }
       };
-      return this.http.post<browsingHistory>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
+      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
         // 取得できた場合ユーザー情報を返却
-        map((res: browsingHistory) => res),
+        map((res: slipDetailInfo) => res),
         // エラー時HTTPステータスコードを戻す
         catchError((err: HttpErrorResponse) => of(undefined))
       );

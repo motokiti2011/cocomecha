@@ -26,6 +26,15 @@ import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 })
 export class ServiceListComponent implements OnInit {
 
+
+  // ページング表示開始位置
+  begin= 0;
+  // ページング最大件数
+  length = 6;
+
+  // NoImageURL
+  noImage = "assets/images/noimage.png";
+
   /** タイトル */
   serviceTitle = 'サービス一覧画面'
   /** コンテンツリスト*/
@@ -113,7 +122,9 @@ export class ServiceListComponent implements OnInit {
         }
         this.getSlip().subscribe(slip => {
           this.seviceListSetting(slip);
+
           this.initSetServiceContents(slip);
+
           if (this.userCertificationDiv) {
             this.service.getFavorite(this.authUser.userId).subscribe(data => {
               this.favoriteList = this.service.favoriteUnuq(data);
@@ -204,6 +215,9 @@ export class ServiceListComponent implements OnInit {
   private seviceListSetting(slipDetail: slipDetailInfo[]): void {
     slipDetail.forEach((content) => {
       if (!(_isNil(content))) {
+        if(content.thumbnailUrl == '') {
+          content.thumbnailUrl = this.noImage;
+        }
         this.contentsList.push(
           this.service.convertServiceContents(content));
       }

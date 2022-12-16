@@ -18,7 +18,7 @@ import { nextActionButtonType, nextActionMessageType, nextActionTitleType } from
 import { ServiceCreateService } from './service-create.service';
 import { NextModalComponent } from 'src/app/page/modal/next-modal/next-modal/next-modal.component';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
-
+import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 
 @Component({
   selector: 'app-service-create',
@@ -46,7 +46,7 @@ export class ServiceCreateComponent implements OnInit {
       preferredDate: 0,
       preferredTime: 0,
       logicalDeleteFlag: 0,
-      imageUrl:''
+      thumbnailUrl:''
     };
 
   /** 入札方式選択状態初期値 */
@@ -120,11 +120,12 @@ export class ServiceCreateComponent implements OnInit {
     public loginModal: MatDialog,
     private router: Router,
     private auth:AuthUserService,
+    private apiService: ApiSerchService, 
   ) { }
 
   ngOnInit(): void {
     // フォームを初期化する
-    this.inputData = { id: '0', useId: '0', title: '', price: 0, area: 0, category: 0, bidMethod: 1, explanation: '', bidderId: 0, favoriteFlg:false, registeredDate: 0, preferredDate: 0, preferredTime: 0, logicalDeleteFlag: 0, imageUrl:'' };
+    this.inputData = { id: '0', useId: '0', title: '', price: 0, area: 0, category: 0, bidMethod: 1, explanation: '', bidderId: 0, favoriteFlg:false, registeredDate: 0, preferredDate: 0, preferredTime: 0, logicalDeleteFlag: 0, thumbnailUrl:'' };
     // ログイン前提のためユーザー情報を取得する。
     // ユーザーIDを設定する
   }
@@ -374,13 +375,18 @@ export class ServiceCreateComponent implements OnInit {
    * 確定処理
    */
   getResult() {
-    console.log('確定反応')
+    // console.log('確定反応')
     console.log(this.inputData);
-    this.service.servicePost(
-      this.service.converSlipDetail(this.inputData)).subscribe(result => {
+    
+    const convertData = this.service.converSlipDetail(this.inputData);
+
+    this.apiService.postSlip(convertData).subscribe(result => {
       // 登録結果からメッセージを表示する
       if (result === 200) {
+        console.log('POST:OK')
         this.next();
+      } else {
+        console.log('POST:NG')
       }
     });
   }

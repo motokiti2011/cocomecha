@@ -36,7 +36,7 @@ export class ApiGsiSerchService {
 
     // リクエストボディ生成
     const body = {
-      "OperationType": operation,
+      "IndexType": operation,
       "Keys": {
         "areaNo1": serchArea1,
         "areaNo2": serchArea2,
@@ -45,7 +45,7 @@ export class ApiGsiSerchService {
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
       // 取得できた場合ユーザー情報を返却
-      map((res: slipDetailInfo) => res),
+      map((res: any) => res.Items),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
@@ -61,14 +61,14 @@ export class ApiGsiSerchService {
 
     // リクエストボディ生成
     const body = {
-      "OperationType": 'USERID-INDEX',
+      "IndexType": 'USERID-INDEX',
       "Keys": {
         "userId": userId
       }
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/userfavorite', body).pipe(
       // 取得できた場合ユーザー情報を返却
-      map((res: slipDetailInfo) => res),
+      map((res: any) => res.Items),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );

@@ -59,7 +59,7 @@ export class ServiceListcomponentService {
       preferredDate: Number(detail.preferredDate),
       preferredTime: Number(detail.preferredTime),
       logicalDeleteFlag: 0,
-      imageUrl: ''
+      thumbnailUrl: detail.thumbnailUrl
     }
     return result;
   }
@@ -426,7 +426,7 @@ export class ServiceListcomponentService {
       price: String(contents.price),
       whet: this.getWhet(contents),
       endDate: String(contents.preferredDate),
-      imageUrl: contents.imageUrl
+      imageUrl: contents.thumbnailUrl
     }
   }
 
@@ -484,7 +484,7 @@ export class ServiceListcomponentService {
       price: String(contents.price),
       whet: this.getWhet(contents),
       endDate: String(contents.preferredDate),
-      imageUrl: contents.imageUrl
+      imageUrl: contents.thumbnailUrl
     }
   }
 
