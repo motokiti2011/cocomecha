@@ -1,15 +1,3 @@
-/**
- * 許可済ユーザー情報
- */
-export interface slipPermissionUser {
-  // ユーザーID
-  userId: string;
-  // ユーザー名
-  userName: string;
-  // 許可区分
-  parmissionDiv: string;
-}
-
 /** 
  * 伝票メッセージ許可ユーザーテーブル
  */
@@ -22,3 +10,15 @@ export interface slipMegPrmUser {
   permissionUserList: Array<slipPermissionUser>;
 }
 
+
+/**
+ * 許可済ユーザー情報
+ */
+export interface slipPermissionUser {
+  // ユーザーID
+  userId: string;
+  // ユーザー名
+  userName: string;
+  // 許可区分
+  parmissionDiv: string;
+}

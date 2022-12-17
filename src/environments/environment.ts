@@ -22,10 +22,14 @@ export const environment = {
   EndPoint: {
     apiVersion: '/v1',
     apiGsiVersion: '/v1',
+    apiCheckVersion: '/v1',
     /** APIエンドポイント */
     apiEmdPoint: 'https://7960fitip4.execute-api.us-east-1.amazonaws.com/dev',
     /** GsiAPIエンドポイント */
-    apiEmdPointGsi: 'https://cac8rxnn1j.execute-api.us-east-1.amazonaws.com/dev'
+    apiEmdPointGsi: 'https://cac8rxnn1j.execute-api.us-east-1.amazonaws.com/dev',
+    /** チェックエンドポイント */
+    apiEmdPointCheck: 'https://1vedfug3ki.execute-api.us-east-1.amazonaws.com/dev'
+
   }
 };
 

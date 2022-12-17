@@ -10,6 +10,9 @@ import { noUndefined } from '@angular/compiler/src/util';
 import { slipManegement } from 'src/app/entity/slipManegement';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
+import { ApiCheckService } from 'src/app/page/service/api-check.service';
+import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +24,7 @@ export class ServiceTransactionService {
     private http: HttpClient,
     private apiService: ApiSerchService,
     private apGsiService: ApiGsiSerchService,
+    private apCheckService: ApiCheckService,
   ) { }
 
   /**
@@ -61,10 +65,8 @@ export class ServiceTransactionService {
    * @returns
    */
   public isSlipUserPermission(slipNo: string, userId: string): Observable<boolean> {
+    return this.apCheckService.checkSlipPrm(slipNo, userId);
 
-
-
-    return of(true);
   }
 
   /**
@@ -74,12 +76,11 @@ export class ServiceTransactionService {
    * @returns 更新後伝票情報
    */
   public postMessageLevel(slipNo: string, messsageLevele: string): Observable<any> {
-
     let data:slipDetailInfo = defaultSlip;
     data.slipNo = slipNo;
     data.messageOpenLebel = messsageLevele;
-
-    return this.http.put<slipDetailInfo>(this.apiEndPoint + 'slipdetail/slipmessagelv',data , { observe: 'response' });
+    return this.apiService.postSlip(data);
+    // return this.http.put<slipDetailInfo>(this.apiEndPoint + 'slipdetail/slipmessagelv',data , { observe: 'response' });
   }
 
   /**
@@ -88,6 +89,9 @@ export class ServiceTransactionService {
   public messagePrmReq(userId:string, slipNo:string) {
     let data:slipDetailInfo = defaultSlip;
     data.slipNo = slipNo;
+    
+
+
     // return this.http.put<slipDetailInfo>(this.apiEndPoint + 'slipdetail/slipmessagelv',data , { observe: 'response' });
   }
 
