@@ -18,8 +18,7 @@ import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import { serchSidAmount } from 'src/app/entity/serchSid';
 import { monthMap } from 'src/app/entity/month';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
-import { noUndefined } from '@angular/compiler/src/util';
-
+import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 
 
 @Injectable({
@@ -34,10 +33,8 @@ export class ServiceListcomponentService {
     private http: HttpClient,
     private jsonp: HttpClientJsonpModule,
     private apiService: ApiSerchService,
+    private apiGsiService: ApiGsiSerchService,
   ) { }
-
-  // private apiEndPoint: string = 'https://localhost:8080/v1/';
-  private apiEndPoint: string = 'http://localhost:8080/v1/';
 
 
   /**
@@ -303,45 +300,13 @@ export class ServiceListcomponentService {
 
   /***************************API関係*******************************************/
 
-  // /**
-  //  * 伝票情報すべてを取得（テスト用）
-  //  * @returns
-  //  */
-  // getSlipDetail(): Observable<any> {
-  //   return this.http.jsonp<any>(`${this.apiEndPoint + this.targetUrl + '/slipget'}`, "callback");
-
-  // }
-
-  // /**
-  //  * 条件に一致する伝票情報を取得
-  //  * @param url
-  //  * @returns
-  //  */
-  // serchSlip(url: string): Observable<slipDetailInfo[]> {
-  //   return this.http.get<slipDetailInfo[]>(`${this.apiEndPoint + this.targetUrl + url}`);
-  // }
-
   /**
    * サイドメニュー変更時の伝票取得処理
    * @param area
    * @param category
    */
   getSidSerchSlip(area: string, category: string): Observable<slipDetailInfo[]> {
-
-    return this.http.get<slipDetailInfo[]>(`${this.apiEndPoint + this.targetUrl + '/serchcategory/' + area + '/' + category}`);
-  }
-
-  /**
-   * お気に入り情報を取得
-   * @param userId
-   * @returns
-   */
-  getFavorite(userId: string): Observable<userFavorite[]> {
-    return this.http.get<userFavorite[]>(`${this.apiEndPoint + "favorite/getuserbyfavorite/" + userId}`);
-
-
-
-
+    return this.apiGsiService.indexSerchSlip(area, '0', category, 'AREANO1ANDCATEGORY-INDEX');
   }
 
   /**
@@ -402,7 +367,7 @@ export class ServiceListcomponentService {
           );
         }
       } else {
-
+        // 存在しないので更新する　
         this.apiService.postFavorite(data).subscribe(st => {
           console.log(st);
         });
@@ -444,20 +409,7 @@ export class ServiceListcomponentService {
     return serviceSlip;
   }
 
-  // /**
-  //  * お気に入り情報更新
-  //  * @param data
-  //  * @returns
-  //  */
-  // private postFav(data: userFavorite): Observable<number> {
-  //   console.log(this.apiEndPoint + 'postfavorite');
-  //   return this.http.post(this.apiEndPoint + 'favorite/postfavorite', data, { observe: 'response' }).pipe(
-  //     // HTTPステータスコードを戻す
-  //     map((res: HttpResponse<any>) => res.status),
-  //     // エラー時もHTTPステータスコードを戻す
-  //     catchError((err: HttpErrorResponse) => of(err.status))
-  //   );
-  // }
+
 
   /**
    * 閲覧履歴情報を取得
@@ -465,9 +417,8 @@ export class ServiceListcomponentService {
    * @returns
    */
   public getBrowsingHistory(userId: string): Observable<browsingHistory[]> {
-    return this.http.get<browsingHistory[]>(`${this.apiEndPoint + "userbrowsinghistory/getuserbybrowsinghistory/" + userId}`);
+    return this.apiGsiService.serchBrowsingHistory(userId);
   }
-
 
   /**
    * 更新用に閲覧履歴情報を作成する
@@ -496,21 +447,6 @@ export class ServiceListcomponentService {
   public postBrowsingHistory(contents: serviceContents, userId: string) {
 
     this.apiService.postHistory(this.createBrowsingHistory(contents, userId));
-    // this.brPost(data).subscribe(result => {
-    //   console.log(result);
-    // });
   }
-
-  // private brPost(data: browsingHistory): Observable<number> {
-  //   return this.http.post(this.apiEndPoint + 'userbrowsinghistory/postuserbrowsinghistory', data, { observe: 'response' })
-  //     .pipe(
-  //       // HTTPステータスコードを戻す
-  //       map((res: HttpResponse<any>) => res.status),
-  //       // エラー時もHTTPステータスコードを戻す
-  //       catchError((err: HttpErrorResponse) => of(err.status))
-  //     );
-  // }
-
-
 
 }

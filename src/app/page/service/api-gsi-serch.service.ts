@@ -51,6 +51,29 @@ export class ApiGsiSerchService {
     );
   }
 
+    /**
+   * ユーザーIDからユーザー情報を取得する。
+   * @param userId
+   * @returns
+   */
+    public indexSerchSlip(serchArea1: string, serchArea2: string, serchCategory: string, subject: string ): Observable<any> {
+
+      // リクエストボディ生成
+      const body = {
+        "IndexType": subject,
+        "Keys": {
+          "areaNo1": serchArea1,
+          "areaNo2": serchArea2,
+          "category": serchCategory
+        }
+      };
+      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: any) => res.Items),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
 
   /**
    * ユーザーIDからお気に入り情報を取得
@@ -73,6 +96,52 @@ export class ApiGsiSerchService {
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
+
+  /**
+   * ユーザーIDからお気に入り情報を取得
+   * @param userId
+   * @returns
+   */
+    public serchBrowsingHistory(userId: string ): Observable<any> {
+
+      // リクエストボディ生成
+      const body = {
+        "IndexType": 'USERID-INDEX',
+        "Keys": {
+          "userId": userId
+        }
+      };
+      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/browsinghistory', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: any) => res.Items),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
+
+
+  /**
+   * ユーザーIDから伝票情報を取得
+   * @param userId
+   * @returns
+   */
+  public serchSlipAuthCheck(userId: string ): Observable<any> {
+
+    // リクエストボディ生成
+    const body = {
+      "IndexType": 'SLIPADMINUSEID-INDEX',
+      "Keys": {
+        "userId": userId
+      }
+    };
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res.Items),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
 
 
 

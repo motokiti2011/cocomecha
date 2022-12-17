@@ -4,7 +4,7 @@ import { catchError, Observable, of, } from 'rxjs';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { map } from 'rxjs/operators';
 import { userMyList } from 'src/app/entity/userMyList';
-
+import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,21 +14,22 @@ export class ServiceDetailService {
 
   constructor(
     private http: HttpClient,
+    private apiService: ApiSerchService,
   ) { }
 
   /**
    * 詳細表示する伝票情報を取得する
-   * @param id 
-   * @returns 
+   * @param slipNo
+   * @returns
    */
-  public getService(id: string): Observable<slipDetailInfo[]> {
-    return this.http.get<slipDetailInfo[]>(`${this.apiEndPoint + 'slipdetail/' + id}`);
+  public getService(slipNo: string): Observable<slipDetailInfo[]> {
+    return this.apiService.getSlip(slipNo);
   }
 
   // /**
   // * 詳細表示する伝票情報を取得する
   // * @param slipDetail
-  // * @returns 
+  // * @returns
   // */
   // public addMyList(slip: slipDetail): Observable<number> {
   //   // 伝票情報からマイリスト情報登録用データを生成する
@@ -58,7 +59,7 @@ export class ServiceDetailService {
   //       map((res: HttpResponse<any>) => res.status),
   //       // エラー時もHTTPステータスコードを戻す
   //       catchError((err: HttpErrorResponse) => of(err.status))
-  //     );    
+  //     );
   // }
-  
+
 }

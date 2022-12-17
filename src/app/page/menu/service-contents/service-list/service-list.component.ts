@@ -127,7 +127,7 @@ export class ServiceListComponent implements OnInit {
         }
         // ユーザー情報ある場合
         if (this.userCertificationDiv) {
-          this.service.getFavorite(this.authUser.userId).subscribe(data => {
+          this.apiGsiService.serchFavorite(this.authUser.userId).subscribe(data => {
             this.favoriteList = this.service.favoriteUnuq(data);
             if (data.length > 0) {
               this.setFavorite();
@@ -416,7 +416,7 @@ export class ServiceListComponent implements OnInit {
       this.seviceListSetting(slip);
       this.initSetServiceContents(slip);
       if (this.userCertificationDiv) {
-        this.service.getFavorite(this.authUser.userId).subscribe(data => {
+        this.apiGsiService.serchFavorite(this.authUser.userId).subscribe(data => {
           this.favoriteList = this.service.favoriteUnuq(data);
           if (data.length > 0) {
             this.setFavorite();

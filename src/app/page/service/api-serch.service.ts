@@ -82,10 +82,29 @@ export class ApiSerchService {
     }
 
 
-
+  /**
+   * ユーザーIDからユーザー情報を取得する。
+   * @param userId
+   * @returns
+   */
+  public getSlip(slipNo: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "GETSLIP",
+      "Keys": {
+        "slipNo": slipNo
+      }
+    };
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo/getslip', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: slipDetailInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
     /**
-     * CognitoユーザーIDをPKに履歴情報をDynamoDBに登録する
+     * 伝票番号をPKに伝票情報をDynamoDBに登録する
      * @param user
      * @returns
      */
@@ -222,6 +241,27 @@ export class ApiSerchService {
         catchError((err: HttpErrorResponse) => of(undefined))
       );
     }
+
+  /**
+   * ユーザーIDからユーザー情報を取得する。
+   * @param userId
+   * @returns
+   */
+  public getSlipPrm(slipNo: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "QUERY",
+      "Keys": {
+        "slipNo": slipNo
+      }
+    };
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo/getslip', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: slipDetailInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 }
