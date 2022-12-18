@@ -6,6 +6,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ServiceDetailService } from './service-detail.service';
 import { slipDetailInfo, defaultSlip } from 'src/app/entity/slipDetailInfo';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 
 // import { MessageDialogComponent } from 'src/app/modal/message-dialog/message-dialog.component';
 
@@ -16,6 +17,13 @@ import { messageDialogData } from 'src/app/entity/messageDialogData';
 })
 export class ServiceDetailComponent implements OnInit {
 
+
+  images = [
+    {title: 'First Slide', short: 'First Slide Short', src: "assets/images/sample11.png"},
+    {title: 'Second Slide', short: 'Second Slide Short', src: "assets/images/noimage.png"},
+    {title: 'Third Slide', short: 'Third Slide Short', src: "assets/images/test1rogo.png"}
+  ];
+  
   /** サービスID */
   serviceId: string = '';
   /** タイトル */
@@ -40,7 +48,12 @@ export class ServiceDetailComponent implements OnInit {
     private service: ServiceDetailService,
     public dialog: MatDialog,
     private router: Router,
-  ) { }
+    private config: NgbCarouselConfig,
+  ) { 
+    config.interval = 0;
+    config.keyboard = true;
+    config.pauseOnHover = true;
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
