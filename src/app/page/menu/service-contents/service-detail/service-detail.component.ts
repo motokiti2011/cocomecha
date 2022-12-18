@@ -46,7 +46,7 @@ export class ServiceDetailComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       console.log(params['serviceId']);
       const serviceId: string = params['serviceId'];
-      // サービスIDからサービス情報を取得し表示する
+      // サービスIDから伝票情報を取得し表示する
       this.service.getService(serviceId).subscribe(data => {
         this.dispContents = data[0];
         // 表示内容に取得した伝票情報を設定
