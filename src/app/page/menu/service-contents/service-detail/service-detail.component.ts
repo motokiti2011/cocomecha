@@ -72,7 +72,20 @@ export class ServiceDetailComponent implements OnInit {
       })
       this.serviceTitle = params['serviceId'];
     });
+    this.getUserInfo();
   }
+
+  /**
+   *
+   */
+  private getUserInfo() {
+
+  }
+
+
+
+
+
 
   /**
    * 取引するボタン押下時の処理

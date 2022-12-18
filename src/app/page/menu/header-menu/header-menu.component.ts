@@ -132,12 +132,12 @@ export class HeaderMenuComponent implements OnInit {
           if(this.login.userName) {
             // ユーザー情報を取得
             // ログイン状態を保持する。
-            // this.authUserService.login();
-            // this.authUserDiv = true;
             this.authenticated();
             return;
           }
-
+        } else {
+          this.authenticated();
+          return;
         }
       }
     );

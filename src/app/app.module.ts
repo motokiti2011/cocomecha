@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core'; 
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
@@ -13,11 +13,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { 
+import {
   HttpClientModule,
   HttpClientJsonpModule,
 } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RoutingGuard } from './page/auth/routing.guard';
 
 import { ServiceListComponent } from './page/menu/service-contents/service-list/service-list.component';
 import { MainMenuComponent } from './page/menu/main-menu/main-menu.component';
@@ -53,13 +54,13 @@ const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
   { path: 'main_menu', component: MainMenuComponent },
   { path: 'service_list', component: ServiceListComponent },
-  { path: 'service_create', component: ServiceCreateComponent },
-  { path: 'transaction_menu', component: TransactionMenuComponent },
+  { path: 'service_create', component: ServiceCreateComponent, canActivate: [RoutingGuard] },
+  { path: 'transaction_menu', component: TransactionMenuComponent, canActivate: [RoutingGuard] },
   { path: 'service_serchConditions_component', component: ServiceSerchConditionsComponent },
-  { path: 'reissue_passwd_component', component: ReissuePasswdComponent },
+  { path: 'reissue_passwd_component', component: ReissuePasswdComponent, canActivate: [RoutingGuard] },
   { path: 'sign-up-component', component: SignUpComponent },
   { path: 'service-detail-component', component: ServiceDetailComponent },
-  { path: 'service-transaction-component', component: ServiceTransactionComponent },
+  { path: 'service-transaction-component', component: ServiceTransactionComponent, canActivate: [RoutingGuard] },
   { path: 'user-resister-component', component: UserRegisterComponent },
 ]
 
