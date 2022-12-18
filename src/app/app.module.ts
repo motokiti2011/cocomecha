@@ -49,6 +49,7 @@ import { FavoriteComponent } from './page/menu/transaction-menu/favorite-tab/fav
 import { UserRegisterComponent } from './page/auth/user-register/user-register.component';
 
 import { POST_PROVIDER } from './page/service/interceptors/http-interceptors';
+import { MyMenuComponent } from './page/menu/my-menu/my-menu.component';
 
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
@@ -62,6 +63,9 @@ const ROUTE_TABLE: Routes = [
   { path: 'service-detail-component', component: ServiceDetailComponent },
   { path: 'service-transaction-component', component: ServiceTransactionComponent, canActivate: [RoutingGuard] },
   { path: 'user-resister-component', component: UserRegisterComponent },
+  { path: 'my-menu-component', component: MyMenuComponent },
+
+
 ]
 
 @NgModule({
@@ -93,6 +97,7 @@ const ROUTE_TABLE: Routes = [
     MessagePrmReqComponent,
     FavoriteComponent,
     UserRegisterComponent,
+    MyMenuComponent,
   ],
   entryComponents: [
     TransactionListComponent,

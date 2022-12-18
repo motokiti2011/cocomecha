@@ -184,6 +184,7 @@ export class HeaderMenuComponent implements OnInit {
    */
   onMypage() {
     console.log("マイページ")
+    this.router.navigate(["my-menu-component"]);
   }
 
 
