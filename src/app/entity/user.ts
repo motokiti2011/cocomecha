@@ -27,6 +27,8 @@ export interface user {
   baseId: string | null;
   // 会社役割
   officeRole: string | null;
+  // プロフィールURL
+  profileImageUrl: string | null;
   // 紹介文
   introduction: string | null;
   // 更新ユーザーID
@@ -67,6 +69,8 @@ export const initUserInfo : user = {
       baseId: null,
       // 会社役割
       officeRole: '',
+      // プロフィール画像URL
+      profileImageUrl: null,
       // 紹介文
       introduction: '',
       // 更新ユーザーID

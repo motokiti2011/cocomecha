@@ -1,1 +1,43 @@
-<p>my-menu works!</p>
+<p>マイメニュー</p>
+
+<div class="container">
+  <div class="row">
+    <div class="col-2"></div>
+      <p>ご登録情報</p>
+  </div>
+
+  <div class="row">
+    <div>お名前：{{dispInfo.name}}</div>
+    <div class="col-3"></div>
+    <div>メールアドレス：{{dispInfo.mailadress}}</div>
+  </div>
+
+  <div class="row">
+    <div class="image-space">プロフィール画像:{{dispInfo.imageUrl}}
+
+    </div>
+
+    <div class="col-3"></div>
+
+    <div>
+      <div>〒:{{dispInfo.postNo}}</div>
+      <div>住所:{{dispInfo.adress}}</div>
+      <div>TEL:{{dispInfo.tel1}}</div>
+      <div>TEL2:{{dispInfo.tel2}}</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="introduction">
+      紹介文:{{dispInfo.introduction}}
+    </div>
+
+    <div class="col-3"></div>
+
+    <div>登録情報はこちら</div>
+    <div>取引情報はこちら</div>
+    <div>工場・メカニック情報はこちら</div>
+  </div>
+
+
+</div>
