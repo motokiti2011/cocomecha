@@ -7,8 +7,8 @@ import { ServiceDetailService } from './service-detail.service';
 import { slipDetailInfo, defaultSlip } from 'src/app/entity/slipDetailInfo';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import { image } from 'src/app/entity/image';
 
-// import { MessageDialogComponent } from 'src/app/modal/message-dialog/message-dialog.component';
 
 @Component({
   selector: 'app-service-detail',
@@ -18,12 +18,11 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 export class ServiceDetailComponent implements OnInit {
 
 
-  images = [
-    {title: 'First Slide', short: 'First Slide Short', src: "assets/images/sample11.png"},
-    {title: 'Second Slide', short: 'Second Slide Short', src: "assets/images/noimage.png"},
-    {title: 'Third Slide', short: 'Third Slide Short', src: "assets/images/test1rogo.png"}
-  ];
-  
+  // image : {short:string, src:string} = {short: '', src: ''};
+  // // {short: '1', src: "assets/images/noimage.png"}
+
+  images : image[] = [];
+
   /** サービスID */
   serviceId: string = '';
   /** タイトル */
@@ -49,7 +48,7 @@ export class ServiceDetailComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     private config: NgbCarouselConfig,
-  ) { 
+  ) {
     config.interval = 0;
     config.keyboard = true;
     config.pauseOnHover = true;
@@ -67,6 +66,7 @@ export class ServiceDetailComponent implements OnInit {
         this.dispPrice = this.dispContents.price;
         this.dispArea = this.dispContents.areaNo1;
         this.dispExplanation = this.dispContents.explanation;
+        this.images = this.service.setImages(this.dispContents.imageUrlList)
         console.log('ディティール1：' + this.dispContents);
         console.log('ディティール2：' + this.dispContents.areaNo1);
       })

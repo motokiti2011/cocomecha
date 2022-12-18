@@ -19,22 +19,22 @@
 
 
     <div class="container-fluid">
-        
+
       <ngb-carousel>
         <ng-template ngbSlide *ngFor="let image of images">
           <div class="wrapper">
             <img class="img" [src]="image.src" alt="Random first slide">
           </div>
           <div class="carousel-caption">
-            <h3>{{ image.title }}</h3>
-            <p>{{ image.short }}</p>
+            <!-- <h3>{{ image.title }}</h3> -->
+            <p>{{ image.imageNo }}</p>
           </div>
         </ng-template>
       </ngb-carousel>
-           
+
       </div>
-    
-  
+
+
 
     <div class="explanation">{{dispExplanation}}</div>
   </div>
