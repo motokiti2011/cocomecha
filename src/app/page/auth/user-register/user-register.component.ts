@@ -42,7 +42,7 @@ export class UserRegisterComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private auth: AuthUserService, 
+    private auth: AuthUserService,
     private apiService: ApiSerchService,
     private router: Router,
   ) { }
@@ -106,7 +106,7 @@ export class UserRegisterComponent implements OnInit {
       this.user.introduction = this.inputData.introduction;
 
       this.apiService.postUser(this.user).subscribe(result => {
-        // TODO 
+        // TODO
         alert(result);
         this.router.navigate(["/main_menu"])
       })

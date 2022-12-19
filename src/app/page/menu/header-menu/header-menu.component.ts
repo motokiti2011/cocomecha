@@ -75,21 +75,20 @@ export class HeaderMenuComponent implements OnInit {
    */
   private setAuthUser(userid: string) {
 
-
     // 認証済の場合表示するユーザー情報を取得
     this.apiService.getUser(userid).subscribe(data => {
-      console.log(data);
-      if (data.Items[0]) {
+      console.log(data[0]);
+      if (data[0]) {
 
-        this.loginUser.userId = data.Items[0].userId;
-        this.loginUser.userName = data.Items[0].userName;
+        this.loginUser.userId = data[0].userId;
+        this.loginUser.userName = data[0].userName;
 
         this.authUserService.login(this.loginUser);
-        if(data.Items[0].userName == undefined) {
+        if(data[0].userName == undefined) {
           // 仮登録ユーザーのためユーザー登録メッセージを表示
           this.temporaryUserDiv = true;
         } else {
-          this.loginUser.userName = data.Items[0].userName;
+          this.loginUser.userName = data.userName;
           this.temporaryUserDiv = false;
         }
       } else {

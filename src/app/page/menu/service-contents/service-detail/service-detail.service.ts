@@ -23,7 +23,6 @@ export class ServiceDetailService {
     return this.apiService.getSlip(slipNo);
   }
 
-
   /**
    * 画像に番号を振り、表示用リストに格納する。
    * @param imageList
@@ -45,9 +44,10 @@ export class ServiceDetailService {
       resultList.push(item);
       count++;
     });
-
     return resultList;
   }
+
+
 
 
 

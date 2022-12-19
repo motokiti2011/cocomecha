@@ -1,0 +1,40 @@
+<div class="contents">
+
+  <div>ユーザー名</div>
+  <input id="name" type="text" [(ngModel)]="inputData.userName" />
+  <label class="mandatory">必須</label>
+
+
+  <div>登録メールアドレス</div>
+  <input id="email" type="email" [(ngModel)]="inputData.mailAdress" />
+  <label class="mandatory">必須</label>
+
+  <div>電話番号</div>
+  <input id="tel" type="tel" [(ngModel)]="inputData.TelNo1" />
+  <label class="mandatory">必須</label>
+
+  <div>住所（都道府県）</div>
+  <select class="area-select" name="area" [(ngModel)]="inputData.areaNo1" (change)="selectArea()">
+    <option value="">地域を選択してください。</option>
+    <option *ngFor="let area of areaData" [value]="area.prefectures" [selected]="area.prefectures === areaSelect">
+      {{area.prefectures}}</option>
+  </select>
+
+  <div>住所（市町村）</div>
+  <input id="area" type="text" [(ngModel)]="inputData.areaNo2" />
+
+  <div>住所その他</div>
+  <input id="area" type="text" [(ngModel)]="inputData.adress" />
+
+  <div>郵便番号</div>
+  <input id="postCode" type="text" [(ngModel)]="inputData.postCode" />
+
+
+  <div>紹介文</div>
+  <input id="introduction" type="text" [(ngModel)]="inputData.introduction" />
+
+
+  <input type="button" class="btn" on-click="onResister()" value="登録">
+
+
+</div>

@@ -50,6 +50,8 @@ import { UserRegisterComponent } from './page/auth/user-register/user-register.c
 
 import { POST_PROVIDER } from './page/service/interceptors/http-interceptors';
 import { MyMenuComponent } from './page/menu/my-menu/my-menu.component';
+import { EditUserInfoComponent } from './page/menu/my-menu/edit-user-info/edit-user-info.component';
+import { FactoryMechanicMenuComponent } from './page/menu/factory-mechanic-menu/factory-mechanic-menu.component';
 
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
@@ -64,8 +66,8 @@ const ROUTE_TABLE: Routes = [
   { path: 'service-transaction-component', component: ServiceTransactionComponent, canActivate: [RoutingGuard] },
   { path: 'user-resister-component', component: UserRegisterComponent },
   { path: 'my-menu-component', component: MyMenuComponent },
-
-
+  { path: 'edit-user-menu', component: EditUserInfoComponent, canActivate: [RoutingGuard] },
+  { path: 'factory-mechanic-menu', component: FactoryMechanicMenuComponent, canActivate: [RoutingGuard] },
 ]
 
 @NgModule({
@@ -98,6 +100,8 @@ const ROUTE_TABLE: Routes = [
     FavoriteComponent,
     UserRegisterComponent,
     MyMenuComponent,
+    EditUserInfoComponent,
+    FactoryMechanicMenuComponent,
   ],
   entryComponents: [
     TransactionListComponent,

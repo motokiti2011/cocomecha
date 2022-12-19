@@ -7,17 +7,17 @@
   </div>
 
   <div class="row">
-    <div>お名前：{{dispInfo.name}}</div>
-    <div class="col-3"></div>
+    <div class="left-menu">お名前：{{dispInfo.name}}</div>
+    <div class="col-1"></div>
     <div>メールアドレス：{{dispInfo.mailadress}}</div>
   </div>
 
   <div class="row">
-    <div class="image-space">プロフィール画像:{{dispInfo.imageUrl}}
-
+    <div class="left-menu">
+      <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide" width="200" height="200">
     </div>
 
-    <div class="col-3"></div>
+    <div class="col-1"></div>
 
     <div>
       <div>〒:{{dispInfo.postNo}}</div>
@@ -28,15 +28,23 @@
   </div>
 
   <div class="row">
-    <div class="introduction">
+    <div class="left-menu">
       紹介文:{{dispInfo.introduction}}
     </div>
 
-    <div class="col-3"></div>
+    <div class="col-1"></div>
 
-    <div>登録情報はこちら</div>
-    <div>取引情報はこちら</div>
-    <div>工場・メカニック情報はこちら</div>
+    <div>
+      <div>
+        <button type="button" class="btn btn-outline-primary" (click)="onEditUserInfo()">登録情報変更はこちら</button>
+      </div>
+      <div>
+        <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引情報はこちら</button>
+      </div>
+      <div>
+        <button type="button" class="btn btn-outline-primary" (click)="onFactoryMecanic()">工場・メカニックメニューはこちら</button>
+      </div>
+    </div>
   </div>
 
 

@@ -35,7 +35,7 @@ export class MyMenuComponent implements OnInit {
     if(authUser !== null) {
       this.apiservice.getUser(authUser).subscribe(user => {
         console.log(user);
-        this.setDispInfo(user);
+        this.setDispInfo(user[0]);
       });
     } else {
       alert('ログインが必要です');
@@ -49,7 +49,7 @@ export class MyMenuComponent implements OnInit {
    * 取得したユーザー情報を表示ように設定する
    * @param user
    */
-  private setDispInfo(user:user) {
+  private setDispInfo(user: user) {
     this.dispInfo = {
       name: user.userName,
       mailadress: user.mailAdress,
@@ -82,6 +82,31 @@ export class MyMenuComponent implements OnInit {
   private isSerParm(parm: string| null, subject: string): string {
     return '';
   }
+
+  /**
+   * 登録情報変更はこちらボタン押下イベント
+   */
+  onEditUserInfo() {
+    this.router.navigate(["/edit-user-menu"]);
+    console.log('chengeUserInfo')
+  }
+
+  /**
+   * 取引情報はこちらボタン押下イベント
+   */
+  onTransaction() {
+    this.router.navigate(["/transaction_menu"]);
+    console.log('transaction')
+  }
+
+  /**
+   * 工場・メカニックメニューはこちらボタン押下イベント
+   */
+  onFactoryMecanic() {
+    this.router.navigate(["/factory-mechanic-menu"]);
+    console.log('factory')
+  }
+
 
 
 }

@@ -45,7 +45,7 @@ export class ApiGsiSerchService {
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
       // 取得できた場合ユーザー情報を返却
-      map((res: any) => res.Items),
+      map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
@@ -69,7 +69,7 @@ export class ApiGsiSerchService {
       };
       return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
         // 取得できた場合ユーザー情報を返却
-        map((res: any) => res.Items),
+        map((res: any) => res),
         // エラー時HTTPステータスコードを戻す
         catchError((err: HttpErrorResponse) => of(undefined))
       );
@@ -91,7 +91,7 @@ export class ApiGsiSerchService {
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/userfavorite', body).pipe(
       // 取得できた場合ユーザー情報を返却
-      map((res: any) => res.Items),
+      map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
@@ -113,7 +113,7 @@ export class ApiGsiSerchService {
       };
       return this.http.post<slipDetailInfo>(this.apiEndPoint + '/browsinghistory', body).pipe(
         // 取得できた場合ユーザー情報を返却
-        map((res: any) => res.Items),
+        map((res: any) => res),
         // エラー時HTTPステータスコードを戻す
         catchError((err: HttpErrorResponse) => of(undefined))
       );
@@ -136,7 +136,7 @@ export class ApiGsiSerchService {
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
       // 取得できた場合ユーザー情報を返却
-      map((res: any) => res.Items),
+      map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
