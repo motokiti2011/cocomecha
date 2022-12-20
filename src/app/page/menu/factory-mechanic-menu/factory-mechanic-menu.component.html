@@ -1,1 +1,105 @@
-<p>factory-mechanic-menu works!</p>
+
+
+<div *ngIf ="switchDiv; else elseContent">
+<!-- 事業所情報画面 -->
+<p>事業所メニュー</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-2"></div>
+        <p>ご登録情報</p>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">事業所名：</div>
+      <div class="col-1"></div>
+      <div>メールアドレス：</div>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">
+        <!-- <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide" width="200" height="200"> -->
+      </div>
+
+      <div class="col-1"></div>
+
+      <div>ご連絡先：
+        <div>〒:</div>
+        <div>住所:</div>
+        <div>TEL:</div>
+        <div>TEL2:</div>
+      </div>
+      <div>営業情報
+        <div>営業時間</div>
+        <div>定休日</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">
+        紹介文:
+      </div>
+
+      <div class="col-1"></div>
+
+      <div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onEditUserInfo()">所属メカニック情報</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onFactoryMecanic()">管理者設定</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引情報はこちら</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #elseContent>
+<!-- メカニック情報画面 -->
+<p>メカニック情報メニュー</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-2"></div>
+        <p>ご登録情報</p>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">メカニック登録名：</div>
+      <div class="col-1"></div>
+      <div>ご連絡先：</div>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">
+        <!-- <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide" width="200" height="200"> -->
+      </div>
+
+      <div class="col-1"></div>
+
+      <div>
+        <div>保有資格</div>
+        <div>得意作業</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">
+        紹介文:
+      </div>
+
+      <div class="col-1"></div>
+
+      <div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引情報はこちら</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onFactoryMecanic()">事業所は未登録です。登録はこちらから</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

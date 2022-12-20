@@ -4,7 +4,7 @@ import { Observable, of, tap } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
-
+import { slipQuestion } from 'src/app/entity/slipQuestion';
 
 @Injectable({
   providedIn: 'root'
@@ -143,7 +143,27 @@ export class ApiGsiSerchService {
   }
 
 
+  /**
+   * 伝票番号から伝票質問情報を取得
+   * @param slipNo
+   * @returns
+   */
+  public serchSlipQuestion(slipNo: string ): Observable<any> {
 
+    // リクエストボディ生成
+    const body = {
+      "IndexType": 'SLIPNO-INDEX',
+      "Keys": {
+        "slipNo": slipNo
+      }
+    };
+    return this.http.post<slipQuestion>(this.apiEndPoint + '/slipquestion', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: slipQuestion) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 

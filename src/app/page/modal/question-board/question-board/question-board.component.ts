@@ -5,7 +5,8 @@ import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { isNil as _isNil } from 'lodash';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
-
+import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 @Component({
   selector: 'app-question-board',
   templateUrl: './question-board.component.html',
@@ -27,7 +28,7 @@ export class QuestionBoardComponent implements OnInit {
   user: loginUser = { userId: '', userName: '' };
   /** 質問投稿ボタンdisible制御フラグ */
   isDisabled :boolean = true;
-  
+
 
   constructor(
     public _dialogRef: MatDialogRef<QuestionBoardComponent>,
@@ -35,27 +36,39 @@ export class QuestionBoardComponent implements OnInit {
     public data: string,
     private service: QuestionBoardService,
     private auth: AuthUserService,
+    private cognito: CognitoService,
+    private apiGsiService: ApiGsiSerchService,
   ) { }
 
   ngOnInit(): void {
     // 認証情報確認
-    this.auth.user$.subscribe(login => {
-      if (login?.userId !== undefined) {
-        this.user = login;
-      }
-    });
+    const authUser = this.cognito.initAuthenticated();
+    if(authUser !== null) {
+      this.initGetSlipQa();
+    } else {
+      alert('ログインが必要です');
+      this.closeModal();
+    }
+  }
+
+  /**
+   * 表示情報を取得する
+   */
+  private initGetSlipQa() {
     this.slipNo = this.data;
     // 表示情報取得
-    this.service.getSlipQuestion(this.data).subscribe(data => {
-      console.log(data);
-      if (data.length !== 0) {
+    this.apiGsiService.serchSlipQuestion(this.data).subscribe(data => {
+      if(data.length !== 0) {
         this.questionList = this.service.anserCheck(data);
         this.dispDiv = true;
       } else {
         this.dispDiv = false;
       }
     });
+
   }
+
+
 
   /**
    * 質問入力フォームが編集された際の監視イベント

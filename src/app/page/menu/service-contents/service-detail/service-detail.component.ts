@@ -91,7 +91,7 @@ export class ServiceDetailComponent implements OnInit {
    * 取引するボタン押下時の処理
    */
   onTransaction() {
-    this.router.navigate(["service-transaction-component"],
+    this.router.navigate(["service-transaction"],
       { queryParams: { slipNo: this.dispContents.slipNo, status: false } });
   }
 
@@ -123,7 +123,7 @@ export class ServiceDetailComponent implements OnInit {
    * 取引状況確認ボタン押下時の処理
    */
   onTransactionStatus() {
-    this.router.navigate(["service-transaction-component"],
+    this.router.navigate(["service-transaction"],
       { queryParams: { slipNo: this.dispContents.slipNo, status: true } });
   }
 

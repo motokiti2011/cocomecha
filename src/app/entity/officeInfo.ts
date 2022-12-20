@@ -1,0 +1,34 @@
+export interface officeInfo {
+  // 事業所ID
+  officeId: string;
+  // 事業所名
+  officeName: string;
+  // 事業所電話番号リスト
+  officeTel: string[];
+  // 事業所メールアドレス
+  officeMailAdress: string;
+  // 事業所所在地１
+  officeArea1: string;
+  // 事業所所在地２
+  officeArea: string;
+  // 事業所所在地
+  officeAdress: string;
+  // 事業所郵便番号
+  officePostCode: string;
+  // 業務内容リスト
+  workContentList: string;
+  // 営業時間
+  businessHours: string;
+  // 管理拠点ID
+  adminBaseId: string;
+  // 拠点情報リスト
+  baseInfoList: string[];
+  // 管理者IDリスト
+  adminIdList: string[];
+  // 従業員リスト
+  employeeList: string[];
+  // 事業所PR
+  officePR: string;
+  // 事業所PR画像URL
+  officePRimageURL: string;
+}

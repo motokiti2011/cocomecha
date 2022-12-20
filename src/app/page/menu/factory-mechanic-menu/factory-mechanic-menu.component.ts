@@ -9,7 +9,30 @@ export class FactoryMechanicMenuComponent implements OnInit {
 
   constructor() { }
 
+  /** 表示切替区分 */
+  switchDiv = false;
+
   ngOnInit(): void {
+    // メカニック情報取得
+
+
+
   }
+
+
+  onEditUserInfo() {
+
+  }
+
+
+  onTransaction() {
+
+  }
+
+  onFactoryMecanic() {
+
+  }
+
+
 
 }

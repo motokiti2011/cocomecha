@@ -63,7 +63,7 @@ const ROUTE_TABLE: Routes = [
   { path: 'reissue_passwd_component', component: ReissuePasswdComponent, canActivate: [RoutingGuard] },
   { path: 'sign-up-component', component: SignUpComponent },
   { path: 'service-detail-component', component: ServiceDetailComponent },
-  { path: 'service-transaction-component', component: ServiceTransactionComponent, canActivate: [RoutingGuard] },
+  { path: 'service-transaction', component: ServiceTransactionComponent, canActivate: [RoutingGuard] },
   { path: 'user-resister-component', component: UserRegisterComponent },
   { path: 'my-menu-component', component: MyMenuComponent },
   { path: 'edit-user-menu', component: EditUserInfoComponent, canActivate: [RoutingGuard] },
