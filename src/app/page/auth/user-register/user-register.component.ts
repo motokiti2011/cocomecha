@@ -102,6 +102,7 @@ export class UserRegisterComponent implements OnInit {
       this.user.areaNo1 = this.inputData.areaNo1;
       this.user.areaNo2 = this.inputData.areaNo2;
       this.user.adress = this.inputData.adress;
+      this.user.profileImageUrl = ''; // 仮
       this.user.postCode = this.inputData.postCode;
       this.user.introduction = this.inputData.introduction;
 

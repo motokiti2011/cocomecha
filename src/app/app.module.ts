@@ -52,6 +52,7 @@ import { POST_PROVIDER } from './page/service/interceptors/http-interceptors';
 import { MyMenuComponent } from './page/menu/my-menu/my-menu.component';
 import { EditUserInfoComponent } from './page/menu/my-menu/edit-user-info/edit-user-info.component';
 import { FactoryMechanicMenuComponent } from './page/menu/factory-mechanic-menu/factory-mechanic-menu.component';
+import { SerchServiceModalComponent } from './page/modal/serch-service-modal/serch-service-modal.component';
 
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
@@ -102,6 +103,7 @@ const ROUTE_TABLE: Routes = [
     MyMenuComponent,
     EditUserInfoComponent,
     FactoryMechanicMenuComponent,
+    SerchServiceModalComponent,
   ],
   entryComponents: [
     TransactionListComponent,
@@ -109,6 +111,7 @@ const ROUTE_TABLE: Routes = [
     BrowsingHistoryComponent,
     TansactionCompleteComponent,
     LoginComponent,
+    SerchServiceModalComponent,
   ],
   imports: [
     FormsModule,

@@ -3,15 +3,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ServiceTransactionService } from './service-transaction.service';
-// import { AuthService } from 'src/app/auth/auth.service';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { messageOpenLevel, openLevel } from 'src/app/entity/messageOpenLevel';
-import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
+import { slipDetailInfo, defaultSlip} from 'src/app/entity/slipDetailInfo';
 import { QuestionBoardComponent } from 'src/app/page/modal/question-board/question-board/question-board.component';
 import { OpenLevelComponent } from 'src/app/page/modal/open-level/open-level/open-level.component';
 import { MessagePrmReqComponent } from 'src/app/page/modal/message-prm-req/message-prm-req/message-prm-req.component';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
+
 
 @Component({
   selector: 'app-service-transaction',
@@ -42,7 +43,9 @@ export class ServiceTransactionComponent implements OnInit {
   parmUserDiv = false;
   /** アクセスユーザー情報 */
   acsessUser = { userId: '', userName: '' }
-  
+  /** 伝票情報 */
+  slip: slipDetailInfo = defaultSlip;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -51,7 +54,7 @@ export class ServiceTransactionComponent implements OnInit {
     private auth: AuthUserService,
     public questionBoardModal: MatDialog,
     public modal: MatDialog,
-
+    private cognito: CognitoService
   ) { }
 
   ngOnInit(): void {
@@ -61,12 +64,13 @@ export class ServiceTransactionComponent implements OnInit {
       console.log(params['slipNo']);
       console.log(params['status']);
       this.service.getService(this.dispSlipId).subscribe(data => {
-        this.dispTitle = data[0].title;
-        this.dispYmd = data[0].completionDate;
-        this.dispPrice = data[0].price;
-        this.dispArea = this.service.areaNameSetting(data[0].areaNo1);
-        this.dispExplanation = data[0].explanation;
-        this.initChatArea(data[0]);
+        this.slip = data[0];
+        this.dispTitle = this.slip.title;
+        this.dispYmd = this.slip.completionDate;
+        this.dispPrice = this.slip.price;
+        this.dispArea = this.service.areaNameSetting(this.slip.areaNo1);
+        this.dispExplanation = this.slip.explanation;
+        this.initChatArea(this.slip);
       });
     });
   }
@@ -76,8 +80,21 @@ export class ServiceTransactionComponent implements OnInit {
    */
   private initChatArea(slip: slipDetailInfo) {
     // 認証ユーザー情報取得
-    this.auth.user$.subscribe(userOrNull => {
-      if (userOrNull == null || userOrNull == undefined) {
+    const user = this.cognito.initAuthenticated();
+    if(user !== null) {
+      this.setAcsessUser();
+      this.acsessUser.userId = user;
+      // 管理者判定
+      this.service.slipAuthCheck(this.dispSlipId, user).subscribe(result => {
+        // 取得できない場合
+        if (result.length === 0) {
+          // 閲覧者設定を行う
+          this.browseSetting(slip, user);
+        } else {
+          this.adminUserDiv = true;
+        }
+      });
+    } else {
         // ダイアログ表示（ログインしてください）し前画面へ戻る
         const dialogData: messageDialogData = {
           massage: 'ログインが必要になります。',
@@ -95,21 +112,22 @@ export class ServiceTransactionComponent implements OnInit {
           this.onReturn();
           return;
         });
-      } else {
-        this.acsessUser = userOrNull;
-        // 管理者判定
-        this.service.slipAuthCheck(this.dispSlipId, userOrNull.userId).subscribe(result => {
-          // 取得できない場合
-          if (result.length === 0) {
-            // 閲覧者設定を行う
-            this.browseSetting(slip, userOrNull.userId);
-          } else {
-            this.adminUserDiv = true;
-          }
-        });
-      }
-    });
+    }
   }
+
+/**
+ * subjectのユーザー情報を設定する有効期限切れの場合メインメニューに戻る
+ */
+private setAcsessUser() {
+  this.auth.user$.subscribe(data => {
+    if(data != null) {
+      this.acsessUser = data;
+    } else {
+      this.router.navigate(["mein-menu"]);
+    }
+  })
+}
+
 
   /**
    * 閲覧者設定
@@ -120,10 +138,12 @@ export class ServiceTransactionComponent implements OnInit {
       this.service.isSlipUserPermission(slip.slipNo, userId).subscribe(re => {
         if (re) {
           // 許可済みユーザーの場合チャット許可する
+
         } else {
           // 未許可の場合　一時許可ボタンを表示
           this.openDiv = true;
           // チャット未許可表示を行う
+
         }
       });
     } else if (slip.messageOpenLebel == '3') {
@@ -153,7 +173,7 @@ export class ServiceTransactionComponent implements OnInit {
       data: ''
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.service.postMessageLevel(this.dispSlipId, String(result)).subscribe(data => {
+      this.service.postMessageLevel(this.slip, String(result)).subscribe(data => {
         console.log(data.messageOpenLebel)
       });
     });
@@ -178,7 +198,7 @@ export class ServiceTransactionComponent implements OnInit {
       if (result != undefined) {
         // メッセージ許可ユーザーの更新をおこなう（取消、追加はサーバーサイドでおこなう）
         if (result) {
-          this.service.messagePrmReq(this.acsessUser.userId, this.dispSlipId);
+          this.service.messagePrmReq(this.acsessUser.userId, this.acsessUser.userName, this.dispSlipId);
         }
       }
       console.log(result);

@@ -120,7 +120,7 @@ export class ServiceCreateComponent implements OnInit {
     public loginModal: MatDialog,
     private router: Router,
     private auth:AuthUserService,
-    private apiService: ApiSerchService, 
+    private apiService: ApiSerchService,
   ) { }
 
   ngOnInit(): void {
@@ -377,16 +377,18 @@ export class ServiceCreateComponent implements OnInit {
   getResult() {
     // console.log('確定反応')
     console.log(this.inputData);
-    
+
     const convertData = this.service.converSlipDetail(this.inputData);
 
     this.apiService.postSlip(convertData).subscribe(result => {
       // 登録結果からメッセージを表示する
       if (result === 200) {
+        alert('POST:OK')
         console.log('POST:OK')
         this.next();
       } else {
         console.log('POST:NG')
+        alert('POST:NG')
       }
     });
   }

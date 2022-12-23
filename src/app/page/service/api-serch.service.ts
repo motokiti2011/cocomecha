@@ -7,6 +7,8 @@ import { user } from 'src/app/entity/user';
 import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
+import { slipQuestion } from 'src/app/entity/slipQuestion';
+import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +69,7 @@ export class ApiSerchService {
           "officeId": user.officeId,
           "baseId": user.baseId,
           "officeRole": user.officeRole,
+          "profileImageUrl": user.profileImageUrl,
           "Introduction": user.introduction,
           "updateUserId": user.updateUserId,
           "created": user.created,
@@ -188,8 +191,6 @@ export class ApiSerchService {
       );
     }
 
-
-
     /**
      * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
      * @param user
@@ -220,7 +221,6 @@ export class ApiSerchService {
       );
     }
 
-
     /**
      * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
      * @param user
@@ -241,6 +241,63 @@ export class ApiSerchService {
         catchError((err: HttpErrorResponse) => of(undefined))
       );
     }
+
+    /**
+     * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
+     * @param user
+     * @returns
+     */
+    public postQuestion(data: slipQuestion): Observable<any> {
+      // リクエストボディ生成
+      const body = {
+        "OperationType": "PUT",
+        "Keys": {
+          "id": data.id,
+          "slipNo": data.slipNo,
+          "slipAdminUser": data.slipAdminUser,
+          "senderId": data.senderId,
+          "senderName": data.senderName,
+          "senderText": data.senderText,
+          "anserDiv": data.anserDiv,
+          "anserText": data.anserText,
+          "created": new Date(),
+          "updated": new Date()
+        }
+      };
+      return this.http.post<slipQuestion>(this.apiEndPoint + '/slipquestion', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: slipQuestion) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
+
+
+    /**
+     * 伝票メッセージ許可ユーザー情報にユーザーを追加する
+     * @param user
+     * @returns
+     */
+    public postMessageReq(userId:string, userName:string, slipNo:string): Observable<any> {
+      // リクエストボディ生成
+      const body = {
+        "OperationType": "MESSAGEREQ",
+        "Keys": {
+          "slipNo": slipNo,
+          "userId": userId,
+          "userName": userName
+        }
+      };
+      return this.http.post<slipMegPrmUser>(this.apiEndPoint + '/slipmegprmuser/messageparmrequest', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: slipMegPrmUser) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
+
+
+
 
 
 

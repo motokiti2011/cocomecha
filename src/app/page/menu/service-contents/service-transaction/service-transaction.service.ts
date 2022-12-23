@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpErrorResponse, } from '@angular/common/http';
-
-// import { RequestOptions } from '@angular/http';
-import { catchError, Observable, of, } from 'rxjs';
-import { slipDetailInfo, defaultSlip } from 'src/app/entity/slipDetailInfo';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import { find as _find } from 'lodash';
-import { noUndefined } from '@angular/compiler/src/util';
 import { slipManegement } from 'src/app/entity/slipManegement';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiCheckService } from 'src/app/page/service/api-check.service';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
-
 
 @Injectable({
   providedIn: 'root'
@@ -66,7 +62,6 @@ export class ServiceTransactionService {
    */
   public isSlipUserPermission(slipNo: string, userId: string): Observable<boolean> {
     return this.apCheckService.checkSlipPrm(slipNo, userId);
-
   }
 
   /**
@@ -75,26 +70,17 @@ export class ServiceTransactionService {
    * @param messsageLevele
    * @returns 更新後伝票情報
    */
-  public postMessageLevel(slipNo: string, messsageLevele: string): Observable<any> {
-    let data:slipDetailInfo = defaultSlip;
-    data.slipNo = slipNo;
+  public postMessageLevel(slip: slipDetailInfo, messsageLevele: string): Observable<any> {
+    let data:slipDetailInfo = slip;
     data.messageOpenLebel = messsageLevele;
     return this.apiService.postSlip(data);
-    // return this.http.put<slipDetailInfo>(this.apiEndPoint + 'slipdetail/slipmessagelv',data , { observe: 'response' });
   }
 
   /**
    * メッセージ許可申請を行う
    */
-  public messagePrmReq(userId:string, slipNo:string) {
-    let data:slipDetailInfo = defaultSlip;
-    data.slipNo = slipNo;
-    
-
-
-    // return this.http.put<slipDetailInfo>(this.apiEndPoint + 'slipdetail/slipmessagelv',data , { observe: 'response' });
+  public messagePrmReq(userId:string, userName:string, slipNo:string) {
+    return this.apiService.postMessageReq(userId, userName, slipNo);
   }
-
-
 
 }

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { HeaderMenuComponent } from '../header-menu/header-menu.component';
 
 @Component({
   selector: 'app-main-menu',
@@ -13,8 +13,11 @@ export class MainMenuComponent implements OnInit {
     private router:Router,
   ) { }
 
+  /** 子コンポーネントを読み込む */
+  @ViewChild(HeaderMenuComponent) child!: HeaderMenuComponent;
 
   ngOnInit(): void {
+    this.child.ngOnInit();
   }
 
   /**

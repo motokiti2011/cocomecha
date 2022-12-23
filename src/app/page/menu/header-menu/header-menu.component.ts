@@ -49,8 +49,6 @@ export class HeaderMenuComponent implements OnInit {
     this.router.navigate(["/main_menu"])
   }
 
-
-
   /**
    * ログイン状態確認
    */
@@ -96,8 +94,6 @@ export class HeaderMenuComponent implements OnInit {
       }
     });
   }
-
-
 
   /**
    * ユーザー認証(ログイン)を行う

@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ServiceSerchConditionsService } from './service-serch-conditions.service';
 import { serchCondition } from 'src/app/entity/serchCondition';
+import { SerchServiceModalComponent } from 'src/app/page/modal/serch-service-modal/serch-service-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-service-serch-conditions',
@@ -16,6 +18,7 @@ export class ServiceSerchConditionsComponent implements OnInit {
   offsetX = ''
   offsetY = ''
 
+  targetService = '';
 
   /**
    * 検索条件
@@ -31,7 +34,8 @@ export class ServiceSerchConditionsComponent implements OnInit {
   constructor(
     private location: Location,
     private service: ServiceSerchConditionsService,
-    private router:Router
+    private router:Router,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -61,8 +65,9 @@ export class ServiceSerchConditionsComponent implements OnInit {
     // 戻り値が0以外の場合検索結果を格納の上画面遷移
     if(serchResult > 0) {
       this.serchCondition.areaNum = serchResult;
-      this.router.navigate(["service_list"],
-       {queryParams:{areaNum :this.serchCondition.areaNum ,category: 0}});        
+      this.onSerchServiceModal();
+      // this.router.navigate(["service_list"],
+      //  {queryParams:{areaNum :this.serchCondition.areaNum ,category: 0}});
     }
   }
 
@@ -74,8 +79,9 @@ export class ServiceSerchConditionsComponent implements OnInit {
   areaSelect(i:number) {
     // 検索条件の都道府県IDに選択地を設定する
     this.serchCondition.areaNum = i;
-    this.router.navigate(["service_list"],
-    {queryParams:{areaNum :this.serchCondition.areaNum ,category: 0}});
+    this.onSerchServiceModal();
+    // this.router.navigate(["service_list"],
+    // {queryParams:{areaNum :this.serchCondition.areaNum ,category: 0}});
   }
 
   /**
@@ -85,8 +91,39 @@ export class ServiceSerchConditionsComponent implements OnInit {
    contentsSelect(i:number) {
     // 検索条件のサービスカテゴリーIDに設定する
     this.serchCondition.category = i;
-    this.router.navigate(["service_list"],
-    {queryParams:{areaNum :0 ,category: this.serchCondition.category}});  
+    this.onSerchServiceModal();
+    // this.router.navigate(["service_list"],
+    // {queryParams:{areaNum :0 ,category: this.serchCondition.category}});
+  }
+
+
+  /**
+   * 検索サービスモーダルを展開する
+   */
+  onSerchServiceModal() {
+
+    const dialogRef = this.modal.open(SerchServiceModalComponent, {
+      width: '400px',
+      height: '450px',
+      data: ''
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result !== null && result !== '') {
+          this.targetService = result;
+          this.router.navigate(["service_list"],
+          { queryParams:{
+            areaNum :this.serchCondition.areaNum,
+            category: this.serchCondition.category,
+            targetService: result
+          }});
+        } else {
+          // 戻るボタンまたはモーダルが閉じられたのでなにもしない
+          return;
+        }
+      }
+    );
   }
 
 
