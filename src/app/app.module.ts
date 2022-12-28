@@ -19,6 +19,7 @@ import {
 } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RoutingGuard } from './page/auth/routing.guard';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ServiceListComponent } from './page/menu/service-contents/service-list/service-list.component';
 import { MainMenuComponent } from './page/menu/main-menu/main-menu.component';
@@ -53,6 +54,8 @@ import { MyMenuComponent } from './page/menu/my-menu/my-menu.component';
 import { EditUserInfoComponent } from './page/menu/my-menu/edit-user-info/edit-user-info.component';
 import { FactoryMechanicMenuComponent } from './page/menu/factory-mechanic-menu/factory-mechanic-menu.component';
 import { SerchServiceModalComponent } from './page/modal/serch-service-modal/serch-service-modal.component';
+import { ServiceCreateModalComponent } from './page/modal/service-create-modal/service-create-modal.component';
+import { MechanicRegisterComponent } from './page/auth/mechanic-register/mechanic-register.component';
 
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
@@ -69,6 +72,7 @@ const ROUTE_TABLE: Routes = [
   { path: 'my-menu-component', component: MyMenuComponent },
   { path: 'edit-user-menu', component: EditUserInfoComponent, canActivate: [RoutingGuard] },
   { path: 'factory-mechanic-menu', component: FactoryMechanicMenuComponent, canActivate: [RoutingGuard] },
+  { path: 'mechanic-register', component: MechanicRegisterComponent, canActivate: [RoutingGuard] },
 ]
 
 @NgModule({
@@ -104,6 +108,8 @@ const ROUTE_TABLE: Routes = [
     EditUserInfoComponent,
     FactoryMechanicMenuComponent,
     SerchServiceModalComponent,
+    ServiceCreateModalComponent,
+    MechanicRegisterComponent,
   ],
   entryComponents: [
     TransactionListComponent,
@@ -112,6 +118,7 @@ const ROUTE_TABLE: Routes = [
     TansactionCompleteComponent,
     LoginComponent,
     SerchServiceModalComponent,
+    ServiceCreateModalComponent,
   ],
   imports: [
     FormsModule,
@@ -128,6 +135,7 @@ const ROUTE_TABLE: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(ROUTE_TABLE),
   ],
   providers: [

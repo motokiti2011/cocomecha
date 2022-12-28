@@ -9,6 +9,8 @@ import { userFavorite } from 'src/app/entity/userFavorite';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
+import { mechanicInfo } from 'src/app/entity/mechanicInfo';
+
 
 @Injectable({
   providedIn: 'root'
@@ -291,6 +293,49 @@ export class ApiSerchService {
       return this.http.post<slipMegPrmUser>(this.apiEndPoint + '/slipmegprmuser/messageparmrequest', body).pipe(
         // 取得できた場合ユーザー情報を返却
         map((res: slipMegPrmUser) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
+
+    /**
+     * メカニック情報を登録する
+     * @param mechanic メカニック情報
+     * @param officeDiv 工業区分
+     * @returns
+     */
+    public postMechanic(mechanic: mechanicInfo, officeDiv: boolean): Observable<any> {
+
+      let operationType = 'INITMECHANIC'
+      if(officeDiv) {
+        operationType = 'INITMECHANICANDOFFICE'
+      }
+      // リクエストボディ生成
+      const body = {
+        "OperationType": operationType,
+        "Keys": {
+          'mechanicId': mechanic.mechanicId,
+          'validDiv': mechanic.validDiv,
+          'mechanicName': mechanic.mechanicName,
+          'adminUserId': mechanic.adminUserId,
+          'adminAddressDiv': mechanic.adminAddressDiv,
+          'telList': mechanic.telList,
+          'mailAdress': mechanic.mailAdress,
+          'officeConnectionDiv': mechanic.officeConnectionDiv,
+          'officeId': mechanic.officeId,
+          'qualification': mechanic.qualification,
+          'specialtyWork': mechanic.specialtyWork,
+          'profileImageUrl': mechanic.profileImageUrl,
+          'introduction': mechanic.introduction,
+          'evaluationInfoIdList': mechanic.evaluationInfoIdList,
+          'updateUserId': mechanic.updateUserId,
+          'created': new Date(),
+          'updated': new Date()
+        }
+      };
+      return this.http.post<mechanicInfo>(this.apiEndPoint + '/mechanicinfo/initmechanicup', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: mechanicInfo) => res),
         // エラー時HTTPステータスコードを戻す
         catchError((err: HttpErrorResponse) => of(undefined))
       );

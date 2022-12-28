@@ -21,6 +21,8 @@ export interface user {
   adress: string | null;
   // 郵便番号
   postCode: string | null;
+  // メカニックID
+  mechanicId: string | null;
   // 事業所ID
   officeId: string | null;
   // 拠点ID
@@ -63,6 +65,8 @@ export const initUserInfo : user = {
       adress: null,
       // 郵便番号
       postCode: null,
+      // メカニックID
+      mechanicId: null,
       // 事業所ID
       officeId: null,
       // 拠点ID

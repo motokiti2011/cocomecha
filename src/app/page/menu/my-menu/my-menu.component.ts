@@ -17,7 +17,7 @@ export class MyMenuComponent implements OnInit {
     private router: Router,
   ) { }
 
-
+  /** 表示情報 */
   dispInfo = {
     name: '',
     mailadress: '',
@@ -30,12 +30,19 @@ export class MyMenuComponent implements OnInit {
   }
 
 
+  /** メカニックボタン表示 */
+  mechanicButonTitle = '';
+  /** メカニックボタンリンク */
+  mechanicButonUrl = '';
+
+
   ngOnInit(): void {
     const authUser = this.cognito.initAuthenticated();
     if(authUser !== null) {
       this.apiservice.getUser(authUser).subscribe(user => {
         console.log(user);
         this.setDispInfo(user[0]);
+        this.isMechanic(user[0]);
       });
     } else {
       alert('ログインが必要です');
@@ -60,6 +67,21 @@ export class MyMenuComponent implements OnInit {
       tel2: this.isSerParm(user.TelNo2, 'tel'),
       introduction: this.isSerParm(user.introduction, 'intro'),
     }
+  }
+
+  /**
+   * メカニック登録有無を確認
+   * @param user
+   */
+  private isMechanic(user: user) {
+    if(user.mechanicId == null
+      || user.mechanicId == '' ) {
+        this.mechanicButonTitle = 'メカニック登録はこちら';
+        this.mechanicButonUrl = 'mechanic-register';
+        return;
+      }
+      this.mechanicButonTitle = '工場・メカニックメニューはこちら';
+      this.mechanicButonUrl = 'factory-mechanic-menu';
   }
 
   /**
@@ -103,8 +125,8 @@ export class MyMenuComponent implements OnInit {
    * 工場・メカニックメニューはこちらボタン押下イベント
    */
   onFactoryMecanic() {
-    this.router.navigate(["/factory-mechanic-menu"]);
-    console.log('factory')
+    this.router.navigate(["/"+this.mechanicButonUrl]);
+    console.log('mechanic-register')
   }
 
 

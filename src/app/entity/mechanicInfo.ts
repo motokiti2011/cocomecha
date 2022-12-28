@@ -9,6 +9,8 @@ export interface mechanicInfo {
   adminUserId: string;
   // 管理アドレス区分
   adminAddressDiv: string;
+  // 電話番号リスト
+  telList: string[] | null;
   // 管理メールアドレス
   mailAdress: string | null;
   // 事業所紐づき区分
@@ -45,6 +47,8 @@ export const initMechanicInfo : mechanicInfo = {
   adminUserId: '',
   // 管理アドレス区分
   adminAddressDiv: '',
+  // 電話番号リスト
+  telList: null,
   // 管理メールアドレス
   mailAdress: null,
   // 事業所紐づき区分

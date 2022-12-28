@@ -40,7 +40,7 @@ export class ServiceCreateService {
       // サービスカテゴリー
       category: String(content.category),
       // 伝票管理者ユーザーID
-      slipAdminUserId: content.useId,
+      slipAdminUserId: content.userId,
       // 伝票管理者ユーザー名
       slipAdminUserName: '0',
       // 伝票管理事業所ID
@@ -74,15 +74,15 @@ export class ServiceCreateService {
       // 工程ステータス
       processStatus: '0',
       // 対象サービス内容
-      targetService: '0',
+      targetService: content.targetService,
       // 対象車両ID
-      targetVehicleId: '0',
+      targetVehicleId: content.targetVehcle,
       // 対象車両名
-      targetVehicleName: '0',
+      targetVehicleName: '',
       // 対象車両情報
       targetVehicleInfo: '0',
       // 作業場所情報
-      workAreaInfo: '0',
+      workAreaInfo: content.workArea,
       // 希望日
       preferredDate: String(content.preferredDate),
       // 希望時間
@@ -96,14 +96,13 @@ export class ServiceCreateService {
       // 画像URLリスト
       imageUrlList: [],
       // メッセージ公開レベル
-      messageOpenLebel: '1',
+      messageOpenLebel: content.msgLv,
       // 更新ユーザーID
       updateUserId: '0',
       // 登録年月日
       created: '0',
       // 更新日時
       updated: '0'
-
 
     }
     return result;

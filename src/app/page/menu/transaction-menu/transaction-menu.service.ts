@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { serviceContents } from 'src/app/entity/serviceContents';
-import { 
+import {
   find as _find,
   isNil as _isNil,
   sortBy as _sortBy,
-  orderBy as _orderBy,  
+  orderBy as _orderBy,
   } from 'lodash';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures'
 import { monthMap } from 'src/app/entity/month';
@@ -20,8 +20,8 @@ export class TransactionMenuService {
 
   /**
    * 画面表示する地域名を設定する
-   * @param areaId 
-   * @returns 
+   * @param areaId
+   * @returns
    */
   public areaDisp(areaId: number): string {
     const area = _find(prefecturesCoordinateData, detail => detail.id === areaId);
@@ -32,27 +32,27 @@ export class TransactionMenuService {
   }
 
 
-  /**
-   * 画面表示するカテゴリーを設定する
-   * @param categoryId 
-   * @returns 
-   */
-  public categoryDisp(categoryId: number): string {
-    const category = _find(serchCategoryData, detail => detail.id === categoryId);
-    if (_isNil(category)) {
-      return '';
-    }
-    return category.category;
-  }
+  // /**
+  //  * 画面表示するカテゴリーを設定する
+  //  * @param categoryId
+  //  * @returns
+  //  */
+  // public categoryDisp(categoryId: string): string {
+  //   const category = _find(serchCategoryData, detail => detail.id === categoryId);
+  //   if (_isNil(category)) {
+  //     return '';
+  //   }
+  //   return category.category;
+  // }
 
   /**
    * 画面表示する金額を設定する
-   * @param content 
-   * @returns 
+   * @param content
+   * @returns
    */
   public priceDisp(content: serviceContents): string {
     // 入札方式によって表示を切り替える
-    if (content.bidMethod < 3) {
+    if (content.bidMethod !== '3') {
       return String(content.price.toLocaleString());
     }
     //　価格を決めてもらう場合は表示しない。
@@ -61,8 +61,8 @@ export class TransactionMenuService {
 
   /**
    * サービスの希望日から残り期間を設定します。
-   * @param content 
-   * @returns 
+   * @param content
+   * @returns
    */
   public getWhet(content: serviceContents): string {
 
@@ -130,8 +130,8 @@ export class TransactionMenuService {
 
   /**
    * 日付を表示用に加工
-   * @param dayDate 
-   * @returns 
+   * @param dayDate
+   * @returns
    */
   public getDispDate(dayDate: number): string {
     if (dayDate === 0) {

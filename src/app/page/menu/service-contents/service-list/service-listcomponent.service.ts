@@ -43,12 +43,17 @@ export class ServiceListcomponentService {
   convertServiceContents(detail: slipDetailInfo): serviceContents {
     const result: serviceContents = {
       id: detail.slipNo,
-      useId: detail.slipAdminUserName,
+      userId: detail.slipAdminUserId,
+      userName: detail.slipAdminUserName,
+      mechanicId: null,
+      officeId: detail.slipAdminOffice,
       title: detail.title,
+      workArea: detail.workAreaInfo,
       price: Number(detail.price),
       area: Number(detail.areaNo1),
-      category: Number(detail.category),
-      bidMethod: Number(detail.bidMethod),
+      category: detail.category,
+      targetVehcle: detail.targetVehicleName,
+      bidMethod: detail.bidMethod,
       explanation: detail.explanation,
       bidderId: Number(detail.bidderId),
       favoriteFlg: false,
@@ -56,7 +61,10 @@ export class ServiceListcomponentService {
       preferredDate: Number(detail.preferredDate),
       preferredTime: Number(detail.preferredTime),
       logicalDeleteFlag: 0,
-      thumbnailUrl: detail.thumbnailUrl
+      msgLv: '1',
+      thumbnailUrl: detail.thumbnailUrl,
+      imageUrlList: null,
+      targetService: '0'
     }
     return result;
   }
@@ -151,7 +159,7 @@ export class ServiceListcomponentService {
    * @param cotegoryId
    * @returns カテゴリー名
    */
-  categorySelect(cotegoryId: number): string {
+  categorySelect(cotegoryId: string): string {
     const categoryData = _find(serchCategoryData, data => data.id == cotegoryId);
     if (categoryData == undefined) {
       return '';

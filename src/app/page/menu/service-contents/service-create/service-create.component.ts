@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { serchCategoryData } from 'src/app/entity/serchCategory';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
-import { serviceContents } from 'src/app/entity/serviceContents';
+import { serviceContents, initServiceContent } from 'src/app/entity/serviceContents';
 import { ModalData, nextActionButtonTypeMap } from 'src/app/entity/nextActionButtonType';
 import {
   find as _find,
@@ -19,6 +19,20 @@ import { ServiceCreateService } from './service-create.service';
 import { NextModalComponent } from 'src/app/page/modal/next-modal/next-modal/next-modal.component';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { user, initUserInfo } from 'src/app/entity/user';
+import {
+  createServiceSelect,
+  timeData,
+  userWorkArea,
+  mechanicWorkArea,
+  userTargetVehcle,
+  mechanicTargetVehcle,
+  userPrice,
+  mechanicPrice,
+  messageLevel
+ } from './service-create-option';
 
 @Component({
   selector: 'app-service-create',
@@ -29,28 +43,14 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 
 export class ServiceCreateComponent implements OnInit {
 
+  /** タイトル */
+  title = '';
+
   /** 入力中データ情報 */
-  inputData: serviceContents =
-    {
-      id: '0',
-      useId: '0',
-      title: '',
-      price: 0,
-      area: 0,
-      category: 0,
-      bidMethod: 1,
-      explanation: '',
-      bidderId: 0,
-      favoriteFlg:false,
-      registeredDate: 0,
-      preferredDate: 0,
-      preferredTime: 0,
-      logicalDeleteFlag: 0,
-      thumbnailUrl:''
-    };
+  inputData: serviceContents = initServiceContent;
 
   /** 入札方式選択状態初期値 */
-  selected = 1;
+  selected = '1';
 
   /** 地域情報選択状態初期値 */
   areaSelect = ''
@@ -68,6 +68,7 @@ export class ServiceCreateComponent implements OnInit {
   formPrice = '';
   priceFormDiv = true;
 
+  /** 価格プレスホルダー */
   pricePlace = '価格'
 
   // submitボタン活性制御
@@ -92,44 +93,157 @@ export class ServiceCreateComponent implements OnInit {
   /** エラーメッセージ */
   errormessage = '';
 
+  /** エラーメッセージ日付 */
   errormessageDay = '';
-
+  /** エラーメッセージ日付 */
   startDate = 0;
 
-  /** 入札方式 */
-  bidMethodData = [
-    { id: 1, label: '自分で設定', value: 'yourself', disabled: false },
-    { id: 2, label: 'オークション方式', value: 'auction', disabled: false },
-    { id: 3, label: '見積り希望', value: 'estimate', disabled: false }
-  ]
+  /** 作成ユーザー情報 */
+  userInfo: user = initUserInfo;
 
-  /** 希望時間 */
-  timeData = [
-    { id: '1', select: '1時' }, { id: '2', select: '2時' }, { id: '3', select: '3時' }, { id: '4', select: '4時' }, { id: '5', select: '5時' }, { id: '6', select: '6時' },
-    { id: '7', select: '7時' }, { id: '8', select: '8時' }, { id: '9', select: '9時' }, { id: '10', select: '10時' }, { id: '11', select: '11時' }, { id: '12', select: '12時' },
-    { id: '13', select: '13時' }, { id: '14', select: '14時' }, { id: '15', select: '15時' }, { id: '16', select: '16時' }, { id: '17', select: '17時' }, { id: '18', select: '18時' },
-    { id: '19', select: '19時' }, { id: '20', select: '20時' }, { id: '21', select: '21時' }, { id: '22', select: '22時' }, { id: '23', select: '23時' }, { id: '24', select: '24時' },
-  ]
+  /** 価格データ */
+  priceSelectData: createServiceSelect[] = [];
 
-  /**  */
+  /** 価格セレクト */
+  priceSelect = '';
+
+  /** 作業場所データ */
+  workAreaData: createServiceSelect[] = [];
+
+  /** 作業場所セレクト */
+  workAreaSelect = '';
+
+  /** 対象車両 */
+  vehcleData: createServiceSelect[] = [];
+
+  /** 作業場所セレクト */
+  vehcleSelect = '';
+
+  /** 希望時間データ */
+  timeData = timeData;
+
+  /** 希望時間セレクト */
   timeSelect = '';
+
+  /** メッセージレベルデータ */
+  msgLvData = messageLevel;
+
+  /** 希望時間セレクト */
+  msgLvSelect = '';
 
   constructor(
     private location: Location,
     private service: ServiceCreateService,
-    public loginModal: MatDialog,
+    public modal: MatDialog,
     private router: Router,
     private auth:AuthUserService,
     private apiService: ApiSerchService,
+    private cognito: CognitoService,
+    private activeRouter: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
-    // フォームを初期化する
-    this.inputData = { id: '0', useId: '0', title: '', price: 0, area: 0, category: 0, bidMethod: 1, explanation: '', bidderId: 0, favoriteFlg:false, registeredDate: 0, preferredDate: 0, preferredTime: 0, logicalDeleteFlag: 0, thumbnailUrl:'' };
-    // ログイン前提のためユーザー情報を取得する。
-    // ユーザーIDを設定する
+
+    // ログイン状態確認
+    const authUser = this.cognito.initAuthenticated();
+    if(authUser == null) {
+      alert("ログインが必要です");
+      this.location.back();
+    } else {
+      // ユーザー情報を取得する
+    this.apiService.getUser(authUser).subscribe(user => {
+      if(user[0] == null) {
+        alert("ログインが必要です");
+        this.location.back();
+        return;
+      } else {
+        this.userInfo = user[0];
+        this.inputData.userId = this.userInfo.userId;
+        this.inputData.userName = this.userInfo.userName;
+      }
+      this.activeRouter.queryParams.subscribe(params => {
+        if(params['serviceType'] == '1') {
+          // メカニックタイプの出品画面表示する
+          this.mechenicDisp();
+        } else {
+          this.serviceSelect();
+        }
+      });
+    });
+    }
   }
 
+  /**
+   * 画面表示を判定し、選択の必要がある場合モーダルを展開する
+   */
+  private serviceSelect() {
+    if(this.userInfo.mechanicId == null || this.userInfo.mechanicId == '' ) {
+      // ユーザー依頼画面への表示
+      this.userDisp();
+    } else {
+      // ユーザー情報にメカニック情報が存在する場合モーダルを開く
+      const dialogRef = this.modal.open(ServiceCreateModalComponent, {
+        width: '400px',
+        height: '450px',
+        data: ''
+      });
+      // モーダルクローズ後
+      dialogRef.afterClosed().subscribe(
+        result => {
+          if (result !== null && result !== '') {
+            if(result == '1') {
+              this.mechenicDisp();
+            } else {
+              this.userDisp();
+            }
+          } else {
+            // 戻るボタン押下時の動き
+            this.location.back();
+            return;
+          }
+        }
+      );
+    }
+  }
+
+  /**
+   *　ユーザー用画面設定を行う
+   */
+  private userDisp() {
+    // 画面表示設定
+    this.title = 'サービスを依頼する'
+    this.workAreaData = userWorkArea;
+    this.vehcleData = userTargetVehcle;
+    this.priceSelectData = userPrice;
+    // セレクトボックス初期値設定
+    this.workAreaSelect = this.workAreaData[0].id;
+    this.categorySelect = this.categoryData[0].id;
+    this.vehcleSelect = this.vehcleData[0].id;
+    this.priceSelect = this.priceSelectData[0].id;
+    this.msgLvSelect = this.msgLvData[0].id;
+    // データ設定
+    this.inputData.targetService = '0';
+  }
+
+  /**
+   * メカニック用画面表示設定を行う
+   */
+  private mechenicDisp() {
+    // 画面表示設定
+    this.title = 'メカニック・工場としてサービス。商品を出品する'
+    this.workAreaData = mechanicWorkArea;
+    this.vehcleData = mechanicTargetVehcle;
+    this.priceSelectData = mechanicPrice;
+    // セレクトボックス初期値設定
+    this.workAreaSelect = this.workAreaData[0].id;
+    this.categorySelect = this.categoryData[0].id;
+    this.vehcleSelect = this.vehcleData[0].id;
+    this.priceSelect = this.priceSelectData[0].id;
+    this.msgLvSelect = this.msgLvData[0].id;
+    // データ設定
+    this.inputData.mechanicId = this.userInfo.mechanicId;
+    this.inputData.targetService = '1';
+  }
 
 
   /**
@@ -154,7 +268,7 @@ export class ServiceCreateComponent implements OnInit {
 
     // カテゴリー選択状況変更監視
     if (_isNil(this.inputData.category)
-      || this.inputData.category === 0) {
+      || this.inputData.category === '0'||this.inputData.category === '' ) {
       this.categoryDiv = true;
     } else {
       this.categoryDiv = false;
@@ -184,8 +298,7 @@ export class ServiceCreateComponent implements OnInit {
 
   }
 
-  /** 画面操作イベント */
-
+  /************** 画面操作イベント *****************************/
   /**
    * タイトル変更イベント
    */
@@ -195,10 +308,19 @@ export class ServiceCreateComponent implements OnInit {
   }
 
   /**
+   * 作業場所変更イベント
+   */
+  inputWorkArea() {
+    console.log('1workArea:'+this.inputData.workArea);
+    console.log('2targetVehcle:'+this.inputData.targetVehcle);
+    console.log('3msgLv:'+this.inputData.msgLv);
+    console.log('4workArea:'+this.inputData.workArea);
+  }
+
+  /**
    * 価格変更イベント
    */
   inputPrice() {
-
     // エラー情報の初期化
     this.priceDiv = true;
     this.errorFlg = false;
@@ -236,8 +358,6 @@ export class ServiceCreateComponent implements OnInit {
         }
       }
     }
-
-
     console.log(this.inputData.price);
     this.cangeMonitoring();
   }
@@ -255,19 +375,11 @@ export class ServiceCreateComponent implements OnInit {
    */
   selectBidMethod() {
     // 選択状態を反映する
-    this.inputData.bidMethod = this.selected;
-    console.log('入札方式選択状態：' + this.selected);
+    console.log('入札方式選択状態2：' + this.inputData.bidMethod);
 
-    const selectnum = String(this.selected);
     // 選択状態によって価格のフォーム表示を切り替える
-    if (selectnum === '1') {
+    if (this.inputData.bidMethod === '1' || this.inputData.bidMethod === '41') {
       this.pricePlace = '価格'
-      this.priceFormDiv = true;
-      if (this.inputData.price === 0) {
-        this.priceDiv = true;
-      }
-    } else if (selectnum === '2') {
-      this.pricePlace = '開始価格'
       this.priceFormDiv = true;
       if (this.inputData.price === 0) {
         this.priceDiv = true;
@@ -277,6 +389,7 @@ export class ServiceCreateComponent implements OnInit {
       this.priceDiv = false;
       this.errorFlg = false;
     }
+    console.log(this.priceFormDiv);
     this.cangeMonitoring();
   }
 
@@ -284,13 +397,6 @@ export class ServiceCreateComponent implements OnInit {
    * カテゴリー選択時イベント
    */
   selectCategory() {
-    console.log(this.categorySelect);
-    const selectData = _find(this.categoryData, detail => detail.category === this.categorySelect);
-    if (!_isNil(selectData)) {
-      this.inputData.category = selectData.id;
-    } else {
-      this.inputData.category = 0;
-    }
     this.cangeMonitoring();
   }
 
@@ -298,7 +404,6 @@ export class ServiceCreateComponent implements OnInit {
    * 地域選択イベント
    */
   selectArea() {
-    console.log('洗濯中' + this.areaSelect);
     const selectData = _find(this.areaData, detail => detail.prefectures === this.areaSelect);
     if (!_isNil(selectData)) {
       this.inputData.area = selectData.id;
@@ -358,7 +463,7 @@ export class ServiceCreateComponent implements OnInit {
    */
   selectTime() {
     console.log(this.timeSelect);
-    const ti = _find(this.timeData, data => data.select === String(this.timeSelect));
+    const ti = _find(this.timeData, data => data.label === String(this.timeSelect));
     if (_isNil(ti)) {
       this.inputData.preferredTime = 0;
       this.timeDiv = true;
@@ -410,7 +515,7 @@ export class ServiceCreateComponent implements OnInit {
       resultAction: ''
     }
 
-    const dialogRef = this.loginModal.open(NextModalComponent, {
+    const dialogRef = this.modal.open(NextModalComponent, {
       width: '50vh',
       height: '50vh',
       data: data
@@ -443,7 +548,7 @@ export class ServiceCreateComponent implements OnInit {
       resultAction: ''
     }
 
-    const dialogRef = this.loginModal.open(NextModalComponent, {
+    const dialogRef = this.modal.open(NextModalComponent, {
       width: '80vh',
       height: '50vh',
       data: data
@@ -478,13 +583,13 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.title = '';
     this.inputData.price = 0;
     this.inputData.area = 0;
-    this.inputData.category = 0;
-    this.inputData.bidMethod = 1;
+    this.inputData.category ='0';
+    this.inputData.bidMethod = '1';
     this.inputData.explanation = '';
     this.inputData.preferredDate = 0;
     this.inputData.preferredTime = 0;
 
-    this.selected = 1;
+    this.selected = '1';
     this.formPrice = '';
     this.timeSelect = '';
     this.startDate = 0;

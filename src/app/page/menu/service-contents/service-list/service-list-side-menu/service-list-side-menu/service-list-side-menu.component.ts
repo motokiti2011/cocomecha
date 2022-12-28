@@ -96,7 +96,7 @@ export class ServiceListSideMenuComponent implements OnInit {
 
     // 作業内容のセレクトボックス初期選択処理
     if (this.serchCategory  != '0') {
-      const initCategory = _find(this.categoryData, data => data.id == Number(this.serchCategory))?.category;
+      const initCategory = _find(this.categoryData, data => data.id == this.serchCategory)?.category;
       if (initCategory != undefined) {
         this.categorySelect = initCategory;
       }

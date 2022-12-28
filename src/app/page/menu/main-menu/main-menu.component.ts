@@ -24,7 +24,8 @@ export class MainMenuComponent implements OnInit {
    * サービスを依頼する
    */
   serviceReqest() {
-    this.router.navigate(["service_create"])
+    this.router.navigate(["service_create"],
+    { queryParams:{ serviceType : '0'}});
   }
 
   /**
