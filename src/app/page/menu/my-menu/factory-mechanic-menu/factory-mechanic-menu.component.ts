@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { mechanicInfo, initMechanicInfo } from 'src/app/entity/mechanicInfo';
+import { officeInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import {
   find as _find,
@@ -11,41 +12,47 @@ import {
   isNil as _isNil,
   cloneDeep as _cloneDeep,
 } from 'lodash';
+import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { FactoryMenuComponent } from '../factory-menu/factory-menu.component';
 
-import { ApiSerchService } from '../../service/api-serch.service';
-import { CognitoService } from '../cognito.service';
 
 @Component({
-  selector: 'app-mechanic-register',
-  templateUrl: './mechanic-register.component.html',
-  styleUrls: ['./mechanic-register.component.scss']
+  selector: 'app-factory-mechanic-menu',
+  templateUrl: './factory-mechanic-menu.component.html',
+  styleUrls: ['./factory-mechanic-menu.component.scss']
 })
-export class MechanicRegisterComponent implements OnInit {
+export class FactoryMechanicMenuComponent implements OnInit {
 
+  /** 子コンポーネントを読み込む */
+  @ViewChild(FactoryMenuComponent) child!: FactoryMenuComponent;
 
   // ユーザー情報
   user: user = initUserInfo;
   // メカニック情報
   mechanicInfo: mechanicInfo = initMechanicInfo;
+  // 工場情報
+  officeInfo: officeInfo = initOfficeInfo;
 
   // 保有資格情報
   qualification = '';
   // 保有資格情報配列
-  qualificationList:string[] = [];
-
+  qualificationList:string[] = []
   // 工場区分
   officeDiv = false;
-
+  // 工場情報表示モード
+  factoryDispDiv = false;
+  // 工場表示切替ボタンテキスト
+  factoryBtnText = '工場情報を編集する'
+  // 工場情報編集モード
+  officeEditMode = false;
   // 管理アドレス区分
   adminAdress = '0';
-
   // 事業所紐付き区分
   officeConnectionDiv = '0';
 
   // 入力データ
   inputData = {
-    // メカニックID
-    mechanicId: '',
     // メカニック名
     mechanicName: '',
     // 管理ユーザーID
@@ -53,28 +60,31 @@ export class MechanicRegisterComponent implements OnInit {
     // 管理アドレス区分
     adminAddressDiv: '',
     // 管理メールアドレス
-    mailAdress: null,
+    mailAdress: '',
     // 事業所紐づき区分
     officeConnectionDiv: '0',
-    // 事業所ID
-    officeId: null,
     // 保有資格情報
     qualification: [''],
     // 得意作業
-    specialtyWork: null,
+    specialtyWork: '',
     // プロフィール画像URL
-    profileImageUrl: null,
+    profileImageUrl: '',
     // 紹介文
-    introduction: null
+    introduction: ''
   }
 
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
 
+  /** 工場登録有無区分 */
+  factoryResistDiv = false;
+
   public form!: FormGroup;  // テンプレートで使用するフォームを宣言
 
+
   constructor(
+    private activeRouter: ActivatedRoute,
     private location: Location,
     private apiService: ApiSerchService,
     private router: Router,
@@ -83,6 +93,16 @@ export class MechanicRegisterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.activeRouter.queryParams.subscribe(params => {
+      if (params['mechanicId'] != '') {
+        const mechanicId = params['mechanicId'];
+        this.getMechanicInfo(mechanicId);
+      } else {
+        alert('メカニック・工場情報が取得できませんでした。');
+        this.router.navigate(["/main_menu"]);
+      }
+    });
+
     const authUser = this.cognito.initAuthenticated();
     if(authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
@@ -204,22 +224,137 @@ export class MechanicRegisterComponent implements OnInit {
     if(this.inputData.introduction == '' || this.inputData.introduction == null) {
       message.push('紹介文')
     }
-    this.mechanicInfo.mechanicId = '0'
-    this.mechanicInfo.validDiv = '0'
     this.mechanicInfo.mechanicName = this.inputData.mechanicName;
     this.mechanicInfo.adminUserId = this.inputData.adminUserId;
     this.mechanicInfo.adminAddressDiv = this.adminAdress;
     this.mechanicInfo.mailAdress = this.inputData.mailAdress;
     this.mechanicInfo.officeConnectionDiv = this.officeConnectionDiv
-    this.mechanicInfo.officeId = this.inputData.officeId;
     this.mechanicInfo.qualification = this.inputData.qualification;
     this.mechanicInfo.specialtyWork = this.inputData.specialtyWork;
     this.mechanicInfo.profileImageUrl = this.inputData.profileImageUrl;
     this.mechanicInfo.introduction = this.inputData.introduction;
   }
 
+  /**
+   * メカニック情報を取得する
+   * @param mechanicId
+   */
+  private getMechanicInfo(mechanicId:string) {
+    this.apiService.getMecha(mechanicId).subscribe(result => {
+      // メカニック情報取得後企業コードをチェック
+      if(result[0] != undefined || result[0] != null ) {
+        this.mechanicInfo = result[0];
+        // メカニック情報を画面に設定
+        this.setMechanicInfo();
+        if(this.mechanicInfo.officeId != null) {
+          if(this.mechanicInfo.officeId !== '0') {
+            this.getOfficeInfo(this.mechanicInfo.officeId);
+          }
+        }
+      } else {
+        alert('メカニック情報が取得できませんでした。')
+        this.router.navigate(["/main_menu"]);
+        return;
+      }
+    })
+  }
+
+  /**
+   * 工場情報を取得する
+   * @param officeId
+   */
+  private getOfficeInfo(officeId: string) {
+    this.apiService.getOfficeInfo(officeId).subscribe(result => {
+      if(result[0] != undefined || result[0] != null ) {
+        this.officeInfo = result[0];
+        // 工場名が未設定の場合
+        if(this.officeInfo.officeName == ''
+        ||this.officeInfo == null) {
+          // 登録画面、所属工場情報のボタンを表示
+          this.factoryResistDiv = true;
+        } else {
+          this.factoryResistDiv = false;
+        }
+        // 管理ユーザー情報が空白の場合
+        if(this.officeInfo.adminIdList.length = 0) {
+          this.officeEditMode = false;
+        } else {
+          this.officeEditMode = true;
+        }
+
+      }
+    });
+  }
+
+  /**
+   * 画面にメカニック情報を設定する
+   */
+  private setMechanicInfo() {
+    this.inputData.mechanicName = this.mechanicInfo.mechanicName;
+    this.inputData.adminUserId = this.mechanicInfo.adminUserId;
+    this.inputData.adminAddressDiv = this.mechanicInfo.adminAddressDiv;
+    this.inputData.mailAdress = this.setParam(this.mechanicInfo.mailAdress);
+    this.inputData.officeConnectionDiv = this.mechanicInfo.officeConnectionDiv;
+    this.inputData.specialtyWork = this.setParam(this.mechanicInfo.specialtyWork);
+    this.inputData.profileImageUrl = this.setParam(this.mechanicInfo.profileImageUrl);
+    this.inputData.introduction = this.setParam(this.mechanicInfo.introduction);
+    // 保有資格は別途設定
+    this.initQualification(this.mechanicInfo.qualification);
+  }
+
+  /**
+   * 入力データにパラメータ設定を行う
+   * @param param
+   */
+  private setParam(param:string | null):string {
+    if(param == null) {
+      return '';
+    }
+    return param;
+  }
+
+  /**
+   * 入力データにパラメータ設定を行う
+   * @param param
+   */
+    private initQualification(param:string[] | null) {
+      if(param == null) {
+        return;
+      }
+      let count = 0;
+      param.forEach(l => {
+        if(count == 0) {
+          this.form.value.name = l;
+        }
+        const quForm = this.builder.group({
+          name: [l],
+        });
+        this.options.push(quForm);
+        count++;
+      })
+      this.setQualification();
+    }
+
+    /**
+     * 工場情報の表示切替を行う
+     */
+    onFactoryDisp() {
+        if(this.factoryDispDiv == false) {
+          this.factoryBtnText = '閉じる';
+          this.factoryDispDiv = true;
+          return;
+        }
+        this.factoryDispDiv = false
+        this.factoryBtnText = '工場情報を編集する';
+    }
+
+    /**
+     * 工場登録（本所属工場新規登録）
+     */
+    onFactoryResister() {
+      this.router.navigate(["/factory-register"]);
+    }
+
 
 
 }
-
-

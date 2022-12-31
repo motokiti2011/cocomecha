@@ -185,16 +185,24 @@ export class ServiceCreateComponent implements OnInit {
       const dialogRef = this.modal.open(ServiceCreateModalComponent, {
         width: '400px',
         height: '450px',
-        data: ''
+        data: {
+          userId: this.userInfo.userId,
+          mechanicId: this.userInfo.mechanicId,
+          officeId: this.userInfo.officeId,
+        }
       });
       // モーダルクローズ後
       dialogRef.afterClosed().subscribe(
         result => {
-          if (result !== null && result !== '') {
-            if(result == '1') {
+          console.log('クリエイトモーダル:'+ result)
+          if (result !== null
+            || result !== '' || result !== undefined ) {
+            if(result == '0') {
+              this.userDisp();
+            } else if(result == '1') {
               this.mechenicDisp();
             } else {
-              this.userDisp();
+              this.officeDisp();
             }
           } else {
             // 戻るボタン押下時の動き
@@ -230,7 +238,7 @@ export class ServiceCreateComponent implements OnInit {
    */
   private mechenicDisp() {
     // 画面表示設定
-    this.title = 'メカニック・工場としてサービス。商品を出品する'
+    this.title = 'メカニックとしてサービス・商品を出品する'
     this.workAreaData = mechanicWorkArea;
     this.vehcleData = mechanicTargetVehcle;
     this.priceSelectData = mechanicPrice;
@@ -242,6 +250,27 @@ export class ServiceCreateComponent implements OnInit {
     this.msgLvSelect = this.msgLvData[0].id;
     // データ設定
     this.inputData.mechanicId = this.userInfo.mechanicId;
+    this.inputData.targetService = '2';
+  }
+
+  /**
+   * 工場用画面表示設定を行う
+   */
+  private officeDisp() {
+    // 画面表示設定
+    this.title = '工場としてサービス・商品を出品する'
+    this.workAreaData = mechanicWorkArea;
+    this.vehcleData = mechanicTargetVehcle;
+    this.priceSelectData = mechanicPrice;
+    // セレクトボックス初期値設定
+    this.workAreaSelect = this.workAreaData[0].id;
+    this.categorySelect = this.categoryData[0].id;
+    this.vehcleSelect = this.vehcleData[0].id;
+    this.priceSelect = this.priceSelectData[0].id;
+    this.msgLvSelect = this.msgLvData[0].id;
+    // データ設定
+    this.inputData.mechanicId = this.userInfo.mechanicId;
+    this.inputData.officeId = this.userInfo.officeId;
     this.inputData.targetService = '1';
   }
 

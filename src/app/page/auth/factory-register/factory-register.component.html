@@ -1,0 +1,128 @@
+
+<div class="container">
+  <div class="row mt-4">
+    <h1>工場情報登録</h1>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">工場表示名</div>
+    <div class="col-1">必須</div>
+    <input class="col-4" id="id" type="text" [(ngModel)]="inputData.officeName" />
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">工場所在地</div>
+    <div class="col-1">必須</div>
+    <input class="col-4" id="name" type="text" [(ngModel)]="inputData.officeAdress" />
+    <div class="col-1"></div>
+    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">工場電話番号</div>
+    <div class="col-1">必須</div>
+    <input class="col-4" id="email" type="email" [(ngModel)]="telNo" />
+    <div class="col-1"></div>
+    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">工場メールアドレス</div>
+    <div class="col-1"></div>
+    <input class="col-4" id="email" type="email" [(ngModel)]="inputData.officeMailAdress" />
+    <div class="col-1"></div>
+    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">営業時間</div>
+    <div class="col-1"></div>
+    <input class="col-1" id="text" type="email" [(ngModel)]="businessHoursStart" />
+    <div class="col-1">　~</div>
+    <input class="col-1" id="text" type="email" [(ngModel)]="businessHoursEnd" />
+    <div class="col-2"></div>
+    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">休憩時間</div>
+    <div class="col-1"></div>
+    <input class="col-1" id="email" type="email" [(ngModel)]="restHoursStart" />
+    <div class="col-1">　　　~</div>
+    <input class="col-1" id="email" type="email" [(ngModel)]="restHoursEnd" />
+    <div class="col-2"></div>
+    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">業務内容
+      <button (click)="addOptionForm()">追加</button>
+    </div>
+    <div class="col-1"></div>
+
+      <form [formGroup]="form">
+        <input type="text" formControlName="name" />
+        <div formArrayName="options">
+          <div *ngFor="let option of options.controls; let i = index">
+            <div [formGroupName]="i">
+              <input type="text" class="col-11" formControlName="name" />
+            </div>
+            <button (click)="removeOptionForm(i)">削除</button>
+          </div>
+        </div>
+      </form>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+  </div>
+
+
+  <div class="row mt-2">
+    <div class="col-2">工場PR文</div>
+    <div class="col-1"></div>
+    <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.officePR" />
+    <div class="col-1"></div>
+    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">工場紹介画像</div>
+    <div class="col-1"></div>
+      <input class="col-4" id="area" type="text" [(ngModel)]="inputData.officePRimageURL" />
+  </div>
+
+  <!-- <div class="row m-5">
+    <div class="col-6">以下は公開されない工場情報の設定となります。</div>
+  </div> -->
+
+  <!-- <div class="row mt-2">
+    <div class="col-2">関連工場</div>
+    <div class="col-1"></div>
+    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">一覧はこちら</button>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">従業員情報</div>
+    <div class="col-1"></div>
+    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">一覧はこちら</button>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-2">管理者設定</div>
+    <div class="col-1"></div>
+    <input class="col-4 high-form" type="text" [(ngModel)]="adminSettingUser" />
+  </div> -->
+
+  <div class="row">
+    <div class="col-3"></div>
+    <input class="col-2" type="button" class="btn" on-click="onRegister()" value="登録">
+  </div>
+
+</div>
+
+
+<button (click)="test1()">test</button>
+<button (click)="goBack()">戻る</button>
+
+
+
+
+

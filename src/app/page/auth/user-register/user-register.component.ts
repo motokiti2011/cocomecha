@@ -107,10 +107,12 @@ export class UserRegisterComponent implements OnInit {
       this.user.introduction = this.inputData.introduction;
 
       this.apiService.postUser(this.user).subscribe(result => {
-        // TODO
-        alert(result);
+        if(result == undefined) {
+          // TODO
+          alert('失敗');
+        }
         this.router.navigate(["/main_menu"])
-      })
+      });
     }
 
 

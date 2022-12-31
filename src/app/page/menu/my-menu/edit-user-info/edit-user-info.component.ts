@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
-import { user } from 'src/app/entity/user';
+import { user, initUserInfo} from 'src/app/entity/user';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import {
   find as _find,
@@ -36,6 +36,9 @@ export class EditUserInfoComponent implements OnInit {
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
 
+  /** ユーザー情報 */
+  user:user = initUserInfo;
+
   constructor(
     private location: Location,
     private cognito: CognitoService,
@@ -58,15 +61,15 @@ export class EditUserInfoComponent implements OnInit {
   private setDispDate(userId: string) {
     this.apiService.getUser(userId).subscribe(data => {
       if(data[0]) {
-        const user:user = data[0];
-        this.inputData.userName = user.userName;
-        this.inputData.mailAdress = user.mailAdress;
-        this.inputData.TelNo1 = this.isSerParm(user.TelNo1,'tel');
-        this.inputData.TelNo2 = this.isSerParm(user.TelNo2,'tel');
-        this.inputData.areaNo1 = this.isSerParm(user.areaNo1,'area1');
-        this.inputData.areaNo2 = this.isSerParm(user.areaNo2,'area2');
-        this.inputData.adress = this.isSerParm(user.adress,'adress');
-        this.inputData.postCode = this.isSerParm(user.postCode,'postCode');
+        this.user = data[0];
+        this.inputData.userName = this.user.userName;
+        this.inputData.mailAdress = this.user.mailAdress;
+        this.inputData.TelNo1 = this.isSerParm(this.user.TelNo1,'tel');
+        this.inputData.TelNo2 = this.isSerParm(this.user.TelNo2,'tel');
+        this.inputData.areaNo1 = this.isSerParm(this.user.areaNo1,'area1');
+        this.inputData.areaNo2 = this.isSerParm(this.user.areaNo2,'area2');
+        this.inputData.adress = this.isSerParm(this.user.adress,'adress');
+        this.inputData.postCode = this.isSerParm(this.user.postCode,'postCode');
       } else {
         alert('データが取得できませんでした。再度アクセスしてください')
         this.location.back();
@@ -94,7 +97,26 @@ export class EditUserInfoComponent implements OnInit {
 
 
   onResister() {
-    console.log('');
+    this.inputCheck();
+    console.log(this.user);
+    // this.apiService.postUser(this.user).subscribe(result => {
+    //   console.log(result);
+    // });
+
+  }
+
+  inputCheck() {
+    this.user.userName = this.inputData.userName;
+    this.user.mailAdress = this.inputData.mailAdress;
+    this.user.TelNo1 = this.inputData.TelNo1;
+    this.user.TelNo2 = this.inputData.TelNo2;
+    this.user.areaNo1 = this.inputData.areaNo1;
+    this.user.areaNo2 = this.inputData.areaNo2;
+    this.user.adress = this.inputData.adress;
+    this.user.profileImageUrl = ''; // 仮
+    this.user.postCode = this.inputData.postCode;
+    this.user.introduction = this.inputData.introduction;
+
   }
 
 

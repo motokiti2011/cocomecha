@@ -34,6 +34,8 @@ export class MyMenuComponent implements OnInit {
   mechanicButonTitle = '';
   /** メカニックボタンリンク */
   mechanicButonUrl = '';
+  // メカニックID
+  mechanicId = '';
 
 
   ngOnInit(): void {
@@ -82,6 +84,7 @@ export class MyMenuComponent implements OnInit {
       }
       this.mechanicButonTitle = '工場・メカニックメニューはこちら';
       this.mechanicButonUrl = 'factory-mechanic-menu';
+      this.mechanicId = user.mechanicId;
   }
 
   /**
@@ -125,7 +128,10 @@ export class MyMenuComponent implements OnInit {
    * 工場・メカニックメニューはこちらボタン押下イベント
    */
   onFactoryMecanic() {
-    this.router.navigate(["/"+this.mechanicButonUrl]);
+    this.router.navigate(["/"+this.mechanicButonUrl],
+    { queryParams:{
+      mechanicId :this.mechanicId
+    }});
     console.log('mechanic-register')
   }
 

@@ -17,6 +17,8 @@ export interface mechanicInfo {
   officeConnectionDiv: string;
   // 事業所ID
   officeId: string| null;
+  // 関連事業所情報リスト
+  associationOfficeList: Array<associationOffice> | null;
   // 保有資格情報
   qualification: string[] | null;
   // 得意作業
@@ -33,6 +35,16 @@ export interface mechanicInfo {
   created: string | null;
   // 更新日
   updated: string | null;
+}
+
+/**
+ * 関連事業所情報
+ */
+export interface associationOffice {
+  officeId: string;
+  officeName: string;
+  officeRole: string;
+  remarks: string;
 }
 
 
@@ -55,6 +67,8 @@ export const initMechanicInfo : mechanicInfo = {
   officeConnectionDiv: '0',
   // 事業所ID
   officeId: null,
+  // 関連事業所情報リスト
+  associationOfficeList: null,
   // 保有資格情報
   qualification: null,
   // 得意作業

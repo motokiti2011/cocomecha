@@ -10,7 +10,7 @@ import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { mechanicInfo } from 'src/app/entity/mechanicInfo';
-
+import { officeInfo } from 'src/app/entity/officeInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +68,7 @@ export class ApiSerchService {
           "areaNo2": user.areaNo2,
           "adress": user.adress,
           "postCode": user.postCode,
+          "mechanicId": user.mechanicId,
           "officeId": user.officeId,
           "baseId": user.baseId,
           "officeRole": user.officeRole,
@@ -123,7 +124,7 @@ export class ApiSerchService {
           "category": data.category,
           "slipAdminUserId": data.slipAdminUserId,
           "slipAdminOffice": data.slipAdminOffice,
-          "slipAdminBaseId": data.slipAdminBaseId,
+          "slipAdminMechanicId": data.slipAdminMechanicId,
           "adminDiv": data.adminDiv,
           "title": data.title,
           "areaNo1": data.areaNo1,
@@ -322,6 +323,7 @@ export class ApiSerchService {
           'telList': mechanic.telList,
           'mailAdress': mechanic.mailAdress,
           'officeConnectionDiv': mechanic.officeConnectionDiv,
+          'associationOfficeList': mechanic.associationOfficeList,
           'officeId': mechanic.officeId,
           'qualification': mechanic.qualification,
           'specialtyWork': mechanic.specialtyWork,
@@ -341,9 +343,88 @@ export class ApiSerchService {
       );
     }
 
+  /**
+   * メカニックIDからメカニック情報を取得する。
+   * @param mechanicId
+   * @returns
+   */
+  public getMecha(mechanicId: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "QUERY",
+      "Keys": {
+        "mechanicId": mechanicId
+      }
+    };
+    return this.http.post<mechanicInfo>(this.apiEndPoint + '/mechanicinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: mechanicInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+  /**
+   * メカニックIDからメカニック情報を取得する。
+   * @param mechanicId
+   * @returns
+   */
+  public getOfficeInfo(officeId: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "QUERY",
+      "Keys": {
+        "officeId": officeId
+      }
+    };
+    return this.http.post<officeInfo>(this.apiEndPoint + '/mechanicinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: officeInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
+    /**
+     * メカニック情報を登録する
+     * @param mechanic メカニック情報
+     * @param officeDiv 工業区分
+     * @returns
+     */
+    public postFactory(officeInfo: officeInfo, userId: string, mechanicId: string| null): Observable<any> {
 
+      // リクエストボディ生成
+      const body = {
+        "OperationType": 'PUT',
+        "Keys": {
+          'officeId': officeInfo.officeId,
+          'officeName': officeInfo.officeName,
+          'officeTel': officeInfo.officeTel,
+          'officeMailAdress': officeInfo.officeMailAdress,
+          'officeArea1': officeInfo.officeArea1,
+          'officeArea': officeInfo.officeArea,
+          'officeAdress': officeInfo.officeAdress,
+          'officePostCode': officeInfo.officePostCode,
+          'workContentList': officeInfo.workContentList,
+          'businessHours': officeInfo.businessHours,
+          'adminBaseId': officeInfo.adminBaseId,
+          'baseInfoList': officeInfo.baseInfoList,
+          'adminIdList': userId,
+          'employeeList': mechanicId,
+          'officePR': officeInfo.officePR,
+          'officePRimageURL': officeInfo.officePRimageURL,
+          'created': new Date(),
+          'updated': new Date()
+        }
+      };
+      return this.http.post<officeInfo>(this.apiEndPoint + '/officeinfo/initofficeup', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: officeInfo) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
 
 
 

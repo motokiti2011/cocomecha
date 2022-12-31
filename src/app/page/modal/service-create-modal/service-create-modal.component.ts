@@ -11,14 +11,34 @@ export class ServiceCreateModalComponent implements OnInit {
   constructor(
     public _dialogRef: MatDialogRef<ServiceCreateModalComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: string,
+    public data: {
+      userId: string,
+      mechanicId: string,
+      officeId: string
+    }
   ) { }
 
+
+  // 工場依頼ボタン表示区分
+  officeBtnDiv = false;
+
+  // 結果
+  select = '';
+
   ngOnInit(): void {
+    console.log(this.data);
+    if(this.data.officeId != ''
+    || this.data.officeId != null) {
+      this.officeBtnDiv = true;
+    } else {
+      this.officeBtnDiv = false;
+    }
   }
 
-  onClick(result: number) {
+  onClick(result: string) {
     console.log(result);
+    this.select = result;
+    this._dialogRef.close(result);
   }
 
 

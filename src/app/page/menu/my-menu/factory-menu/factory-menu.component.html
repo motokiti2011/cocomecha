@@ -1,0 +1,44 @@
+
+<div class="container">
+  <div class="row">
+    <h1>工場情報</h1>
+  </div>
+
+  <div class="row">
+    <div class="col-2">工場表示名</div>
+    <div class="col-1">必須</div>
+    <input class="col-4" id="id" type="text" [(ngModel)]="dispInfo.officeName" />
+  </div>
+
+  <div class="row">
+    <div class="col-2">工場連絡先</div>
+    <div class="col-1">必須</div>
+    <input class="col-4" id="email" type="email" [(ngModel)]="dispInfo.officeMailAdress" />
+
+  </div>
+
+  <div class="row">
+    <div class="col-2">工場所在地</div>
+    <div class="col-1"></div>
+    <input class="col-4 high-form" type="text" [(ngModel)]="dispInfo.officeArea1" />
+  </div>
+
+  <div class="row">
+    <div class="col-2">営業時間</div>
+    <div class="col-1"></div>
+    <input class="col-4 high-form" id="area" type="text" [(ngModel)]="dispInfo.businessHours" />
+
+  </div>
+
+  <div class="row">
+    <div class="col-2">拠点情報</div>
+    <div class="col-1"></div>
+      <input class="col-4" id="area" type="text" [(ngModel)]="dispInfo.officeArea" />
+  </div>
+
+  <div class="row">
+    <div class="col-3"></div>
+    <input class="col-2" type="button" class="btn" on-click="onResister()" value="登録">
+  </div>
+
+</div>

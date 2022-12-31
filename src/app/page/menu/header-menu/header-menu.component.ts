@@ -82,7 +82,8 @@ export class HeaderMenuComponent implements OnInit {
         this.loginUser.userName = data[0].userName;
 
         this.authUserService.login(this.loginUser);
-        if(data[0].userName == undefined) {
+        if(data[0].userName == undefined
+          || data[0].userName == '') {
           // 仮登録ユーザーのためユーザー登録メッセージを表示
           this.temporaryUserDiv = true;
         } else {

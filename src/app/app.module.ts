@@ -52,10 +52,12 @@ import { UserRegisterComponent } from './page/auth/user-register/user-register.c
 import { POST_PROVIDER } from './page/service/interceptors/http-interceptors';
 import { MyMenuComponent } from './page/menu/my-menu/my-menu.component';
 import { EditUserInfoComponent } from './page/menu/my-menu/edit-user-info/edit-user-info.component';
-import { FactoryMechanicMenuComponent } from './page/menu/factory-mechanic-menu/factory-mechanic-menu.component';
 import { SerchServiceModalComponent } from './page/modal/serch-service-modal/serch-service-modal.component';
 import { ServiceCreateModalComponent } from './page/modal/service-create-modal/service-create-modal.component';
 import { MechanicRegisterComponent } from './page/auth/mechanic-register/mechanic-register.component';
+import { FactoryMechanicMenuComponent } from './page/menu/my-menu/factory-mechanic-menu/factory-mechanic-menu.component';
+import { FactoryMenuComponent } from './page/menu/my-menu/factory-menu/factory-menu.component';
+import { FactoryRegisterComponent } from './page/auth/factory-register/factory-register.component';
 
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
@@ -71,8 +73,9 @@ const ROUTE_TABLE: Routes = [
   { path: 'user-resister-component', component: UserRegisterComponent },
   { path: 'my-menu-component', component: MyMenuComponent },
   { path: 'edit-user-menu', component: EditUserInfoComponent, canActivate: [RoutingGuard] },
-  { path: 'factory-mechanic-menu', component: FactoryMechanicMenuComponent, canActivate: [RoutingGuard] },
   { path: 'mechanic-register', component: MechanicRegisterComponent, canActivate: [RoutingGuard] },
+  { path: 'factory-mechanic-menu', component: FactoryMechanicMenuComponent, canActivate: [RoutingGuard] },
+  { path: 'factory-register', component: FactoryRegisterComponent, canActivate: [RoutingGuard] },
 ]
 
 @NgModule({
@@ -110,6 +113,8 @@ const ROUTE_TABLE: Routes = [
     SerchServiceModalComponent,
     ServiceCreateModalComponent,
     MechanicRegisterComponent,
+    FactoryMenuComponent,
+    FactoryRegisterComponent,
   ],
   entryComponents: [
     TransactionListComponent,

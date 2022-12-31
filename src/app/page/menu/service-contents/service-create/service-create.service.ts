@@ -17,8 +17,6 @@ export class ServiceCreateService {
     private apiService: ApiSerchService,
   ) { }
 
-  private apiEndPoint: string = 'http://localhost:8080/v1/slipdetail/slippost';
-
   // 伝票情報を更新する
   public servicePost(contents: slipDetailInfo): Observable<number> {
 
@@ -42,15 +40,15 @@ export class ServiceCreateService {
       // 伝票管理者ユーザーID
       slipAdminUserId: content.userId,
       // 伝票管理者ユーザー名
-      slipAdminUserName: '0',
+      slipAdminUserName: '',
       // 伝票管理事業所ID
       slipAdminOffice: '0',
       // 伝票管理事業所名
-      slipAdminOfficeName: '0',
+      slipAdminOfficeName: '',
       // 伝票管理拠点ID
-      slipAdminBaseId: '0',
+      slipAdminMechanicId: '0',
       // 伝票管理拠点名
-      slipAdminBaseName: '0',
+      slipAdminMechanicName: '',
       // 管理者区分
       adminDiv: '0',
       // タイトル

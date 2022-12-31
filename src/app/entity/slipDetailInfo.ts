@@ -14,9 +14,9 @@ export interface slipDetailInfo {
   // 伝票管理事業所名
   slipAdminOfficeName: string;
   // 伝票管理拠点ID
-  slipAdminBaseId: string;
+  slipAdminMechanicId: string;
   // 伝票管理拠点名
-  slipAdminBaseName: string;
+  slipAdminMechanicName: string;
   // 管理者区分（どの管理者IDを利用するかどうか）
   adminDiv: string;
   // タイトル
@@ -90,10 +90,10 @@ export const defaultSlip: slipDetailInfo = {
   slipAdminOffice: '',
   // 伝票管理事業所名
   slipAdminOfficeName: '',
-  // 伝票管理拠点ID
-  slipAdminBaseId: '',
-  // 伝票管理拠点名
-  slipAdminBaseName: '',
+  // 伝票管理メカニックID
+  slipAdminMechanicId: '',
+  // 伝票管理メカニック名
+  slipAdminMechanicName: '',
   // 管理者区分
   adminDiv:'0',
   // タイトル
