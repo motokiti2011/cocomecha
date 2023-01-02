@@ -17,7 +17,8 @@ import { loginUser } from 'src/app/entity/loginUser';
 import { serchSidAmount } from 'src/app/entity/serchSid';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
-
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
+import { serchInfo, serchParam } from 'src/app/entity/serchInfo';
 
 @Component({
   selector: 'app-service-list',
@@ -57,13 +58,18 @@ export class ServiceListComponent implements OnInit {
   maxPageDisp: boolean = false;
   /** 表示順セレクトボタン */
   selected = 'defult';
+  /** 検索条件：対象サービス */
+  searchTargetService = '';
+
   /** 検索条件：地域 */
   serchArea1 = '0';
   /** 検索条件：詳細地域 */
   serchArea2 = '0';
-
   /** 検索条件：カテゴリー  */
   serchCategory = '0';
+  serchInfo:serchInfo = serchParam;
+
+
   /** 認証ユーザー情報有無フラグ */
   userCertificationDiv: boolean = false;
   /** お気に入り取得情報 */
@@ -97,6 +103,7 @@ export class ServiceListComponent implements OnInit {
     private auth: AuthUserService,
     private apiService: ApiSerchService,
     private apiGsiService: ApiGsiSerchService,
+    private apiUniqueService: ApiUniqueService
 
   ) { }
 
@@ -104,17 +111,15 @@ export class ServiceListComponent implements OnInit {
     // 検索条件画面からの条件から展開するサービス内容を抽出する
     this.activeRouter.queryParams.subscribe(params => {
       // this.loading.show();
-      // エリア情報選択時
-      if (params['areaNum'] > 0) {
-        this.serchArea1 = params['areaNum'];
+      // 検索条件取得
+      this.serchInfo.areaNo1 = params['areaNum'];
+      this.searchTargetService = params['targetService'];
+
+      if(this.searchTargetService !== '0') {
+        this.getServiceContents();
       } else {
-        this.serchCategory = params['category'];
+        this.getSlip();
       }
-      // 伝票を取得して設定する。
-      this.getSlip().subscribe(slip => {
-        this.seviceListSetting(slip);
-        this.initSetServiceContents(slip);
-      });
       // 認証有無状態を判定する
       this.auth.user$.subscribe(userOrNull => {
         if (userOrNull === null) {
@@ -139,11 +144,23 @@ export class ServiceListComponent implements OnInit {
   }
 
   /**
-   * 検索結果を元に伝票情報を取得する
+   * 検索情報を元に伝票情報を取得する
    */
-  getSlip(): Observable<slipDetailInfo[]> {
-    return this.apiGsiService.initSerchSlip(this.serchArea1, this.serchArea2, this.serchCategory);
+  private getSlip() {
+    this.apiUniqueService.serchSlip(this.serchInfo).subscribe(slip => {
+      this.seviceListSetting(slip);
+      this.initSetServiceContents(slip);
+    });
+  }
 
+  /**
+   * 検索条件を元にサービス商品情報を取得する
+   */
+  getServiceContents() {
+    this.apiUniqueService.serchServiceContents(this.serchInfo).subscribe(slip => {
+      this.seviceListSetting(slip);
+      this.initSetServiceContents(slip);
+    });
   }
 
   /**

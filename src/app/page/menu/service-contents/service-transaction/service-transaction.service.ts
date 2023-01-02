@@ -9,6 +9,7 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiCheckService } from 'src/app/page/service/api-check.service';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class ServiceTransactionService {
     private apiService: ApiSerchService,
     private apGsiService: ApiGsiSerchService,
     private apCheckService: ApiCheckService,
+    private apiUniqeService: ApiUniqueService,
   ) { }
 
   /**
@@ -80,7 +82,7 @@ export class ServiceTransactionService {
    * メッセージ許可申請を行う
    */
   public messagePrmReq(userId:string, userName:string, slipNo:string) {
-    return this.apiService.postMessageReq(userId, userName, slipNo);
+    return this.apiUniqeService.postMessageReq(userId, userName, slipNo);
   }
 
 }

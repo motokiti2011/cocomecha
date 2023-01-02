@@ -111,7 +111,13 @@ export class ServiceSerchConditionsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result !== null && result !== '') {
+          if(result == undefined) {
+            // TODO
+            result = '0'
+          }
           this.targetService = result;
+          console.log('もーだりぃ')
+          console.log(result)
           this.router.navigate(["service_list"],
           { queryParams:{
             areaNum :this.serchCondition.areaNum,

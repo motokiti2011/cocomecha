@@ -51,7 +51,7 @@ export class ApiGsiSerchService {
     );
   }
 
-    /**
+  /**
    * ユーザーIDからユーザー情報を取得する。
    * @param userId
    * @returns

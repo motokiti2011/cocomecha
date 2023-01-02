@@ -8,7 +8,7 @@ import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
-import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
+// import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { mechanicInfo } from 'src/app/entity/mechanicInfo';
 import { officeInfo } from 'src/app/entity/officeInfo';
 
@@ -123,8 +123,6 @@ export class ApiSerchService {
           "deleteDiv": data.deleteDiv,
           "category": data.category,
           "slipAdminUserId": data.slipAdminUserId,
-          "slipAdminOffice": data.slipAdminOffice,
-          "slipAdminMechanicId": data.slipAdminMechanicId,
           "adminDiv": data.adminDiv,
           "title": data.title,
           "areaNo1": data.areaNo1,
@@ -276,72 +274,72 @@ export class ApiSerchService {
     }
 
 
-    /**
-     * 伝票メッセージ許可ユーザー情報にユーザーを追加する
-     * @param user
-     * @returns
-     */
-    public postMessageReq(userId:string, userName:string, slipNo:string): Observable<any> {
-      // リクエストボディ生成
-      const body = {
-        "OperationType": "MESSAGEREQ",
-        "Keys": {
-          "slipNo": slipNo,
-          "userId": userId,
-          "userName": userName
-        }
-      };
-      return this.http.post<slipMegPrmUser>(this.apiEndPoint + '/slipmegprmuser/messageparmrequest', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: slipMegPrmUser) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+    // /**
+    //  * 伝票メッセージ許可ユーザー情報にユーザーを追加する
+    //  * @param user
+    //  * @returns
+    //  */
+    // public postMessageReq(userId:string, userName:string, slipNo:string): Observable<any> {
+    //   // リクエストボディ生成
+    //   const body = {
+    //     "OperationType": "MESSAGEREQ",
+    //     "Keys": {
+    //       "slipNo": slipNo,
+    //       "userId": userId,
+    //       "userName": userName
+    //     }
+    //   };
+    //   return this.http.post<slipMegPrmUser>(this.apiEndPoint + '/slipmegprmuser/messageparmrequest', body).pipe(
+    //     // 取得できた場合ユーザー情報を返却
+    //     map((res: slipMegPrmUser) => res),
+    //     // エラー時HTTPステータスコードを戻す
+    //     catchError((err: HttpErrorResponse) => of(undefined))
+    //   );
+    // }
 
-    /**
-     * メカニック情報を登録する
-     * @param mechanic メカニック情報
-     * @param officeDiv 工業区分
-     * @returns
-     */
-    public postMechanic(mechanic: mechanicInfo, officeDiv: boolean): Observable<any> {
+    // /**
+    //  * メカニック情報を登録する
+    //  * @param mechanic メカニック情報
+    //  * @param officeDiv 工業区分
+    //  * @returns
+    //  */
+    // public postMechanic(mechanic: mechanicInfo, officeDiv: boolean): Observable<any> {
 
-      let operationType = 'INITMECHANIC'
-      if(officeDiv) {
-        operationType = 'INITMECHANICANDOFFICE'
-      }
-      // リクエストボディ生成
-      const body = {
-        "OperationType": operationType,
-        "Keys": {
-          'mechanicId': mechanic.mechanicId,
-          'validDiv': mechanic.validDiv,
-          'mechanicName': mechanic.mechanicName,
-          'adminUserId': mechanic.adminUserId,
-          'adminAddressDiv': mechanic.adminAddressDiv,
-          'telList': mechanic.telList,
-          'mailAdress': mechanic.mailAdress,
-          'officeConnectionDiv': mechanic.officeConnectionDiv,
-          'associationOfficeList': mechanic.associationOfficeList,
-          'officeId': mechanic.officeId,
-          'qualification': mechanic.qualification,
-          'specialtyWork': mechanic.specialtyWork,
-          'profileImageUrl': mechanic.profileImageUrl,
-          'introduction': mechanic.introduction,
-          'evaluationInfoIdList': mechanic.evaluationInfoIdList,
-          'updateUserId': mechanic.updateUserId,
-          'created': new Date(),
-          'updated': new Date()
-        }
-      };
-      return this.http.post<mechanicInfo>(this.apiEndPoint + '/mechanicinfo/initmechanicup', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: mechanicInfo) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+    //   let operationType = 'INITMECHANIC'
+    //   if(officeDiv) {
+    //     operationType = 'INITMECHANICANDOFFICE'
+    //   }
+    //   // リクエストボディ生成
+    //   const body = {
+    //     "OperationType": operationType,
+    //     "Keys": {
+    //       'mechanicId': mechanic.mechanicId,
+    //       'validDiv': mechanic.validDiv,
+    //       'mechanicName': mechanic.mechanicName,
+    //       'adminUserId': mechanic.adminUserId,
+    //       'adminAddressDiv': mechanic.adminAddressDiv,
+    //       'telList': mechanic.telList,
+    //       'mailAdress': mechanic.mailAdress,
+    //       'officeConnectionDiv': mechanic.officeConnectionDiv,
+    //       'associationOfficeList': mechanic.associationOfficeList,
+    //       'officeId': mechanic.officeId,
+    //       'qualification': mechanic.qualification,
+    //       'specialtyWork': mechanic.specialtyWork,
+    //       'profileImageUrl': mechanic.profileImageUrl,
+    //       'introduction': mechanic.introduction,
+    //       'evaluationInfoIdList': mechanic.evaluationInfoIdList,
+    //       'updateUserId': mechanic.updateUserId,
+    //       'created': new Date(),
+    //       'updated': new Date()
+    //     }
+    //   };
+    //   return this.http.post<mechanicInfo>(this.apiEndPoint + '/mechanicinfo/initmechanicup', body).pipe(
+    //     // 取得できた場合ユーザー情報を返却
+    //     map((res: mechanicInfo) => res),
+    //     // エラー時HTTPステータスコードを戻す
+    //     catchError((err: HttpErrorResponse) => of(undefined))
+    //   );
+    // }
 
   /**
    * メカニックIDからメカニック情報を取得する。
@@ -386,45 +384,45 @@ export class ApiSerchService {
   }
 
 
-    /**
-     * メカニック情報を登録する
-     * @param mechanic メカニック情報
-     * @param officeDiv 工業区分
-     * @returns
-     */
-    public postFactory(officeInfo: officeInfo, userId: string, mechanicId: string| null): Observable<any> {
+    // /**
+    //  * メカニック情報を登録する
+    //  * @param mechanic メカニック情報
+    //  * @param officeDiv 工業区分
+    //  * @returns
+    //  */
+    // public postFactory(officeInfo: officeInfo, userId: string, mechanicId: string| null): Observable<any> {
 
-      // リクエストボディ生成
-      const body = {
-        "OperationType": 'PUT',
-        "Keys": {
-          'officeId': officeInfo.officeId,
-          'officeName': officeInfo.officeName,
-          'officeTel': officeInfo.officeTel,
-          'officeMailAdress': officeInfo.officeMailAdress,
-          'officeArea1': officeInfo.officeArea1,
-          'officeArea': officeInfo.officeArea,
-          'officeAdress': officeInfo.officeAdress,
-          'officePostCode': officeInfo.officePostCode,
-          'workContentList': officeInfo.workContentList,
-          'businessHours': officeInfo.businessHours,
-          'adminBaseId': officeInfo.adminBaseId,
-          'baseInfoList': officeInfo.baseInfoList,
-          'adminIdList': userId,
-          'employeeList': mechanicId,
-          'officePR': officeInfo.officePR,
-          'officePRimageURL': officeInfo.officePRimageURL,
-          'created': new Date(),
-          'updated': new Date()
-        }
-      };
-      return this.http.post<officeInfo>(this.apiEndPoint + '/officeinfo/initofficeup', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: officeInfo) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+    //   // リクエストボディ生成
+    //   const body = {
+    //     "OperationType": 'PUT',
+    //     "Keys": {
+    //       'officeId': officeInfo.officeId,
+    //       'officeName': officeInfo.officeName,
+    //       'officeTel': officeInfo.officeTel,
+    //       'officeMailAdress': officeInfo.officeMailAdress,
+    //       'officeArea1': officeInfo.officeArea1,
+    //       'officeArea': officeInfo.officeArea,
+    //       'officeAdress': officeInfo.officeAdress,
+    //       'officePostCode': officeInfo.officePostCode,
+    //       'workContentList': officeInfo.workContentList,
+    //       'businessHours': officeInfo.businessHours,
+    //       'adminBaseId': officeInfo.adminBaseId,
+    //       'baseInfoList': officeInfo.baseInfoList,
+    //       'adminIdList': userId,
+    //       'employeeList': mechanicId,
+    //       'officePR': officeInfo.officePR,
+    //       'officePRimageURL': officeInfo.officePRimageURL,
+    //       'created': new Date(),
+    //       'updated': new Date()
+    //     }
+    //   };
+    //   return this.http.post<officeInfo>(this.apiEndPoint + '/officeinfo/initofficeup', body).pipe(
+    //     // 取得できた場合ユーザー情報を返却
+    //     map((res: officeInfo) => res),
+    //     // エラー時HTTPステータスコードを戻す
+    //     catchError((err: HttpErrorResponse) => of(undefined))
+    //   );
+    // }
 
 
 

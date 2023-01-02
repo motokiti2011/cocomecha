@@ -71,8 +71,6 @@
           </td>
         </tr>
 
-
-
         <tr>
           <!-- カテゴリー　-->
           <td>カテゴリー</td>
@@ -233,7 +231,7 @@
           <td>メッセージの<br>公開レベル</td>
           <td></td>
           <td>
-            <select class="category-select" name="category" [(ngModel)]="inputData.msgLv" (change)="inputWorkArea()">
+            <select [(ngModel)]="inputData.msgLv" (change)="inputWorkArea()">
               <option *ngFor="let msgLv of msgLvData"
               [value]="msgLv.id"
               [selected]="msgLv.id === msgLvSelect">{{msgLv.label}}</option>
@@ -241,6 +239,23 @@
           </td>
         </tr>
 
+        <tr>
+          <!-- メッセージの公開レベル　-->
+          <td>管理ユーザー<br></td>
+          <td></td>
+          <td>
+            <div *ngIf="adminSelectDiv">
+              <select [(ngModel)]="adminSelect" (change)="inputWorkArea()">
+                <option *ngFor="let admin of adminUserData"
+                [value]="admin.id"
+                [selected]="admin.id === adminSelect">{{admin.label}}</option>
+              </select>
+            </div>
+
+              <div>この依頼は{{adminUserName}}によって管理されます。</div>
+
+          </td>
+        </tr>
 
         <tr>
           <!-- 添付画像　-->

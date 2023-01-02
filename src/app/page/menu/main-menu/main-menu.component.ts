@@ -29,6 +29,14 @@ export class MainMenuComponent implements OnInit {
   }
 
   /**
+   * サービスを出品する
+   */
+    serviceExhibit() {
+      this.router.navigate(["service_create"],
+      { queryParams:{ serviceType : '1'}});
+    }
+
+  /**
    * サービス一覧
    */
   serviceSerch() {

@@ -73,9 +73,16 @@ export const mechanicPrice = [
   { id: '44', label: '見積もり後価格決定（有料）' }
 ]
 
+/** メッセージレベル */
 export const messageLevel = [
-    { id: '1', label: '全体に公開' },
-    { id: '2', label: '一部に公開' },
-    { id: '3', label: '非公開' }
-  ];
+  { id: '1', label: '全体に公開' },
+  { id: '2', label: '一部に公開' },
+  { id: '3', label: '非公開' }
+];
 
+/** メッセージレベル */
+export const adminUserSelect = [
+  { id: '1', label: 'ログインユーザーとして管理' },
+  { id: '2', label: 'メカニックとして管理' },
+  { id: '3', label: '工場として管理' }
+];

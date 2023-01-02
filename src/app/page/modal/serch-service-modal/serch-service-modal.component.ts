@@ -21,8 +21,9 @@ export class SerchServiceModalComponent implements OnInit {
   }
 
 
-  onClick(result: number) {
+  onClick(result: string) {
     console.log(result);
+    this._dialogRef.close(result);
   }
 
 

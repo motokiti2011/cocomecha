@@ -6,10 +6,10 @@ export interface serviceContents {
   userId: string;
   // ユーザー名
   userName: string;
-  // メカニックID
-  mechanicId: string| null;
-  // 事業所ID
-  officeId: string| null;
+  // メンテナンスID
+  mechanicId: string |null,
+  // オフィスID
+  officeId: string |null,
   // タイトル
   title: string;
   // 作業場所

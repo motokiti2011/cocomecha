@@ -13,6 +13,7 @@ import {
   cloneDeep as _cloneDeep,
 } from 'lodash';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { FactoryMenuComponent } from '../factory-menu/factory-menu.component';
 
@@ -87,6 +88,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     private activeRouter: ActivatedRoute,
     private location: Location,
     private apiService: ApiSerchService,
+    private apiUniqeService: ApiUniqueService,
     private router: Router,
     private builder: FormBuilder,
     private cognito: CognitoService,
@@ -132,7 +134,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     this.inputCheck();
     console.log(this.inputData);
     console.log(this.mechanicInfo);
-    this.apiService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
+    this.apiUniqeService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
       if(result != 200 ) {
         alert('失敗しました')
       } else {

@@ -1,4 +1,4 @@
-export interface slipDetailInfo {
+export interface salesServiceInfo {
   // 伝票番号
   slipNo: string;
   // 削除区分
@@ -9,6 +9,14 @@ export interface slipDetailInfo {
   slipAdminUserId: string;
   // 伝票管理者ユーザー名
   slipAdminUserName: string;
+  // 伝票管理事業所ID
+  slipAdminOfficeId: string;
+  // 伝票管理事業所名
+  slipAdminOfficeName: string;
+  // 伝票管理拠点ID
+  slipAdminMechanicId: string;
+  // 伝票管理拠点名
+  slipAdminMechanicName: string;
   // 管理者区分（どの管理者IDを利用するかどうか）
   adminDiv: string;
   // タイトル
@@ -67,7 +75,7 @@ export interface slipDetailInfo {
 /**
  * 空の伝票情報
  */
-export const defaultSlip: slipDetailInfo = {
+export const defaulsalesService: salesServiceInfo = {
   // 伝票番号
   slipNo: '',
   // 削除区分
@@ -78,6 +86,14 @@ export const defaultSlip: slipDetailInfo = {
   slipAdminUserId: '',
   // 伝票管理者ユーザー名
   slipAdminUserName: '',
+  // 伝票管理事業所ID
+  slipAdminOfficeId: '',
+  // 伝票管理事業所名
+  slipAdminOfficeName: '',
+  // 伝票管理メカニックID
+  slipAdminMechanicId: '',
+  // 伝票管理メカニック名
+  slipAdminMechanicName: '',
   // 管理者区分
   adminDiv:'0',
   // タイトル

@@ -22,6 +22,7 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { user, initUserInfo } from 'src/app/entity/user';
+import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
 import {
   createServiceSelect,
   timeData,
@@ -31,7 +32,8 @@ import {
   mechanicTargetVehcle,
   userPrice,
   mechanicPrice,
-  messageLevel
+  messageLevel,
+  adminUserSelect,
  } from './service-create-option';
 
 @Component({
@@ -131,6 +133,15 @@ export class ServiceCreateComponent implements OnInit {
   /** 希望時間セレクト */
   msgLvSelect = '';
 
+  /** 管理ユーザー区分 */
+  adminSelectDiv = false;
+  /** 管理ユーザーデータ */
+  adminUserData = adminUserSelect;
+  /** 管理ユーザーセレクト */
+  adminSelect = '';
+  /** 管理ユーザー名 */
+  adminUserName = '';
+
   constructor(
     private location: Location,
     private service: ServiceCreateService,
@@ -162,9 +173,17 @@ export class ServiceCreateComponent implements OnInit {
         this.inputData.userName = this.userInfo.userName;
       }
       this.activeRouter.queryParams.subscribe(params => {
-        if(params['serviceType'] == '1') {
-          // メカニックタイプの出品画面表示する
-          this.mechenicDisp();
+        if(params['serviceType'] == '1' || params['serviceType'] == '2' ) {
+          if(this.userInfo.mechanicId !== ''
+          && this.userInfo.mechanicId !== null ) {
+            // メカニックタイプの出品画面表示する
+            this.mechenicDisp();
+          } else {
+            // メカニック未登録の場合
+            alert("メカニック登録されていません");
+            this.location.back();
+            return;
+          }
         } else {
           this.serviceSelect();
         }
@@ -231,6 +250,8 @@ export class ServiceCreateComponent implements OnInit {
     this.msgLvSelect = this.msgLvData[0].id;
     // データ設定
     this.inputData.targetService = '0';
+    this.adminSelectDiv = false;
+    this.adminUserName = this.userInfo.userName;
   }
 
   /**
@@ -251,6 +272,7 @@ export class ServiceCreateComponent implements OnInit {
     // データ設定
     this.inputData.mechanicId = this.userInfo.mechanicId;
     this.inputData.targetService = '2';
+
   }
 
   /**
@@ -272,6 +294,7 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.mechanicId = this.userInfo.mechanicId;
     this.inputData.officeId = this.userInfo.officeId;
     this.inputData.targetService = '1';
+    this.adminSelectDiv = true;
   }
 
 
@@ -511,20 +534,35 @@ export class ServiceCreateComponent implements OnInit {
   getResult() {
     // console.log('確定反応')
     console.log(this.inputData);
+    // 工場、メカニックとして依頼する場合
+    if(this.inputData.targetService !== '0') {
+      // サービス商品として更新を行う
+      this.service.postSalesService(this.inputData).subscribe(result => {
+        // 登録結果からメッセージを表示する
+        if (result === 200) {
+          alert('POST:OK')
+          console.log('POST:OK')
+          this.next();
+        } else {
+          console.log('POST:NG')
+          alert('POST:NG')
+        }
+      });
+    } else {
+      // 伝票情報の更新を行う
+      this.service.postSlip(this.inputData).subscribe(result => {
+        // 登録結果からメッセージを表示する
+        if (result === 200) {
+          alert('POST:OK')
+          console.log('POST:OK')
+          this.next();
+        } else {
+          console.log('POST:NG')
+          alert('POST:NG')
+        }
+      });
+    }
 
-    const convertData = this.service.converSlipDetail(this.inputData);
-
-    this.apiService.postSlip(convertData).subscribe(result => {
-      // 登録結果からメッセージを表示する
-      if (result === 200) {
-        alert('POST:OK')
-        console.log('POST:OK')
-        this.next();
-      } else {
-        console.log('POST:NG')
-        alert('POST:NG')
-      }
-    });
   }
 
   /**

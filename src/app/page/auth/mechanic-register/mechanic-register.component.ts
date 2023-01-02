@@ -13,6 +13,7 @@ import {
 } from 'lodash';
 
 import { ApiSerchService } from '../../service/api-serch.service';
+import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
 
 @Component({
@@ -77,6 +78,7 @@ export class MechanicRegisterComponent implements OnInit {
   constructor(
     private location: Location,
     private apiService: ApiSerchService,
+    private apiUniqueService: ApiUniqueService,
     private router: Router,
     private builder: FormBuilder,
     private cognito: CognitoService,
@@ -112,7 +114,7 @@ export class MechanicRegisterComponent implements OnInit {
     this.inputCheck();
     console.log(this.inputData);
     console.log(this.mechanicInfo);
-    this.apiService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
+    this.apiUniqueService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
       if(result != 200 ) {
         alert('失敗しました')
       } else {

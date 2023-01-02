@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { ApiSerchService } from '../../service/api-serch.service';
+import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
 import { officeInfo, employee, baseInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
 import { user, initUserInfo } from 'src/app/entity/user';
@@ -68,6 +69,7 @@ export class FactoryRegisterComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private apiService: ApiSerchService,
+    private apiUniqueService: ApiUniqueService,
     private router: Router,
     private cognito: CognitoService,
     private location: Location,
@@ -186,7 +188,7 @@ export class FactoryRegisterComponent implements OnInit {
       this.officeInfo.officePR = this.inputData.officePR;
       this.officeInfo.officePRimageURL = this.inputData.officePRimageURL;
 
-      this.apiService.postFactory(this.officeInfo, this.user.userId, this.user.mechanicId).subscribe(result => {
+      this.apiUniqueService.postFactory(this.officeInfo, this.user.userId, this.user.mechanicId).subscribe(result => {
         console.log(result);
       });
     }

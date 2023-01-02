@@ -45,8 +45,8 @@ export class ServiceListcomponentService {
       id: detail.slipNo,
       userId: detail.slipAdminUserId,
       userName: detail.slipAdminUserName,
-      mechanicId: null,
-      officeId: detail.slipAdminOffice,
+      mechanicId: '',
+      officeId: '',
       title: detail.title,
       workArea: detail.workAreaInfo,
       price: Number(detail.price),
@@ -302,6 +302,13 @@ export class ServiceListcomponentService {
     });
     return list;
   }
+
+
+
+
+
+
+
 
 
 
