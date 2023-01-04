@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { CognitoUserPool, CognitoUserAttribute, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk';
-import { CognitoService } from './cognito.service';
+import { CognitoService } from '../auth/cognito.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +22,10 @@ export class UploadService {
       console.log(err);
     });
     const clientParams: any = {
-      region: environment.region,
-      credentials: new AWS.CognitoIdentityCredentials({ IdentityPoolId: environment.identityPoolId }),
+      region: environment.Auth.region,
+      credentials: new AWS.CognitoIdentityCredentials({ IdentityPoolId: environment.Auth.identityPoolId }),
       apiVersion: '2006-03-01',
-      params: { Bucket: environment.bucketName }
+      params: { Bucket: environment.Buket.bucketName }
     };
     this.s3 = new AWS.S3(clientParams);
   }
@@ -35,7 +36,7 @@ export class UploadService {
    */
   uploadFile(file: any): Promise<any> {
     const params = {
-      Bucket: environment.bucketName,
+      Bucket: environment.Buket.bucketName,
       Key: file.name,
       ContentType: file.type,
       Body: file
@@ -47,12 +48,12 @@ export class UploadService {
   }
 
   getFileList(): Promise<AWS.S3.ListObjectsOutput> {
-    const params = { Bucket: environment.bucketName };
+    const params = { Bucket: environment.Buket.bucketName };
     return this.s3.listObjects(params).promise();
   }
 
   getFile(key: string): Promise<AWS.S3.GetObjectOutput> {
-    const params = { Bucket: environment.bucketName, Key: key };
+    const params = { Bucket: environment.Buket.bucketName, Key: key };
     return this.s3.getObject(params).promise();
   }
 
@@ -61,7 +62,7 @@ export class UploadService {
      */
   public onManagedUpload(file: File): Promise<AWS.S3.ManagedUpload.SendData> {
     let params: AWS.S3.Types.PutObjectRequest = {
-      Bucket: environment.bucketName,
+      Bucket: environment.Buket.bucketName,
       Key: file.name,
       Body: file,
       ACL: 'public-read', // インターネットから誰でもダウンロードできるように

@@ -31,6 +31,7 @@ export class ServiceTransactionService {
    * @returns
    */
   public getService(slipNo: string, serviceType: string): Observable<any> {
+    console.log('getService:'+ serviceType )
     if(serviceType !== '0') {
       return this.apiUniqeService.getServiceContents(slipNo);
     }

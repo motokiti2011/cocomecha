@@ -89,7 +89,7 @@ export class SignUpComponent implements OnInit {
         console.log(result);
         if (result) {
           alert('登録完了！！')
-          this.router.navigate(["/"])
+          this.router.navigate(["main_menu"])
         } else {
           alert('失敗')
         }

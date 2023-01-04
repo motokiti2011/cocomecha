@@ -385,13 +385,15 @@ export class ApiUniqueService {
    * @returns
    */
   public sendQuestion(question: slipQuestion, serviceType: string): Observable<any> {
-    // リクエストボディ生成
-    const type:string = serviceType;
+    console.log(question)
+    console.log(serviceType)
 
+    // リクエストボディ生成
     const body = {
       "OperationType": "SENDQUESTION",
-      "ServiceType" : type,
+      "ServiceType": serviceType,
       "Keys": {
+        "serviceType": serviceType,
         "id" : '',
         "slipNo": question.slipNo,
         "slipAdminUser": question.slipAdminUser,
@@ -404,6 +406,7 @@ export class ApiUniqueService {
         "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
       }
     };
+    console.log(body)
     return this.http.post<slipQuestion>(this.apiEndPoint + '/sendquestion', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: slipQuestion) => res),

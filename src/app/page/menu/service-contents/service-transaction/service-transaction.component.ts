@@ -65,7 +65,7 @@ export class ServiceTransactionComponent implements OnInit {
     // 伝票表示情報取得反映
     this.route.queryParams.subscribe(params => {
       this.dispSlipId = params['slipNo'];
-      this.serviceType = params['searchTargetService'];
+      this.serviceType = params['serviceType'];
       console.log('serviceTypeX:' + this.serviceType);
       this.service.getService(this.dispSlipId, this.serviceType).subscribe(data => {
         this.slip = data[0];
@@ -75,7 +75,6 @@ export class ServiceTransactionComponent implements OnInit {
         this.dispArea = this.service.areaNameSetting(this.slip.areaNo1);
         this.dispExplanation = this.slip.explanation;
         this.serviceType = this.slip.targetService;
-        console.log('serviceTypeY:'+this.serviceType)
         this.initChatArea(this.slip);
       });
     });
