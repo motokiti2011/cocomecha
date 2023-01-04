@@ -4,7 +4,7 @@ import { TransactionMessageService } from './transaction-message.service';
 import { dispSlipComment } from 'src/app/entity/slipMessageInfo';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { isNil as _isNil, find as _find } from 'lodash';
-
+import { ApiCheckService } from 'src/app/page/service/api-check.service';
 @Component({
   selector: 'app-transaction-message',
   templateUrl: './transaction-message.component.html',
@@ -28,6 +28,13 @@ export class TransactionMessageComponent implements OnInit {
   adressData: { sendId: string, name: string }[] = [];
   /** 宛先情報 */
   adressId: string = '';
+  /** 管理者区分 */
+  adminDiv = false;
+  /** サービスID */
+  serviceId = '';
+  /** アクセスユーザー */
+  acceseUser = '';
+
   /** 伝票番号 */
   @Input() dispSlipId: string = '';
   /** 管理者ユーザーフラグ */
@@ -41,32 +48,49 @@ export class TransactionMessageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // 認証ユーザー情報取得
-    this.auth.user$.subscribe(userOrNull => {
-      if (userOrNull == null || userOrNull == undefined) {
-        // 以降のデータ取得処理を行わない
-        return;
-      }
-      console.log(this.dispSlipId);
-      // 伝票情報取得不正の場合
-      if (this.dispSlipId == undefined || this.dispSlipId == null) {
-        this.privateMessage = 'データ取得に失敗しました。'
-        this.dispDiv = false;
-      } else {
-        this.dispDiv = true;
-        // 伝票メッセージ情報を取得
-        this.service.getSlipMessage(this.dispSlipId).subscribe(data => {
-          console.log(data);
-          // 表示内容を設定する
-          this.dispMessageList = this.service.settingMessage(
-            data, this.adminUserDiv, this.acsessUser.userId)
-          console.log(this.dispMessageList);
-        });
-        this.setAdress();
-      }
+  }
+
+  /**
+   * 表示処理
+   * @param serviceId
+   * @param acceseUser
+   */
+  onShow(serviceId:string, acceseUser: string) {
+    this.dispDiv = true;
+    this.serviceId = serviceId;
+    this.acceseUser = acceseUser;
+    // 伝票メッセージ情報を取得
+    this.service.getSlipMessage(serviceId).subscribe(data => {
+      console.log(data);
+      this.service.checkAdminSlip(serviceId, acceseUser).subscribe(check => {
+        this.adminDiv = check
+        this.setDispMessage();
+      });
+    });
+    this.setAdress();
+  }
+
+  /**
+   * 表示メッセージを作成する
+   */
+  private setDispMessage() {
+    this.service.getSlipMessage(this.serviceId).subscribe(data => {
+        if(this.acceseUser) {
+          this.dispMessageList = this.service.adminDispSetting(data, this.acceseUser)
+        } else {
+          this.dispMessageList = this.service.gestDispSetting(data, this.acceseUser)
+        }
+        console.log(this.dispMessageList);
     });
   }
 
+  /**
+   * メッセージ非表示設定
+   */
+  onHidden() {
+    this.privateMessage = 'メッセージは非表示となってます。'
+    this.dispDiv = false;
+  }
 
   /**
    * 宛先情報を設定する
@@ -82,7 +106,7 @@ export class TransactionMessageComponent implements OnInit {
   }
 
   /**
-   *　宛先変更イベント 
+   *　宛先変更イベント
    */
   selectAdress() {
     console.log(this.adressSelect)
@@ -122,12 +146,12 @@ export class TransactionMessageComponent implements OnInit {
         this.adressId,
         this.sernderMessage)
         .subscribe(data => {
-          if (data === 200) {
+          if (data.ResponseMetadata.HTTPStatusCode === 200) {
             // 連続投稿防止のためメッセージ初期化
             this.sernderMessage = '';
             this.isDisabled = true;
             // 再読み込みを実施
-            this.ngOnInit();
+            this.setDispMessage();
           } else {
             console.log('メッセージ登録失敗です。')
           }

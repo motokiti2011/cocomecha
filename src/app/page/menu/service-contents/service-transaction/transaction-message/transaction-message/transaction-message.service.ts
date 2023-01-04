@@ -1,87 +1,76 @@
 import { Injectable, Inject, LOCALE_ID } from '@angular/core';
-import { catchError, Observable, of, } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { HttpClient, HttpResponse, HttpErrorResponse, } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { slipMessageInfo, dispSlipComment, defaltDispSlipComment } from 'src/app/entity/slipMessageInfo';
 import { sortBy as _sortBy } from 'lodash';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { formatDate } from '@angular/common';
+import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
+import { ApiCheckService } from 'src/app/page/service/api-check.service';
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionMessageService {
 
-  private apiEndPoint: string = 'http://localhost:8080/v1/';
-
   constructor(
     private http: HttpClient,
+    private apiSerchService: ApiSerchService,
+    private apiGsiSerchService: ApiGsiSerchService,
+    private apiCheckService: ApiCheckService,
+    private apiUniqueService: ApiUniqueService,
     @Inject(LOCALE_ID) private locale: string
   ) { }
 
   /**
-   * 伝票情報のメッセージ情報を取得する 
+   * 伝票情報のメッセージ情報を取得する
    */
   public getSlipMessage(slipNo: string): Observable<slipMessageInfo[]> {
-    return this.http.get<slipMessageInfo[]>(`${this.apiEndPoint + 'slipcomment/slipmessage/getslip/' + slipNo}`);
+    return this.apiGsiSerchService.serchSlipMessage(slipNo);
   }
 
   /**
-   * 
-   * @param userName 
-   * @param slipNo 
-   * @param sendText 
-   * @returns 
+   *
+   * @param userName
+   * @param slipNo
+   * @param sendText
+   * @returns
    */
-  public sernderMessage(userId:string, userName: string, slipNo: string, sendId: string, sendText: string): Observable<number> {
+  public sernderMessage(userId:string, userName: string, slipNo: string, sendId: string, sendText: string): Observable<any> {
     // 伝票情報からマイリスト情報登録用データを生成する
 
     const comment: slipMessageInfo = {
-      commentId: '0',
+      messageId: '0',
       slipNo: slipNo,
       displayOrder: '0',
       userId: userId,
       sendUserName: userName,
       comment: sendText,
-      sendAdress:sendId,
+      sendAdressId: sendId,
       logicalDeleteDiv: '0',
       sendDate: String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
     }
-    return this.http.post(this.apiEndPoint + 'slipcomment/slipcommentpost', comment, { observe: 'response' })
-      .pipe(
-        // HTTPステータスコードを戻す
-        map((res: HttpResponse<any>) => res.status),
-        // エラー時もHTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(err.status))
-      );
+    return this.apiUniqueService.sendMessage(comment);
   }
 
 
-
   /**
-   * 画面表示するメッセージ情報を設定する
-   * @param comment 
-   * @param adminDiv 
-   * @param useId 
-   * @returns 
+   * 管理者チェック
+   * @param slipNo
+   * @param userId
+   * @returns
    */
-  public settingMessage(comment: slipMessageInfo[], adminDiv: boolean, useId: string): dispSlipComment[] {
-    let resultList: dispSlipComment[] = [];
-    if (adminDiv) {
-      // 画面アクセス者が伝票管理者の場合
-      resultList = this.adminDispSetting(comment, useId);
-    } else {
-      // その他ユーザーの場合
-      resultList = this.gestDispSetting(comment, useId);
-    }
-    return resultList;
+  public checkAdminSlip(slipNo:string, userId: string): Observable<boolean> {
+    return this.apiCheckService.checkSlipPrm(slipNo, userId)
   }
 
   /**
    * 管理者メッセージ表示設定を行う。
-   * @param comment 
+   * @param comment
    */
-  private adminDispSetting(comment: slipMessageInfo[], userId: string): dispSlipComment[] {
+  public adminDispSetting(comment: slipMessageInfo[], userId: string): dispSlipComment[] {
     let resultList: dispSlipComment[] = [];
     comment.forEach(data => {
       // コメントが管理者投稿の場合
@@ -99,20 +88,20 @@ export class TransactionMessageService {
 
   /**
    * ゲストアクセス用メッセージ表示設定を行う
-   * @param comment 
-   * @param userId 
+   * @param comment
+   * @param userId
    */
-  private gestDispSetting(comment: slipMessageInfo[], userId: string): dispSlipComment[] {
+  public gestDispSetting(comment: slipMessageInfo[], userId: string): dispSlipComment[] {
     let resultList: dispSlipComment[] = [];
     // 宛先がゲストか全体メッセージのみを設定する
     comment.forEach(data => {
       if (data.userId == userId) {
         // 自身投稿メッセージの場合(true → 左)
         resultList.push(this.setDispMsg(data, true));
-      } else if (data.sendAdress == userId) {
+      } else if (data.sendAdressId == userId) {
         // 宛先が自身の場合(false → 右)
         resultList.push(this.setDispMsg(data, false));
-      } else if (data.sendAdress == '') {
+      } else if (data.sendAdressId == '') {
         // 宛先が全体の場合(false → 右)
         resultList.push(this.setDispMsg(data, false));
       }
@@ -124,14 +113,14 @@ export class TransactionMessageService {
 
   /**
    * 表示コメント情報を作成する。
-   * @param data 
-   * @param position 
-   * @returns 
+   * @param data
+   * @param position
+   * @returns
    */
   private setDispMsg(data: slipMessageInfo, position: boolean): dispSlipComment {
     const dispComment: dispSlipComment = {
       // コメントID
-      commentId: data.commentId,
+      messageId: data.messageId,
       // 表示位置
       position: position,
       // 伝票番号
@@ -145,7 +134,7 @@ export class TransactionMessageService {
       // コメント
       comment: data.comment,
       // 投稿宛先
-      sendAdress: data.sendAdress,
+      sendAdressId: data.sendAdressId,
       // 論理削除フラグ
       logicalDeleteDiv: data.logicalDeleteDiv,
       // 投稿日時
@@ -166,16 +155,16 @@ export class TransactionMessageService {
 
   /**
    * 伝票許可ユーザー情報を取得し宛先リストを生成する
-   * @param slipNo 
+   * @param slipNo
    */
   public getSendAdress(slipNo: string): Observable<slipMegPrmUser[]> {
-    return this.http.get<slipMegPrmUser[]>(`${this.apiEndPoint + 'slipmegprmuser/' + slipNo}`)
+    return this.apiSerchService.getSlipMegPrmUser(slipNo);
   }
 
   /**
    * 伝票管理者の宛先設定を行う
    * @param userId
-   * 
+   *
    */
   public setAdminAdress(userId: string, megPrmUser: slipMegPrmUser): { sendId: string, name: string }[] {
     let returnList: { sendId: string, name: string }[] = [];

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { image } from 'src/app/entity/image';
 
 @Injectable({
@@ -12,6 +12,7 @@ export class ServiceDetailService {
 
   constructor(
     private apiService: ApiSerchService,
+    private apiUniqueService: ApiUniqueService,
   ) { }
 
   /**
@@ -19,8 +20,11 @@ export class ServiceDetailService {
    * @param slipNo
    * @returns
    */
-  public getService(slipNo: string): Observable<slipDetailInfo[]> {
-    return this.apiService.getSlip(slipNo);
+  public getService(slipNo: string, serviceType: string): Observable<any> {
+    if(serviceType !== '0') {
+      return this.apiUniqueService.getServiceContents(slipNo);
+    }
+    return this.apiUniqueService.getSlip(slipNo);
   }
 
   /**

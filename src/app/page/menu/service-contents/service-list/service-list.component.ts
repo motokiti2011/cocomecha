@@ -360,8 +360,9 @@ export class ServiceListComponent implements OnInit {
       this.service.postBrowsingHistory(content, this.authUser.userId);
     }
 
-    this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.id } });
-    console.log(content);
+    this.router.navigate(["service-detail-component"],
+     { queryParams: { serviceId: content.id, searchTargetService: this.searchTargetService } });
+      console.log(content);
   }
 
   /**

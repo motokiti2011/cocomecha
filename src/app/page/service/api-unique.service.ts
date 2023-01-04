@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpResponse, } from '@angular/common/http';
-import { Observable, of, tap } from 'rxjs';
+import { Injectable, Inject, LOCALE_ID } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-
+import { formatDate } from '@angular/common';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { mechanicInfo } from 'src/app/entity/mechanicInfo';
 import { officeInfo } from 'src/app/entity/officeInfo';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
 import { serchInfo } from 'src/app/entity/serchInfo';
+import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
+import { slipQuestion } from 'src/app/entity/slipQuestion';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,7 @@ export class ApiUniqueService {
 
   constructor(
     private http: HttpClient,
+    @Inject(LOCALE_ID) private locale: string
   ) { }
 
   private apiEndPoint: string = environment.EndPoint.apiEmdPointUNIQUE + environment.EndPoint.apiVersion + '/unitoption';
@@ -298,6 +301,112 @@ export class ApiUniqueService {
     return this.http.post<salesServiceInfo>(this.apiEndPoint + '/serchsalesservicecontents', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: salesServiceInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+  /**
+   * 伝票情報を取得する。
+   * @param slipNo
+   * @returns
+   */
+    public getSlip(slipNo: string): Observable<any> {
+      // リクエストボディ生成
+      const body = {
+        "OperationType": "GETSLIP",
+        "Keys": {
+          "slipNo": slipNo
+        }
+      };
+      return this.http.post<any>(this.apiEndPoint + '/getslip', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: any) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
+
+  /**
+   * サービス商品情報を取得する。
+   * @param slipNo
+   * @returns
+   */
+  public getServiceContents(slipNo: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "GETSALESSERVICE",
+      "Keys": {
+        "slipNo": slipNo
+      }
+    };
+    return this.http.post<any>(this.apiEndPoint + '/getsalesservice', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+  /**
+   * 伝票メッセージ情報を登録する。
+   * @param mechanicId
+   * @returns
+   */
+  public sendMessage(message: slipMessageInfo): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "SENDMESSAGE",
+      "Keys": {
+        "messageId": message.messageId,
+        "slipNo": message.slipNo,
+        "displayOrder": message.displayOrder,
+        "userId": message.userId,
+        "sendUserName": message.sendUserName,
+        "comment": message.comment,
+        "sendAdressId": message.sendAdressId,
+        "logicalDeleteDiv": message.logicalDeleteDiv,
+        "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
+        "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
+      }
+    };
+    return this.http.post<slipMessageInfo>(this.apiEndPoint + '/sendmessage', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: slipMessageInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+  /**
+   * 伝票質問情報を登録する。
+   * @param question
+   * @returns
+   */
+  public sendQuestion(question: slipQuestion, serviceType: string): Observable<any> {
+    // リクエストボディ生成
+    const type:string = serviceType;
+
+    const body = {
+      "OperationType": "SENDQUESTION",
+      "ServiceType" : type,
+      "Keys": {
+        "id" : '',
+        "slipNo": question.slipNo,
+        "slipAdminUser": question.slipAdminUser,
+        "senderId": question.senderId,
+        "senderName":question.senderName,
+        "senderText":question.senderText,
+        "anserDiv": question.anserDiv,
+        "anserText": question.anserText,
+        "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
+        "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
+      }
+    };
+    return this.http.post<slipQuestion>(this.apiEndPoint + '/sendquestion', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: slipQuestion) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );

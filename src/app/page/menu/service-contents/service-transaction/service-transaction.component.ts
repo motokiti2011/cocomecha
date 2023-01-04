@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -8,11 +8,11 @@ import { messageOpenLevel, openLevel } from 'src/app/entity/messageOpenLevel';
 import { slipDetailInfo, defaultSlip} from 'src/app/entity/slipDetailInfo';
 import { QuestionBoardComponent } from 'src/app/page/modal/question-board/question-board/question-board.component';
 import { OpenLevelComponent } from 'src/app/page/modal/open-level/open-level/open-level.component';
+import { TransactionMessageComponent } from './transaction-message/transaction-message/transaction-message.component';
 import { MessagePrmReqComponent } from 'src/app/page/modal/message-prm-req/message-prm-req/message-prm-req.component';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
-
 
 @Component({
   selector: 'app-service-transaction',
@@ -20,6 +20,9 @@ import { CognitoService } from 'src/app/page/auth/cognito.service';
   styleUrls: ['./service-transaction.component.scss']
 })
 export class ServiceTransactionComponent implements OnInit {
+
+  /** 子コンポーネントを読み込む */
+  @ViewChild(TransactionMessageComponent) child!: TransactionMessageComponent;
 
   /** 表示伝票番号 */
   dispSlipId: string = '';
@@ -45,13 +48,14 @@ export class ServiceTransactionComponent implements OnInit {
   acsessUser = { userId: '', userName: '' }
   /** 伝票情報 */
   slip: slipDetailInfo = defaultSlip;
+  /** 伝票タイプ */
+  serviceType = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
     private service: ServiceTransactionService,
-    private auth: AuthUserService,
     public questionBoardModal: MatDialog,
     public modal: MatDialog,
     private cognito: CognitoService
@@ -61,15 +65,17 @@ export class ServiceTransactionComponent implements OnInit {
     // 伝票表示情報取得反映
     this.route.queryParams.subscribe(params => {
       this.dispSlipId = params['slipNo'];
-      console.log(params['slipNo']);
-      console.log(params['status']);
-      this.service.getService(this.dispSlipId).subscribe(data => {
+      this.serviceType = params['searchTargetService'];
+      console.log('serviceTypeX:' + this.serviceType);
+      this.service.getService(this.dispSlipId, this.serviceType).subscribe(data => {
         this.slip = data[0];
         this.dispTitle = this.slip.title;
         this.dispYmd = this.slip.completionDate;
         this.dispPrice = this.slip.price;
         this.dispArea = this.service.areaNameSetting(this.slip.areaNo1);
         this.dispExplanation = this.slip.explanation;
+        this.serviceType = this.slip.targetService;
+        console.log('serviceTypeY:'+this.serviceType)
         this.initChatArea(this.slip);
       });
     });
@@ -82,17 +88,22 @@ export class ServiceTransactionComponent implements OnInit {
     // 認証ユーザー情報取得
     const user = this.cognito.initAuthenticated();
     if(user !== null) {
-      this.setAcsessUser();
+      // this.setAcsessUser();
       this.acsessUser.userId = user;
-      // 管理者判定
-      this.service.slipAuthCheck(this.dispSlipId, user).subscribe(result => {
-        // 取得できない場合
-        if (result.length === 0) {
-          // 閲覧者設定を行う
-          this.browseSetting(slip, user);
-        } else {
-          this.adminUserDiv = true;
-        }
+      this.service.getSendName(user).subscribe(user => {
+        this.acsessUser.userName = user[0].userName;
+        // メッセージメニュー画面の初期化
+        this.child.onShow(this.dispSlipId, this.acsessUser.userId);
+        // 管理者判定
+        this.service.slipAuthCheck(this.dispSlipId, user).subscribe(result => {
+          // 取得できない場合
+          if (result.length === 0) {
+            // 閲覧者設定を行う
+            this.browseSetting(slip, user);
+          } else {
+            this.adminUserDiv = true;
+          }
+        });
       });
     } else {
         // ダイアログ表示（ログインしてください）し前画面へ戻る
@@ -115,18 +126,18 @@ export class ServiceTransactionComponent implements OnInit {
     }
   }
 
-/**
- * subjectのユーザー情報を設定する有効期限切れの場合メインメニューに戻る
- */
-private setAcsessUser() {
-  this.auth.user$.subscribe(data => {
-    if(data != null) {
-      this.acsessUser = data;
-    } else {
-      this.router.navigate(["mein-menu"]);
-    }
-  })
-}
+// /**
+//  * subjectのユーザー情報を設定する有効期限切れの場合メインメニューに戻る
+//  */
+// private setAcsessUser() {
+//   this.auth.user$.subscribe(data => {
+//     if(data != null) {
+//       this.acsessUser = data;
+//     } else {
+//       this.router.navigate(["mein-menu"]);
+//     }
+//   })
+// }
 
 
   /**
@@ -156,10 +167,17 @@ private setAcsessUser() {
    * 質問モーダルを展開する
    */
   onQuestion() {
+    console.log('サービスタイプ:'+this.serviceType)
+
     this.questionBoardModal.open(QuestionBoardComponent, {
       width: '600px',
       height: '800px',
-      data: this.dispSlipId
+      data: {
+        serviceId: this.dispSlipId,
+        userId: this.acsessUser.userId,
+        userName: this.acsessUser.userName,
+        serviceType: this.serviceType
+      }
     });
   }
 

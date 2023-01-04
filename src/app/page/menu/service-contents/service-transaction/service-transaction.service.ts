@@ -8,8 +8,9 @@ import { slipManegement } from 'src/app/entity/slipManegement';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiCheckService } from 'src/app/page/service/api-check.service';
-import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
+import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
+import { user } from 'src/app/entity/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,6 @@ export class ServiceTransactionService {
 
 
   constructor(
-    private http: HttpClient,
     private apiService: ApiSerchService,
     private apGsiService: ApiGsiSerchService,
     private apCheckService: ApiCheckService,
@@ -27,11 +27,22 @@ export class ServiceTransactionService {
 
   /**
    * 詳細表示する伝票情報を取得する
-   * @param id
+   * @param slipNo
    * @returns
    */
-  public getService(slipNo: string): Observable<slipDetailInfo[]> {
-    return this.apiService.getSlip(slipNo);
+  public getService(slipNo: string, serviceType: string): Observable<any> {
+    if(serviceType !== '0') {
+      return this.apiUniqeService.getServiceContents(slipNo);
+    }
+    return this.apiUniqeService.getSlip(slipNo);
+  }
+
+  /**
+   * アクセス者情報取得
+   * @param userId
+   */
+  public getSendName(userId: string): Observable<any> {
+    return this.apiService.getUser(userId);
   }
 
   /**

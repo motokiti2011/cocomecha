@@ -2,8 +2,8 @@
  * 伝票コメント情報
  */
 export interface slipMessageInfo {
-  // コメントID
-  commentId: string;
+  // メッセージID
+  messageId: string;
   // 伝票番号
   slipNo: string;
   // 表示順
@@ -15,7 +15,7 @@ export interface slipMessageInfo {
   // コメント
   comment: string;
   // 投稿宛先
-  sendAdress: string;
+  sendAdressId: string;
   // 論理削除フラグ
   logicalDeleteDiv: string;
   // 投稿日時
@@ -27,7 +27,7 @@ export interface slipMessageInfo {
  */
 export const defaltSlipComment: slipMessageInfo = {
     // コメントID
-    commentId: '0',
+    messageId: '0',
     // 伝票番号
     slipNo: '',
     // 表示順
@@ -39,7 +39,7 @@ export const defaltSlipComment: slipMessageInfo = {
     // コメント
     comment: '',
     // 投稿宛先
-    sendAdress: '',
+    sendAdressId: '',
     // 論理削除フラグ
     logicalDeleteDiv: '0',
     // 投稿日時
@@ -51,7 +51,7 @@ export const defaltSlipComment: slipMessageInfo = {
  */
 export interface dispSlipComment {
   // コメントID
-  commentId: string;
+  messageId: string;
   // 表示位置
   position: boolean;
   // 伝票番号
@@ -65,7 +65,7 @@ export interface dispSlipComment {
   // コメント
   comment: string;
   // 投稿宛先
-  sendAdress: string;
+  sendAdressId: string;
   // 論理削除フラグ
   logicalDeleteDiv: string;
   // 投稿日時
@@ -77,7 +77,7 @@ export interface dispSlipComment {
  */
  export const defaltDispSlipComment: dispSlipComment = {
   // コメントID
-  commentId: '0',
+  messageId: '0',
   // 表示位置
   position: true,
   // 伝票番号
@@ -91,7 +91,7 @@ export interface dispSlipComment {
   // コメント
   comment: '',
   // 投稿宛先
-  sendAdress: '',
+  sendAdressId: '',
   // 論理削除フラグ
   logicalDeleteDiv: '0',
   // 投稿日時

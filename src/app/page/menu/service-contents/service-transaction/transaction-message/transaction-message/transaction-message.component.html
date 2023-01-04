@@ -4,10 +4,10 @@
     <div *ngFor="let list of dispMessageList" >
 
       <div [ngClass]="list.position? 'to-msg':'from-msg'">
-        <div class="index">No.{{list.commentId}}　コメント者名：{{list.sendUserName}}</div>
+        <div class="index">No.{{list.messageId}}　コメント者名：{{list.sendUserName}}</div>
         <div class="sender-text">{{list.comment}}</div>
       </div>
-      
+
     </div>
   </div>
   <ng-template #elseContent>
@@ -20,8 +20,8 @@
 <div class="form">
   <select class="adress-select" name="adress" [(ngModel)]="adressSelect" (change)="selectAdress()">
     <option value="">宛先を選択してください。</option>
-    <option *ngFor="let adress of adressData" 
-    [value]="adress.sendId" 
+    <option *ngFor="let adress of adressData"
+    [value]="adress.sendId"
     [selected]="adress.sendId === adressSelect">
     {{adress.name}}</option>
   </select>

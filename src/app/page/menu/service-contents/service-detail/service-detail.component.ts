@@ -23,6 +23,8 @@ export class ServiceDetailComponent implements OnInit {
 
   images : image[] = [];
 
+  serviceType = '';
+
   /** サービスID */
   serviceId: string = '';
   /** タイトル */
@@ -58,22 +60,22 @@ export class ServiceDetailComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       console.log(params['serviceId']);
       const serviceId: string = params['serviceId'];
+      this.serviceType = params['searchTargetService'];
       // サービスIDから伝票情報を取得し表示する
-      this.service.getService(serviceId).subscribe(data => {
+      this.service.getService(serviceId, this.serviceType).subscribe(data => {
         this.dispContents = data[0];
         // 表示内容に取得した伝票情報を設定
+        this.serviceTitle = this.dispContents.title;
         this.dispYMD = this.dispContents.bidEndDate;
         this.dispPrice = this.dispContents.price;
         this.dispArea = this.dispContents.areaNo1;
         this.dispExplanation = this.dispContents.explanation;
         this.images = this.service.setImages(this.dispContents.imageUrlList)
-        console.log('ディティール1：' + this.dispContents);
-        console.log('ディティール2：' + this.dispContents.areaNo1);
       })
-      this.serviceTitle = params['serviceId'];
     });
     this.getUserInfo();
   }
+
 
   /**
    *
@@ -91,8 +93,14 @@ export class ServiceDetailComponent implements OnInit {
    * 取引するボタン押下時の処理
    */
   onTransaction() {
+    console.log('serviceType1:'+this.serviceType)
     this.router.navigate(["service-transaction"],
-      { queryParams: { slipNo: this.dispContents.slipNo, status: false } });
+      { queryParams: {
+        slipNo: this.dispContents.slipNo,
+        serviceType: this.serviceType,
+        status: false
+      }
+    });
   }
 
   // /**
@@ -124,7 +132,7 @@ export class ServiceDetailComponent implements OnInit {
    */
   onTransactionStatus() {
     this.router.navigate(["service-transaction"],
-      { queryParams: { slipNo: this.dispContents.slipNo, status: true } });
+      { queryParams: { slipNo: this.dispContents.slipNo, serviceType: this.serviceType, status: true } });
   }
 
 

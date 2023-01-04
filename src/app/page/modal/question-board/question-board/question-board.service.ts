@@ -5,7 +5,7 @@ import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { HttpClient, HttpResponse, HttpClientJsonpModule, HttpErrorResponse, } from '@angular/common/http';
 import { loginUser } from 'src/app/entity/loginUser';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
-
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,7 @@ export class QuestionBoardService {
   constructor(
     private http: HttpClient,
     private apiService: ApiSerchService,
+    private apiUniqueService: ApiUniqueService,
   ) { }
 
   /**
@@ -45,10 +46,11 @@ export class QuestionBoardService {
    * @param slipNo
    * @returns
    */
-  public sernderQuestion(user:loginUser,slipNo: string,text: string): Observable<HttpResponse<any>> {
-    const data = this.createQuestion(user, slipNo, text)
-    return this.apiService.postQuestion(data)
-    // return this.http.post(this.apiEndPoint + 'slipquestion/postslipquestion', data, { observe: 'response' });
+  public sernderQuestion(
+    userId: string, userName: string, slipNo: string,
+     serviceType: string, text: string): Observable<any> {
+    const data = this.createQuestion(userId, userName, slipNo, text)
+    return this.apiUniqueService.sendQuestion(data, serviceType);
   }
 
   /**
@@ -58,13 +60,13 @@ export class QuestionBoardService {
    * @param text
    * @returns
    */
-  private createQuestion(user: loginUser, slipNo: string, text: string): slipQuestion {
+  private createQuestion(userId:string, userName:string, slipNo: string, text: string): slipQuestion {
     const data:slipQuestion = {
       id: 0,
       slipNo: slipNo,
       slipAdminUser: '',
-      senderId: user.userId,
-      senderName: user.userName,
+      senderId: userId,
+      senderName: userName,
       senderText: text,
       anserDiv: '0',
       anserText: ''
