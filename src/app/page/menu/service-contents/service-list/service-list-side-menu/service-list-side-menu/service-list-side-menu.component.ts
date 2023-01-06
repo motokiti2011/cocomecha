@@ -41,6 +41,8 @@ export class ServiceListSideMenuComponent implements OnInit {
   @Input() serchCategory: string = '0';
   /** お気に入り表示情報*/
   @Input() favoriteList: userFavorite[] = [];
+  /** アクセスユーザー */
+  @Input() acseccUser: string = '';
   // /** 閲覧履歴表示情報*/
   // @Input() browsingHistoryList: serviceContents[] = [];
   /** エリア操作時のイベント */
@@ -102,19 +104,17 @@ export class ServiceListSideMenuComponent implements OnInit {
       }
     }
     // 認証ユーザー取得
-    this.auth.user$.subscribe(userOrNull => {
+    if (this.acseccUser !== null && this.acseccUser != '') {
+      // 認証情報がない場合、お気に入り、閲覧履歴は非表示
+      this.userCertificationDiv = false;
+    } else {
+      this.userCertificationDiv = true;
+    }
+    if(this.userCertificationDiv) {
+      // 閲覧履歴情報を取得
+      this.initListDisplay(this.acseccUser);
+    }
 
-      if (userOrNull === null) {
-        // 認証情報がない場合、お気に入り、閲覧履歴は非表示
-        this.userCertificationDiv = false;
-      } else {
-        this.userCertificationDiv = true;
-      }
-      if(this.userCertificationDiv) {
-        // 閲覧履歴情報を取得
-        this.initListDisplay(userOrNull?.userId);
-      }
-    });
   }
 
   /**
@@ -192,5 +192,13 @@ export class ServiceListSideMenuComponent implements OnInit {
   listMenu() {
     console.log(323);
   }
+
+  /**
+   * 検索するボタン押下イベント
+   */
+  onSerch() {
+    console.log();
+  }
+
 
 }

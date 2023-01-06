@@ -1,4 +1,10 @@
 <div class="button-item">
+
+  <div>
+    <input type="button" value="検索する" (click)="onSerch()" />
+  </div>
+
+
   <p>地域</p>
   <select class="area-select" name="area" [(ngModel)]="areaSelect" (change)="onArea()">
     <option value="">未選択</option>

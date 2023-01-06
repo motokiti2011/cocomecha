@@ -154,7 +154,7 @@ export class ServiceCreateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+    this.refreshForm();
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
     if(authUser == null) {

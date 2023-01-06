@@ -311,21 +311,21 @@ export class ApiUniqueService {
    * @param slipNo
    * @returns
    */
-    public getSlip(slipNo: string): Observable<any> {
-      // リクエストボディ生成
-      const body = {
-        "OperationType": "GETSLIP",
-        "Keys": {
-          "slipNo": slipNo
-        }
-      };
-      return this.http.post<any>(this.apiEndPoint + '/getslip', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: any) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+  public getSlip(slipNo: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "GETSLIP",
+      "Keys": {
+        "slipNo": slipNo
+      }
+    };
+    return this.http.post<any>(this.apiEndPoint + '/getslip', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
   /**
    * サービス商品情報を取得する。
@@ -414,6 +414,30 @@ export class ApiUniqueService {
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
+
+
+  /**
+   * お気に入り情報を削除する。
+   * @param slipNo
+   * @returns
+   */
+  public multipleDeleteFavorite(idList: string[]): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "MULTIPLEDELETEFAVORITE",
+      "Keys": {
+        "idList": idList
+      }
+    };
+    return this.http.post<any>(this.apiEndPoint + '/getsalesservice', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
 
 
 }

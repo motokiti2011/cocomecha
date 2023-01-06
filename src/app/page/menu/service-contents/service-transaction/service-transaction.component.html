@@ -13,15 +13,15 @@
     <input type="button" class="btn_item" on-click="onMsgPrmReq()" value="メッセージ許可申請">
     <p class="private-message">このサービスのメッセージは<br>非公開です。</p>
 
-    <div *ngId="authUserDiv">
+    <div *ngIf="adminUserDiv">
       <input type="button" class="btn_item" on-click="onOpenLevelSet()" value="メッセージ公開レベル設定">
     </div>
 
-    <div *ngId="openDiv">
+    <div *ngIf="openDiv">
       <input type="button" class="btn_item" on-click="onMsgPrmReq()" value="メッセージ許可申請">
     </div>
 
-    <div *ngId="privateDiv">
+    <div *ngIf="privateDiv">
       <p class="private-message">このサービスのメッセージは<br>非公開です。</p>
     </div>
   </div>

@@ -12,6 +12,8 @@ export interface userFavorite {
   price: string;
   // 期間
   whet: string;
+  // サービスタイプ
+  serviceType: string;
   // 終了日
   endDate: string;
   // 画像url

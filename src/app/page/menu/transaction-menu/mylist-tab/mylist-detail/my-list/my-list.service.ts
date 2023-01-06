@@ -18,8 +18,8 @@ export class MyListService {
 
   /**
    * マイリスト情報を取得
-   * @param userId 
-   * @returns 
+   * @param userId
+   * @returns
    */
   public getMyList(userId: string): Observable<userMyList[]> {
     return this.http.get<userMyList[]>(`${this.apiEndPoint + 'usermylist/getusermylisygroup/' + userId}`);
@@ -27,8 +27,8 @@ export class MyListService {
 
   /**
    * 取得したマイリスト情報を表示用に加工する
-   * @param userMyList 
-   * @returns 
+   * @param userMyList
+   * @returns
    */
   public displayFormatdisplayFormat(userMyList: userMyList[]): dispUserMyList[] {
     let resultList: dispUserMyList[] = [];
@@ -46,7 +46,8 @@ export class MyListService {
         dispMessageDate: String(formatDate(data.messageDate, "yy/MM/dd HH:mm", this.locale)),
         messageOrQuastionId: data.messageOrQuastionId,
         bidderId: data.bidderId,
-        deleteDiv: data.deleteDiv
+        deleteDiv: data.deleteDiv,
+        serviceType:  data.serviceType
       }
       resultList.push(dispContents);
     });
@@ -56,8 +57,8 @@ export class MyListService {
 
   /**
    * 既読・未読を切替
-   * @param data 
-   * @returns 
+   * @param data
+   * @returns
    */
   private readOrNoread(data: string): string {
     if (data == '0') {
@@ -68,7 +69,7 @@ export class MyListService {
 
   /**
    * カテゴリーを表示用に加工する
-   * @param category 
+   * @param category
    */
   public dispCategoryFormat(category: string): string {
     let msg = '';

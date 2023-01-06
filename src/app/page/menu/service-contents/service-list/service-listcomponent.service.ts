@@ -373,20 +373,18 @@ export class ServiceListcomponentService {
       if (_find(favoriteList, data => data.slipNo == contents.id)) {
         const id = _find(favoriteList, data => data.slipNo == contents.id)?.id
         // 存在する場合解除が必用なため削除する。
-        if (id !== undefined) {
-          this.apiService.deleteFavorite(id).pipe(
-            // HTTPステータスコードを戻す
-            map((res: HttpResponse<any>) => res.status),
-            // エラー時もHTTPステータスコードを戻す
-            catchError((err: HttpErrorResponse) => of(err.status))
-          );
+        if (id !== undefined && id !== null)  {
+          this.apiService.deleteFavorite(id).subscribe(st => {
+            console.log('削除');
+            console.log(st);
+          });
         }
       } else {
-        // 存在しないので更新する　
+        // 存在しないので追加する
         this.apiService.postFavorite(data).subscribe(st => {
+          console.log('追加');
           console.log(st);
         });
-
       }
     }
   }
@@ -406,7 +404,8 @@ export class ServiceListcomponentService {
       price: String(contents.price),
       whet: this.getWhet(contents),
       endDate: String(contents.preferredDate),
-      imageUrl: contents.thumbnailUrl
+      imageUrl: contents.thumbnailUrl,
+      serviceType: contents.targetService
     }
   }
 
@@ -420,11 +419,9 @@ export class ServiceListcomponentService {
       if (_find(favorite, f => f.slipNo == slip.id)) {
         slip.favoriteFlg = true;
       }
-    })
+    });
     return serviceSlip;
   }
-
-
 
   /**
    * 閲覧履歴情報を取得
@@ -450,7 +447,8 @@ export class ServiceListcomponentService {
       price: String(contents.price),
       whet: this.getWhet(contents),
       endDate: String(contents.preferredDate),
-      imageUrl: contents.thumbnailUrl
+      imageUrl: contents.thumbnailUrl,
+      serviceType: contents.targetService
     }
   }
 
@@ -459,9 +457,8 @@ export class ServiceListcomponentService {
    * @param contents
    * @returns
    */
-  public postBrowsingHistory(contents: serviceContents, userId: string) {
-
-    this.apiService.postHistory(this.createBrowsingHistory(contents, userId));
+  public postBrowsingHistory(contents: serviceContents, userId: string) :Observable<any> {
+    return this.apiService.postHistory(this.createBrowsingHistory(contents, userId));
   }
 
 }

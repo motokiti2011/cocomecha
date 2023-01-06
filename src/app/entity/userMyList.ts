@@ -21,6 +21,8 @@ export interface userMyList {
   bidderId: string;
   // 削除区分
   deleteDiv: string;
+  // サービスタイプ
+  serviceType: string;
 }
 
 /** 表示用マイリスト情報 */
@@ -51,6 +53,8 @@ export interface dispUserMyList {
   bidderId: string;
   // 削除区分
   deleteDiv: string;
+  // サービスタイプ
+  serviceType: string;
 }
 
 /** マイリストカテゴリー設定値 */

@@ -66,7 +66,7 @@ export class MyListComponent implements OnInit {
   mock: userMyList = {
     id: '',
     userId:'1', slipNo:'1', serviceTitle:'テストタイトル', category:'1', message:'テストメッセージ', readDiv:'0',
-    messageDate:'20221001', messageOrQuastionId:'1', bidderId:'', deleteDiv: '0'  }
+    messageDate:'20221001', messageOrQuastionId:'1', bidderId:'', deleteDiv: '0', serviceType:'0' }
 
 
 
@@ -199,7 +199,7 @@ export class MyListComponent implements OnInit {
 
   /**
    * タイトルクリック時、詳細画面へ遷移する
-   * @param content 
+   * @param content
    */
   contentsDetail(content: userMyList) {
     this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.slipNo } });
@@ -207,7 +207,7 @@ export class MyListComponent implements OnInit {
 
   /**
    *  並び順変更イベント
-   * 
+   *
    */
   changeOrder() {
   //   console.log(this.selected)

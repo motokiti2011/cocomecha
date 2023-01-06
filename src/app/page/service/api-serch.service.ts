@@ -151,7 +151,7 @@ export class ApiSerchService {
     public postHistory(data: browsingHistory): Observable<any> {
       // リクエストボディ生成
       const body = {
-        "OperationType": "PUT",
+        "OperationType": "POST",
         "Keys": {
           "id": data.id,
           "userId": data.userId,
@@ -161,6 +161,7 @@ export class ApiSerchService {
           "whet": data.whet,
           "endDate": data.endDate,
           "imageUrl": data.imageUrl,
+          "serviceType": data.serviceType,
           "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
           "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
 
@@ -182,7 +183,7 @@ export class ApiSerchService {
     public postFavorite(data: userFavorite): Observable<any> {
       // リクエストボディ生成
       const body = {
-        "OperationType": "PUT",
+        "OperationType": "POST",
         "Keys": {
           "id": data.id,
           "userId": data.userId,
@@ -192,6 +193,7 @@ export class ApiSerchService {
           "whet": data.whet,
           "endDate": data.endDate,
           "imageUrl": data.imageUrl,
+          "serviceType": data.serviceType,
           "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
           "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
         }

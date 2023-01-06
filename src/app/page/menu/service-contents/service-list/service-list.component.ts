@@ -19,7 +19,7 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { serchInfo, serchParam } from 'src/app/entity/serchInfo';
-
+import { CognitoService } from 'src/app/page/auth/cognito.service';
 @Component({
   selector: 'app-service-list',
   templateUrl: './service-list.component.html',
@@ -67,15 +67,16 @@ export class ServiceListComponent implements OnInit {
   serchArea2 = '0';
   /** 検索条件：カテゴリー  */
   serchCategory = '0';
+  /** 検索情報 */
   serchInfo:serchInfo = serchParam;
-
-
+  /** アクセスユーザー */
+  acseccUser = '';
   /** 認証ユーザー情報有無フラグ */
   userCertificationDiv: boolean = false;
   /** お気に入り取得情報 */
   favoriteList: userFavorite[] = [];
   /** ユーザー情報 */
-  authUser: loginUser = { userId: '', userName: '' };
+  authUser = '';
 
   displayData = [
     { label: '表示順', value: 'defult', disabled: false },
@@ -101,6 +102,7 @@ export class ServiceListComponent implements OnInit {
     private service: ServiceListcomponentService,
     // private loading: LoadingSpinnerService,
     private auth: AuthUserService,
+    private cognito: CognitoService,
     private apiService: ApiSerchService,
     private apiGsiService: ApiGsiSerchService,
     private apiUniqueService: ApiUniqueService
@@ -121,18 +123,17 @@ export class ServiceListComponent implements OnInit {
         this.getSlip();
       }
       // 認証有無状態を判定する
-      this.auth.user$.subscribe(userOrNull => {
-        if (userOrNull === null) {
+      const authUser = this.cognito.initAuthenticated();
+        if (authUser === null) {
           // 認証情報がない場合、お気に入り、閲覧履歴は非表示
           this.userCertificationDiv = false;
         } else {
           // ユーザー情報を基にお気に入り情報を取得
           this.userCertificationDiv = true;
-          this.authUser = userOrNull;
-        }
-        // ユーザー情報ある場合
-        if (this.userCertificationDiv) {
-          this.apiGsiService.serchFavorite(this.authUser.userId).subscribe(data => {
+          this.authUser = authUser;
+          this.acseccUser = authUser;
+          // ユーザー情報ある場合
+          this.apiGsiService.serchFavorite(authUser).subscribe(data => {
             this.favoriteList = this.service.favoriteUnuq(data);
             if (data.length > 0) {
               this.setFavorite();
@@ -140,7 +141,6 @@ export class ServiceListComponent implements OnInit {
           });
         }
       });
-    });
   }
 
   /**
@@ -222,7 +222,8 @@ export class ServiceListComponent implements OnInit {
    * お気に入り情報を設定する
    */
   private setFavorite() {
-    this.displayContentsList = this.service.setFavorite(this.displayContentsList, this.favoriteList);
+    const dList = this.displayContentsList;
+    this.displayContentsList = this.service.setFavorite(dList, this.favoriteList);
   }
 
   /**
@@ -357,7 +358,9 @@ export class ServiceListComponent implements OnInit {
   onContentsSelect(content: serviceContents): void {
     if (this.userCertificationDiv) {
       // 認証されている場合は閲覧履歴情報に登録
-      this.service.postBrowsingHistory(content, this.authUser.userId);
+      this.service.postBrowsingHistory(content, this.authUser).subscribe(d => {
+        console.log(d)
+      });
     }
 
     this.router.navigate(["service-detail-component"],
@@ -411,7 +414,7 @@ export class ServiceListComponent implements OnInit {
       this.seviceListSetting(slip);
       this.initSetServiceContents(slip);
       if (this.userCertificationDiv) {
-        this.apiGsiService.serchFavorite(this.authUser.userId).subscribe(data => {
+        this.apiGsiService.serchFavorite(this.authUser).subscribe(data => {
           this.favoriteList = this.service.favoriteUnuq(data);
           if (data.length > 0) {
             this.setFavorite();
@@ -434,7 +437,7 @@ export class ServiceListComponent implements OnInit {
       this.seviceListSetting(slip);
       this.initSetServiceContents(slip);
       if (this.userCertificationDiv) {
-        this.apiGsiService.serchFavorite(this.authUser.userId).subscribe(data => {
+        this.apiGsiService.serchFavorite(this.authUser).subscribe(data => {
           this.favoriteList = this.service.favoriteUnuq(data);
           if (data.length > 0) {
             this.setFavorite();

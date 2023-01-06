@@ -6,22 +6,34 @@
 
 <div class="disp-area">
   <div *ngIf ="dispDiv; else elseContent">
-    <div *ngFor="let list of questionList" >
+    <div *ngFor="let list of questionList; index as i" >
       <div class="question-contents">
         <div class="index">No.{{list.id}}</div>
         <div class="sender">質問者：{{list.senderName}}</div>
         <div class="question">質問内容</div>
         <div class="sender-text">{{list.senderText}}</div>
         <div class="anser">解答：{{list.anserText}}</div>
+        <div *ngIf="adminDiv && list.anserDiv =='0' ">
+          <input name="text" type="button" (click)="onAnser(i)" value="回答する" />
+        </div>
+        <div *ngIf="adminDiv && list.anserDiv =='1' ">
+          <input name="text" type="button" (click)="onAnser(i)" value="回答を編集する" />
+        </div>
       </div>
-    </div>    
+    </div>
   </div>
   <ng-template #elseContent>
     <div class="none">{{noneMessage}}</div>
   </ng-template>
 </div>
 
-<div class="form">
-  <input class="form-question" type="text" [(ngModel)]="sernderQuestion" (change)="sendQuest()" placeholder="質問はこちらに記入してください。" />
-  <input type="button" class="submit-button" value="投稿する" (click)="onSendQuestion()" [disabled]="isDisabled" />
+<div>
+  <div class="form">
+    <div *ngIf ="anserDiv">
+      <input type="button" class="submit-button" value="回答をやめる" (click)="onStopAnser()" />
+    </div>
+      <input class="form-question" type="text" [(ngModel)]="sernderMessage" (change)="sendMessageCheck()" placeholder={{formPlaceholder}} />
+      <input type="button" class="submit-button" value={{buttonMessage}} (click)="onSubmit()" [disabled]="isDisabled"/>
+  </div>
+
 </div>

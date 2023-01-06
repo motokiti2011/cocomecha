@@ -21,6 +21,7 @@ import { loginUser } from 'src/app/entity/loginUser';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { userFavorite } from 'src/app/entity/userFavorite';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
 
 @Component({
   selector: 'app-favorite',
@@ -57,7 +58,7 @@ export class FavoriteComponent implements OnInit {
     { id: 4, value: '価格が高い順' },
   ];
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '' };
+  loginUser = ''
 
 
   constructor(
@@ -65,7 +66,7 @@ export class FavoriteComponent implements OnInit {
     private router: Router,
     private service: TransactionMenuService,
     private favoriteService: FavoriteService,
-    private auth: AuthUserService,
+    private cognito: CognitoService,
     public modal: MatDialog,
   ) { }
 
@@ -77,35 +78,34 @@ export class FavoriteComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
-    this.auth.user$.subscribe(user => {
-      // 未認証の場合前画面へ戻る
-      if (user == undefined || user == null || user.userId == '') {
-        // ダイアログ表示（ログインしてください）し前画面へ戻る
-        const dialogData: messageDialogData = {
-          massage: 'ログインが必要になります。',
-          closeFlg: false,
-          closeTime: 0,
-          btnDispDiv: true
-        }
-        const dialogRef = this.modal.open(MessageDialogComponent, {
-          width: '300px',
-          height: '150px',
-          data: dialogData
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(result);
-          this.onReturn();
-          return;
-        });
-      } else {
-        // ユーザー情報を設定する
-        this.loginUser = user;
+    const user = this.cognito.initAuthenticated();
+    // 未認証の場合前画面へ戻る
+    if (user == undefined || user == null || user == '') {
+      // ダイアログ表示（ログインしてください）し前画面へ戻る
+      const dialogData: messageDialogData = {
+        massage: 'ログインが必要になります。',
+        closeFlg: false,
+        closeTime: 0,
+        btnDispDiv: true
       }
-      // データを取得
-      this.favoriteService.getFavoriteList(this.loginUser.userId).subscribe(data => {
-        console.log(data);
-        this.detailList = data;
+      const dialogRef = this.modal.open(MessageDialogComponent, {
+        width: '300px',
+        height: '150px',
+        data: dialogData
       });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(result);
+        this.onReturn();
+        return;
+      });
+    } else {
+      // ユーザー情報を設定する
+      this.loginUser = user;
+    }
+    // データを取得
+    this.favoriteService.getFavoriteList(this.loginUser).subscribe(data => {
+      console.log(data);
+      this.detailList = data;
     });
 
   }
@@ -185,13 +185,11 @@ export class FavoriteComponent implements OnInit {
     this.favoriteService.deleteMyFavorite(deleteList).subscribe(result => {
       console.log(result);
     });
-
-
   }
 
   /**
    * タイトルクリック時、詳細画面へ遷移する
-   * @param content 
+   * @param content
    */
   contentsDetail(content: serviceContents) {
     this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.id } });
@@ -199,7 +197,7 @@ export class FavoriteComponent implements OnInit {
 
   /**
    *  並び順変更イベント
-   * 
+   *
    */
   changeOrder() {
     console.log(this.selected)

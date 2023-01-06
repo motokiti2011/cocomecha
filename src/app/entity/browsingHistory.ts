@@ -15,6 +15,8 @@ export interface browsingHistory {
   endDate: string;
   // 画像url
   imageUrl:string;
+  // サービスタイプ
+  serviceType: string;
 }
 
 

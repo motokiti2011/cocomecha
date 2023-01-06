@@ -148,7 +148,6 @@ export class ServiceTransactionComponent implements OnInit {
       this.service.isSlipUserPermission(slip.slipNo, userId).subscribe(re => {
         if (re) {
           // 許可済みユーザーの場合チャット許可する
-
         } else {
           // 未許可の場合　一時許可ボタンを表示
           this.openDiv = true;
@@ -167,7 +166,6 @@ export class ServiceTransactionComponent implements OnInit {
    */
   onQuestion() {
     console.log('サービスタイプ:'+this.serviceType)
-
     this.questionBoardModal.open(QuestionBoardComponent, {
       width: '600px',
       height: '800px',
@@ -175,7 +173,8 @@ export class ServiceTransactionComponent implements OnInit {
         serviceId: this.dispSlipId,
         userId: this.acsessUser.userId,
         userName: this.acsessUser.userName,
-        serviceType: this.serviceType
+        serviceType: this.serviceType,
+        slipAdmin: this.adminUserDiv
       }
     });
   }

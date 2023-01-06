@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
+import { userFavorite } from 'src/app/entity/userFavorite';
 
 @Injectable({
   providedIn: 'root'
@@ -90,9 +91,9 @@ export class ApiGsiSerchService {
         "userId": userId
       }
     };
-    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/userfavorite', body).pipe(
+    return this.http.post<userFavorite>(this.apiEndPoint + '/userfavorite', body).pipe(
       // 取得できた場合ユーザー情報を返却
-      map((res: any) => res),
+      map((res: userFavorite) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );

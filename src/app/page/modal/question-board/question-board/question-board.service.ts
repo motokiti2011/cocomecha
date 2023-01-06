@@ -28,7 +28,7 @@ export class QuestionBoardService {
   public anserCheck(slipQuestion: slipQuestion[]): slipQuestion[] {
     let count = 1;
     slipQuestion.forEach(data => {
-      data.id = count;
+      // data.id = count;
       // 未回答の場合解答メッセージを設定する。
       if (data.anserDiv == '0') {
         data.anserText = '未回答';
@@ -51,6 +51,16 @@ export class QuestionBoardService {
      serviceType: string, text: string): Observable<any> {
     const data = this.createQuestion(userId, userName, slipNo, text)
     return this.apiUniqueService.sendQuestion(data, serviceType);
+  }
+
+  /**
+   * 質問情報の回答内容を更新する
+   * @param slipQuestion
+   */
+  public anserQuestion(slipQuestion: slipQuestion):Observable<any> {
+    const data: slipQuestion = slipQuestion;
+    data.anserDiv = '1';
+    return this.apiService.postQuestion(data)
   }
 
   /**
