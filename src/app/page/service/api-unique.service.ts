@@ -417,8 +417,8 @@ export class ApiUniqueService {
 
 
   /**
-   * お気に入り情報を削除する。
-   * @param slipNo
+   * お気に入り情報を削除する(複数件)。
+   * @param idList
    * @returns
    */
   public multipleDeleteFavorite(idList: string[]): Observable<any> {
@@ -437,6 +437,26 @@ export class ApiUniqueService {
     );
   }
 
+    /**
+   * 閲覧履歴情報を削除する(複数件)
+   * @param idList
+   * @returns
+   */
+    public multipleDeleteHistory(idList: string[]): Observable<any> {
+      // リクエストボディ生成
+      const body = {
+        "OperationType": "MULTIPLEDELETEHISTORY",
+        "Keys": {
+          "idList": idList
+        }
+      };
+      return this.http.post<any>(this.apiEndPoint + '/getsalesservice', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: any) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
 
 
 

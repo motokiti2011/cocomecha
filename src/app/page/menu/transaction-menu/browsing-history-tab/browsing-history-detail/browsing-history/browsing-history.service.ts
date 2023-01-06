@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpClientJsonpModule, HttpErrorResponse, } from '@angular/common/http';
 import { catchError, Observable, of, map} from 'rxjs';
 import { browsingHistory } from 'src/app/entity/browsingHistory';
+import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,7 @@ export class BrowsingHistoryService {
 
   /**
    * お気に入り情報を取得する
-   * @returns 
+   * @returns
    */
   public getMyBrosingHistory(userId: string): Observable<browsingHistory[]> {
     return this.http.get<browsingHistory[]>(`${this.apiEndPoint + 'userbrowsinghistory/getuserbybrowsinghistory/' + userId}`);
@@ -25,9 +27,13 @@ export class BrowsingHistoryService {
 
   /**
    * お気に入り情報を削除する
-   * @param list 
+   * @param list
    */
   public deleteMyBrosingHistory(list: browsingHistory[]): Observable<number> {
+
+
+
+
     return this.http.post(this.apiEndPoint + 'userbrowsinghistory/deletebrowsinghistorylist', list, { observe: 'response' }).pipe(
       // HTTPステータスコードを戻す
       map((res: HttpResponse<any>) => res.status),
