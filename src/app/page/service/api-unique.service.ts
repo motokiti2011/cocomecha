@@ -12,6 +12,7 @@ import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
 import { serchInfo } from 'src/app/entity/serchInfo';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
+import { browsingHistory } from 'src/app/entity/browsingHistory';
 
 @Injectable({
   providedIn: 'root'
@@ -424,12 +425,12 @@ export class ApiUniqueService {
   public multipleDeleteFavorite(idList: string[]): Observable<any> {
     // リクエストボディ生成
     const body = {
-      "OperationType": "MULTIPLEDELETEFAVORITE",
+      "IndexType": "MULTIPLEDELETEFAVORITE",
       "Keys": {
         "idList": idList
       }
     };
-    return this.http.post<any>(this.apiEndPoint + '/getsalesservice', body).pipe(
+    return this.http.post<any>(this.apiEndPoint + '/multiplefavorite', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -442,15 +443,15 @@ export class ApiUniqueService {
    * @param idList
    * @returns
    */
-    public multipleDeleteHistory(idList: string[]): Observable<any> {
+    public multipleDeleteBrowsingHistory(idList: string[]): Observable<any> {
       // リクエストボディ生成
       const body = {
-        "OperationType": "MULTIPLEDELETEHISTORY",
+        "IndexType": "MULTIPLEDELETEBROWSINGHISTORY",
         "Keys": {
           "idList": idList
         }
       };
-      return this.http.post<any>(this.apiEndPoint + '/getsalesservice', body).pipe(
+      return this.http.post<any>(this.apiEndPoint + '/multiplebrosing', body).pipe(
         // 取得できた場合ユーザー情報を返却
         map((res: any) => res),
         // エラー時HTTPステータスコードを戻す

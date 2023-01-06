@@ -12,33 +12,29 @@ export class BrowsingHistoryService {
 
   constructor(
     private http: HttpClient,
+    private apiGsiSerchService: ApiGsiSerchService,
+    private apiUniqueService: ApiUniqueService,
   ) { }
-
-  private apiEndPoint: string = 'http://localhost:8080/v1/';
 
 
   /**
-   * お気に入り情報を取得する
+   * 閲覧履歴情報を取得する
    * @returns
    */
   public getMyBrosingHistory(userId: string): Observable<browsingHistory[]> {
-    return this.http.get<browsingHistory[]>(`${this.apiEndPoint + 'userbrowsinghistory/getuserbybrowsinghistory/' + userId}`);
+    return this.apiGsiSerchService.serchBrowsingHistory(userId);
   }
 
   /**
-   * お気に入り情報を削除する
+   * 閲覧履歴情報を削除する
    * @param list
    */
-  public deleteMyBrosingHistory(list: browsingHistory[]): Observable<number> {
-
-
-
-
-    return this.http.post(this.apiEndPoint + 'userbrowsinghistory/deletebrowsinghistorylist', list, { observe: 'response' }).pipe(
-      // HTTPステータスコードを戻す
-      map((res: HttpResponse<any>) => res.status),
-      // エラー時もHTTPステータスコードを戻す
-      catchError((err: HttpErrorResponse) => of(err.status))
-    );
+  public deleteMyBrosingHistory(list: browsingHistory[]): Observable<any> {
+    let idList:string[] = [];
+    list.forEach(li => {
+      idList.push(li.id);
+    }); 
+    return this.apiUniqueService.multipleDeleteBrowsingHistory(idList);
   }
+
 }
