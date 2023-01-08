@@ -18,4 +18,8 @@ export interface userFavorite {
   endDate: string;
   // 画像url
   imageUrl:string;
+  // 作成日時
+  created: string;
+  // 更新日時
+  updated: string;
 }

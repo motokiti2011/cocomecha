@@ -17,5 +17,9 @@ export interface browsingHistory {
   imageUrl:string;
   // サービスタイプ
   serviceType: string;
+  // 作成日時
+  created: string;
+  // 更新日時
+  updated: string;
 }
 

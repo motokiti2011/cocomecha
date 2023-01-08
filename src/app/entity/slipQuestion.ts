@@ -15,4 +15,8 @@ export interface slipQuestion {
   anserDiv: String;
   // 解答文
   anserText: String;
+  // 作成日時
+  created: string;
+  // 更新日時
+  updated: string;
 }

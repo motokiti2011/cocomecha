@@ -36,9 +36,9 @@ export interface user {
   // 更新ユーザーID
   updateUserId: string;
   // 登録日
-  created: number | null;
+  created: string | null;
   // 更新日
-  updated: number | null;
+  updated: string | null;
 }
 
 

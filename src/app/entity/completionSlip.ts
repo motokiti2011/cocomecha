@@ -46,6 +46,10 @@ export interface completionSlip {
   logicalDeleteFlag: number;
   // 対象サービス内容
   targetService: string;
+  // 作成日時
+  created: string;
+  // 更新日時
+  updated: string;
 }
 
 export const initCompletionSlip: completionSlip = {
@@ -71,5 +75,7 @@ export const initCompletionSlip: completionSlip = {
   thumbnailUrl:'',
   imageUrlList:null,
   logicalDeleteFlag: 0,
-  targetService: '0'
+  targetService: '0',
+  created: '0',
+  updated: '0',
 }

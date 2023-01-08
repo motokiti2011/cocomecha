@@ -17,4 +17,8 @@ export interface slipVehicle {
   firstRegistrationDate: string;
   // 車検満了日
   inspectionExpirationDate: string;
+  // 作成日時
+  created: string;
+  // 更新日時
+  updated: string;
 }

@@ -27,8 +27,8 @@ export interface evaluationInfo {
   evaluationComment: string;
   // 対評価コメント
   versusEvaluationComment: string;
-  // 登録年月
+  // 作成日時
   created: string;
-  // 更新年月
+  // 更新日時
   updated: string;
 }

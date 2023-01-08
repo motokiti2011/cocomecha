@@ -21,5 +21,8 @@ export interface userVehicle {
   inspectionExpirationDate: string;
   // 更新ユーザーID
   updateUserId: string;
-
+  // 作成日時
+  created: string;
+  // 更新日時
+  updated: string;
 }

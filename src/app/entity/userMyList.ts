@@ -3,6 +3,12 @@ export interface userMyList {
   id: string;
   // ユーザーID
   userId: string;
+  // メカニックID
+  mechanicId: string;
+  // 工場ID
+  officeId: string; 
+  // サービスタイプ
+  serviceType: string;
   // 伝票番号
   slipNo: string;
   // タイトル
@@ -21,14 +27,22 @@ export interface userMyList {
   bidderId: string;
   // 削除区分
   deleteDiv: string;
-  // サービスタイプ
-  serviceType: string;
+  // 作成日時
+  created: string;
+  // 更新日時
+  updated: string;
 }
 
 /** 表示用マイリスト情報 */
 export interface dispUserMyList {
   // ユーザーID
   userId: string;
+  // メカニックID
+  mechanicId: string;
+  // 工場ID
+  officeId: string; 
+  // サービスタイプ
+  serviceType: string;
   // 伝票番号
   slipNo: string;
   // タイトル
@@ -53,8 +67,6 @@ export interface dispUserMyList {
   bidderId: string;
   // 削除区分
   deleteDiv: string;
-  // サービスタイプ
-  serviceType: string;
 }
 
 /** マイリストカテゴリー設定値 */

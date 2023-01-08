@@ -20,6 +20,10 @@ export interface slipMessageInfo {
   logicalDeleteDiv: string;
   // 投稿日時
   sendDate: string;
+  // 作成日時
+  created: string;
+  // 更新日時
+  updated: string;
 }
 
 /**
@@ -43,7 +47,11 @@ export const defaltSlipComment: slipMessageInfo = {
     // 論理削除フラグ
     logicalDeleteDiv: '0',
     // 投稿日時
-    sendDate: ''
+    sendDate: '',
+    // 作成日時
+    created: '',
+    // 更新日時
+    updated: '',
 }
 
 /**
