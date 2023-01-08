@@ -48,7 +48,7 @@ export class UserRegisterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.auth.user$.subscribe(user => {
+    this.auth.userInfo$.subscribe(user => {
       if(user == null) {
         alert("ログインが必要です")
         this.location.back();

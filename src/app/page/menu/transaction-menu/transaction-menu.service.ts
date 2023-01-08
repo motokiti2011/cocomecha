@@ -1,22 +1,36 @@
 import { Injectable } from '@angular/core';
 import { serviceContents } from 'src/app/entity/serviceContents';
+import { Observable } from 'rxjs';
 import {
   find as _find,
   isNil as _isNil,
   sortBy as _sortBy,
   orderBy as _orderBy,
-  } from 'lodash';
+} from 'lodash';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures'
 import { monthMap } from 'src/app/entity/month';
 import { serchCategoryData } from 'src/app/entity/serchCategory';
-
+import { user } from 'src/app/entity/user';
+import { ApiSerchService } from '../../service/api-serch.service';
 
 
 @Injectable()
 export class TransactionMenuService {
 
 
-  constructor() { }
+  constructor(
+    private apiService: ApiSerchService,
+  ) { }
+
+  /**
+   * ユーザー情報を取得
+   * @param userId
+   * @returns
+   */
+  public getUser(userId: string):Observable<any> {
+    return this.apiService.getUser(userId);
+  }
+
 
   /**
    * 画面表示する地域名を設定する

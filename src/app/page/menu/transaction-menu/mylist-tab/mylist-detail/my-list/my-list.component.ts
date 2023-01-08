@@ -61,7 +61,7 @@ export class MyListComponent implements OnInit {
   /** メッセージ通知 */
   messageAlert = '';
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '' };
+  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null};
   /** Mock */
   mock: userMyList = {
     id: '',
@@ -87,12 +87,12 @@ export class MyListComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
-    this.auth.user$.subscribe(user => {
-      // 未認証の場合前画面へ戻る
+    this.auth.userInfo$.subscribe(user => {
+      // ユーザー情報取得できない場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
-        // ダイアログ表示（ログインしてください）し前画面へ戻る
+        // ダイアログ表示(もう一度操作してください）し前画面へ戻る
         const dialogData: messageDialogData = {
-          massage: 'ログインが必要になります。',
+          massage: 'もう一度操作してください',
           closeFlg: false,
           closeTime: 0,
           btnDispDiv: true

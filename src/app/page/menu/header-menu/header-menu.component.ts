@@ -16,7 +16,7 @@ import { ApiSerchService } from '../../service/api-serch.service';
 })
 export class HeaderMenuComponent implements OnInit {
 
-  loginUser: loginUser = {userId: '' , userName: 'ログイン'};
+  loginUser: loginUser =  { userId: '', userName: 'ログイン',mechanicId:null, officeId:null };
 
   temporaryUserDiv = false;
 
@@ -145,7 +145,7 @@ export class HeaderMenuComponent implements OnInit {
    */
   onClickHelp() {
     console.log('help');
-    this.authUserService.user$.subscribe(hoge => {
+    this.authUserService.userInfo$.subscribe(hoge => {
       console.log(hoge);
     });
   }

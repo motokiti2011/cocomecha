@@ -57,7 +57,7 @@ export class BrowsingHistoryComponent implements OnInit {
     { id: 4, value: '価格が高い順' },
   ];
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '' };
+  loginUser: loginUser = { userId: '', userName: '',mechanicId:null, officeId:null};
 
   constructor(
     private location: Location,
@@ -76,12 +76,12 @@ export class BrowsingHistoryComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
-    this.auth.user$.subscribe(user => {
-      // 未認証の場合前画面へ戻る
+    this.auth.userInfo$.subscribe(user => {
+      // ユーザー情報取得できない場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
-        // ダイアログ表示（ログインしてください）し前画面へ戻る
+        // ダイアログ表示（もう一度操作してください）し前画面へ戻る
         const dialogData: messageDialogData = {
-          massage: 'ログインが必要になります。',
+          massage: 'もう一度操作してください',
           closeFlg: false,
           closeTime: 0,
           btnDispDiv: true
@@ -218,7 +218,7 @@ export class BrowsingHistoryComponent implements OnInit {
 
   /**
    * タイトルクリック時、詳細画面へ遷移する
-   * @param content 
+   * @param content
    */
   contentsDetail(content: serviceContents) {
     this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.id } });
@@ -227,7 +227,7 @@ export class BrowsingHistoryComponent implements OnInit {
 
   /**
     *  並び順変更イベント
-    * 
+    *
     */
   changeOrder() {
     console.log(this.selected)

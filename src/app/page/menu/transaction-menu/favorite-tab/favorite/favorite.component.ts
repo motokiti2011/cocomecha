@@ -17,7 +17,6 @@ import {
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { FavoriteService } from './favorite.service';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
-import { loginUser } from 'src/app/entity/loginUser';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { userFavorite } from 'src/app/entity/userFavorite';
@@ -58,7 +57,7 @@ export class FavoriteComponent implements OnInit {
     { id: 4, value: '価格が高い順' },
   ];
   /** ログインユーザー情報 */
-  loginUser = ''
+  acceseUser = ''
 
 
   constructor(
@@ -79,11 +78,11 @@ export class FavoriteComponent implements OnInit {
    */
   private setListSetting() {
     const user = this.cognito.initAuthenticated();
-    // 未認証の場合前画面へ戻る
+    // ユーザー情報取得できない場合前画面へ戻る
     if (user == undefined || user == null || user == '') {
-      // ダイアログ表示（ログインしてください）し前画面へ戻る
+      // ダイアログ表示（もう一度操作してください）し前画面へ戻る
       const dialogData: messageDialogData = {
-        massage: 'ログインが必要になります。',
+        massage: 'もう一度操作してください',
         closeFlg: false,
         closeTime: 0,
         btnDispDiv: true
@@ -100,10 +99,10 @@ export class FavoriteComponent implements OnInit {
       });
     } else {
       // ユーザー情報を設定する
-      this.loginUser = user;
+      this.acceseUser = user;
     }
     // データを取得
-    this.favoriteService.getFavoriteList(this.loginUser).subscribe(data => {
+    this.favoriteService.getFavoriteList(this.acceseUser).subscribe(data => {
       console.log(data);
       this.detailList = data;
     });

@@ -636,7 +636,7 @@ export class ServiceCreateComponent implements OnInit {
 
 
   onDummy2() {
-    this.auth.user$.subscribe(hoge => {
+    this.auth.userInfo$.subscribe(hoge => {
       console.log(hoge);
     })
   }

@@ -53,6 +53,8 @@ export class TransactionListComponent implements OnInit {
   /** 削除ボタン活性フラグ */
   checkbutton: boolean = true;
 
+
+  // 並び順選択
   selected = '';
 
   orderMenu = [
@@ -63,13 +65,13 @@ export class TransactionListComponent implements OnInit {
   ];
 
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '' };
+  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null};
 
   constructor(
     private location: Location,
     private router: Router,
-    private service: TransactionMenuService,
-    private listService: TransactionListService,
+    private service: TransactionListService,
+    private Menuservice: TransactionMenuService,
     private auth: AuthUserService,
     public modal: MatDialog,
   ) { }
@@ -82,12 +84,12 @@ export class TransactionListComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
-    this.auth.user$.subscribe(user => {
-      // 未認証の場合前画面へ戻る
+    this.auth.userInfo$.subscribe(user => {
+      // ユーザー情報取得できない場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
-        // ダイアログ表示（ログインしてください）し前画面へ戻る
+        // ダイアログ表示（もう一度操作してください）し前画面へ戻る
         const dialogData: messageDialogData = {
-          massage: 'ログインが必要になります。',
+          massage: 'もう一度操作してください',
           closeFlg: false,
           closeTime: 0,
           btnDispDiv: true
@@ -107,8 +109,8 @@ export class TransactionListComponent implements OnInit {
         this.loginUser = user;
       }
       // データを取得
-      this.listService.getTransactionSlip(this.loginUser.userId).subscribe(data => {
-        this.detailList = this.listService.dispContentsSlip(data)
+      this.service.getTransactionSlip(this.loginUser.userId, '0').subscribe(data => {
+        this.detailList = this.service.dispContentsSlip(data)
       });
     });
   }
@@ -190,7 +192,7 @@ export class TransactionListComponent implements OnInit {
 
   /**
    * タイトルクリック時、詳細画面へ遷移する
-   * @param content 
+   * @param content
    */
   contentsDetail(slipId: string) {
     this.router.navigate(["service-detail-component"], { queryParams: { serviceId: slipId } });
@@ -198,7 +200,7 @@ export class TransactionListComponent implements OnInit {
 
   /**
     *  並び順変更イベント
-    * 
+    *
     */
   changeOrder() {
     console.log(this.selected)

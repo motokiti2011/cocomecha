@@ -11,6 +11,7 @@ import { transactionContents, dispTransactionContents, TranStatus } from 'src/ap
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
+import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 
 import { monthMap } from 'src/app/entity/month';
 
@@ -21,6 +22,7 @@ export class TransactionListService {
 
   constructor(
     private http: HttpClient,
+    private apiGsiService: ApiGsiSerchService,
   ) { }
 
   private apiEndPoint: string = 'http://localhost:8080/v1/';
@@ -28,16 +30,16 @@ export class TransactionListService {
 
   /**
    * 取引中、管理中の伝票情報を取得する
-   * @returns 
+   * @returns
    */
-  public getTransactionSlip(userId: string): Observable<transactionContents[]> {
-    return this.http.get<transactionContents[]>(`${this.apiEndPoint + 'slipdetail/gettransactionslip/' + userId}`);
+  public getTransactionSlip(id: string, serviceType: string ): Observable<transactionContents[]> {
+    return this.apiGsiService.serchTransactionSlip(id, serviceType);
   }
 
 
   /**
    * 取引伝票情報を表示用に加工する。
-   * @param slip 
+   * @param slip
    */
   public dispContentsSlip(transactionSlip: transactionContents[]): dispTransactionContents[] {
     let result: dispTransactionContents[] = [];
@@ -75,7 +77,7 @@ export class TransactionListService {
 
   /**
    * 取引ステータス情報を設定する
-   * @param data 
+   * @param data
    */
   public setSlipStatus(status: string): string {
 
@@ -105,8 +107,8 @@ export class TransactionListService {
 
   /**
    * サービスの希望日から残り期間を設定します。
-   * @param content 
-   * @returns 
+   * @param content
+   * @returns
    */
   public getWhet(preferredDate: number, preferredTime: number): string {
 
@@ -174,8 +176,8 @@ export class TransactionListService {
 
   /**
    * 日付を表示用に加工
-   * @param dayDate 
-   * @returns 
+   * @param dayDate
+   * @returns
    */
   private getDispDate(dayDate: number): string {
     if (dayDate === 0) {
@@ -193,8 +195,8 @@ export class TransactionListService {
 
   /**
    * 伝票状態を確認し取引ステータスを設定する
-   * @param slip 
-   * @param userId 
+   * @param slip
+   * @param userId
    */
   private slipStatusSet(slip: slipDetailInfo, userId: string): string {
     // 伝票管理者とアクセス者が一致する場合

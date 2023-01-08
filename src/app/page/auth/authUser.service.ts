@@ -7,21 +7,21 @@ import { loginUser } from 'src/app/entity/loginUser';
 })
 export class AuthUserService {
 
-  private _user$
+  private _userInfo$
 
   constructor() {
-    this._user$ = new BehaviorSubject<loginUser | null>(null)
+    this._userInfo$ = new BehaviorSubject<loginUser | null>(null)
   }
 
-  get user$() {
-    return this._user$.asObservable()
+  get userInfo$() {
+    return this._userInfo$.asObservable()
   }
 
-  login(user: loginUser) {
-    this._user$.next(user)
+  login(userInfo: loginUser) {
+    this._userInfo$.next(userInfo)
   }
 
   logout() {
-    this._user$.next(null)
+    this._userInfo$.next(null)
   }
 }

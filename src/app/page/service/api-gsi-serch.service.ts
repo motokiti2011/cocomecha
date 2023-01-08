@@ -7,6 +7,7 @@ import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { userFavorite } from 'src/app/entity/userFavorite';
+import { completionSlip } from 'src/app/entity/completionSlip';
 
 @Injectable({
   providedIn: 'root'
@@ -190,6 +191,64 @@ export class ApiGsiSerchService {
   }
 
 
+  /**
+   * 各種IDから完了伝票情報を取得
+   * @param id
+   * @returns
+   */
+  public serchCompletionSlip(id: string, serchType: string): Observable<any> {
+
+    let indexType = 'SLIPADMINUSERID-INDEX'
+    if(serchType == '1') {
+      indexType = 'SLIPADMINOFFICE-INDEX'
+    } else if(serchType == '2') {
+      indexType = 'SLIPADMINMECHANIC-INDEX'
+    }
+
+    // リクエストボディ生成
+    const body = {
+      "IndexType": indexType,
+      "Keys": {
+        "id": id
+      }
+    };
+    return this.http.post<completionSlip>(this.apiEndPoint + '/slipmessage', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: completionSlip) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+  /**
+   * 各種IDから完了伝票情報を取得
+   * @param id
+   * @returns
+   */
+  public serchTransactionSlip(id: string, serchType: string): Observable<any> {
+
+    let indexType = 'SLIPADMINUSERID-INDEX'
+    if(serchType == '1') {
+      indexType = 'SLIPADMINOFFICE-INDEX'
+    } else if(serchType == '2') {
+      indexType = 'SLIPADMINMECHANIC-INDEX'
+    }
+
+    // リクエストボディ生成
+    const body = {
+      "IndexType": indexType,
+      "Keys": {
+        "id": id
+      }
+    };
+    return this.http.post<completionSlip>(this.apiEndPoint + '/transactionslip', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: completionSlip) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 

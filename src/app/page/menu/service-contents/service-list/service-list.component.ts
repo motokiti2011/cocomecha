@@ -380,7 +380,7 @@ export class ServiceListComponent implements OnInit {
     // 画面表示のお気に入りFlgを制御する
     this.displayContentsList = this.contentsList;
     // 認証情報取得
-    this.auth.user$.subscribe(user => {
+    this.auth.userInfo$.subscribe(user => {
       if (user) {
         // お気に入り登録有無を判定し更新する。
         this.service.postFavorite(this.favoriteList, contents, user.userId);

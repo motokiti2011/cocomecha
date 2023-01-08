@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { find as _find, isNil as _isNil } from 'lodash';
-
+import { Router } from '@angular/router';
 import { TransactionMenuService } from './transaction-menu.service';
 import { BrowsingHistoryComponent } from './browsing-history-tab/browsing-history-detail/browsing-history/browsing-history.component';
-import { TansactionCompleteComponent } from './transaction-complete-tab/transaction-complete-detail/tansaction-complete/tansaction-complete.component';
+import { TansactionCompleteComponent } from './transaction-complete-tab/tansaction-complete.component';
 import { TransactionListComponent } from './transaction/transaction-list/transaction-list.component';
 import { FavoriteComponent } from './favorite-tab/favorite/favorite.component';
 import { MyListComponent } from './mylist-tab/mylist-detail/my-list/my-list.component';
+import { AuthUserService } from '../../auth/authUser.service';
+import { CognitoService } from '../../auth/cognito.service';
 import { loginUser } from 'src/app/entity/loginUser';
-// import { MylistDetailComponent } from './mylist-tab/mylist-detail/mylist-detail.component';
-// import { BrowsingHistoryDetailComponent } from './browsing-history-tab/browsing-history-detail/browsing-history-detail.component';
-// import { TransactionCompleteDetailComponent } from './transaction-complete-tab/transaction-complete-detail/transaction-complete-detail.component';
-// import { TransactionDetailComponent } from './transaction/transaction-detail/transaction-detail.component';
 
 @Component({
   selector: 'app-transaction-menu',
@@ -43,14 +41,57 @@ export class TransactionMenuComponent implements OnInit {
   ];
 
   constructor(
-    private transactionMenuService: TransactionMenuService,
+    private router: Router,
+    private service: TransactionMenuService,
+    private cognito: CognitoService,
+    private auth: AuthUserService,
+
+
   ) { }
 
   ngOnInit(): void {
+    this.authUserSetting();
     this.initDisplay();
     // 初回表示画面をセット
     this.currentTab = MyListComponent;
   }
+
+  /**
+   * アクセスユーザー情報の取得設定を行う
+   */
+  private authUserSetting() {
+    // ログイン検証
+    const authUser = this.cognito.initAuthenticated();
+    if(authUser == null) {
+      alert('ログインが必要です');
+      this.router.navigate(["/main_menu"]);
+      return;
+    }
+    // アクセス情報の確認、設定
+    // this.auth.userInfo$.subscribe(user => {
+    //   if(user == null) {
+    this.service.getUser(authUser).subscribe(result => {
+      if(result[0] != null) {
+        const acceseUser:loginUser = {
+          userId: authUser,
+          userName: result[0].userName,
+          mechanicId: result[0].mechanicId,
+          officeId: result[0].officeId
+        }
+        // Subjectにユーザー情報をセットする。
+        this.auth.login(acceseUser);
+      } else {
+        alert('情報が取得できませんでした。再度アクセスしてください');
+        this.router.navigate(["/main_menu"]);
+        return;
+      }
+    });
+    //   }
+    // });
+  }
+
+
+
 
   /**
    * 表示方式の初期設定を行う

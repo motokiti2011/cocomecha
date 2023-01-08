@@ -30,7 +30,8 @@ import { TransactionMenuComponent } from './page/menu/transaction-menu/transacti
 import { TransactionListComponent } from './page/menu/transaction-menu/transaction/transaction-list/transaction-list.component';
 import { MyListComponent } from './page/menu/transaction-menu/mylist-tab/mylist-detail/my-list/my-list.component';
 import { BrowsingHistoryComponent } from './page/menu/transaction-menu/browsing-history-tab/browsing-history-detail/browsing-history/browsing-history.component';
-import { TansactionCompleteComponent } from './page/menu/transaction-menu/transaction-complete-tab/transaction-complete-detail/tansaction-complete/tansaction-complete.component';
+// import { TansactionCompleteComponent } from './page/menu/transaction-menu/transaction-complete-tab/transaction-complete-detail/tansaction-complete/tansaction-complete.component';
+import { TansactionCompleteComponent } from './page/menu/transaction-menu/transaction-complete-tab/tansaction-complete.component';
 import { TransactionMenuService } from './page/menu/transaction-menu/transaction-menu.service';
 import { ServiceSerchConditionsComponent } from './page/menu/service-contents/service-serch-conditions/service-serch-conditions.component';
 import { LoginComponent } from './page/modal/login/login.component';

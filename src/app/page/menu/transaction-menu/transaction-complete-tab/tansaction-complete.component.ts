@@ -7,8 +7,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
-import { TransactionMenuService } from '../../../transaction-menu.service';
-import { TansactionCompleteService } from '../tansaction-complete.service';
+import { TransactionMenuService } from '../transaction-menu.service';
+import { TansactionCompleteService } from './transaction-complete-detail/tansaction-complete.service';
 import {
   find as _find,
   cloneDeep as _cloneDeep,
@@ -60,7 +60,9 @@ export class TansactionCompleteComponent implements OnInit {
   ];
 
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '' };
+  loginUser: loginUser = { userId: '', userName: '',mechanicId:null, officeId:null };
+
+  selectType = '0';
 
   constructor(
     private location: Location,
@@ -80,12 +82,12 @@ export class TansactionCompleteComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
-    this.auth.user$.subscribe(user => {
+    this.auth.userInfo$.subscribe(user => {
       // 未認証の場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
-        // ダイアログ表示（ログインしてください）し前画面へ戻る
+        // ダイアログ表示し前画面へ戻る
         const dialogData: messageDialogData = {
-          massage: 'ログインが必要になります。',
+          massage: '情報の取得に失敗しました。もう一度操作してください',
           closeFlg: false,
           closeTime: 0,
           btnDispDiv: true
@@ -104,9 +106,8 @@ export class TansactionCompleteComponent implements OnInit {
         // ユーザー情報を設定する
         this.loginUser = user;
       }
-      this.compService.getTransactionCompSlip
       // データを取得
-      this.compService.getTransactionCompSlip(this.loginUser.userId).subscribe(data => {
+      this.compService.getTransactionCompSlip(this.loginUser.userId, this.selectType).subscribe(data => {
         this.detailList = this.compService.dispContentsSlip(data)
       });
     });
@@ -190,7 +191,7 @@ export class TansactionCompleteComponent implements OnInit {
 
   /**
    * タイトルクリック時、詳細画面へ遷移する
-   * @param content 
+   * @param content
    */
   contentsDetail(content: serviceContents) {
     this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.id } });
@@ -198,7 +199,7 @@ export class TansactionCompleteComponent implements OnInit {
 
   /**
    *  並び順変更イベント
-   * 
+   *
    */
   changeOrder() {
     console.log(this.selected)
