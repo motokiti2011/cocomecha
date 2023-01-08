@@ -40,7 +40,7 @@ export class MyMenuComponent implements OnInit {
 
   ngOnInit(): void {
     const authUser = this.cognito.initAuthenticated();
-    if(authUser !== null) {
+    if (authUser !== null) {
       this.apiservice.getUser(authUser).subscribe(user => {
         console.log(user);
         this.setDispInfo(user[0]);
@@ -76,15 +76,15 @@ export class MyMenuComponent implements OnInit {
    * @param user
    */
   private isMechanic(user: user) {
-    if(user.mechanicId == null
-      || user.mechanicId == '' ) {
-        this.mechanicButonTitle = 'メカニック登録はこちら';
-        this.mechanicButonUrl = 'mechanic-register';
-        return;
-      }
-      this.mechanicButonTitle = '工場・メカニックメニューはこちら';
-      this.mechanicButonUrl = 'factory-mechanic-menu';
-      this.mechanicId = user.mechanicId;
+    if (user.mechanicId == null
+      || user.mechanicId == '') {
+      this.mechanicButonTitle = 'メカニック登録はこちら';
+      this.mechanicButonUrl = 'mechanic-register';
+      return;
+    }
+    this.mechanicButonTitle = '工場・メカニックメニューはこちら';
+    this.mechanicButonUrl = 'factory-mechanic-menu';
+    this.mechanicId = user.mechanicId;
   }
 
   /**
@@ -92,9 +92,9 @@ export class MyMenuComponent implements OnInit {
    * @param imageUrl
    * @returns
    */
-  private isSetImage(imageUrl: string| null): string {
+  private isSetImage(imageUrl: string | null): string {
     const url = 'assets/images/noimage.png'
-    if(imageUrl == null || imageUrl == '') {
+    if (imageUrl == null || imageUrl == '') {
       return url;
     }
     return imageUrl;
@@ -104,7 +104,7 @@ export class MyMenuComponent implements OnInit {
    * 設定値を加工し返却
    * @param parm
    */
-  private isSerParm(parm: string| null, subject: string): string {
+  private isSerParm(parm: string | null, subject: string): string {
     return '';
   }
 
@@ -128,10 +128,12 @@ export class MyMenuComponent implements OnInit {
    * 工場・メカニックメニューはこちらボタン押下イベント
    */
   onFactoryMecanic() {
-    this.router.navigate(["/"+this.mechanicButonUrl],
-    { queryParams:{
-      mechanicId :this.mechanicId
-    }});
+    this.router.navigate(["/" + this.mechanicButonUrl],
+      {
+        queryParams: {
+          mechanicId: this.mechanicId
+        }
+      });
     console.log('mechanic-register')
   }
 

@@ -9,13 +9,13 @@ export interface salesServiceInfo {
   slipAdminUserId: string;
   // 伝票管理者ユーザー名
   slipAdminUserName: string;
-  // 伝票管理事業所ID
-  slipAdminOfficeId: string;
-  // 伝票管理事業所名
+  // 工場ID
+  slipAdminOfficeId: string| null;
+  // 工場名
   slipAdminOfficeName: string;
-  // 伝票管理拠点ID
-  slipAdminMechanicId: string;
-  // 伝票管理拠点名
+  // メカニックID
+  slipAdminMechanicId: string| null;
+  // メカニック名
   slipAdminMechanicName: string;
   // 管理者区分（どの管理者IDを利用するかどうか）
   adminDiv: string;

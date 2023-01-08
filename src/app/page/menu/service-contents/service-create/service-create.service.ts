@@ -7,6 +7,7 @@ import { serviceContents } from 'src/app/entity/serviceContents';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
+import { UploadService } from 'src/app/page/service/upload.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ServiceCreateService {
 
   constructor(
     private apiUniqueService: ApiUniqueService,
+    private s3: UploadService,
   ) { }
 
   // 伝票情報を更新する
@@ -40,6 +42,9 @@ export class ServiceCreateService {
    * @returns
    */
   public converSlipDetail(content: serviceContents): slipDetailInfo {
+
+    const imageData = this.imageSetting(content.imageUrlList);
+
     const result: slipDetailInfo = {
       // 伝票番号
       slipNo: '0',
@@ -92,9 +97,9 @@ export class ServiceCreateService {
       // 取引完了日
       transactionCompletionDate: '0',
       // サムネイルURL
-      thumbnailUrl: '',
+      thumbnailUrl: imageData.samneil,
       // 画像URLリスト
-      imageUrlList: [],
+      imageUrlList: imageData.urlList,
       // メッセージ公開レベル
       messageOpenLebel: content.msgLv,
       // 更新ユーザーID
@@ -115,6 +120,9 @@ export class ServiceCreateService {
    * @returns
    */
   public converSalesService(content: serviceContents): salesServiceInfo {
+
+    const imageData = this.imageSetting(content.imageUrlList);
+
     const result: salesServiceInfo = {
       // 伝票番号
       slipNo: '0',
@@ -126,16 +134,16 @@ export class ServiceCreateService {
       slipAdminUserId: content.userId,
       // 伝票管理者ユーザー名
       slipAdminUserName: '',
-      // 伝票管理事業所ID
-      slipAdminOfficeId: '0',
-      // 伝票管理事業所名
-      slipAdminOfficeName: '',
-      // 伝票管理拠点ID
-      slipAdminMechanicId: '0',
-      // 伝票管理拠点名
+      // メカニックID
+      slipAdminMechanicId: content.mechanicId,
+      // メカニック名
       slipAdminMechanicName: '',
+      // 工場ID
+      slipAdminOfficeId: content.officeId,
+      // 工場名
+      slipAdminOfficeName: '',
       // 管理者区分
-      adminDiv: '0',
+      adminDiv: content.targetService,
       // タイトル
       title: content.title,
       // サービス地域1
@@ -175,9 +183,9 @@ export class ServiceCreateService {
       // 取引完了日
       transactionCompletionDate: '0',
       // サムネイルURL
-      thumbnailUrl: '',
+      thumbnailUrl: imageData.samneil,
       // 画像URLリスト
-      imageUrlList: [],
+      imageUrlList: imageData.urlList,
       // メッセージ公開レベル
       messageOpenLebel: content.msgLv,
       // 更新ユーザーID
@@ -190,9 +198,63 @@ export class ServiceCreateService {
     return result;
   }
 
+  /**
+   * 画像アップロードを行う
+   * @param imgList 
+   */
+  public imgUpload(imgList: any) {
+    let uploadUrl = '';
+    let uploadResult = '';  
+    if (imgList) {
+      this.s3.onManagedUpload(imgList).then((data) => {
+        if (data) {
+          uploadUrl = data.Location;
+          uploadResult = 'アップロードが完了しました。';
+        }
+      }).catch((err) => {
+        uploadResult = 'アップロードが失敗しました。';
+      });
+      } else {
+        uploadResult = 'ファイルが選択されていません。';
+      }
+  }
+
+  /**
+   * 画像情報を設定する
+   * @param imageList 
+   * @returns 
+   */
+  private imageSetting(imageList: string[]| null): {samneil:string, urlList:string[]} {
+    // 画像情報を設定する
+    let samneil = '';
+    let urlList: string[] = [];
+    if(imageList != null) {
+      if(imageList.length == 1) {
+        samneil = imageList[0];
+      } else {
+        let count = 0;
+        imageList.forEach(img => {
+          if(count == 0) {
+            samneil = img;
+          } else {
+            urlList?.push(img);
+          }
+          count++
+        });
+      }
+    }
+    return {samneil: samneil, urlList: urlList}
+  }
 
 
 
+  /**
+   * 画像アップロードを行う
+   * @param imgList 
+   */
+  public protoImgUpload(imgList: any): Promise<AWS.S3.ManagedUpload.SendData> {
+    return this.s3.onManagedUpload(imgList);
+  }
 
 
   /**

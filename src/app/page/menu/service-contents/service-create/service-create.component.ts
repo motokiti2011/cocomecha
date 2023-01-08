@@ -34,7 +34,8 @@ import {
   mechanicPrice,
   messageLevel,
   adminUserSelect,
- } from './service-create-option';
+} from './service-create-option';
+import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 
 @Component({
   selector: 'app-service-create',
@@ -86,53 +87,37 @@ export class ServiceCreateComponent implements OnInit {
   explanationDiv = true;
   preferredDateDiv = true;
   timeDiv = true;
-
-
   /** エラーフラグ */
   errorFlg = false;
   errorDayFlg = false;
-
   /** エラーメッセージ */
   errormessage = '';
-
   /** エラーメッセージ日付 */
   errormessageDay = '';
   /** エラーメッセージ日付 */
   startDate = 0;
-
   /** 作成ユーザー情報 */
   userInfo: user = initUserInfo;
-
   /** 価格データ */
   priceSelectData: createServiceSelect[] = [];
-
   /** 価格セレクト */
   priceSelect = '';
-
   /** 作業場所データ */
   workAreaData: createServiceSelect[] = [];
-
   /** 作業場所セレクト */
   workAreaSelect = '';
-
   /** 対象車両 */
   vehcleData: createServiceSelect[] = [];
-
   /** 作業場所セレクト */
   vehcleSelect = '';
-
   /** 希望時間データ */
   timeData = timeData;
-
   /** 希望時間セレクト */
   timeSelect = '';
-
   /** メッセージレベルデータ */
   msgLvData = messageLevel;
-
   /** 希望時間セレクト */
   msgLvSelect = '';
-
   /** 管理ユーザー区分 */
   adminSelectDiv = false;
   /** 管理ユーザーデータ */
@@ -141,13 +126,20 @@ export class ServiceCreateComponent implements OnInit {
   adminSelect = '';
   /** 管理ユーザー名 */
   adminUserName = '';
+  /** イメージ */
+  img: any = []
+  /** ファイルリスト */
+  fileList: any[] = []
+  /** locationリスト */
+  locationList: string[] = [];
+
 
   constructor(
     private location: Location,
     private service: ServiceCreateService,
     public modal: MatDialog,
     private router: Router,
-    private auth:AuthUserService,
+    private auth: AuthUserService,
     private apiService: ApiSerchService,
     private cognito: CognitoService,
     private activeRouter: ActivatedRoute,
@@ -157,38 +149,49 @@ export class ServiceCreateComponent implements OnInit {
     this.refreshForm();
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
-    if(authUser == null) {
+    if (authUser == null) {
       alert("ログインが必要です");
       this.location.back();
     } else {
       // ユーザー情報を取得する
-    this.apiService.getUser(authUser).subscribe(user => {
-      if(user[0] == null) {
-        alert("ログインが必要です");
-        this.location.back();
-        return;
-      } else {
-        this.userInfo = user[0];
-        this.inputData.userId = this.userInfo.userId;
-        this.inputData.userName = this.userInfo.userName;
-      }
-      this.activeRouter.queryParams.subscribe(params => {
-        if(params['serviceType'] == '1' || params['serviceType'] == '2' ) {
-          if(this.userInfo.mechanicId !== ''
-          && this.userInfo.mechanicId !== null ) {
-            // メカニックタイプの出品画面表示する
-            this.mechenicDisp();
-          } else {
-            // メカニック未登録の場合
-            alert("メカニック登録されていません");
-            this.location.back();
-            return;
-          }
+      this.apiService.getUser(authUser).subscribe(user => {
+        if (user[0] == null) {
+          alert("ログインが必要です");
+          this.location.back();
+          return;
         } else {
-          this.serviceSelect();
+          this.userInfo = user[0];
+          this.inputData.userId = this.userInfo.userId;
+          this.inputData.userName = this.userInfo.userName;
         }
+        this.activeRouter.queryParams.subscribe(params => {
+          if (params['serviceType'] == '1') {
+            if (this.userInfo.mechanicId !== '' && this.userInfo.mechanicId !== null) {
+              // メカニックタイプの出品画面表示する
+              this.mechenicDisp();
+            } else {
+              // メカニック未登録の場合
+              alert("メカニック登録されていません");
+              this.location.back();
+              return;
+            }
+          } else if( params['serviceType'] == '2') {
+            if (this.userInfo.officeId !== '' && this.userInfo.officeId !== null) {
+              // 工場タイプの出品画面表示する
+              this.officeDisp();
+            } else {
+              // 工場未登録の場合
+              alert("工場が登録されていません");
+              this.location.back();
+              return;
+            }
+          
+
+          } else {
+            this.serviceSelect();
+          }
+        });
       });
-    });
     }
   }
 
@@ -196,7 +199,7 @@ export class ServiceCreateComponent implements OnInit {
    * 画面表示を判定し、選択の必要がある場合モーダルを展開する
    */
   private serviceSelect() {
-    if(this.userInfo.mechanicId == null || this.userInfo.mechanicId == '' ) {
+    if (this.userInfo.mechanicId == null || this.userInfo.mechanicId == '') {
       // ユーザー依頼画面への表示
       this.userDisp();
     } else {
@@ -213,12 +216,12 @@ export class ServiceCreateComponent implements OnInit {
       // モーダルクローズ後
       dialogRef.afterClosed().subscribe(
         result => {
-          console.log('クリエイトモーダル:'+ result)
+          console.log('クリエイトモーダル:' + result)
           if (result !== null
-            || result !== '' || result !== undefined ) {
-            if(result == '0') {
+            || result !== '' || result !== undefined) {
+            if (result == '0') {
               this.userDisp();
-            } else if(result == '1') {
+            } else if (result == '1') {
               this.mechenicDisp();
             } else {
               this.officeDisp();
@@ -320,7 +323,7 @@ export class ServiceCreateComponent implements OnInit {
 
     // カテゴリー選択状況変更監視
     if (_isNil(this.inputData.category)
-      || this.inputData.category === '0'||this.inputData.category === '' ) {
+      || this.inputData.category === '0' || this.inputData.category === '') {
       this.categoryDiv = true;
     } else {
       this.categoryDiv = false;
@@ -363,10 +366,10 @@ export class ServiceCreateComponent implements OnInit {
    * 作業場所変更イベント
    */
   inputWorkArea() {
-    console.log('1workArea:'+this.inputData.workArea);
-    console.log('2targetVehcle:'+this.inputData.targetVehcle);
-    console.log('3msgLv:'+this.inputData.msgLv);
-    console.log('4workArea:'+this.inputData.workArea);
+    console.log('1workArea:' + this.inputData.workArea);
+    console.log('2targetVehcle:' + this.inputData.targetVehcle);
+    console.log('3msgLv:' + this.inputData.msgLv);
+    console.log('4workArea:' + this.inputData.workArea);
   }
 
   /**
@@ -529,13 +532,40 @@ export class ServiceCreateComponent implements OnInit {
   }
 
   /**
+   * アップロードファイル選択時イベント
+   * @param event 
+   */
+  onInputChange(event: any) {
+    const files = event.target.files[0];
+    console.log('１ファイル');
+    console.log(files);
+    this.fileList.push(files);
+    this.img.push(files);
+    console.log('２リスト');
+    console.log(this.fileList);
+    console.log(this.img);
+  }
+
+
+  /**
    * 確定処理
    */
   getResult() {
+    if(this.fileList.length != 0) {
+      this.fileUp();
+    } else {
+      this.postSlip();
+    }
+  }
+
+  /**
+   * 伝票情報登録を行う
+   */
+  private postSlip() {
     // console.log('確定反応')
     console.log(this.inputData);
     // 工場、メカニックとして依頼する場合
-    if(this.inputData.targetService !== '0') {
+    if (this.inputData.targetService !== '0') {
       // サービス商品として更新を行う
       this.service.postSalesService(this.inputData).subscribe(result => {
         // 登録結果からメッセージを表示する
@@ -562,8 +592,37 @@ export class ServiceCreateComponent implements OnInit {
         }
       });
     }
-
   }
+
+
+  /**
+   * ファイルアップロードを行い画像URLを取得する
+   */
+  private fileUp() {
+    let count = 0;
+    if (this.fileList.length != 0) {
+      this.fileList.forEach(file => {
+        this.service.protoImgUpload(file).then((data) => {
+          count++;
+          if (data) {
+            this.locationList.push(data.Location);
+            console.log(data);
+          }
+          if (count == this.fileList.length) {
+            console.log('処理完了');
+            console.log(this.locationList);
+            this.inputData.imageUrlList = this.locationList;
+            this.postSlip();
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    } else {
+      console.log('不動！');
+    }
+  }
+
 
   /**
    * 次の作業を選択し選択画面へ遷移する
@@ -602,36 +661,66 @@ export class ServiceCreateComponent implements OnInit {
     });
   }
 
+
+
+
+
+
+
   onDummy() {
-    const data: ModalData = {
-      title: nextActionTitleType.SUCSESSMESSAGE,
-      message: nextActionMessageType.NEXTMESSAGE,
-      nextActionList: [
-        { nextId: nextActionButtonType.TOP, nextAction: nextActionButtonTypeMap[0] },
-        { nextId: nextActionButtonType.MYMENU, nextAction: nextActionButtonTypeMap[1] },
-        { nextId: nextActionButtonType.SERVICECREATE, nextAction: nextActionButtonTypeMap[2] },
-        { nextId: nextActionButtonType.SERVICEDETAEL, nextAction: nextActionButtonTypeMap[3] }
-      ],
-      resultAction: ''
+    const hoges: any = [];
+    let count = 0;
+    if (this.fileList) {
+      this.fileList.forEach(file => {
+        this.service.protoImgUpload(file).then((data) => {
+          count++;
+          if (data) {
+            hoges.push(data.Location);
+            console.log(data);
+          }
+          if (count == this.fileList.length) {
+            console.log('処理完了');
+            console.log(hoges);
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+
+
+    } else {
+      console.log('不動！');
     }
 
-    const dialogRef = this.modal.open(NextModalComponent, {
-      width: '80vh',
-      height: '50vh',
-      data: data
-    });
-    // 次の操作モーダルを表示
-    dialogRef.afterClosed().subscribe(nextAction => {
-      if (nextAction !== undefined) {
-        const linc = this.service.nextNav(nextAction.resultAction);
-        if (linc == '99') {
-          this.refreshForm();
-        } else {
-          // モーダル返却値から遷移先へ飛ぶ
-          this.router.navigate([linc]);
-        }
-      }
-    });
+    // const data: ModalData = {
+    //   title: nextActionTitleType.SUCSESSMESSAGE,
+    //   message: nextActionMessageType.NEXTMESSAGE,
+    //   nextActionList: [
+    //     { nextId: nextActionButtonType.TOP, nextAction: nextActionButtonTypeMap[0] },
+    //     { nextId: nextActionButtonType.MYMENU, nextAction: nextActionButtonTypeMap[1] },
+    //     { nextId: nextActionButtonType.SERVICECREATE, nextAction: nextActionButtonTypeMap[2] },
+    //     { nextId: nextActionButtonType.SERVICEDETAEL, nextAction: nextActionButtonTypeMap[3] }
+    //   ],
+    //   resultAction: ''
+    // }
+
+    // const dialogRef = this.modal.open(NextModalComponent, {
+    //   width: '80vh',
+    //   height: '50vh',
+    //   data: data
+    // });
+    // // 次の操作モーダルを表示
+    // dialogRef.afterClosed().subscribe(nextAction => {
+    //   if (nextAction !== undefined) {
+    //     const linc = this.service.nextNav(nextAction.resultAction);
+    //     if (linc == '99') {
+    //       this.refreshForm();
+    //     } else {
+    //       // モーダル返却値から遷移先へ飛ぶ
+    //       this.router.navigate([linc]);
+    //     }
+    //   }
+    // });
   }
 
 
@@ -650,7 +739,7 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.title = '';
     this.inputData.price = 0;
     this.inputData.area = 0;
-    this.inputData.category ='0';
+    this.inputData.category = '0';
     this.inputData.bidMethod = '1';
     this.inputData.explanation = '';
     this.inputData.preferredDate = 0;
@@ -665,6 +754,41 @@ export class ServiceCreateComponent implements OnInit {
     this.categorySelect = '';
     // 確定ボタン非活性
     this.invalid = true;
+  }
+
+
+  onChangeDragAreaInput(event: any) {
+    // ファイルの情報はevent.target.filesにある
+    let reader = new FileReader();
+    const file = event.target.files[0];
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      this.img.push(reader.result);
+    };
+  }
+
+  dragOver(event: DragEvent) {
+    // ブラウザで画像を開かないようにする
+    event.preventDefault();
+  }
+  drop(event: DragEvent) {
+    // ブラウザで画像を開かないようにする
+    event.preventDefault();
+    if (event.dataTransfer == null) {
+      return;
+    }
+    const file = event.dataTransfer.files;
+    this.fileList.push(file[0])
+    const fileList = Object.entries(file).map(f => f[1]);
+    console.log(fileList);
+
+    fileList.forEach(f => {
+      let reader = new FileReader();
+      reader.readAsDataURL(f);
+      reader.onload = () => {
+        this.img.push(reader.result);
+      };
+    });
   }
 
 

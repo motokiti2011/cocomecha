@@ -51,181 +51,181 @@ export class ApiSerchService {
     );
   }
 
-    /**
-     * CognitoユーザーIDをPKにユーザー情報をDynamoDBに登録する
-     * @param user
-     * @returns
-     */
-     public postUser(user: user): Observable<any> {
-      // リクエストボディ生成
-      const body = {
-        "OperationType": "PUT",
-        "Keys": {
-          "userId": user.userId,
-          "userValidDiv": user.userValidDiv,
-          "corporationDiv": user.corporationDiv,
-          "userName": user.userName,
-          "mailAdress": user.mailAdress,
-          "TelNo1": user.TelNo1,
-          "TelNo2": user.TelNo2,
-          "areaNo1": user.areaNo1,
-          "areaNo2": user.areaNo2,
-          "adress": user.adress,
-          "postCode": user.postCode,
-          "mechanicId": user.mechanicId,
-          "officeId": user.officeId,
-          "baseId": user.baseId,
-          "officeRole": user.officeRole,
-          "profileImageUrl": user.profileImageUrl,
-          "Introduction": user.introduction,
-          "updateUserId": user.updateUserId,
-          "created": user.created,
-          "updated": user.updated
-        }
-      };
-      return this.http.post<user>(this.apiEndPoint + '/userinfo', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: user) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+  /**
+   * CognitoユーザーIDをPKにユーザー情報をDynamoDBに登録する
+   * @param user
+   * @returns
+   */
+  public postUser(user: user): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "PUT",
+      "Keys": {
+        "userId": user.userId,
+        "userValidDiv": user.userValidDiv,
+        "corporationDiv": user.corporationDiv,
+        "userName": user.userName,
+        "mailAdress": user.mailAdress,
+        "TelNo1": user.TelNo1,
+        "TelNo2": user.TelNo2,
+        "areaNo1": user.areaNo1,
+        "areaNo2": user.areaNo2,
+        "adress": user.adress,
+        "postCode": user.postCode,
+        "mechanicId": user.mechanicId,
+        "officeId": user.officeId,
+        "baseId": user.baseId,
+        "officeRole": user.officeRole,
+        "profileImageUrl": user.profileImageUrl,
+        "Introduction": user.introduction,
+        "updateUserId": user.updateUserId,
+        "created": user.created,
+        "updated": user.updated
+      }
+    };
+    return this.http.post<user>(this.apiEndPoint + '/userinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: user) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
-    /**
-     * 伝票番号をPKに伝票情報をDynamoDBに登録する
-     * @param user
-     * @returns
-     */
-    public postSlip(data: slipDetailInfo): Observable<any> {
-      // リクエストボディ生成
-      const body = {
-        "OperationType": "PUT",
-        "Keys": {
-          "slipNo": data.slipNo,
-          "deleteDiv": data.deleteDiv,
-          "category": data.category,
-          "slipAdminUserId": data.slipAdminUserId,
-          "adminDiv": data.adminDiv,
-          "title": data.title,
-          "areaNo1": data.areaNo1,
-          "areaNo2": data.areaNo2,
-          "price": data.price,
-          "bidMethod": data.bidMethod,
-          "bidderId": data.bidderId,
-          "bidEndDate": data.bidEndDate,
-          "explanation": data.explanation,
-          "displayDiv": data.displayDiv,
-          "processStatus": data.processStatus,
-          "targetService": data.targetService,
-          "targetVehicleId": data.targetVehicleId,
-          "targetVehicleName": data.targetVehicleName,
-          "targetVehicleInfo": data.targetVehicleInfo,
-          "workAreaInfo": data.workAreaInfo,
-          "preferredDate": data.preferredDate,
-          "preferredTime": data.preferredTime,
-          "completionDate": data.completionDate,
-          "transactionCompletionDate": data.transactionCompletionDate,
-          "thumbnailUrl": data.thumbnailUrl,
-          "imageUrlList": data.imageUrlList,
-          "messageOpenLebel": data.messageOpenLebel,
-          "updateUserId": data.updateUserId,
-          "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
-          "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
-        }
-      };
-      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: slipDetailInfo) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+  /**
+   * 伝票番号をPKに伝票情報をDynamoDBに登録する
+   * @param user
+   * @returns
+   */
+  public postSlip(data: slipDetailInfo): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "PUT",
+      "Keys": {
+        "slipNo": data.slipNo,
+        "deleteDiv": data.deleteDiv,
+        "category": data.category,
+        "slipAdminUserId": data.slipAdminUserId,
+        "adminDiv": data.adminDiv,
+        "title": data.title,
+        "areaNo1": data.areaNo1,
+        "areaNo2": data.areaNo2,
+        "price": data.price,
+        "bidMethod": data.bidMethod,
+        "bidderId": data.bidderId,
+        "bidEndDate": data.bidEndDate,
+        "explanation": data.explanation,
+        "displayDiv": data.displayDiv,
+        "processStatus": data.processStatus,
+        "targetService": data.targetService,
+        "targetVehicleId": data.targetVehicleId,
+        "targetVehicleName": data.targetVehicleName,
+        "targetVehicleInfo": data.targetVehicleInfo,
+        "workAreaInfo": data.workAreaInfo,
+        "preferredDate": data.preferredDate,
+        "preferredTime": data.preferredTime,
+        "completionDate": data.completionDate,
+        "transactionCompletionDate": data.transactionCompletionDate,
+        "thumbnailUrl": data.thumbnailUrl,
+        "imageUrlList": data.imageUrlList,
+        "messageOpenLebel": data.messageOpenLebel,
+        "updateUserId": data.updateUserId,
+        "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
+        "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
+      }
+    };
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: slipDetailInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 
-    /**
-     * CognitoユーザーIDをPKに履歴情報をDynamoDBに登録する
-     * @param user
-     * @returns
-     */
-    public postHistory(data: browsingHistory): Observable<any> {
-      // リクエストボディ生成
-      const body = {
-        "OperationType": "POST",
-        "Keys": {
-          "id": data.id,
-          "userId": data.userId,
-          "slipNo": data.slipNo,
-          "title": data.title,
-          "price": data.price,
-          "whet": data.whet,
-          "endDate": data.endDate,
-          "imageUrl": data.imageUrl,
-          "serviceType": data.serviceType,
-          "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
-          "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
+  /**
+   * CognitoユーザーIDをPKに履歴情報をDynamoDBに登録する
+   * @param user
+   * @returns
+   */
+  public postHistory(data: browsingHistory): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "POST",
+      "Keys": {
+        "id": data.id,
+        "userId": data.userId,
+        "slipNo": data.slipNo,
+        "title": data.title,
+        "price": data.price,
+        "whet": data.whet,
+        "endDate": data.endDate,
+        "imageUrl": data.imageUrl,
+        "serviceType": data.serviceType,
+        "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
+        "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
 
-        }
-      };
-      return this.http.post<browsingHistory>(this.apiEndPoint + '/browsinghistory', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: browsingHistory) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+      }
+    };
+    return this.http.post<browsingHistory>(this.apiEndPoint + '/browsinghistory', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: browsingHistory) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
-    /**
-     * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
-     * @param user
-     * @returns
-     */
-    public postFavorite(data: userFavorite): Observable<any> {
-      // リクエストボディ生成
-      const body = {
-        "OperationType": "POST",
-        "Keys": {
-          "id": data.id,
-          "userId": data.userId,
-          "slipNo": data.slipNo,
-          "title": data.title,
-          "price": data.price,
-          "whet": data.whet,
-          "endDate": data.endDate,
-          "imageUrl": data.imageUrl,
-          "serviceType": data.serviceType,
-          "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
-          "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
-        }
-      };
-      return this.http.post<browsingHistory>(this.apiEndPoint + '/userfavorite', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: browsingHistory) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+  /**
+   * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
+   * @param user
+   * @returns
+   */
+  public postFavorite(data: userFavorite): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "POST",
+      "Keys": {
+        "id": data.id,
+        "userId": data.userId,
+        "slipNo": data.slipNo,
+        "title": data.title,
+        "price": data.price,
+        "whet": data.whet,
+        "endDate": data.endDate,
+        "imageUrl": data.imageUrl,
+        "serviceType": data.serviceType,
+        "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
+        "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
+      }
+    };
+    return this.http.post<browsingHistory>(this.apiEndPoint + '/userfavorite', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: browsingHistory) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
-    /**
-     * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
-     * @param user
-     * @returns
-     */
-    public deleteFavorite(id: string): Observable<any> {
-      // リクエストボディ生成
-      const body = {
-        "OperationType": "DELETE",
-        "Keys": {
-          "id": id
-        }
-      };
-      return this.http.post<browsingHistory>(this.apiEndPoint + '/userfavorite', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: browsingHistory) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+  /**
+   * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
+   * @param user
+   * @returns
+   */
+  public deleteFavorite(id: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "DELETE",
+      "Keys": {
+        "id": id
+      }
+    };
+    return this.http.post<browsingHistory>(this.apiEndPoint + '/userfavorite', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: browsingHistory) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
   /**
    * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
@@ -309,7 +309,7 @@ export class ApiSerchService {
     const body = {
       "OperationType": "PUT",
       "Keys": {
-        "messageId":message.messageId,
+        "messageId": message.messageId,
         "slipNo": message.slipNo,
         "displayOrder": message.displayOrder,
         "userId": message.userId,

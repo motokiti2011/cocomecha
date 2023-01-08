@@ -38,7 +38,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
   // 保有資格情報
   qualification = '';
   // 保有資格情報配列
-  qualificationList:string[] = []
+  qualificationList: string[] = []
   // 工場区分
   officeDiv = false;
   // 工場情報表示モード
@@ -106,7 +106,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     });
 
     const authUser = this.cognito.initAuthenticated();
-    if(authUser !== null) {
+    if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
         this.inputData.adminUserId = user[0].userId;
@@ -135,7 +135,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     console.log(this.inputData);
     console.log(this.mechanicInfo);
     this.apiUniqeService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
-      if(result != 200 ) {
+      if (result != 200) {
         alert('失敗しました')
       } else {
         alert('登録成功')
@@ -148,7 +148,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
    * ユーザー登録情報と合わせるボタン押下時イベント
    * @param e
    */
-  onSomeUserInfo(e:string) {
+  onSomeUserInfo(e: string) {
     console.log(e);
   }
 
@@ -191,20 +191,20 @@ export class FactoryMechanicMenuComponent implements OnInit {
    * 資格情報をデータに格納する
    */
   private setQualification() {
-    const qualificationArray = this.options.value as {name:string}[];
+    const qualificationArray = this.options.value as { name: string }[];
     const result: string[] = []
     // 資格情報を格納
     const qualificationForm = this.form.value.name.replace(/\s+/g, '');
-    if(qualificationForm != ''
-    || qualificationForm != null ) {
+    if (qualificationForm != ''
+      || qualificationForm != null) {
       result.push(this.form.value.name);
     }
     // 追加入力した資格情報を格納
-    if(qualificationArray.length > 0) {
+    if (qualificationArray.length > 0) {
       qualificationArray.forEach(s => {
         // 空白削除
         const qualification = s.name.replace(/\s+/g, '');
-        if(qualification != '' && qualification != null) {
+        if (qualification != '' && qualification != null) {
           result.push(s.name)
         }
       });
@@ -217,13 +217,13 @@ export class FactoryMechanicMenuComponent implements OnInit {
    */
   private inputCheck() {
     let message: string[] = []
-    if(this.inputData.mechanicName == '' || this.inputData.mechanicName == null) {
+    if (this.inputData.mechanicName == '' || this.inputData.mechanicName == null) {
       message.push('名称')
     }
-    if(this.inputData.mailAdress == '' || this.inputData.mailAdress == null) {
+    if (this.inputData.mailAdress == '' || this.inputData.mailAdress == null) {
       message.push('電話番号')
     }
-    if(this.inputData.introduction == '' || this.inputData.introduction == null) {
+    if (this.inputData.introduction == '' || this.inputData.introduction == null) {
       message.push('紹介文')
     }
     this.mechanicInfo.mechanicName = this.inputData.mechanicName;
@@ -241,15 +241,15 @@ export class FactoryMechanicMenuComponent implements OnInit {
    * メカニック情報を取得する
    * @param mechanicId
    */
-  private getMechanicInfo(mechanicId:string) {
+  private getMechanicInfo(mechanicId: string) {
     this.apiService.getMecha(mechanicId).subscribe(result => {
       // メカニック情報取得後企業コードをチェック
-      if(result[0] != undefined || result[0] != null ) {
+      if (result[0] != undefined || result[0] != null) {
         this.mechanicInfo = result[0];
         // メカニック情報を画面に設定
         this.setMechanicInfo();
-        if(this.mechanicInfo.officeId != null) {
-          if(this.mechanicInfo.officeId !== '0') {
+        if (this.mechanicInfo.officeId != null) {
+          if (this.mechanicInfo.officeId !== '0') {
             this.getOfficeInfo(this.mechanicInfo.officeId);
           }
         }
@@ -267,18 +267,18 @@ export class FactoryMechanicMenuComponent implements OnInit {
    */
   private getOfficeInfo(officeId: string) {
     this.apiService.getOfficeInfo(officeId).subscribe(result => {
-      if(result[0] != undefined || result[0] != null ) {
+      if (result[0] != undefined || result[0] != null) {
         this.officeInfo = result[0];
         // 工場名が未設定の場合
-        if(this.officeInfo.officeName == ''
-        ||this.officeInfo == null) {
+        if (this.officeInfo.officeName == ''
+          || this.officeInfo == null) {
           // 登録画面、所属工場情報のボタンを表示
           this.factoryResistDiv = true;
         } else {
           this.factoryResistDiv = false;
         }
         // 管理ユーザー情報が空白の場合
-        if(this.officeInfo.adminIdList.length = 0) {
+        if (this.officeInfo.adminIdList.length = 0) {
           this.officeEditMode = false;
         } else {
           this.officeEditMode = true;
@@ -308,8 +308,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
    * 入力データにパラメータ設定を行う
    * @param param
    */
-  private setParam(param:string | null):string {
-    if(param == null) {
+  private setParam(param: string | null): string {
+    if (param == null) {
       return '';
     }
     return param;
@@ -319,43 +319,43 @@ export class FactoryMechanicMenuComponent implements OnInit {
    * 入力データにパラメータ設定を行う
    * @param param
    */
-    private initQualification(param:string[] | null) {
-      if(param == null) {
-        return;
+  private initQualification(param: string[] | null) {
+    if (param == null) {
+      return;
+    }
+    let count = 0;
+    param.forEach(l => {
+      if (count == 0) {
+        this.form.value.name = l;
       }
-      let count = 0;
-      param.forEach(l => {
-        if(count == 0) {
-          this.form.value.name = l;
-        }
-        const quForm = this.builder.group({
-          name: [l],
-        });
-        this.options.push(quForm);
-        count++;
-      })
-      this.setQualification();
-    }
+      const quForm = this.builder.group({
+        name: [l],
+      });
+      this.options.push(quForm);
+      count++;
+    })
+    this.setQualification();
+  }
 
-    /**
-     * 工場情報の表示切替を行う
-     */
-    onFactoryDisp() {
-        if(this.factoryDispDiv == false) {
-          this.factoryBtnText = '閉じる';
-          this.factoryDispDiv = true;
-          return;
-        }
-        this.factoryDispDiv = false
-        this.factoryBtnText = '工場情報を編集する';
+  /**
+   * 工場情報の表示切替を行う
+   */
+  onFactoryDisp() {
+    if (this.factoryDispDiv == false) {
+      this.factoryBtnText = '閉じる';
+      this.factoryDispDiv = true;
+      return;
     }
+    this.factoryDispDiv = false
+    this.factoryBtnText = '工場情報を編集する';
+  }
 
-    /**
-     * 工場登録（本所属工場新規登録）
-     */
-    onFactoryResister() {
-      this.router.navigate(["/factory-register"]);
-    }
+  /**
+   * 工場登録（本所属工場新規登録）
+   */
+  onFactoryResister() {
+    this.router.navigate(["/factory-register"]);
+  }
 
 
 

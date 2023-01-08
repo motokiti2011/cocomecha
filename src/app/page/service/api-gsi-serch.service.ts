@@ -28,12 +28,12 @@ export class ApiGsiSerchService {
    * @param userId
    * @returns
    */
-  public initSerchSlip(serchArea1: string, serchArea2: string, serchCategory: string ): Observable<any> {
+  public initSerchSlip(serchArea1: string, serchArea2: string, serchCategory: string): Observable<any> {
 
     let operation = '';
 
     // 引数設定状況によって検索条件を組み合わせる
-    if(serchArea1 == '0') {
+    if (serchArea1 == '0') {
       operation = 'CATEGORY-INDEX';
     } else {
       operation = 'AREANO1-INDEX';
@@ -61,31 +61,31 @@ export class ApiGsiSerchService {
    * @param userId
    * @returns
    */
-    public indexSerchSlip(serchArea1: string, serchArea2: string, serchCategory: string, subject: string ): Observable<any> {
+  public indexSerchSlip(serchArea1: string, serchArea2: string, serchCategory: string, subject: string): Observable<any> {
 
-      // リクエストボディ生成
-      const body = {
-        "IndexType": subject,
-        "Keys": {
-          "areaNo1": serchArea1,
-          "areaNo2": serchArea2,
-          "category": serchCategory
-        }
-      };
-      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: any) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+    // リクエストボディ生成
+    const body = {
+      "IndexType": subject,
+      "Keys": {
+        "areaNo1": serchArea1,
+        "areaNo2": serchArea2,
+        "category": serchCategory
+      }
+    };
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
   /**
    * ユーザーIDからお気に入り情報を取得
    * @param userId
    * @returns
    */
-  public serchFavorite(userId: string ): Observable<any> {
+  public serchFavorite(userId: string): Observable<any> {
 
     // リクエストボディ生成
     const body = {
@@ -107,22 +107,22 @@ export class ApiGsiSerchService {
    * @param userId
    * @returns
    */
-    public serchBrowsingHistory(userId: string ): Observable<any> {
+  public serchBrowsingHistory(userId: string): Observable<any> {
 
-      // リクエストボディ生成
-      const body = {
-        "IndexType": 'USERID-INDEX',
-        "Keys": {
-          "userId": userId
-        }
-      };
-      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/browsinghistory', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: any) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+    // リクエストボディ生成
+    const body = {
+      "IndexType": 'USERID-INDEX',
+      "Keys": {
+        "userId": userId
+      }
+    };
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/browsinghistory', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
   /**
@@ -130,7 +130,7 @@ export class ApiGsiSerchService {
    * @param userId
    * @returns
    */
-  public serchSlipAuthCheck(userId: string ): Observable<any> {
+  public serchSlipAuthCheck(userId: string): Observable<any> {
 
     // リクエストボディ生成
     const body = {
@@ -153,7 +153,7 @@ export class ApiGsiSerchService {
    * @param slipNo
    * @returns
    */
-  public serchSlipQuestion(slipNo: string ): Observable<any> {
+  public serchSlipQuestion(slipNo: string): Observable<any> {
 
     // リクエストボディ生成
     const body = {
@@ -175,7 +175,7 @@ export class ApiGsiSerchService {
    * @param slipNo
    * @returns
    */
-  public serchSlipMessage(slipNo: string ): Observable<any> {
+  public serchSlipMessage(slipNo: string): Observable<any> {
 
     // リクエストボディ生成
     const body = {
@@ -202,9 +202,9 @@ export class ApiGsiSerchService {
   public serchCompletionSlip(id: string, serchType: string): Observable<any> {
 
     let indexType = 'SLIPADMINUSERID-INDEX'
-    if(serchType == '1') {
+    if (serchType == '1') {
       indexType = 'SLIPADMINOFFICE-INDEX'
-    } else if(serchType == '2') {
+    } else if (serchType == '2') {
       indexType = 'SLIPADMINMECHANIC-INDEX'
     }
 
@@ -234,9 +234,9 @@ export class ApiGsiSerchService {
   public serchTransactionSlip(id: string, serchType: string): Observable<any> {
 
     let indexType = 'SLIPUSER-INDEX'
-    if(serchType == '1') {
+    if (serchType == '1') {
       indexType = 'SLIPMECHANIC-INDEX'
-    } else if(serchType == '2') {
+    } else if (serchType == '2') {
       indexType = 'SLIPOFFICE-INDEX'
     }
 
@@ -256,36 +256,36 @@ export class ApiGsiSerchService {
     );
   }
 
-    /**
-   * 各種IDからマイリスト情報を取得
-   * @param id
-   * @param serchType
-   * @returns
-   */
-    public serchMyList(id: string, serchType: string): Observable<any> {
+  /**
+ * 各種IDからマイリスト情報を取得
+ * @param id
+ * @param serchType
+ * @returns
+ */
+  public serchMyList(id: string, serchType: string): Observable<any> {
 
-      let indexType = 'USERID-INDEX'
-      if(serchType == '1') {
-        indexType = 'MECHANICID-INDEX'
-      } else if(serchType == '2') {
-        indexType = 'OFFICEID-INDEX'
-      }
-
-      // リクエストボディ生成
-      const body = {
-        "IndexType": indexType,
-        "Keys": {
-          "id": id,
-          "serviceType": serchType
-        }
-      };
-      return this.http.post<userMyList>(this.apiEndPoint + '/usermylist', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: userMyList) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
+    let indexType = 'USERID-INDEX'
+    if (serchType == '1') {
+      indexType = 'MECHANICID-INDEX'
+    } else if (serchType == '2') {
+      indexType = 'OFFICEID-INDEX'
     }
+
+    // リクエストボディ生成
+    const body = {
+      "IndexType": indexType,
+      "Keys": {
+        "id": id,
+        "serviceType": serchType
+      }
+    };
+    return this.http.post<userMyList>(this.apiEndPoint + '/usermylist', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: userMyList) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 }

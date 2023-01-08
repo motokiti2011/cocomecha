@@ -257,19 +257,34 @@
           </td>
         </tr>
 
+
         <tr>
           <!-- 添付画像　-->
           <td>添付画像</td>
           <td></td>
           <td>
-            <input class="file" type="file" name="example" accept="image/*" multiple>
+            <input type="file" accept="*/*" (change)="onInputChange($event)">
           </td>
           <td></td>
         </tr>
-
-
-
       </table>
+
+
+      <div class="container-md text-center">
+        <div 
+          class="dragarea w-100 border bg-light d-flex align-items-center"
+          (dragover)="dragOver($event)" (drop)="drop($event)"
+        >
+          <span class="mx-auto">ドラッグエリア</span>
+        </div>
+        <input type="file" id="dragareaInput" style="display:none" (change)="onChangeDragAreaInput($event)">
+        <label class="mt-3 btn btn-secondary" for="dragareaInput">参照</label>
+        <div class="row">
+          <img *ngFor="let i of img" [src]="i" class="col-6">
+        </div>
+      </div>
+
+
 
 
       <div class="row">
@@ -289,7 +304,7 @@
 
 
     <div class="submit-button">
-      <input type="button" class="submit-button" value="ダミー" (click)="onDummy()" />
+      <input type="button" class="submit-button" value="画像テスト用" (click)="onDummy()" />
     </div>
 
     <div class="submit-button">

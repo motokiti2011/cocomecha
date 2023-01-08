@@ -5,7 +5,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ServiceTransactionService } from './service-transaction.service';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { messageOpenLevel, openLevel } from 'src/app/entity/messageOpenLevel';
-import { slipDetailInfo, defaultSlip} from 'src/app/entity/slipDetailInfo';
+import { slipDetailInfo, defaultSlip } from 'src/app/entity/slipDetailInfo';
 import { QuestionBoardComponent } from 'src/app/page/modal/question-board/question-board/question-board.component';
 import { OpenLevelComponent } from 'src/app/page/modal/open-level/open-level/open-level.component';
 import { TransactionMessageComponent } from './transaction-message/transaction-message/transaction-message.component';
@@ -86,7 +86,7 @@ export class ServiceTransactionComponent implements OnInit {
   private initChatArea(slip: slipDetailInfo) {
     // 認証ユーザー情報取得
     const user = this.cognito.initAuthenticated();
-    if(user !== null) {
+    if (user !== null) {
       // this.setAcsessUser();
       this.acsessUser.userId = user;
       this.service.getSendName(user).subscribe(user => {
@@ -105,38 +105,38 @@ export class ServiceTransactionComponent implements OnInit {
         });
       });
     } else {
-        // ダイアログ表示（ログインしてください）し前画面へ戻る
-        const dialogData: messageDialogData = {
-          massage: 'ログインが必要になります。',
-          closeFlg: false,
-          closeTime: 0,
-          btnDispDiv: true
-        }
-        const dialogRef = this.modal.open(MessageDialogComponent, {
-          width: '300px',
-          height: '150px',
-          data: dialogData
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(result);
-          this.onReturn();
-          return;
-        });
+      // ダイアログ表示（ログインしてください）し前画面へ戻る
+      const dialogData: messageDialogData = {
+        massage: 'ログインが必要になります。',
+        closeFlg: false,
+        closeTime: 0,
+        btnDispDiv: true
+      }
+      const dialogRef = this.modal.open(MessageDialogComponent, {
+        width: '300px',
+        height: '150px',
+        data: dialogData
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(result);
+        this.onReturn();
+        return;
+      });
     }
   }
 
-// /**
-//  * subjectのユーザー情報を設定する有効期限切れの場合メインメニューに戻る
-//  */
-// private setAcsessUser() {
-//   this.auth.user$.subscribe(data => {
-//     if(data != null) {
-//       this.acsessUser = data;
-//     } else {
-//       this.router.navigate(["mein-menu"]);
-//     }
-//   })
-// }
+  // /**
+  //  * subjectのユーザー情報を設定する有効期限切れの場合メインメニューに戻る
+  //  */
+  // private setAcsessUser() {
+  //   this.auth.user$.subscribe(data => {
+  //     if(data != null) {
+  //       this.acsessUser = data;
+  //     } else {
+  //       this.router.navigate(["mein-menu"]);
+  //     }
+  //   })
+  // }
 
 
   /**
@@ -165,7 +165,7 @@ export class ServiceTransactionComponent implements OnInit {
    * 質問モーダルを展開する
    */
   onQuestion() {
-    console.log('サービスタイプ:'+this.serviceType)
+    console.log('サービスタイプ:' + this.serviceType)
     this.questionBoardModal.open(QuestionBoardComponent, {
       width: '600px',
       height: '800px',
