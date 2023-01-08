@@ -79,7 +79,9 @@ export class QuestionBoardService {
       senderName: userName,
       senderText: text,
       anserDiv: '0',
-      anserText: ''
+      anserText: '',
+      created: '',
+      updated: ''
     }
     return data;
   }

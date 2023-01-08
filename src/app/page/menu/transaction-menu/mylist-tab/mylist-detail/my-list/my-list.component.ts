@@ -62,13 +62,6 @@ export class MyListComponent implements OnInit {
   messageAlert = '';
   /** ログインユーザー情報 */
   loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null};
-  /** Mock */
-  mock: userMyList = {
-    id: '',
-    userId:'1', slipNo:'1', serviceTitle:'テストタイトル', category:'1', message:'テストメッセージ', readDiv:'0',
-    messageDate:'20221001', messageOrQuastionId:'1', bidderId:'', deleteDiv: '0', serviceType:'0' }
-
-
 
   constructor(
     private location: Location,
@@ -112,10 +105,10 @@ export class MyListComponent implements OnInit {
         this.loginUser = user;
       }
       // データを取得
-      this.mylistservice.getMyList(this.loginUser.userId).subscribe(data => {
+      this.mylistservice.getMyList(this.loginUser.userId, '0').subscribe(data => {
         console.log(data);
         if(data.length === 0) {
-          data.push(this.mock);
+          // data.push(this.mock);
         }
         this.detailList = this.mylistservice.displayFormatdisplayFormat(data);
       });

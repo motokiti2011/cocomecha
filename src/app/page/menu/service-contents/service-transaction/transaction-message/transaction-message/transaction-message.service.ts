@@ -50,7 +50,10 @@ export class TransactionMessageService {
       comment: sendText,
       sendAdressId: sendId,
       logicalDeleteDiv: '0',
-      sendDate: String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
+      sendDate: String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
+      created: '',
+      // 更新日時
+      updated: '',
     }
     return this.apiUniqueService.sendMessage(comment);
   }

@@ -3,6 +3,7 @@ import { HttpClient, HttpResponse, HttpClientJsonpModule, HttpErrorResponse, } f
 import { catchError, Observable, of, map } from 'rxjs';
 import { userMyList, dispUserMyList, MylistCategory, MylistCategoryMessage } from 'src/app/entity/userMyList';
 import { formatDate } from '@angular/common';
+import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class MyListService {
 
   constructor(
     private http: HttpClient,
+    private apiGsiService: ApiGsiSerchService,
     @Inject(LOCALE_ID) private locale: string
   ) { }
 
@@ -21,8 +23,8 @@ export class MyListService {
    * @param userId
    * @returns
    */
-  public getMyList(userId: string): Observable<userMyList[]> {
-    return this.http.get<userMyList[]>(`${this.apiEndPoint + 'usermylist/getusermylisygroup/' + userId}`);
+  public getMyList(id: string, serviceType: string): Observable<userMyList[]> {
+    return this.apiGsiService.serchMyList(id, serviceType);
   }
 
   /**
@@ -35,6 +37,9 @@ export class MyListService {
     userMyList.forEach(data => {
       let dispContents: dispUserMyList = {
         userId: data.userId,
+        mechanicId: data.mechanicId,
+        officeId: data.officeId,
+        serviceType:  data.serviceType,
         slipNo: data.slipNo,
         serviceTitle: data.serviceTitle,
         category: data.category,
@@ -46,8 +51,7 @@ export class MyListService {
         dispMessageDate: String(formatDate(data.messageDate, "yy/MM/dd HH:mm", this.locale)),
         messageOrQuastionId: data.messageOrQuastionId,
         bidderId: data.bidderId,
-        deleteDiv: data.deleteDiv,
-        serviceType:  data.serviceType
+        deleteDiv: data.deleteDiv
       }
       resultList.push(dispContents);
     });

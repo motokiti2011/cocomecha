@@ -405,7 +405,9 @@ export class ServiceListcomponentService {
       whet: this.getWhet(contents),
       endDate: String(contents.preferredDate),
       imageUrl: contents.thumbnailUrl,
-      serviceType: contents.targetService
+      serviceType: contents.targetService,
+      created: '',
+      updated: '',
     }
   }
 
@@ -448,7 +450,9 @@ export class ServiceListcomponentService {
       whet: this.getWhet(contents),
       endDate: String(contents.preferredDate),
       imageUrl: contents.thumbnailUrl,
-      serviceType: contents.targetService
+      serviceType: contents.targetService,
+      created: '',
+      updated: '',
     }
   }
 

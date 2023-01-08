@@ -8,6 +8,8 @@ import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { completionSlip } from 'src/app/entity/completionSlip';
+import { transactionSlip } from 'src/app/entity/transactionSlip';
+import { userMyList } from 'src/app/entity/userMyList';
 
 @Injectable({
   providedIn: 'root'
@@ -194,6 +196,7 @@ export class ApiGsiSerchService {
   /**
    * 各種IDから完了伝票情報を取得
    * @param id
+   * @param serchType
    * @returns
    */
   public serchCompletionSlip(id: string, serchType: string): Observable<any> {
@@ -209,10 +212,11 @@ export class ApiGsiSerchService {
     const body = {
       "IndexType": indexType,
       "Keys": {
-        "id": id
+        "id": id,
+        "serviceType": serchType
       }
     };
-    return this.http.post<completionSlip>(this.apiEndPoint + '/slipmessage', body).pipe(
+    return this.http.post<completionSlip>(this.apiEndPoint + '/completionslip', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: completionSlip) => res),
       // エラー時HTTPステータスコードを戻す
@@ -222,34 +226,66 @@ export class ApiGsiSerchService {
 
 
   /**
-   * 各種IDから完了伝票情報を取得
+   * 各種IDから取引伝票情報を取得
    * @param id
+   * @param serchType
    * @returns
    */
   public serchTransactionSlip(id: string, serchType: string): Observable<any> {
 
-    let indexType = 'SLIPADMINUSERID-INDEX'
+    let indexType = 'SLIPUSER-INDEX'
     if(serchType == '1') {
-      indexType = 'SLIPADMINOFFICE-INDEX'
+      indexType = 'SLIPMECHANIC-INDEX'
     } else if(serchType == '2') {
-      indexType = 'SLIPADMINMECHANIC-INDEX'
+      indexType = 'SLIPOFFICE-INDEX'
     }
 
     // リクエストボディ生成
     const body = {
       "IndexType": indexType,
       "Keys": {
-        "id": id
+        "id": id,
+        "serviceType": serchType
       }
     };
-    return this.http.post<completionSlip>(this.apiEndPoint + '/transactionslip', body).pipe(
+    return this.http.post<transactionSlip>(this.apiEndPoint + '/transactionslip', body).pipe(
       // 取得できた場合ユーザー情報を返却
-      map((res: completionSlip) => res),
+      map((res: transactionSlip) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
 
+    /**
+   * 各種IDからマイリスト情報を取得
+   * @param id
+   * @param serchType
+   * @returns
+   */
+    public serchMyList(id: string, serchType: string): Observable<any> {
+
+      let indexType = 'USERID-INDEX'
+      if(serchType == '1') {
+        indexType = 'MECHANICID-INDEX'
+      } else if(serchType == '2') {
+        indexType = 'OFFICEID-INDEX'
+      }
+
+      // リクエストボディ生成
+      const body = {
+        "IndexType": indexType,
+        "Keys": {
+          "id": id,
+          "serviceType": serchType
+        }
+      };
+      return this.http.post<userMyList>(this.apiEndPoint + '/usermylist', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: userMyList) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
 
 
 }

@@ -25,9 +25,6 @@ export class TransactionListService {
     private apiGsiService: ApiGsiSerchService,
   ) { }
 
-  private apiEndPoint: string = 'http://localhost:8080/v1/';
-
-
   /**
    * 取引中、管理中の伝票情報を取得する
    * @returns

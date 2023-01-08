@@ -8,7 +8,7 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { TransactionMenuService } from '../transaction-menu.service';
-import { TansactionCompleteService } from './transaction-complete-detail/tansaction-complete.service';
+import { TansactionCompleteService } from './tansaction-complete.service';
 import {
   find as _find,
   cloneDeep as _cloneDeep,
