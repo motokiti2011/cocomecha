@@ -63,6 +63,7 @@ export class TransactionListService {
         whet: this.getWhet(Number(slip.preferredDate),Number(slip.preferredTime)),
         endDate: this.getDispDate(Number(slip.preferredDate)),
         deleteDiv: slip.deleteDiv,
+        completionScheduledDate: slip.completionScheduledDate,
         transactionStatus: this.setSlipStatus(slip.transactionStatus)
       }
       result.push(dispSlip)

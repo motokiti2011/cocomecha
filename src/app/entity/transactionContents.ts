@@ -36,6 +36,8 @@ export interface transactionContents {
   imageUrl: string;
   // メッセージ公開レベル
   messageOpenLebel: string;
+  // 完了予定日
+  completionScheduledDate: string;
   // 取引ステータス
   transactionStatus: string;
 }
@@ -84,6 +86,8 @@ export interface dispTransactionContents {
   endDate: string;
   // 削除区分
   deleteDiv: string;
+  // 完了予定日
+  completionScheduledDate: string;
   // 取引ステータス
   transactionStatus: string;
 }

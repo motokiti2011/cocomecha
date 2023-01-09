@@ -23,6 +23,8 @@ export interface transactionSlip {
   bidderId: string;
   // 削除区分
   deleteDiv: string;
+  // 完了予定日
+  completionScheduledDate: string;
   // 作成日時
   created: string;
   // 更新日時
