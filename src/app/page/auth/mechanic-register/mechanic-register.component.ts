@@ -16,6 +16,8 @@ import { ApiSerchService } from '../../service/api-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
 
+import { UploadService } from '../../service/upload.service';
+
 @Component({
   selector: 'app-mechanic-register',
   templateUrl: './mechanic-register.component.html',
@@ -64,7 +66,7 @@ export class MechanicRegisterComponent implements OnInit {
     // 得意作業
     specialtyWork: null,
     // プロフィール画像URL
-    profileImageUrl: null,
+    profileImageUrl: '',
     // 紹介文
     introduction: null
   }
@@ -72,6 +74,8 @@ export class MechanicRegisterComponent implements OnInit {
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
+  /** 画像情報 */
+  imageFile: any = null;
 
   public form!: FormGroup;  // テンプレートで使用するフォームを宣言
 
@@ -82,6 +86,7 @@ export class MechanicRegisterComponent implements OnInit {
     private router: Router,
     private builder: FormBuilder,
     private cognito: CognitoService,
+    private s3: UploadService,
   ) { }
 
   ngOnInit(): void {
@@ -107,21 +112,24 @@ export class MechanicRegisterComponent implements OnInit {
   }
 
   /**
+   * アップロードファイル選択時イベント
+   * @param event
+   */
+  onInputChange(event: any) {
+    const file = event.target.files[0];
+    console.log(file);
+    this.imageFile = file;
+  }
+
+  /**
    * 登録するボタン押下イベント
    */
   onResister() {
-    this.setQualification();
-    this.inputCheck();
-    console.log(this.inputData);
-    console.log(this.mechanicInfo);
-    this.apiUniqueService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
-      if(result != 200 ) {
-        alert('失敗しました')
-      } else {
-        alert('登録成功')
-        this.router.navigate(["/main_menu"]);
-      }
-    });
+    if(this.imageFile != null) {
+      this.setImageUrl();
+    } else {
+      this.mechanicResister();
+    }
   }
 
   /**
@@ -166,6 +174,44 @@ export class MechanicRegisterComponent implements OnInit {
   test1() {
     this.setQualification();
   }
+
+
+
+  /************  以下内部処理 ****************/
+
+  /**
+   * イメージを設定する
+   */
+  private setImageUrl() {
+    this.s3.onManagedUpload(this.imageFile).then((data) => {
+      if (data) {
+        console.log(data);
+        this.inputData.profileImageUrl = data.Location;
+        this.mechanicResister();
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  /**
+   * メカニック登録
+   */
+  private mechanicResister() {
+    this.setQualification();
+    this.inputCheck();
+    console.log(this.inputData);
+    console.log(this.mechanicInfo);
+    this.apiUniqueService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
+      if(result != 200 ) {
+        alert('失敗しました')
+      } else {
+        alert('登録成功')
+        this.router.navigate(["/main_menu"]);
+      }
+    });
+  }
+
 
   /**
    * 資格情報をデータに格納する

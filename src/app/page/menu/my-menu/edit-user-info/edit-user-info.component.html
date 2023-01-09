@@ -32,6 +32,9 @@
   <div>紹介文</div>
   <input id="introduction" type="text" [(ngModel)]="inputData.introduction" />
 
+  <div>画像</div>
+  <input type="file" accept="*/*" (change)="onInputChange($event)">
+
 
   <input type="button" class="btn" on-click="onResister()" value="登録">
 

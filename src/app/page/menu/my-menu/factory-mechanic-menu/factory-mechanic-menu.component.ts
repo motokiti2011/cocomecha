@@ -16,7 +16,7 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { FactoryMenuComponent } from '../factory-menu/factory-menu.component';
-
+import { UploadService } from 'src/app/page/service/upload.service';
 
 @Component({
   selector: 'app-factory-mechanic-menu',
@@ -78,6 +78,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
 
+  imageFile: any = null;
+
   /** 工場登録有無区分 */
   factoryResistDiv = false;
 
@@ -92,6 +94,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     private router: Router,
     private builder: FormBuilder,
     private cognito: CognitoService,
+    private s3: UploadService,
   ) { }
 
   ngOnInit(): void {
@@ -132,16 +135,11 @@ export class FactoryMechanicMenuComponent implements OnInit {
   onResister() {
     this.setQualification();
     this.inputCheck();
-    console.log(this.inputData);
-    console.log(this.mechanicInfo);
-    this.apiUniqeService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
-      if (result != 200) {
-        alert('失敗しました')
-      } else {
-        alert('登録成功')
-        this.router.navigate(["/main_menu"]);
-      }
-    });
+    if(this.imageFile != null) {
+      this.setImageUrl();
+    } else {
+      this.mechanicResister();
+    }
   }
 
   /**
@@ -185,6 +183,71 @@ export class FactoryMechanicMenuComponent implements OnInit {
 
   test1() {
     this.setQualification();
+  }
+
+/**
+ * アップロードファイル選択時イベント
+ * @param event
+ */
+  onInputChange(event: any) {
+    const file = event.target.files[0];
+    console.log(file);
+    this.imageFile = file;
+  }
+
+/**
+ * 工場情報の表示切替を行う
+ */
+  onFactoryDisp() {
+    if (this.factoryDispDiv == false) {
+      this.factoryBtnText = '閉じる';
+      this.factoryDispDiv = true;
+      return;
+    }
+    this.factoryDispDiv = false
+    this.factoryBtnText = '工場情報を編集する';
+  }
+
+  /**
+   * 工場登録（本所属工場新規登録）
+   */
+  onFactoryResister() {
+    this.router.navigate(["/factory-register"]);
+  }
+
+  /************  以下内部処理 ****************/
+
+  /**
+   * イメージを設定する
+   */
+  private setImageUrl() {
+    this.s3.onManagedUpload(this.imageFile).then((data) => {
+      if (data) {
+        console.log(data);
+        this.mechanicInfo.profileImageUrl = data.Location;
+        this.mechanicResister();
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  /**
+   * メカニック情報登録
+   */
+  private mechanicResister() {
+    // this.setQualification();
+    // this.inputCheck();
+    console.log(this.inputData);
+    console.log(this.mechanicInfo);
+    this.apiUniqeService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
+      if (result != 200) {
+        alert('失敗しました')
+      } else {
+        alert('登録成功')
+        this.router.navigate(["/main_menu"]);
+      }
+    });
   }
 
   /**
@@ -233,7 +296,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     this.mechanicInfo.officeConnectionDiv = this.officeConnectionDiv
     this.mechanicInfo.qualification = this.inputData.qualification;
     this.mechanicInfo.specialtyWork = this.inputData.specialtyWork;
-    this.mechanicInfo.profileImageUrl = this.inputData.profileImageUrl;
+    // this.mechanicInfo.profileImageUrl = this.inputData.profileImageUrl;
     this.mechanicInfo.introduction = this.inputData.introduction;
   }
 
@@ -337,25 +400,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     this.setQualification();
   }
 
-  /**
-   * 工場情報の表示切替を行う
-   */
-  onFactoryDisp() {
-    if (this.factoryDispDiv == false) {
-      this.factoryBtnText = '閉じる';
-      this.factoryDispDiv = true;
-      return;
-    }
-    this.factoryDispDiv = false
-    this.factoryBtnText = '工場情報を編集する';
-  }
 
-  /**
-   * 工場登録（本所属工場新規登録）
-   */
-  onFactoryResister() {
-    this.router.navigate(["/factory-register"]);
-  }
 
 
 

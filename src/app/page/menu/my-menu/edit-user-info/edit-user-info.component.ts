@@ -11,6 +11,7 @@ import {
   isNil as _isNil,
   cloneDeep as _cloneDeep,
 } from 'lodash';
+import { UploadService } from 'src/app/page/service/upload.service';
 
 @Component({
   selector: 'app-edit-user-info',
@@ -39,11 +40,14 @@ export class EditUserInfoComponent implements OnInit {
   /** ユーザー情報 */
   user:user = initUserInfo;
 
+  imageFile: any = null;
+
   constructor(
     private location: Location,
     private cognito: CognitoService,
     private apiService: ApiSerchService,
     private router: Router,
+    private s3: UploadService,
   ) { }
 
 
@@ -58,6 +62,76 @@ export class EditUserInfoComponent implements OnInit {
       this.setDispDate(user);
   }
 
+
+  /**
+   * 設定値を加工し返却
+   * @param parm
+   */
+  private isSerParm(parm: string| null, subject: string): string {
+    if(parm != null && parm != '') {
+      return parm;
+    }
+    return '';
+  }
+
+  /**
+   * 地域選択イベント
+   */
+  selectArea() {
+
+  }
+
+/**
+ * アップロードファイル選択時イベント
+ * @param event
+ */
+  onInputChange(event: any) {
+    const file = event.target.files[0];
+    console.log(file);
+    this.imageFile = file;
+  }
+
+
+
+  /**
+   * 登録ボタン押下イベント
+   */
+  onResister() {
+    this.inputCheck();
+    console.log(this.user);
+    if(this.imageFile != null) {
+      this.setImageUrl();
+    } else {
+      this.userResister();
+    }
+
+    // this.apiService.postUser(this.user).subscribe(result => {
+    //   console.log(result);
+    // });
+
+  }
+
+  inputCheck() {
+    this.user.userName = this.inputData.userName;
+    this.user.mailAdress = this.inputData.mailAdress;
+    this.user.TelNo1 = this.inputData.TelNo1;
+    this.user.TelNo2 = this.inputData.TelNo2;
+    this.user.areaNo1 = this.inputData.areaNo1;
+    this.user.areaNo2 = this.inputData.areaNo2;
+    this.user.adress = this.inputData.adress;
+    this.user.profileImageUrl = ''; // 仮
+    this.user.postCode = this.inputData.postCode;
+    this.user.introduction = this.inputData.introduction;
+
+  }
+
+
+  /************  以下内部処理 ****************/
+
+  /**
+   * 表示データを設定する
+   * @param userId
+   */
   private setDispDate(userId: string) {
     this.apiService.getUser(userId).subscribe(data => {
       if(data[0]) {
@@ -78,45 +152,53 @@ export class EditUserInfoComponent implements OnInit {
   }
 
 
+
+
   /**
-   * 設定値を加工し返却
-   * @param parm
+   * イメージを設定する
    */
-  private isSerParm(parm: string| null, subject: string): string {
-    if(parm != null && parm != '') {
-      return parm;
+  private setImageUrl() {
+    this.s3.onManagedUpload(this.imageFile).then((data) => {
+      if (data) {
+        console.log(data);
+        this.user.profileImageUrl = data.Location;
+        this.userResister();
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  /**
+   * ユーザー情報を登録する
+   */
+  private userResister() {
+    console.log(this.inputData);
+    if(_isNil(this.inputData.userName) || this.inputData.userName == ''
+    || _isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == ''
+    || _isNil(this.inputData.mailAdress) || this.inputData.mailAdress == '') {
+      alert('必須項目です。');
+    } else {
+      this.user.userValidDiv = '0';
+      this.user.corporationDiv = '0';
+      this.user.userName = this.inputData.userName;
+      this.user.mailAdress = this.inputData.mailAdress;
+      this.user.TelNo1 = this.inputData.TelNo1;
+      this.user.areaNo1 = this.inputData.areaNo1;
+      this.user.areaNo2 = this.inputData.areaNo2;
+      this.user.adress = this.inputData.adress;
+      this.user.profileImageUrl = ''; // 仮
+      this.user.postCode = this.inputData.postCode;
+      this.user.introduction = this.inputData.introduction;
+
+      this.apiService.postUser(this.user).subscribe(result => {
+        if(result == undefined) {
+          // TODO
+          alert('失敗');
+        }
+        this.router.navigate(["/main_menu"])
+      });
     }
-    return '';
-  }
-
-
-  selectArea() {
-
-  }
-
-
-
-  onResister() {
-    this.inputCheck();
-    console.log(this.user);
-    // this.apiService.postUser(this.user).subscribe(result => {
-    //   console.log(result);
-    // });
-
-  }
-
-  inputCheck() {
-    this.user.userName = this.inputData.userName;
-    this.user.mailAdress = this.inputData.mailAdress;
-    this.user.TelNo1 = this.inputData.TelNo1;
-    this.user.TelNo2 = this.inputData.TelNo2;
-    this.user.areaNo1 = this.inputData.areaNo1;
-    this.user.areaNo2 = this.inputData.areaNo2;
-    this.user.adress = this.inputData.adress;
-    this.user.profileImageUrl = ''; // 仮
-    this.user.postCode = this.inputData.postCode;
-    this.user.introduction = this.inputData.introduction;
-
   }
 
 

@@ -37,6 +37,12 @@
   </div>
 
   <div class="row">
+    <div class="col-2">プロフィール画像</div>
+    <div class="col-1"></div>
+    <input class="col-4" type="file" accept="*/*" (change)="onInputChange($event)">
+  </div>
+
+  <div class="row">
     <div class="col-3"></div>
     <input class="col-2" type="button" class="btn" on-click="onResister()" value="登録">
   </div>

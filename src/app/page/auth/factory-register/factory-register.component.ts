@@ -7,6 +7,7 @@ import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
 import { officeInfo, employee, baseInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
 import { user, initUserInfo } from 'src/app/entity/user';
+import { UploadService } from '../../service/upload.service';
 
 @Component({
   selector: 'app-factory-register',
@@ -62,6 +63,7 @@ export class FactoryRegisterComponent implements OnInit {
 
   user: user = initUserInfo;
 
+  imageFile: any = null;
 
   public form!: FormGroup;  // テンプレートで使用するフォームを宣言
 
@@ -73,6 +75,7 @@ export class FactoryRegisterComponent implements OnInit {
     private router: Router,
     private cognito: CognitoService,
     private location: Location,
+    private s3: UploadService,
   ) { }
 
   ngOnInit(): void {
@@ -127,6 +130,86 @@ export class FactoryRegisterComponent implements OnInit {
     this.setbusinessContent();
   }
 
+/**
+ * アップロードファイル選択時イベント
+ * @param event
+ */
+  onInputChange(event: any) {
+    const file = event.target.files[0];
+    console.log(file);
+    this.imageFile = file;
+
+  }
+
+  /**
+   * ユーザー登録情報と合わせるボタン押下時イベント
+   * @param e
+   */
+  onSomeUserInfo(e:string) {
+    console.log(e);
+  }
+
+  /**
+   * 登録するボタン押下イベント
+   */
+  onRegister() {
+    if(this.imageFile != null) {
+      this.setImageUrl();
+    } else {
+      this.officeResister();
+    }
+  }
+
+  goBack() {
+    this.location.back();
+  }
+
+
+  /************  以下内部処理 ****************/
+
+  /**
+   * イメージを設定する
+   */
+  private setImageUrl() {
+    this.s3.onManagedUpload(this.imageFile).then((data) => {
+      if (data) {
+        console.log(data);
+        this.inputData.officePRimageURL = data.Location;
+        this.officeResister();
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  /**
+   * 工場登録
+   */
+  private officeResister() {
+    // 業務内容情報を設定
+    this.setbusinessContent();
+    // 更新データ設定
+    this.officeInfo.officeName = this.inputData.officeName;
+    this.officeInfo.officeTel = this.inputData.officeTel;
+    this.officeInfo.officeMailAdress = this.inputData.officeMailAdress;
+    this.officeInfo.officeArea1 = this.inputData.officeArea1;
+    this.officeInfo.officeArea = this.inputData.officeArea;
+    this.officeInfo.officeAdress = this.inputData.officeAdress;
+    this.officeInfo.officePostCode = this.inputData.officePostCode;
+    this.officeInfo.workContentList = this.businessContentList;
+    // TODO
+    this.officeInfo.businessHours = [];
+    this.officeInfo.baseInfoList = [];
+    this.officeInfo.employeeList = [];
+    this.officeInfo.officePR = this.inputData.officePR;
+    this.officeInfo.officePRimageURL = this.inputData.officePRimageURL;
+
+    this.apiUniqueService.postFactory(this.officeInfo, this.user.userId, this.user.mechanicId).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+
   /**
    * 業務内容情報をデータに格納する
    */
@@ -155,46 +238,5 @@ export class FactoryRegisterComponent implements OnInit {
     console.log(result)
     this.businessContentList = result;
   }
-
-
-
-  /**
-   * ユーザー登録情報と合わせるボタン押下時イベント
-   * @param e
-   */
-    onSomeUserInfo(e:string) {
-      console.log(e);
-    }
-
-    /**
-     * 登録するボタン押下イベント
-     */
-    onRegister() {
-      // 業務内容情報を設定
-      this.setbusinessContent();
-      // 更新データ設定
-      this.officeInfo.officeName = this.inputData.officeName;
-      this.officeInfo.officeTel = this.inputData.officeTel;
-      this.officeInfo.officeMailAdress = this.inputData.officeMailAdress;
-      this.officeInfo.officeArea1 = this.inputData.officeArea1;
-      this.officeInfo.officeArea = this.inputData.officeArea;
-      this.officeInfo.officeAdress = this.inputData.officeAdress;
-      this.officeInfo.officePostCode = this.inputData.officePostCode;
-      this.officeInfo.workContentList = this.businessContentList;
-      // TODO
-      this.officeInfo.businessHours = [];
-      this.officeInfo.baseInfoList = [];
-      this.officeInfo.employeeList = [];
-      this.officeInfo.officePR = this.inputData.officePR;
-      this.officeInfo.officePRimageURL = this.inputData.officePRimageURL;
-
-      this.apiUniqueService.postFactory(this.officeInfo, this.user.userId, this.user.mechanicId).subscribe(result => {
-        console.log(result);
-      });
-    }
-
-    goBack() {
-      this.location.back();
-    }
 
 }

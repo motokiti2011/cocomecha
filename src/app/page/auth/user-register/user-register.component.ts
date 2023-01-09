@@ -12,7 +12,7 @@ import {
 
 import { AuthUserService } from '../authUser.service';
 import { ApiSerchService } from '../../service/api-serch.service';
-
+import { UploadService } from '../../service/upload.service';
 
 @Component({
   selector: 'app-user-register',
@@ -40,11 +40,14 @@ export class UserRegisterComponent implements OnInit {
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
 
+  imageFile: any = null;
+
   constructor(
     private location: Location,
     private auth: AuthUserService,
     private apiService: ApiSerchService,
     private router: Router,
+    private s3: UploadService,
   ) { }
 
   ngOnInit(): void {
@@ -85,7 +88,49 @@ export class UserRegisterComponent implements OnInit {
   }
 
 
+/**
+ * アップロードファイル選択時イベント
+ * @param event
+ */
+  onInputChange(event: any) {
+    const file = event.target.files[0];
+    console.log(file);
+    this.imageFile = file;
+  }
+
+  /**
+   * 登録ボタン押下時イベント
+   */
   onResister() {
+    if(this.imageFile != null) {
+      this.setImageUrl();
+    } else {
+      this.userResister();
+    }
+  }
+
+
+  /************  以下内部処理 ****************/
+
+  /**
+   * イメージを設定する
+   */
+  private setImageUrl() {
+    this.s3.onManagedUpload(this.imageFile).then((data) => {
+      if (data) {
+        console.log(data);
+        this.user.profileImageUrl = data.Location;
+        this.userResister();
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  /**
+   * ユーザー情報を登録する
+   */
+  private userResister() {
     console.log(this.inputData);
     if(_isNil(this.inputData.userId) || this.inputData.userId == ''
     || _isNil(this.inputData.userName) || this.inputData.userName == ''
@@ -114,8 +159,6 @@ export class UserRegisterComponent implements OnInit {
         this.router.navigate(["/main_menu"])
       });
     }
-
-
   }
 
 }
