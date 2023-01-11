@@ -59,6 +59,8 @@ import { MechanicRegisterComponent } from './page/auth/mechanic-register/mechani
 import { FactoryMechanicMenuComponent } from './page/menu/my-menu/factory-mechanic-menu/factory-mechanic-menu.component';
 import { FactoryMenuComponent } from './page/menu/my-menu/factory-menu/factory-menu.component';
 import { FactoryRegisterComponent } from './page/auth/factory-register/factory-register.component';
+import { VehicleRegisterComponent } from './page/auth/vehicle-register/vehicle-register.component';
+
 
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
@@ -77,6 +79,7 @@ const ROUTE_TABLE: Routes = [
   { path: 'mechanic-register', component: MechanicRegisterComponent, canActivate: [RoutingGuard] },
   { path: 'factory-mechanic-menu', component: FactoryMechanicMenuComponent, canActivate: [RoutingGuard] },
   { path: 'factory-register', component: FactoryRegisterComponent, canActivate: [RoutingGuard] },
+  { path: 'vehicle-register', component: VehicleRegisterComponent, canActivate: [RoutingGuard] },
 ]
 
 @NgModule({
@@ -116,6 +119,7 @@ const ROUTE_TABLE: Routes = [
     MechanicRegisterComponent,
     FactoryMenuComponent,
     FactoryRegisterComponent,
+    VehicleRegisterComponent,
   ],
   entryComponents: [
     TransactionListComponent,

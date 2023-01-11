@@ -1,8 +1,8 @@
 export interface userVehicle {
-  // ユーザーID
-  userId: string;
   // 車両ID
   vehicleId: string;
+  // ユーザーID
+  userId: string;
   // 車両名
   vehicleName: string;
   // 車両番号
@@ -15,6 +15,8 @@ export interface userVehicle {
   coler: string;
   // カラーNo.
   colerNo: string;
+  // 走行距離
+  mileage: string;
   // 初年度登録日
   firstRegistrationDate: string;
   // 車検満了日

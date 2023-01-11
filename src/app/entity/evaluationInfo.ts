@@ -1,6 +1,7 @@
 // 評価情報
 export interface evaluationInfo {
-
+  // ID
+  id: string;
   // 伝票番号
   slipNo: string;
   // 評価情報ID
@@ -9,10 +10,10 @@ export interface evaluationInfo {
   mechanicId: string;
   // 事業所ID
   officeId: string;
-  // 拠点ID
-  baseId: string;
   // サービスタイトル
   serviceTitle: string;
+  // サービスタイプ
+  serviceType: string;
   // 日付
   date: string;
   // 評価者表示区分
