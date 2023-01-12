@@ -367,7 +367,7 @@ export class ApiSerchService {
         "vehicleId": '',
         "userId": data.userId,
         "vehicleName": data.vehicleName,
-        "vehicleNo": data.vehicleNo,
+        "vehicleNo": data.vehicleNo.serialNum,
         "chassisNo": data.chassisNo,
         "designatedClassification": data.designatedClassification,
         "coler": data.coler,
