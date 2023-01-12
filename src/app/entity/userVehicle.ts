@@ -6,7 +6,7 @@ export interface userVehicle {
   // 車両名
   vehicleName: string;
   // 車両番号
-  vehicleNo: string;
+  vehicleNo: vehicleNumberPlate;
   // 車台番号
   chassisNo: string;
   // 指定類別
@@ -27,4 +27,18 @@ export interface userVehicle {
   created: string;
   // 更新日時
   updated: string;
+}
+
+/**
+ * 車両登録番号
+ */
+export interface vehicleNumberPlate {
+  // 地域名
+  areaName: string;
+  // 分類番号
+  classificationNum: string;
+  // ひらがな
+  kana: string;
+  // 一連指定番号
+  serialNum: string;
 }

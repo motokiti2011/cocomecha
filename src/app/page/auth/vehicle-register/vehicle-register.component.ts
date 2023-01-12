@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ApiSerchService } from '../../service/api-serch.service';
+import { ApiGsiSerchService } from '../../service/api-gsi-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
-import { officeInfo, employee, baseInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { UploadService } from '../../service/upload.service';
-import { userVehicle } from 'src/app/entity/userVehicle';
+import { userVehicle, vehicleNumberPlate } from 'src/app/entity/userVehicle';
 
 @Component({
   selector: 'app-vehicle-register',
@@ -16,12 +16,20 @@ import { userVehicle } from 'src/app/entity/userVehicle';
 })
 export class VehicleRegisterComponent implements OnInit {
 
+  // ナンバープレートデータ
+  numberPleateData: vehicleNumberPlate = {
+    areaName: '',
+    classificationNum: '',
+    kana: '',
+    serialNum: ''
+  }
+
   // 入力データ
   inputData = {
     // 車両名
     vehicleName: '',
     // 車両番号
-    vehicleNo: '',
+    vehicleNo: this.numberPleateData,
     // 車台番号
     chassisNo: '',
     // 指定番号
@@ -39,15 +47,14 @@ export class VehicleRegisterComponent implements OnInit {
     // 車検満了日
     inspectionExpirationDate: ''
   }
-
+  /** ユーザー情報　*/
   user: user = initUserInfo;
-
-  vehicleList:userVehicle[] = [];
-
-
+  /** 車両リスト　*/
+  vehicleList: userVehicle[] = [];
 
   constructor(
     private apiService: ApiSerchService,
+    private apiGsiService: ApiGsiSerchService,
     private apiUniqueService: ApiUniqueService,
     private router: Router,
     private cognito: CognitoService,
@@ -61,6 +68,7 @@ export class VehicleRegisterComponent implements OnInit {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
         this.user = user[0];
+        this.getVehicleList();
       });
     } else {
       alert('ログインが必要です');
@@ -68,9 +76,6 @@ export class VehicleRegisterComponent implements OnInit {
     }
 
   }
-
-
-
 
 
   /**
@@ -85,7 +90,7 @@ export class VehicleRegisterComponent implements OnInit {
    * 登録するボタン押下イベント
    */
   onRegister() {
-    console.log(this.inputData)
+    this.vehicleResister();
   }
 
   goBack() {
@@ -95,12 +100,39 @@ export class VehicleRegisterComponent implements OnInit {
 
   /************  以下内部処理 ****************/
 
+  /**
+   * 車両情報を取得する
+   */
+  private getVehicleList() {
+    this.apiGsiService.serchVehicle(this.user.userId, '0').subscribe(result => {
+      this.vehicleList = result;
+    });
+  }
 
   /**
    * 車両登録登録
    */
   private vehicleResister() {
- 
+    console.log(this.inputData);
+    const userVehicle :userVehicle = {
+      vehicleId : '',
+      userId: this.user.userId,
+      vehicleName: this.inputData.vehicleName,
+      vehicleNo: this.numberPleateData,
+      chassisNo: this.inputData.chassisNo,
+      designatedClassification: this.inputData.designatedNo,
+      coler: this.inputData.coler,
+      colerNo: this.inputData.colerNo,
+      mileage: this.inputData.mileage,
+      firstRegistrationDate: this.inputData.firstRegistrationDate,
+      inspectionExpirationDate: this.inputData.inspectionExpirationDate,
+      updateUserId: '',
+      created: '',
+      updated: ''
+    }
+    this.apiService.postUserVehicle(userVehicle).subscribe(result => {
+      console.log(result);
+    })
   }
 
 

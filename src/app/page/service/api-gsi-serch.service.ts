@@ -10,6 +10,7 @@ import { userFavorite } from 'src/app/entity/userFavorite';
 import { completionSlip } from 'src/app/entity/completionSlip';
 import { transactionSlip } from 'src/app/entity/transactionSlip';
 import { userMyList } from 'src/app/entity/userMyList';
+import { userVehicle } from 'src/app/entity/userVehicle';
 
 @Injectable({
   providedIn: 'root'
@@ -282,6 +283,31 @@ export class ApiGsiSerchService {
     return this.http.post<userMyList>(this.apiEndPoint + '/usermylist', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: userMyList) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+  /**
+   *
+   * @returns
+   */
+  public serchVehicle(id: string,serchType: string): Observable<any> {
+    let indexType = 'USERID-INDEX'
+    if (serchType == '1') {
+      indexType = 'VEHICLENO-INDEX'
+    }
+
+    // リクエストボディ生成
+    const body = {
+      "IndexType": indexType,
+      "Keys": {
+        "id": id
+      }
+    };
+    return this.http.post<userVehicle>(this.apiEndPoint + '/uservehicleinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: userVehicle) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );

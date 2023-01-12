@@ -48,8 +48,11 @@
 
   <div class="row mt-2">
     <div class="col-2">車両番号（ナンバー）</div>
-    <div class="col-1">必須</div>
-    <input class="col-4" id="name" type="text" [(ngModel)]="inputData.vehicleNo" />
+    <div class="col-1"></div>
+    <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.areaName" />
+    <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.classificationNum" />
+    <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.kana" />
+    <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.serialNum" />
     <div class="col-1"></div>
     <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
   </div>

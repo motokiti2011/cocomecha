@@ -14,6 +14,7 @@ import { mechanicInfo } from 'src/app/entity/mechanicInfo';
 import { officeInfo } from 'src/app/entity/officeInfo';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
+import { userVehicle } from 'src/app/entity/userVehicle';
 
 @Injectable({
   providedIn: 'root'
@@ -347,6 +348,39 @@ export class ApiSerchService {
     return this.http.post<slipMegPrmUser>(this.apiEndPoint + '/slipmegprmuser', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: slipMegPrmUser) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+  /**
+   * ユーザー車両情報を登録する
+   * @param mechanicId
+   * @returns
+   */
+  public postUserVehicle(data: userVehicle): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "POST",
+      "Keys": {
+        "vehicleId": '',
+        "userId": data.userId,
+        "vehicleName": data.vehicleName,
+        "vehicleNo": data.vehicleNo,
+        "chassisNo": data.chassisNo,
+        "designatedClassification": data.designatedClassification,
+        "coler": data.coler,
+        "colerNo": data.colerNo,
+        "mileage": data.mileage,
+        "firstRegistrationDate": data.firstRegistrationDate,
+        "InspectionExpirationDate": data.inspectionExpirationDate,
+        "updateUserId": data.userId
+      }
+    };
+    return this.http.post<userVehicle>(this.apiEndPoint + '/uservehicleinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: userVehicle) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
