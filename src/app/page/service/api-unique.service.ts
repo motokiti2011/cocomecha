@@ -152,6 +152,7 @@ export class ApiUniqueService {
         "deleteDiv": data.deleteDiv,
         "category": data.category,
         "slipAdminUserId": data.slipAdminUserId,
+        "slipAdminUserName": data.slipAdminUserName,
         "adminDiv": data.adminDiv,
         "title": data.title,
         "areaNo1": data.areaNo1,
@@ -203,6 +204,7 @@ export class ApiUniqueService {
         "deleteDiv": data.deleteDiv,
         "category": data.category,
         "slipAdminUserId": data.slipAdminUserId,
+        "slipAdminUserName": data.slipAdminUserName,
         'slipAdminOfficeId': data.slipAdminOfficeId,
         'slipAdminMechanicId': data.slipAdminMechanicId,
         "adminDiv": data.adminDiv,
@@ -385,7 +387,7 @@ export class ApiUniqueService {
    * @param question
    * @returns
    */
-  public sendQuestion(question: slipQuestion, serviceType: string): Observable<any> {
+  public sendQuestion(question: slipQuestion, serviceType: string ): Observable<any> {
     console.log(question)
     console.log(serviceType)
 
