@@ -235,4 +235,14 @@ export class ServiceTransactionComponent implements OnInit {
     this.router.navigate(["service_list"],
       { queryParams: { areaNum: 0, category: 0 } });
   }
+
+
+  /**
+   * 取引依頼するボタン押下イベント
+   */
+  onTransactionRequest() {
+    console.log(this.slip);
+  }
+
+
 }

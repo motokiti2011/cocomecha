@@ -40,8 +40,6 @@ export class QuestionBoardComponent implements OnInit {
   constructor(
     public _dialogRef: MatDialogRef<QuestionBoardComponent>,
     private service: QuestionBoardService,
-    private auth: AuthUserService,
-    private cognito: CognitoService,
     private apiGsiService: ApiGsiSerchService,
     @Inject(MAT_DIALOG_DATA)
     public data:{

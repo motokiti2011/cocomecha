@@ -15,7 +15,6 @@ export class QuestionBoardService {
 
 
   constructor(
-    private http: HttpClient,
     private apiService: ApiSerchService,
     private apiUniqueService: ApiUniqueService,
   ) { }

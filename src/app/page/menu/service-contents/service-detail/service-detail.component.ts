@@ -132,7 +132,10 @@ export class ServiceDetailComponent implements OnInit {
    */
   onTransactionStatus() {
     this.router.navigate(["service-transaction"],
-      { queryParams: { slipNo: this.dispContents.slipNo, serviceType: this.serviceType, status: true } });
+      { queryParams: { 
+        slipNo: this.dispContents.slipNo,
+        serviceType: this.serviceType,
+        status: true } });
   }
 
 
