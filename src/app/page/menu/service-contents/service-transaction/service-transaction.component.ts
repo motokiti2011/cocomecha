@@ -242,6 +242,13 @@ export class ServiceTransactionComponent implements OnInit {
    */
   onTransactionRequest() {
     console.log(this.slip);
+    this.service.transactionReq(this.slip, this.acsessUser.userId, this.serviceType).subscribe(
+      result => {
+
+      });
+
+
+
   }
 
 

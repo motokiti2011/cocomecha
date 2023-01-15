@@ -9,6 +9,7 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiCheckService } from 'src/app/page/service/api-check.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
+import { ApiSlipProsessService } from 'src/app/page/service/api-slip-prosess.service';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { user } from 'src/app/entity/user';
 
@@ -23,6 +24,7 @@ export class ServiceTransactionService {
     private apGsiService: ApiGsiSerchService,
     private apCheckService: ApiCheckService,
     private apiUniqeService: ApiUniqueService,
+    private apiSlipService: ApiSlipProsessService,
   ) { }
 
   /**
@@ -96,5 +98,20 @@ export class ServiceTransactionService {
   public messagePrmReq(userId:string, userName:string, slipNo:string) {
     return this.apiUniqeService.postMessageReq(userId, userName, slipNo);
   }
+
+
+  /**
+   * 取引開始依頼を行う
+   * @param slip
+   * @param userId
+   * @param serviceType
+   * @returns
+   */
+  public transactionReq(slip: slipDetailInfo,
+    userId: string, serviceType: string ): Observable<any> {
+      return this.apiSlipService.sendTransactionReq(
+        slip.slipNo, userId, serviceType)
+  }
+
 
 }
