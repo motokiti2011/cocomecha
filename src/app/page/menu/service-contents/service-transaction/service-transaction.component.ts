@@ -13,6 +13,8 @@ import { MessagePrmReqComponent } from 'src/app/page/modal/message-prm-req/messa
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { TransactionApprovalModalComponent } from 'src/app/page/modal/transaction-approval-modal/transaction-approval-modal/transaction-approval-modal.component';
+import { serviceTransactionRequest } from 'src/app/entity/serviceTransactionRequest';
 
 @Component({
   selector: 'app-service-transaction',
@@ -50,6 +52,8 @@ export class ServiceTransactionComponent implements OnInit {
   slip: slipDetailInfo = defaultSlip;
   /** 伝票タイプ */
   serviceType = '';
+  /** 取引依頼 */
+  tranReq : serviceTransactionRequest[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -100,7 +104,12 @@ export class ServiceTransactionComponent implements OnInit {
             // 閲覧者設定を行う
             this.browseSetting(slip, user);
           } else {
+            // 管理者区分ON
             this.adminUserDiv = true;
+            // 取引依頼情報取得
+            this.service.getTranReq(slip.slipNo).subscribe(re => {
+              this.tranReq = re;
+            })
           }
         });
       });
@@ -125,18 +134,7 @@ export class ServiceTransactionComponent implements OnInit {
     }
   }
 
-  // /**
-  //  * subjectのユーザー情報を設定する有効期限切れの場合メインメニューに戻る
-  //  */
-  // private setAcsessUser() {
-  //   this.auth.user$.subscribe(data => {
-  //     if(data != null) {
-  //       this.acsessUser = data;
-  //     } else {
-  //       this.router.navigate(["mein-menu"]);
-  //     }
-  //   })
-  // }
+
 
 
   /**
@@ -244,11 +242,42 @@ export class ServiceTransactionComponent implements OnInit {
     console.log(this.slip);
     this.service.transactionReq(this.slip, this.acsessUser.userId, this.serviceType).subscribe(
       result => {
-
+        console.log(result)
       });
+  }
 
-
-
+  /**
+   * 取引を商品するボタン押下イベント
+   */
+  onTransactionApproval() {
+    const dialogRef = this.modal.open(TransactionApprovalModalComponent, {
+      width: '400px',
+      height: '450px',
+      data: this.tranReq
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result !== null && result !== '') {
+          if(result == undefined) {
+            // TODO
+            result = '0'
+          }
+          // this.targetService = result;
+          // console.log('もーだりぃ')
+          // console.log(result)
+          // this.router.navigate(["service_list"],
+          // { queryParams:{
+          //   areaNum :this.serchCondition.areaNum,
+          //   category: this.serchCondition.category,
+          //   targetService: result
+          // }});
+        } else {
+          // 戻るボタンまたはモーダルが閉じられたのでなにもしない
+          // return;
+        }
+      }
+    );
   }
 
 

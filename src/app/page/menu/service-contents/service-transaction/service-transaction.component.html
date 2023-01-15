@@ -22,7 +22,9 @@
     </div>
 
 
-    <input type="button" class="btn_item" on-click="onTransactionRequest()" value="このサービスの取引を依頼する">
+    <input type="button" class="btn_item" on-click="onTransactionRequest()" value="取引を依頼する">
+
+    <input type="button" class="btn_item" on-click="onTransactionApproval()" value="取引依頼を承認する">
 
 
     <div *ngIf="privateDiv">
@@ -69,6 +71,8 @@
       <div class="item">{{dispExplanation}}</div>
     </div>
   </div>
+
+
 
 </div>
 

@@ -66,7 +66,6 @@ export class MyListComponent implements OnInit {
   constructor(
     private location: Location,
     private router: Router,
-    private service: TransactionMenuService,
     private mylistservice: MyListService,
     private auth: AuthUserService,
     public modal: MatDialog,
@@ -194,8 +193,8 @@ export class MyListComponent implements OnInit {
    * タイトルクリック時、詳細画面へ遷移する
    * @param content
    */
-  contentsDetail(content: userMyList) {
-    this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.slipNo } });
+  contentsDetail(content: dispUserMyList) {
+    this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.slipNo, searchTargetService:content.serviceType } });
   }
 
   /**

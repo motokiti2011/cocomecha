@@ -4,6 +4,7 @@ import { catchError, Observable, of, map } from 'rxjs';
 import { userMyList, dispUserMyList, MylistCategory, MylistCategoryMessage } from 'src/app/entity/userMyList';
 import { formatDate } from '@angular/common';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
+import { mylistMessages } from 'src/app/entity/mylistMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +45,7 @@ export class MyListService {
         serviceTitle: data.serviceTitle,
         category: data.category,
         dispCategory: this.dispCategoryFormat(data.category),
-        message: data.message,
+        message: this.setMessage(data.category, data.message),
         readDiv: data.readDiv,
         dispRead: this.readOrNoread(data.readDiv),
         messageDate: data.messageDate,
@@ -93,12 +94,20 @@ export class MyListService {
       default:
         return '';
     }
-
-
-
   }
 
-
-
+  /**
+   * 表示メッセージを設定する
+   * @param category 
+   * @param message 
+   * @returns 
+   */
+  private setMessage(category: string, message: string):string {
+    if(category == '' ) {
+      return message;      
+    }
+    const messageList = Object.values(mylistMessages);
+    return messageList[Number(category)];
+  }
 
 }

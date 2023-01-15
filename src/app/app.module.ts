@@ -60,6 +60,7 @@ import { FactoryMechanicMenuComponent } from './page/menu/my-menu/factory-mechan
 import { FactoryMenuComponent } from './page/menu/my-menu/factory-menu/factory-menu.component';
 import { FactoryRegisterComponent } from './page/auth/factory-register/factory-register.component';
 import { VehicleRegisterComponent } from './page/auth/vehicle-register/vehicle-register.component';
+import { TransactionApprovalModalComponent } from './page/modal/transaction-approval-modal/transaction-approval-modal/transaction-approval-modal.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -120,6 +121,7 @@ const ROUTE_TABLE: Routes = [
     FactoryMenuComponent,
     FactoryRegisterComponent,
     VehicleRegisterComponent,
+    TransactionApprovalModalComponent,
   ],
   entryComponents: [
     TransactionListComponent,

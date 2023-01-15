@@ -27,26 +27,46 @@
 
   <div class="service-contents">
 
-    <div class="item-list-heder">
-      <!-- <div class="heder-check" >
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{HEAD.readDiv}}</th>
+          <th>{{HEAD.msgPage}}</th>
+          <th>{{HEAD.adlessMsg}}</th>
+          <th>{{HEAD.messageDate}}</th>
+
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of detailList">
+          <td>{{item.dispRead}}</td>
+          <td><div class="item-title" (click)="contentsDetail(item)" >{{item.serviceTitle}}</div></td>
+          <td>{{item.message}}</td>
+          <td>{{item.messageDate}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- <div class="item-list-heder">
+      <div class="heder-check" >
         <input type="checkbox" 
         [(ngModel)]="hedSelection"
         (change)="bulkSelection()">
-      </div> -->
+      </div>
       <div class="heder-read" >{{HEAD.readDiv}}</div>
       <div class="heder-title" >{{HEAD.msgPage}}</div>
       <div class="heder-message" >{{HEAD.adlessMsg}}</div>
       <div class="heder-date" >{{HEAD.messageDate}}</div>
-    </div>
+    </div> -->
 
-    <div *ngFor="let content of detailList">
+    <!-- <div *ngFor="let content of detailList">
       <div class="item-list">
         <div class="item-read" >{{content.readDiv}}</div>
-        <!-- <div class="item-title" (click)="contentsDetail(content)" >{{content.serviceTitle}}</div> -->
+        <div class="item-title" (click)="contentsDetail(content)" >{{content.serviceTitle}}</div>
         <div class="item-message" >{{content.message}}</div>
         <div class="item-date" >{{content.messageDate}}</div>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <!-- <div class="delete-btn">

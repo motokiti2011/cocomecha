@@ -15,7 +15,30 @@
 
   <div class="contants">
 
-    <div class="item-list-heder">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{HEAD.title}}</th>
+          <th>{{HEAD.price}}</th>
+          <th>{{HEAD.whet}}</th>
+          <th>{{HEAD.endDate}}</th>
+          <th>{{HEAD.status}}</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of detailList">
+          <td>{{item.title}}</td>
+          <td>{{item.price}}</td>
+          <td>{{item.whet}}</td>
+          <td>{{item.endDate}}</td>
+          <td>{{item.transactionStatus}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+
+    <!-- <div class="item-list-heder">
       <div class="heder-title" >{{HEAD.title}}</div>
       <div class="heder-price" >{{HEAD.price}}</div>
       <div class="heder-whet" >{{HEAD.whet}}</div>
@@ -31,7 +54,7 @@
         <div class="item-endDate" >{{content.endDate}}</div>
         <div class="item-status" >{{content.transactionStatus}}</div>
       </div>
-    </div>
+    </div> -->
     
   </div>
 

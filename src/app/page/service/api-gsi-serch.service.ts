@@ -11,6 +11,8 @@ import { completionSlip } from 'src/app/entity/completionSlip';
 import { transactionSlip } from 'src/app/entity/transactionSlip';
 import { userMyList } from 'src/app/entity/userMyList';
 import { userVehicle } from 'src/app/entity/userVehicle';
+import { serviceTransactionRequest } from 'src/app/entity/serviceTransactionRequest';
+
 
 @Injectable({
   providedIn: 'root'
@@ -289,7 +291,7 @@ export class ApiGsiSerchService {
   }
 
   /**
-   *
+   *　車両情報を取得
    * @returns
    */
   public serchVehicle(id: string,serchType: string): Observable<any> {
@@ -312,6 +314,30 @@ export class ApiGsiSerchService {
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
+
+
+  /**
+   * 取引依頼情報を取得
+   * @param slipNo 
+   * @returns 
+   */
+  public serchTransactionRequest(slipNo: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "IndexType": 'SLIPNO-INDEX',
+      "Keys": {
+        "slipNo": slipNo
+      }
+    };
+    return this.http.post<serviceTransactionRequest>(this.apiEndPoint + '/servicetransactionrequest', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: serviceTransactionRequest) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
 
 
 }

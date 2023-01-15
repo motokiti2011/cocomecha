@@ -113,5 +113,13 @@ export class ServiceTransactionService {
         slip.slipNo, userId, serviceType)
   }
 
+  /**
+   * 取引依頼を取得
+   * @param slipNo 
+   */
+  public getTranReq(slipNo: string): Observable<any> {
+    return this.apGsiService.serchTransactionRequest(slipNo);
+  }
+
 
 }
