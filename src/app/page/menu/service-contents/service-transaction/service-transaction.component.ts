@@ -54,6 +54,8 @@ export class ServiceTransactionComponent implements OnInit {
   serviceType = '';
   /** 取引依頼 */
   tranReq : serviceTransactionRequest[] = [];
+  /** 管理者ID */
+  slipAdminCheckId = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -100,13 +102,13 @@ export class ServiceTransactionComponent implements OnInit {
         // メッセージメニュー画面の初期化
         this.child.onShow(this.dispSlipId, this.acsessUser.userId);
         // 管理者判定
-        let slipAdminCheckId = this.acsessUser.userId;
+        this.slipAdminCheckId = this.acsessUser.userId;
         if(this.serviceType == '1') {
-          slipAdminCheckId = this.acsessUser.officeId;
+          this.slipAdminCheckId = this.acsessUser.officeId;
         } else if(this.serviceType == '2') {
-          slipAdminCheckId = this.acsessUser.mechanicId;
+          this.slipAdminCheckId = this.acsessUser.mechanicId;
         }
-        this.service.slipAuthCheck(this.dispSlipId,slipAdminCheckId,this.serviceType ).subscribe(result => {
+        this.service.slipAuthCheck(this.dispSlipId, this.slipAdminCheckId,this.serviceType ).subscribe(result => {
           // 取得できない場合
           if (result.length === 0) {
             // 閲覧者設定を行う
@@ -269,20 +271,15 @@ export class ServiceTransactionComponent implements OnInit {
         if (result !== null && result !== '') {
           if(result == undefined) {
             // TODO
-            result = '0'
+            return;
+          } else {
+            this.service.approvalTransaction(result, this.slipAdminCheckId).subscribe(res => {
+              console.log(res);
+            })
           }
-          // this.targetService = result;
-          // console.log('もーだりぃ')
-          // console.log(result)
-          // this.router.navigate(["service_list"],
-          // { queryParams:{
-          //   areaNum :this.serchCondition.areaNum,
-          //   category: this.serchCondition.category,
-          //   targetService: result
-          // }});
         } else {
           // 戻るボタンまたはモーダルが閉じられたのでなにもしない
-          // return;
+          return;
         }
       }
     );

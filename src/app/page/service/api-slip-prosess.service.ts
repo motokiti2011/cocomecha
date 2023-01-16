@@ -48,6 +48,32 @@ export class ApiSlipProsessService {
 
 
 
+  public approvalTransaction(req: serviceTransactionRequest, adminId: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "CONFIRMTRANSACTION",
+      "Keys": {
+        "slipNo" : req.slipNo,
+        "requestId" : req.requestId,
+        "requestUserName": req.requestUserName,
+        "serviceUserType" : req.serviceUserType,
+        "requestType" : req.requestType,
+        "files" : req.files,
+        "requestStatus" : req.requestStatus,
+        "confirmDiv" : req.confirmDiv,
+        "deadline" : req.deadline,
+        "adminUser": adminId,
+        "confirmUser" : req.requestId
+      }
+    };
+    return this.http.post<serviceTransactionRequest>(this.apiEndPoint + '/slipmegprmuser', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: serviceTransactionRequest) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
 
 
 

@@ -12,6 +12,7 @@ import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { ApiSlipProsessService } from 'src/app/page/service/api-slip-prosess.service';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { user } from 'src/app/entity/user';
+import { serviceTransactionRequest } from 'src/app/entity/serviceTransactionRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -120,6 +121,16 @@ export class ServiceTransactionService {
    */
   public getTranReq(slipNo: string): Observable<any> {
     return this.apGsiService.serchTransactionRequest(slipNo);
+  }
+
+
+  /**
+   * 取引確定を行う
+   * @param req
+   * @returns
+   */
+  public approvalTransaction(req: serviceTransactionRequest, adminId: string): Observable<any> {
+    return this.apiSlipService.approvalTransaction(req, adminId);
   }
 
 
