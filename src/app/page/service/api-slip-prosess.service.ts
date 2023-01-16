@@ -47,7 +47,12 @@ export class ApiSlipProsessService {
   }
 
 
-
+  /**
+   * 取引確定処理を行う
+   * @param req 
+   * @param adminId 
+   * @returns 
+   */
   public approvalTransaction(req: serviceTransactionRequest, adminId: string): Observable<any> {
     // リクエストボディ生成
     const body = {
@@ -66,7 +71,7 @@ export class ApiSlipProsessService {
         "confirmUser" : req.requestId
       }
     };
-    return this.http.post<serviceTransactionRequest>(this.apiEndPoint + '/slipmegprmuser', body).pipe(
+    return this.http.post<serviceTransactionRequest>(this.apiEndPoint + '/confirmtransaction', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: serviceTransactionRequest) => res),
       // エラー時HTTPステータスコードを戻す
