@@ -65,9 +65,10 @@ export class ServiceTransactionService {
    * 伝票の管理者判定を行う
    * @param slipId
    * @param userId
+   * @param serviceType
    */
-  public slipAuthCheck(slipId: string, userId: string): Observable<slipManegement[]> {
-    return this.apGsiService.serchSlipAuthCheck(userId);
+  public slipAuthCheck(slipId: string, adminId: string, serviceType: string): Observable<slipManegement[]> {
+    return this.apCheckService.checkAdminUserSlip(slipId, adminId, serviceType);
   }
 
   /**
@@ -108,14 +109,14 @@ export class ServiceTransactionService {
    * @returns
    */
   public transactionReq(slip: slipDetailInfo,
-    userId: string, serviceType: string ): Observable<any> {
+    userId: string, name: string, serviceType: string ): Observable<any> {
       return this.apiSlipService.sendTransactionReq(
-        slip.slipNo, userId, serviceType)
+        slip.slipNo, userId, name, serviceType);
   }
 
   /**
    * 取引依頼を取得
-   * @param slipNo 
+   * @param slipNo
    */
   public getTranReq(slipNo: string): Observable<any> {
     return this.apGsiService.serchTransactionRequest(slipNo);

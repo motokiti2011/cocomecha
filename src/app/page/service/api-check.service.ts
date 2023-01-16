@@ -8,6 +8,8 @@ import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,6 +43,29 @@ export class ApiCheckService {
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
+
+    /**
+   * ユーザーIDからユーザー情報を取得する。
+   * @param userId
+   * @returns
+   */
+    public checkAdminUserSlip(slipNo: string, adminId: string, serviceType: string): Observable<any> {
+      // リクエストボディ生成
+      const body = {
+        "OperationType": "ADMINIDCHECHK",
+        "Keys": {
+          "slipNo": slipNo,
+          "adminId": adminId,
+          "serviceType": serviceType
+        }
+      };
+      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipadminusercheck', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: slipDetailInfo) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
 
 
 }

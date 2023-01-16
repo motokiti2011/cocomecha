@@ -47,7 +47,7 @@ export class ServiceTransactionComponent implements OnInit {
   /** 許可済ユーザー */
   parmUserDiv = false;
   /** アクセスユーザー情報 */
-  acsessUser = { userId: '', userName: '' }
+  acsessUser = { userId: '', userName: '', mechanicId: '', officeId: '' }
   /** 伝票情報 */
   slip: slipDetailInfo = defaultSlip;
   /** 伝票タイプ */
@@ -95,10 +95,18 @@ export class ServiceTransactionComponent implements OnInit {
       this.acsessUser.userId = user;
       this.service.getSendName(user).subscribe(user => {
         this.acsessUser.userName = user[0].userName;
+        this.acsessUser.mechanicId = user[0].mechanicId;
+        this.acsessUser.officeId = user[0].officeId;
         // メッセージメニュー画面の初期化
         this.child.onShow(this.dispSlipId, this.acsessUser.userId);
         // 管理者判定
-        this.service.slipAuthCheck(this.dispSlipId, user).subscribe(result => {
+        let slipAdminCheckId = this.acsessUser.userId;
+        if(this.serviceType == '1') {
+          slipAdminCheckId = this.acsessUser.officeId;
+        } else if(this.serviceType == '2') {
+          slipAdminCheckId = this.acsessUser.mechanicId;
+        }
+        this.service.slipAuthCheck(this.dispSlipId,slipAdminCheckId,this.serviceType ).subscribe(result => {
           // 取得できない場合
           if (result.length === 0) {
             // 閲覧者設定を行う
@@ -240,14 +248,14 @@ export class ServiceTransactionComponent implements OnInit {
    */
   onTransactionRequest() {
     console.log(this.slip);
-    this.service.transactionReq(this.slip, this.acsessUser.userId, this.serviceType).subscribe(
+    this.service.transactionReq(this.slip, this.acsessUser.userId, this.acsessUser.userName, this.serviceType).subscribe(
       result => {
         console.log(result)
       });
   }
 
   /**
-   * 取引を商品するボタン押下イベント
+   * 取引を承認するボタン押下イベント
    */
   onTransactionApproval() {
     const dialogRef = this.modal.open(TransactionApprovalModalComponent, {

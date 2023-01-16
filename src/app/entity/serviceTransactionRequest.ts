@@ -6,6 +6,8 @@ export interface serviceTransactionRequest {
   slipNo: string;
   // リクエストＩＤ
   requestId: string;
+  // リクエストユーザー名
+  requestUserName: string;
   // 申し込みユーザータイプ
   serviceUserType: string;
   // リクエストタイプ
