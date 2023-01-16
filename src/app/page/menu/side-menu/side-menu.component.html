@@ -2,35 +2,48 @@
 <div class="container">
 
   <div class="row">
-    <p>トップに戻る</p>
+    <!-- <p>トップに戻る</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onTopBytton()">トップに戻る</button>
   </div>
 
   <div class="row">
-      <p>作業を頼む</p>
+    <!-- <p>作業を頼む</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onWorkRequest()">作業を頼む</button>
+  </div>
+
+  <div *ngIf="mechaDiv" class="row">
+    <!-- <p>サービスを出品する</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onWorkExhibit()">サービスを出品する</button>
   </div>
 
   <div class="row">
-    <p>サービスを出品する</p>
+    <!-- <p>サービスを探す</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onWorkSerch()">サービスを探す</button>
+  </div>
+
+  <div *ngIf="mechaDiv" class="row">
+    <!-- <p>作業依頼を探す</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onWorkRequestSerch()">作業依頼を探す</button>
   </div>
 
   <div class="row">
-    <p>サービスを探す</p>
+    <!-- <p>プロフィールを編集</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onProfileEdit()">プロフィールを編集</button>
   </div>
 
-  <div class="row">
-    <p>作業依頼を探す</p>
+  <div *ngIf!="mechaDiv" class="row">
+    <!-- <p>メカニック登録を行う</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onMechaResister()">メカニック登録を行う</button>
   </div>
 
-  <div class="row">
-    <p>プロフィールを編集</p>
+  <div *ngIf="mechaDiv" class="row">
+    <!-- <p>メカニックプロフィールを編集</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onMechaProfileEdit()">メカニックプロフィールを編集</button>
   </div>
 
-  <div class="row">
-    <p>メカニックプロフィールを編集</p>
-  </div>
-
-  <div class="row">
-    <p>工場プロフィールを編集</p>
+  <div *ngIf="factoryDiv" class="row">
+    <!-- <p>工場プロフィールを編集</p> -->
+    <button type="button" class="btn btn-outline-primary" (click)="onFactoryProfileEdit()">工場プロフィールを編集</button>
   </div>
 
 </div>

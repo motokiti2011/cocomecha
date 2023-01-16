@@ -2,8 +2,12 @@
 
 <div class="transaction-menu">
   <aside>
-    <app-side-menu></app-side-menu>
-  </aside>
+
+    <app-side-menu
+    [acceseUser]="acceseUser">
+  </app-side-menu>
+  
+</aside>
 
   <article>
 
@@ -21,17 +25,6 @@
         <!-- ngComponentOutlet で動的にコンポーネントを読み込む -->
         <ng-container *ngComponentOutlet="currentTab"></ng-container>
       </div>
-
-      <!-- <div>
-        <select class="select-btn" [(ngModel)]="selected" (change)="changeDisplay()">
-          <option *ngFor="let item of data"
-          [value]="item.value"
-          [selected]="item.value === selected">{{item.label}}
-        </option>
-        </select>
-      </div> -->
-
-
     </div>
 
   </article>

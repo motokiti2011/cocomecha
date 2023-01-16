@@ -10,6 +10,7 @@ import { MyListComponent } from './mylist-tab/mylist-detail/my-list/my-list.comp
 import { AuthUserService } from '../../auth/authUser.service';
 import { CognitoService } from '../../auth/cognito.service';
 import { loginUser } from 'src/app/entity/loginUser';
+import { user } from 'src/app/entity/user';
 
 @Component({
   selector: 'app-transaction-menu',
@@ -26,6 +27,9 @@ export class TransactionMenuComponent implements OnInit {
   currentTab: any;
   /** 表示タブ */
   displayTab: any;
+  /** acceseUser */
+  acceseUser?: user;
+
   /** タブメニューデータ */
   tabs = [
     { name: 'お知らせ', contents: MyListComponent, current: true },
@@ -72,6 +76,7 @@ export class TransactionMenuComponent implements OnInit {
     //   if(user == null) {
     this.service.getUser(authUser).subscribe(result => {
       if(result[0] != null) {
+        this.acceseUser = result[0];
         const acceseUser:loginUser = {
           userId: authUser,
           userName: result[0].userName,
