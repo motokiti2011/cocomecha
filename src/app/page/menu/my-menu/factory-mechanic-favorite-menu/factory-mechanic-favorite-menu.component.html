@@ -1,0 +1,20 @@
+<p>工場・メカニックお気に入り一覧</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>工場・メカニック名</th>
+      <th>商品一覧へ</th>
+      <th>３ヘッド</th>
+      <th>４ヘッド</th>
+
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of favoriteList">
+      <td>{{item.id}}</td>
+      <td><div class="item-title" (click)="itemList(item)" >商品一覧へ</div></td>
+      <td>{{item.favoriteId}}</td>
+      <td>{{item.serviceType}}</td>
+    </tr>
+  </tbody>
+</table>

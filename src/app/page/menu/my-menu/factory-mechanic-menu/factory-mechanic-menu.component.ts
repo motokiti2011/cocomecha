@@ -215,6 +215,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
     this.router.navigate(["/factory-register"]);
   }
 
+
+
   /************  以下内部処理 ****************/
 
   /**

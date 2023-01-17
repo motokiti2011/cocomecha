@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { officeInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
 import { UploadService } from 'src/app/page/service/upload.service';
+import { user } from 'src/app/entity/user';
 
 @Component({
   selector: 'app-factory-menu',
@@ -11,6 +12,8 @@ export class FactoryMenuComponent implements OnInit {
 
 
   imageFile:any = null;
+
+  user? :user
 
   constructor(
     private s3: UploadService,

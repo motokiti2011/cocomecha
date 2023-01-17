@@ -1,133 +1,140 @@
 
-<div class="container">
-  <div *ngIf="vehicleList.length">
+<div class="main-content">
 
-    <div class="center-block">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>車名</th>
-            <th>ナンバー（登録番号）</th>
-            <th>走行距離</th>
-            <th>車検満了日</th>
-            <th>履歴</th>
-            <th>削除する場合はこちら</th>
-        </thead>
-        <tbody>
-          <tr *ngFor="let vehicle of vehicleList">
-            <td>{{vehicle.vehicleId}}</td>
-            <td>{{vehicle.vehicleName}}</td>
-            <td>{{vehicle.vehicleNo}}</td>
-            <td>{{vehicle.mileage}}</td>
-            <td>履歴はこちら</td>
-            <td>削除はこちら</td>
-          </tr>
-        </tbody>
-      </table>
+  <div>
+    <app-side-menu
+      [acceseUser]="user"
+    ></app-side-menu>
+  </div>
+
+  <div class="container">
+    <div *ngIf="vehicleList.length">
+
+      <div class="center-block">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>車名</th>
+              <th>ナンバー（登録番号）</th>
+              <th>走行距離</th>
+              <th>車検満了日</th>
+              <th>履歴</th>
+              <th>削除する場合はこちら</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vehicle of vehicleList">
+              <td>{{vehicle.vehicleId}}</td>
+              <td>{{vehicle.vehicleName}}</td>
+              <td>{{vehicle.vehicleNo}}</td>
+              <td>{{vehicle.mileage}}</td>
+              <td>履歴はこちら</td>
+              <td>削除はこちら</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <div *ngIf="vehicleList.length == 0">
+      <div class="center-block">
+        <div>現在登録されている車両はありません。</div>
+      </div>
+    </div>
+
+
+
+    <div class="row mt-4">
+      <h1>車両情報登録</h1>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-2">車両名</div>
+      <div class="col-1">必須</div>
+      <input class="col-4" id="id" type="text" [(ngModel)]="inputData.vehicleName" />
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-2">車両番号（ナンバー）</div>
+      <div class="col-1"></div>
+      <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.areaName" />
+      <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.classificationNum" />
+      <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.kana" />
+      <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.serialNum" />
+      <div class="col-1"></div>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-2">車台番号（フレームNo.）</div>
+      <div class="col-1">必須</div>
+      <input class="col-4" id="email" type="email" [(ngModel)]="inputData.chassisNo" />
+      <div class="col-1"></div>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-2">指定番号・類別区分番号</div>
+      <div class="col-1"></div>
+      <input class="col-1" id="email" type="email" [(ngModel)]="inputData.designatedNo" />
+      <div class="col-1">　　　</div>
+      <input class="col-1" id="email" type="email" [(ngModel)]="inputData.classificationNo" />
+      <div class="col-2"></div>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-2">カラー</div>
+      <div class="col-1"></div>
+      <input class="col-1" id="email" type="email" [(ngModel)]="inputData.coler" />
+      <div class="col-1"></div>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-2">カラーNo.</div>
+      <div class="col-1"></div>
+      <input class="col-1" id="text" type="email" [(ngModel)]="inputData.colerNo" />Km
+      <div class="col-2"></div>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+    </div>
+
+
+    <div class="row mt-2">
+      <div class="col-2">走行距離</div>
+      <div class="col-1"></div>
+      <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.mileage" />
+      <div class="col-1"></div>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-2">初年度登録日</div>
+      <div class="col-1"></div>
+      <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.firstRegistrationDate" />
+      <div class="col-1"></div>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-2">車検満了日</div>
+      <div class="col-1"></div>
+      <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.inspectionExpirationDate" />
+      <div class="col-1"></div>
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
+    </div>
+
+
+    <div class="row">
+      <div class="col-3"></div>
+      <input class="col-2" type="button" class="btn" on-click="onRegister()" value="登録">
     </div>
 
   </div>
-  <div *ngIf="vehicleList.length == 0">
-    <div class="center-block">
-      <div>現在登録されている車両はありません。</div>
-    </div>
-  </div>
 
-
-
-  <div class="row mt-4">
-    <h1>車両情報登録</h1>
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-2">車両名</div>
-    <div class="col-1">必須</div>
-    <input class="col-4" id="id" type="text" [(ngModel)]="inputData.vehicleName" />
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-2">車両番号（ナンバー）</div>
-    <div class="col-1"></div>
-    <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.areaName" />
-    <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.classificationNum" />
-    <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.kana" />
-    <input class="col-1" id="name" type="text" [(ngModel)]="numberPleateData.serialNum" />
-    <div class="col-1"></div>
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-2">車台番号（フレームNo.）</div>
-    <div class="col-1">必須</div>
-    <input class="col-4" id="email" type="email" [(ngModel)]="inputData.chassisNo" />
-    <div class="col-1"></div>
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-2">指定番号・類別区分番号</div>
-    <div class="col-1"></div>
-    <input class="col-1" id="email" type="email" [(ngModel)]="inputData.designatedNo" />
-    <div class="col-1">　　　</div>
-    <input class="col-1" id="email" type="email" [(ngModel)]="inputData.classificationNo" />
-    <div class="col-2"></div>
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-2">カラー</div>
-    <div class="col-1"></div>
-    <input class="col-1" id="email" type="email" [(ngModel)]="inputData.coler" />
-    <div class="col-1"></div>
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-2">カラーNo.</div>
-    <div class="col-1"></div>
-    <input class="col-1" id="text" type="email" [(ngModel)]="inputData.colerNo" />Km
-    <div class="col-2"></div>
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
-  </div>
-
-
-  <div class="row mt-2">
-    <div class="col-2">走行距離</div>
-    <div class="col-1"></div>
-    <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.mileage" />
-    <div class="col-1"></div>
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-2">初年度登録日</div>
-    <div class="col-1"></div>
-    <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.firstRegistrationDate" />
-    <div class="col-1"></div>
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-2">車検満了日</div>
-    <div class="col-1"></div>
-    <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.inspectionExpirationDate" />
-    <div class="col-1"></div>
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button>
-  </div>
-
-
-  <div class="row">
-    <div class="col-3"></div>
-    <input class="col-2" type="button" class="btn" on-click="onRegister()" value="登録">
-  </div>
+  <button (click)="goBack()">戻る</button>
 
 </div>
-
-
-
-<button (click)="goBack()">戻る</button>
-
 
 
 

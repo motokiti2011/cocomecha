@@ -71,9 +71,7 @@ export class TransactionMenuComponent implements OnInit {
       this.router.navigate(["/main_menu"]);
       return;
     }
-    // アクセス情報の確認、設定
-    // this.auth.userInfo$.subscribe(user => {
-    //   if(user == null) {
+
     this.service.getUser(authUser).subscribe(result => {
       if(result[0] != null) {
         this.acceseUser = result[0];
@@ -91,8 +89,6 @@ export class TransactionMenuComponent implements OnInit {
         return;
       }
     });
-    //   }
-    // });
   }
 
 

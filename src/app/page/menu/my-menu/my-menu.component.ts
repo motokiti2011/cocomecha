@@ -36,13 +36,15 @@ export class MyMenuComponent implements OnInit {
   mechanicButonUrl = '';
   // メカニックID
   mechanicId = '';
-
+  // ユーザー
+  user? : user;
 
   ngOnInit(): void {
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiservice.getUser(authUser).subscribe(user => {
         console.log(user);
+        this.user = user[0];
         this.setDispInfo(user[0]);
         this.isMechanic(user[0]);
       });
@@ -145,6 +147,12 @@ export class MyMenuComponent implements OnInit {
     console.log('vehicle-register')
   }
 
+  /**
+   * 工場メカニックお気に入りメニュー
+   */
+  onFcMcFavoriteMenu() {
+    this.router.navigate(["/fcmc-favorite-menu"]);
+  }
 
 
 }

@@ -1,54 +1,69 @@
-<p>マイメニュー</p>
+<div class="main-content">
 
-<div class="container">
-  <div class="row">
-    <div class="col-2"></div>
-      <p>ご登録情報</p>
+  <div>
+    <app-side-menu
+      [acceseUser]="user"
+    ></app-side-menu>
   </div>
 
-  <div class="row">
-    <div class="left-menu">お名前：{{dispInfo.name}}</div>
-    <div class="col-1"></div>
-    <div>メールアドレス：{{dispInfo.mailadress}}</div>
+
+  <p>マイメニュー</p>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-2"></div>
+        <p>ご登録情報</p>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">お名前：{{dispInfo.name}}</div>
+      <div class="col-1"></div>
+      <div>メールアドレス：{{dispInfo.mailadress}}</div>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">
+        <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide" width="200" height="200">
+      </div>
+
+      <div class="col-1"></div>
+
+      <div>
+        <div>〒:{{dispInfo.postNo}}</div>
+        <div>住所:{{dispInfo.adress}}</div>
+        <div>TEL:{{dispInfo.tel1}}</div>
+        <div>TEL2:{{dispInfo.tel2}}</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="left-menu">
+        紹介文:{{dispInfo.introduction}}
+      </div>
+
+      <div class="col-1"></div>
+
+      <div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">ご登録の車両情報はこちら</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onEditUserInfo()">登録情報変更はこちら</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引情報はこちら</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onFactoryMecanic()">{{mechanicButonTitle}}</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary" (click)="onFcMcFavoriteMenu()">工場・メカニックお気に入り情報</button>
+        </div>
+
+
+
+      </div>
+    </div>
   </div>
-
-  <div class="row">
-    <div class="left-menu">
-      <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide" width="200" height="200">
-    </div>
-
-    <div class="col-1"></div>
-
-    <div>
-      <div>〒:{{dispInfo.postNo}}</div>
-      <div>住所:{{dispInfo.adress}}</div>
-      <div>TEL:{{dispInfo.tel1}}</div>
-      <div>TEL2:{{dispInfo.tel2}}</div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="left-menu">
-      紹介文:{{dispInfo.introduction}}
-    </div>
-
-    <div class="col-1"></div>
-
-    <div>
-      <div>
-        <button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">ご登録の車両情報はこちら</button>
-      </div>
-      <div>
-        <button type="button" class="btn btn-outline-primary" (click)="onEditUserInfo()">登録情報変更はこちら</button>
-      </div>
-      <div>
-        <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引情報はこちら</button>
-      </div>
-      <div>
-        <button type="button" class="btn btn-outline-primary" (click)="onFactoryMecanic()">{{mechanicButonTitle}}</button>
-      </div>
-    </div>
-  </div>
-
 
 </div>

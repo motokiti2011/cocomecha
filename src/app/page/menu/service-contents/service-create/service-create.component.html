@@ -1,6 +1,8 @@
 <div class="main-content">
   <aside>
-    <app-side-menu></app-side-menu>
+    <app-side-menu
+    [acceseUser]="userInfo"
+    ></app-side-menu>
   </aside>
 
   <article>
@@ -271,7 +273,7 @@
 
 
       <div class="container-md text-center">
-        <div 
+        <div
           class="dragarea w-100 border bg-light d-flex align-items-center"
           (dragover)="dragOver($event)" (drop)="drop($event)"
         >

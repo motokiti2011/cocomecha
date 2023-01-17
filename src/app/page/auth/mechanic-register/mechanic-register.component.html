@@ -1,94 +1,101 @@
+<div class="main-content">
 
-<div class="container">
-  <div class="row">
-    <h1>メカニック情報登録</h1>
+  <div>
+    <app-side-menu
+      [acceseUser]="user"
+    ></app-side-menu>
   </div>
 
-  <div class="row">
-    <div class="col-2">メカニック表示名</div>
-    <div class="col-1">必須</div>
-    <input class="col-4" id="id" type="text" [(ngModel)]="inputData.mechanicName" />
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('1')">ユーザー登録と合わせる</button>
-  </div>
-
-  <!-- <div class="row">
-    <div class="col-2">メカニック電話番号</div>
-    <div class="col-1">必須</div>
-    <input class="col-4" id="name" type="text" [(ngModel)]="inputData.userName" />
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('2')">ユーザー登録と合わせる</button>
-    </div> -->
-
-  <div class="row">
-    <div class="col-2">メカニックメールアドレス</div>
-    <div class="col-1">必須</div>
-    <input class="col-4" id="email" type="email" [(ngModel)]="inputData.mailAdress" />
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('3')">ユーザー登録と合わせる</button>
-  </div>
-
-  <div class="row">
-    <div class="col-2">保有資格
-      <button (click)="addOptionForm()">追加</button>
+  <div class="container">
+    <div class="row">
+      <h1>メカニック情報登録</h1>
     </div>
-    <div class="col-1"></div>
-      <form [formGroup]="form">
 
-        <input type="text" class="col-11" formControlName="name" />
+    <div class="row">
+      <div class="col-2">メカニック表示名</div>
+      <div class="col-1">必須</div>
+      <input class="col-4" id="id" type="text" [(ngModel)]="inputData.mechanicName" />
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('1')">ユーザー登録と合わせる</button>
+    </div>
 
-        <div formArrayName="options">
-          <div *ngFor="let option of options.controls; let i = index">
-            <div [formGroupName]="i">
-              <input type="text" class="col-11" formControlName="name" />
+    <!-- <div class="row">
+      <div class="col-2">メカニック電話番号</div>
+      <div class="col-1">必須</div>
+      <input class="col-4" id="name" type="text" [(ngModel)]="inputData.userName" />
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('2')">ユーザー登録と合わせる</button>
+      </div> -->
+
+    <div class="row">
+      <div class="col-2">メカニックメールアドレス</div>
+      <div class="col-1">必須</div>
+      <input class="col-4" id="email" type="email" [(ngModel)]="inputData.mailAdress" />
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('3')">ユーザー登録と合わせる</button>
+    </div>
+
+    <div class="row">
+      <div class="col-2">保有資格
+        <button (click)="addOptionForm()">追加</button>
+      </div>
+      <div class="col-1"></div>
+        <form [formGroup]="form">
+
+          <input type="text" class="col-11" formControlName="name" />
+
+          <div formArrayName="options">
+            <div *ngFor="let option of options.controls; let i = index">
+              <div [formGroupName]="i">
+                <input type="text" class="col-11" formControlName="name" />
+              </div>
+              <button (click)="removeOptionForm(i)">削除</button>
             </div>
-            <button (click)="removeOptionForm(i)">削除</button>
           </div>
+        </form>
+    </div>
+
+    <div class="row">
+      <div class="col-2">得意作業</div>
+      <div class="col-1"></div>
+      <input class="col-4 high-form" type="text" [(ngModel)]="inputData.specialtyWork" />
+    </div>
+
+    <div class="row">
+      <div class="col-2">メカニック紹介文</div>
+      <div class="col-1"></div>
+      <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.introduction" />
+      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">ユーザー登録と合わせる</button>
+    </div>
+
+    <div class="row">
+      <div class="col-2">プロフィール画像</div>
+      <div class="col-1"></div>
+        <input type="file" accept="*/*" (change)="onInputChange($event)">
+    </div>
+
+    <div class="row">
+      <div class="col-2">所属工場</div>
+      <div class="col-1"></div>
+      <div>
+        <div class="row">
+          <div class="col-2">所属工場</div>
+          <input class="col-4" id="postCode" type="text" [(ngModel)]="inputData.officeId" />
         </div>
-      </form>
-  </div>
-
-  <div class="row">
-    <div class="col-2">得意作業</div>
-    <div class="col-1"></div>
-    <input class="col-4 high-form" type="text" [(ngModel)]="inputData.specialtyWork" />
-  </div>
-
-  <div class="row">
-    <div class="col-2">メカニック紹介文</div>
-    <div class="col-1"></div>
-    <input class="col-4 high-form" id="area" type="text" [(ngModel)]="inputData.introduction" />
-    <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">ユーザー登録と合わせる</button>
-  </div>
-
-  <div class="row">
-    <div class="col-2">プロフィール画像</div>
-    <div class="col-1"></div>
-      <input type="file" accept="*/*" (change)="onInputChange($event)">
-  </div>
-
-  <div class="row">
-    <div class="col-2">所属工場</div>
-    <div class="col-1"></div>
-    <div>
-      <div class="row">
-        <div class="col-2">所属工場</div>
-        <input class="col-4" id="postCode" type="text" [(ngModel)]="inputData.officeId" />
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-3"></div>
+      <input class="col-2" type="button" class="btn" on-click="onResister()" value="登録">
+    </div>
+
   </div>
 
-  <div class="row">
-    <div class="col-3"></div>
-    <input class="col-2" type="button" class="btn" on-click="onResister()" value="登録">
-  </div>
 
+  <button (click)="test1()">テストボタン</button>
+
+
+
+  <button (click)="goBack()">戻る</button>
 </div>
-
-
-<button (click)="test1()">テストボタン</button>
-
-
-
-<button (click)="goBack()">戻る</button>
-
 
 
 
