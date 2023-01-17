@@ -64,6 +64,7 @@ import { TransactionApprovalModalComponent } from './page/modal/transaction-appr
 import { FactoryMechanicFavoriteMenuComponent } from './page/menu/my-menu/factory-mechanic-favorite-menu/factory-mechanic-favorite-menu.component';
 import { FactoryMechanicContentsMenuComponent } from './page/menu/my-menu/factory-mechanic-contents-menu/factory-mechanic-contents-menu.component';
 import { FactoryMechanicContentsManagementComponent } from './page/menu/my-menu/factory-mechanic-contents-management/factory-mechanic-contents-management.component';
+import { FactoryMechanicImpletionComponent } from './page/menu/my-menu/factory-mechanic-impletion/factory-mechanic-impletion.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -131,6 +132,7 @@ const ROUTE_TABLE: Routes = [
     FactoryMechanicFavoriteMenuComponent,
     FactoryMechanicContentsMenuComponent,
     FactoryMechanicContentsManagementComponent,
+    FactoryMechanicImpletionComponent,
   ],
   entryComponents: [
     TransactionListComponent,
