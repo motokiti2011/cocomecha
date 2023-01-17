@@ -13,6 +13,7 @@ import { serchInfo } from 'src/app/entity/serchInfo';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { browsingHistory } from 'src/app/entity/browsingHistory';
+import { mcfcItem } from 'src/app/entity/mcfcItem';
 
 @Injectable({
   providedIn: 'root'
@@ -387,7 +388,7 @@ export class ApiUniqueService {
    * @param question
    * @returns
    */
-  public sendQuestion(question: slipQuestion, serviceType: string ): Observable<any> {
+  public sendQuestion(question: slipQuestion, serviceType: string): Observable<any> {
     console.log(question)
     console.log(serviceType)
 
@@ -441,10 +442,10 @@ export class ApiUniqueService {
   }
 
   /**
- * 閲覧履歴情報を削除する(複数件)
- * @param idList
- * @returns
- */
+   * 閲覧履歴情報を削除する(複数件)
+   * @param idList
+   * @returns
+   */
   public multipleDeleteBrowsingHistory(idList: string[]): Observable<any> {
     // リクエストボディ生成
     const body = {
@@ -461,6 +462,30 @@ export class ApiUniqueService {
     );
   }
 
+
+  
+/**
+ * メカニックファクトリー商品リスト取得
+ * @param id
+ * @param serviceType
+ * @returns
+ */
+  public getMcFcItemList(id: string, serviceType: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "IndexType": "FCMCITEM",
+      "Keys": {
+        "id": id,
+        "serviceType": serviceType
+      }
+    };
+    return this.http.post<mcfcItem>(this.apiEndPoint + '/multiplebrosing', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: mcfcItem) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 }

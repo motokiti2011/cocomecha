@@ -1,15 +1,8 @@
 
-<div class="main-content">
-
-  <div>
-    <app-side-menu
-      [acceseUser]="user"
-    ></app-side-menu>
-  </div>
-
 
   <div class="container">
     <div class="row">
+      <div class="col-2"></div>
       <h1>工場情報</h1>
     </div>
 
@@ -36,7 +29,6 @@
       <div class="col-2">営業時間</div>
       <div class="col-1"></div>
       <input class="col-4 high-form" id="area" type="text" [(ngModel)]="dispInfo.businessHours" />
-
     </div>
 
     <div class="row">
@@ -56,5 +48,9 @@
       <input class="col-2" type="button" class="btn" on-click="onResister()" value="登録">
     </div>
 
+    <div class="row">
+      <button type="button" class="btn btn-outline-primary" (click)="onFcMcServiceList()">工場から出品中の商品一覧はこちら</button>
+    </div>
+
+
   </div>
-</div>

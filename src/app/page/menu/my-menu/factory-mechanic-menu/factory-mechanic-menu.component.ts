@@ -112,6 +112,11 @@ export class FactoryMechanicMenuComponent implements OnInit {
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
+        this.user = user[0];
+        if(this.user.officeId != '0' && this.user.officeId != null) {
+          // 工場登録ある場合表示
+          this.factoryResistDiv = true;
+        }
         this.inputData.adminUserId = user[0].userId;
         this.initForm();
       });
@@ -199,7 +204,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
  * 工場情報の表示切替を行う
  */
   onFactoryDisp() {
-    if (this.factoryDispDiv == false) {
+    if (!this.factoryDispDiv) {
       this.factoryBtnText = '閉じる';
       this.factoryDispDiv = true;
       return;
@@ -214,6 +219,14 @@ export class FactoryMechanicMenuComponent implements OnInit {
   onFactoryResister() {
     this.router.navigate(["/factory-register"]);
   }
+
+  /**
+   * 商品一覧はこちらボタン押下イベント
+   */
+  onFcMcServiceList() {
+    this.router.navigate(["fcmc-manegement"],
+     { queryParams: { serviceId: '2'} });
+  }  
 
 
 

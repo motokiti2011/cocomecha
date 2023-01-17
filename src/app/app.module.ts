@@ -85,7 +85,8 @@ const ROUTE_TABLE: Routes = [
   { path: 'factory-register', component: FactoryRegisterComponent, canActivate: [RoutingGuard] },
   { path: 'vehicle-register', component: VehicleRegisterComponent, canActivate: [RoutingGuard] },
   { path: 'fcmc-favorite-menu', component: FactoryMechanicFavoriteMenuComponent, canActivate: [RoutingGuard] },
-
+  { path: 'fcmc-manegement', component: FactoryMechanicContentsManagementComponent, canActivate: [RoutingGuard] },
+  
 ]
 
 @NgModule({

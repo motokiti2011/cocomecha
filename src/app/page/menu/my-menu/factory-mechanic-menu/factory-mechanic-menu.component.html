@@ -82,27 +82,33 @@
       <input class="col-2" type="button" class="btn" on-click="onResister()" value="登録">
     </div>
 
-  </div>
-
-  <div class="row">
-
-    <div *ngIf="factoryResistDiv; else elseContent">
-      <input class="col-2" type="button" class="btn" on-click="onFactoryDisp()" value={{factoryBtnText}}>
-      <div *ngIf="factoryDispDiv">
-        <app-factory-menu></app-factory-menu>
-      </div>
+    <div class="row">
+      <button type="button" class="btn btn-outline-primary" (click)="onFcMcServiceList()">メカニックから出品中の商品一覧はこちら</button>
     </div>
-    <ng-template #elseContent>
-      <div class="row">工場未登録となります。</div>
-      <input class="col-2" type="button" class="btn" on-click="onFactoryResister()" value="工場登録をする">
-    </ng-template>
 
 
     <div class="row">
-      <button (click)="test1()">テストボタン</button>
-      <button (click)="goBack()">戻る</button>
+      <div *ngIf="factoryResistDiv; else elseContent">
+        <input class="col-2" type="button" class="btn" on-click="onFactoryDisp()" value={{factoryBtnText}}>
+        <div *ngIf="factoryDispDiv">
+          <app-factory-menu></app-factory-menu>
+        </div>
+      </div>
+      <ng-template #elseContent>
+        <div class="row">工場未登録となります。</div>
+        <input class="col-2" type="button" class="btn" on-click="onFactoryResister()" value="工場登録をする">
+      </ng-template>
     </div>
+
+
+
+
   </div>
+
+
+
 </div>
 
 
+  <button (click)="test1()">テストボタン</button>
+  <button (click)="goBack()">戻る</button>

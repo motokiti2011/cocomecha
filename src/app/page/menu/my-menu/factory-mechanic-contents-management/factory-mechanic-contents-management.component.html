@@ -1,1 +1,18 @@
 <p>工場メカニック商品管理</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>商品名</th>
+      <th>取引状況</th>
+      <th>閲覧数・お気に入り</th>
+
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of itemList">
+      <td><div class="item-title" (click)="onItemDisp(item)" >{{item.serviceName}}</div></td>
+      <td>{{item.serviceType}}</td>
+      <td>{{item.browsingCount}}・{{item.favoriteCount}}</td>
+    </tr>
+  </tbody>
+</table>
