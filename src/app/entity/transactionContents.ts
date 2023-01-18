@@ -90,6 +90,8 @@ export interface dispTransactionContents {
   completionScheduledDate: string;
   // 取引ステータス
   transactionStatus: string;
+  // メッセージ
+  message: string| null;
 }
 
 

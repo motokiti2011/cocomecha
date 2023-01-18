@@ -61,7 +61,8 @@ export class TansactionCompleteService {
         endDate: this.getDispDate(Number(slip.preferredDate)),
         deleteDiv: slip.deleteDiv,
         completionScheduledDate: slip.completionScheduledDate,
-        transactionStatus: this.setSlipStatus(slip.transactionStatus)
+        transactionStatus: this.setSlipStatus(slip.transactionStatus),
+        message: this.setMessage(slip.transactionStatus)
       }
       result.push(dispSlip)
     });
@@ -201,4 +202,19 @@ export class TansactionCompleteService {
     // 上記以外（落札者の場合）
     return 'サービス取引中';
   }
+
+/**
+ * メッセージを設定する
+ * @param status
+ * @returns
+ */
+private setMessage(status: string): string | null {
+  let result = null
+  if(status == 'COMPLEAT') {
+    result = 'かり'
+  }
+
+  return result;
+}
+
 }

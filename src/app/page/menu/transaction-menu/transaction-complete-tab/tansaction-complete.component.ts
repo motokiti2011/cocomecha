@@ -35,7 +35,8 @@ export class TansactionCompleteComponent implements OnInit {
     category: 'カテゴリー',
     price: '価格',
     whet: '期間',
-    endDate: '終了日'
+    endDate: '終了日',
+    message: 'メッセージ'
   };
 
   /** 表示用リスト */
@@ -211,11 +212,19 @@ export class TansactionCompleteComponent implements OnInit {
     }
   }
 
-/**
- * 前画面に戻る
- */
+  /**
+   * 前画面に戻る
+   */
   onReturn() {
     this.location.back();
+  }
+
+  /**
+   * 評価を行う
+   * @param item
+   */
+  onEvo(item: serviceContents ) {
+    this.router.navigate(["service-evaluation"], { queryParams: { serviceId: item.id } });
   }
 
 

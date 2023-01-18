@@ -64,7 +64,8 @@ export class TransactionListService {
         endDate: this.getDispDate(Number(slip.preferredDate)),
         deleteDiv: slip.deleteDiv,
         completionScheduledDate: slip.completionScheduledDate,
-        transactionStatus: this.setSlipStatus(slip.transactionStatus)
+        transactionStatus: this.setSlipStatus(slip.transactionStatus),
+        message: ''
       }
       result.push(dispSlip)
     });

@@ -226,7 +226,16 @@ export class FactoryMechanicMenuComponent implements OnInit {
   onFcMcServiceList() {
     this.router.navigate(["fcmc-manegement"],
      { queryParams: { serviceId: '2'} });
-  }  
+  }
+
+  /**
+   * 評価はこちらボタン押下イベント
+   */
+  onFcMcInpulaetion() {
+    this.router.navigate(["fcmc-implaetion"],
+     { queryParams: { serviceId: '2'} });
+  }
+
 
 
 

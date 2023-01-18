@@ -64,6 +64,14 @@ export class FactoryMenuComponent implements OnInit {
     { queryParams: { serviceId: '1'} });
   }
 
+  /**
+   * 評価はこちらボタン押下イベント
+   */
+  onFcMcInpulaetion() {
+    this.router.navigate(["fcmc-implaetion"],
+      { queryParams: { serviceId: '2'} });
+  }
+
 
   /************  以下内部処理 ****************/
 

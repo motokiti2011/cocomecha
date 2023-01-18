@@ -101,7 +101,6 @@ export class ServiceSerchConditionsComponent implements OnInit {
    * 検索サービスモーダルを展開する
    */
   onSerchServiceModal() {
-
     const dialogRef = this.modal.open(SerchServiceModalComponent, {
       width: '400px',
       height: '450px',
@@ -113,7 +112,8 @@ export class ServiceSerchConditionsComponent implements OnInit {
         if (result !== null && result !== '') {
           if(result == undefined) {
             // TODO
-            result = '0'
+            // result = '0'
+            return;
           }
           this.targetService = result;
           console.log('もーだりぃ')
