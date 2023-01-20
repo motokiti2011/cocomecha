@@ -1,12 +1,20 @@
 import { Component, Inject,  OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+
 @Component({
   selector: 'app-service-create-modal',
   templateUrl: './service-create-modal.component.html',
   styleUrls: ['./service-create-modal.component.scss']
 })
 export class ServiceCreateModalComponent implements OnInit {
+
+
+  // 工場依頼ボタン表示区分
+  officeBtnDiv = false;
+
+  // 結果
+  select = '';
 
   constructor(
     public _dialogRef: MatDialogRef<ServiceCreateModalComponent>,
@@ -17,13 +25,6 @@ export class ServiceCreateModalComponent implements OnInit {
       officeId: string
     }
   ) { }
-
-
-  // 工場依頼ボタン表示区分
-  officeBtnDiv = false;
-
-  // 結果
-  select = '';
 
   ngOnInit(): void {
     console.log(this.data);
@@ -48,7 +49,7 @@ export class ServiceCreateModalComponent implements OnInit {
   }
 
   onReturn() {
-    this.closeModal();
+    this._dialogRef.close('');
   }
 
 }

@@ -3,6 +3,10 @@ import { ApiSerchService } from '../../service/api-serch.service';
 import { CognitoService } from '../../auth/cognito.service';
 import { Router } from '@angular/router';
 import { user } from 'src/app/entity/user';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-my-menu',
@@ -15,6 +19,7 @@ export class MyMenuComponent implements OnInit {
     private apiservice: ApiSerchService,
     private cognito: CognitoService,
     private router: Router,
+    private overlay: Overlay,
   ) { }
 
   /** 表示情報 */
@@ -39,17 +44,29 @@ export class MyMenuComponent implements OnInit {
   // ユーザー
   user? : user;
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   ngOnInit(): void {
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
+      // ローディング開始
+      this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
       this.apiservice.getUser(authUser).subscribe(user => {
         console.log(user);
         this.user = user[0];
         this.setDispInfo(user[0]);
         this.isMechanic(user[0]);
+        // ローディング解除
+        this.overlayRef.detach();
       });
     } else {
       alert('ログインが必要です');
+      // ローディング解除
+      this.overlayRef.detach();
       this.router.navigate(["/main_menu"]);
     }
 

@@ -36,6 +36,9 @@ import {
   adminUserSelect,
 } from './service-create-option';
 import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-service-create',
@@ -133,6 +136,12 @@ export class ServiceCreateComponent implements OnInit {
   /** locationリスト */
   locationList: string[] = [];
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
 
   constructor(
     private location: Location,
@@ -143,10 +152,13 @@ export class ServiceCreateComponent implements OnInit {
     private apiService: ApiSerchService,
     private cognito: CognitoService,
     private activeRouter: ActivatedRoute,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
     this.refreshForm();
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
     if (authUser == null) {
@@ -156,6 +168,8 @@ export class ServiceCreateComponent implements OnInit {
       // ユーザー情報を取得する
       this.apiService.getUser(authUser).subscribe(user => {
         if (user[0] == null) {
+          // ローディング解除
+          this.overlayRef.detach();
           alert("ログインが必要です");
           this.location.back();
           return;
@@ -170,6 +184,8 @@ export class ServiceCreateComponent implements OnInit {
               // メカニックタイプの出品画面表示する
               this.mechenicDisp();
             } else {
+              // ローディング解除
+              this.overlayRef.detach();
               // メカニック未登録の場合
               alert("メカニック登録されていません");
               this.location.back();
@@ -179,14 +195,16 @@ export class ServiceCreateComponent implements OnInit {
             if (this.userInfo.officeId !== '' && this.userInfo.officeId !== null) {
               // 工場タイプの出品画面表示する
               this.officeDisp();
+              // ローディング解除
+              this.overlayRef.detach();
             } else {
+              // ローディング解除
+              this.overlayRef.detach();
               // 工場未登録の場合
               alert("工場が登録されていません");
               this.location.back();
               return;
             }
-          
-
           } else {
             this.serviceSelect();
           }
@@ -217,8 +235,7 @@ export class ServiceCreateComponent implements OnInit {
       dialogRef.afterClosed().subscribe(
         result => {
           console.log('クリエイトモーダル:' + result)
-          if (result !== null
-            || result !== '' || result !== undefined) {
+          if (!(_isNil(result)) && result !== '' ) {
             if (result == '0') {
               this.userDisp();
             } else if (result == '1') {
@@ -226,7 +243,11 @@ export class ServiceCreateComponent implements OnInit {
             } else {
               this.officeDisp();
             }
+            // ローディング解除
+            this.overlayRef.detach();
           } else {
+            // ローディング解除
+            this.overlayRef.detach();
             // 戻るボタン押下時の動き
             this.location.back();
             return;
@@ -255,6 +276,8 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.targetService = '0';
     this.adminSelectDiv = false;
     this.adminUserName = this.userInfo.userName;
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
   /**
@@ -275,7 +298,8 @@ export class ServiceCreateComponent implements OnInit {
     // データ設定
     this.inputData.mechanicId = this.userInfo.mechanicId;
     this.inputData.targetService = '2';
-
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
   /**
@@ -298,6 +322,8 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.officeId = this.userInfo.officeId;
     this.inputData.targetService = '1';
     this.adminSelectDiv = true;
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
 
@@ -533,7 +559,7 @@ export class ServiceCreateComponent implements OnInit {
 
   /**
    * アップロードファイル選択時イベント
-   * @param event 
+   * @param event
    */
   onInputChange(event: any) {
     const files = event.target.files[0];

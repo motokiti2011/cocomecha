@@ -20,6 +20,10 @@ import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { serchInfo, serchParam } from 'src/app/entity/serchInfo';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 @Component({
   selector: 'app-service-list',
   templateUrl: './service-list.component.html',
@@ -95,6 +99,12 @@ export class ServiceListComponent implements OnInit {
     anfavorite: false
   };
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     private router: Router,
     private activeRouter: ActivatedRoute,
@@ -105,11 +115,14 @@ export class ServiceListComponent implements OnInit {
     private cognito: CognitoService,
     private apiService: ApiSerchService,
     private apiGsiService: ApiGsiSerchService,
-    private apiUniqueService: ApiUniqueService
+    private apiUniqueService: ApiUniqueService,
+    private overlay: Overlay,
 
   ) { }
 
   ngOnInit() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     // 検索条件画面からの条件から展開するサービス内容を抽出する
     this.activeRouter.queryParams.subscribe(params => {
       // this.loading.show();
@@ -216,6 +229,8 @@ export class ServiceListComponent implements OnInit {
       this.pageIndex.push(count);
       count++;
     }
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
   /**

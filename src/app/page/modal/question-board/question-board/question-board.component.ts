@@ -7,6 +7,12 @@ import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
+
+
 @Component({
   selector: 'app-question-board',
   templateUrl: './question-board.component.html',
@@ -37,10 +43,17 @@ export class QuestionBoardComponent implements OnInit {
   /** ボタンメッセージ */
   buttonMessage = '投稿する'
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     public _dialogRef: MatDialogRef<QuestionBoardComponent>,
     private service: QuestionBoardService,
     private apiGsiService: ApiGsiSerchService,
+    private overlay: Overlay,
     @Inject(MAT_DIALOG_DATA)
     public data:{
       serviceId: string,
@@ -62,6 +75,9 @@ export class QuestionBoardComponent implements OnInit {
    * 表示情報を取得する
    */
   private initGetSlipQa() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+
     // 表示情報取得
     this.apiGsiService.serchSlipQuestion(this.data.serviceId).subscribe(data => {
       if(data.length !== 0) {
@@ -70,6 +86,8 @@ export class QuestionBoardComponent implements OnInit {
       } else {
         this.dispDiv = false;
       }
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
@@ -128,7 +146,8 @@ export class QuestionBoardComponent implements OnInit {
       // 空文字の場合登録しない
       return;
     }
-
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.service.sernderQuestion(
       this.data.userId, this.data.userName, this.data.serviceId ,this.data.serviceType, this.sernderMessage)
     .subscribe(result => {
@@ -139,6 +158,8 @@ export class QuestionBoardComponent implements OnInit {
       } else {
         alert('登録に失敗しました')
       }
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
@@ -158,6 +179,8 @@ export class QuestionBoardComponent implements OnInit {
     }
     const index = Number(this.anserIndex);
     this.questionList[index].anserText = this.sernderMessage;
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.service.anserQuestion(this.questionList[index]).subscribe(result => {
       if(result == 200) {
         this.onStopAnser();
@@ -165,6 +188,8 @@ export class QuestionBoardComponent implements OnInit {
       } else {
         alert('登録に失敗ました。申し訳ございませんがもう一度操作してください。');
       }
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 

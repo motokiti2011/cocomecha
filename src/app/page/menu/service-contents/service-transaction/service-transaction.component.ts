@@ -15,6 +15,11 @@ import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { TransactionApprovalModalComponent } from 'src/app/page/modal/transaction-approval-modal/transaction-approval-modal/transaction-approval-modal.component';
 import { serviceTransactionRequest } from 'src/app/entity/serviceTransactionRequest';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
+
 
 @Component({
   selector: 'app-service-transaction',
@@ -57,6 +62,12 @@ export class ServiceTransactionComponent implements OnInit {
   /** 管理者ID */
   slipAdminCheckId = '';
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -64,10 +75,14 @@ export class ServiceTransactionComponent implements OnInit {
     private service: ServiceTransactionService,
     public questionBoardModal: MatDialog,
     public modal: MatDialog,
-    private cognito: CognitoService
+    private cognito: CognitoService,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+
     // 伝票表示情報取得反映
     this.route.queryParams.subscribe(params => {
       this.dispSlipId = params['slipNo'];
@@ -119,6 +134,8 @@ export class ServiceTransactionComponent implements OnInit {
             // 取引依頼情報取得
             this.service.getTranReq(slip.slipNo).subscribe(re => {
               this.tranReq = re;
+              // ローディング解除
+              this.overlayRef.detach();
             })
           }
         });
@@ -139,6 +156,8 @@ export class ServiceTransactionComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         console.log(result);
         this.onReturn();
+        // ローディング解除
+        this.overlayRef.detach();
         return;
       });
     }
@@ -160,12 +179,15 @@ export class ServiceTransactionComponent implements OnInit {
           // 未許可の場合　一時許可ボタンを表示
           this.openDiv = true;
           // チャット未許可表示を行う
-
+          // ローディング解除
+          this.overlayRef.detach();
         }
       });
     } else if (slip.messageOpenLebel == '3') {
       // 非公開の場合　非公開表示をする
       this.privateDiv = true;
+      // ローディング解除
+      this.overlayRef.detach();
     }
   }
 

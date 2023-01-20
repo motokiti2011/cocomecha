@@ -8,7 +8,9 @@ import { slipDetailInfo, defaultSlip } from 'src/app/entity/slipDetailInfo';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { image } from 'src/app/entity/image';
-
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-service-detail',
@@ -43,6 +45,12 @@ export class ServiceDetailComponent implements OnInit {
   //   slipNo: '',userId: '',userName: '', title: '',category: '',area: '',price: '',bidMethod: '',bidderId: '',bidEndDate: '',
   //   explanation: '',displayDiv: '',preferredDate: '',preferredTime: '',completionDate: '',deleteDiv: '',imageUrl: '',messageOpenLebel:'1'};
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -50,6 +58,7 @@ export class ServiceDetailComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     private config: NgbCarouselConfig,
+    private overlay: Overlay,
   ) {
     config.interval = 0;
     config.keyboard = true;
@@ -57,6 +66,8 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.route.queryParams.subscribe(params => {
       console.log(params['serviceId']);
       const serviceId: string = params['serviceId'];
@@ -71,6 +82,8 @@ export class ServiceDetailComponent implements OnInit {
         this.dispArea = this.dispContents.areaNo1;
         this.dispExplanation = this.dispContents.explanation;
         this.images = this.service.setImages(this.dispContents.imageUrlList)
+        // ローディング解除
+        this.overlayRef.detach();
       })
     });
     this.getUserInfo();
@@ -132,7 +145,7 @@ export class ServiceDetailComponent implements OnInit {
    */
   onTransactionStatus() {
     this.router.navigate(["service-transaction"],
-      { queryParams: { 
+      { queryParams: {
         slipNo: this.dispContents.slipNo,
         serviceType: this.serviceType,
         status: true } });

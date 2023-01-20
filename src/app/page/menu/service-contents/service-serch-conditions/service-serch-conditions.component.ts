@@ -5,6 +5,11 @@ import { ServiceSerchConditionsService } from './service-serch-conditions.servic
 import { serchCondition } from 'src/app/entity/serchCondition';
 import { SerchServiceModalComponent } from 'src/app/page/modal/serch-service-modal/serch-service-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-service-serch-conditions',
@@ -30,12 +35,21 @@ export class ServiceSerchConditionsComponent implements OnInit {
     category : 0,
   }
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  /** モーダルデータ */
+  modalData?: {serchType: string, value: string};
 
   constructor(
     private location: Location,
     private service: ServiceSerchConditionsService,
     private router:Router,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
@@ -65,9 +79,8 @@ export class ServiceSerchConditionsComponent implements OnInit {
     // 戻り値が0以外の場合検索結果を格納の上画面遷移
     if(serchResult > 0) {
       this.serchCondition.areaNum = serchResult;
-      this.onSerchServiceModal();
-      // this.router.navigate(["service_list"],
-      //  {queryParams:{areaNum :this.serchCondition.areaNum ,category: 0}});
+      const serchData = {serchType: 'area', value: String(serchResult) }
+      this.onSerchServiceModal(serchData);
     }
   }
 
@@ -79,9 +92,8 @@ export class ServiceSerchConditionsComponent implements OnInit {
   areaSelect(i:number) {
     // 検索条件の都道府県IDに選択地を設定する
     this.serchCondition.areaNum = i;
-    this.onSerchServiceModal();
-    // this.router.navigate(["service_list"],
-    // {queryParams:{areaNum :this.serchCondition.areaNum ,category: 0}});
+    const serchData = {serchType: 'area', value: String(i) }
+    this.onSerchServiceModal(serchData);
   }
 
   /**
@@ -91,45 +103,54 @@ export class ServiceSerchConditionsComponent implements OnInit {
    contentsSelect(i:number) {
     // 検索条件のサービスカテゴリーIDに設定する
     this.serchCondition.category = i;
-    this.onSerchServiceModal();
-    // this.router.navigate(["service_list"],
-    // {queryParams:{areaNum :0 ,category: this.serchCondition.category}});
+    const serchData = {serchType: 'category', value: String(i) }
+    this.onSerchServiceModal(serchData);
   }
 
 
   /**
    * 検索サービスモーダルを展開する
    */
-  onSerchServiceModal() {
+  private onSerchServiceModal(serchData: {serchType: string,value: string}) {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     const dialogRef = this.modal.open(SerchServiceModalComponent, {
       width: '400px',
       height: '450px',
-      data: ''
+      data: serchData
     });
     // モーダルクローズ後
     dialogRef.afterClosed().subscribe(
       result => {
         if (result !== null && result !== '') {
           if(result == undefined) {
-            // TODO
-            // result = '0'
             return;
           }
           this.targetService = result;
-          console.log('もーだりぃ')
-          console.log(result)
-          this.router.navigate(["service_list"],
-          { queryParams:{
-            areaNum :this.serchCondition.areaNum,
-            category: this.serchCondition.category,
-            targetService: result
-          }});
+          // ローディング解除
+          this.overlayRef.detach();
+          this.openSerchServiceList(result);
         } else {
+          // ローディング解除
+          this.overlayRef.detach();
           // 戻るボタンまたはモーダルが閉じられたのでなにもしない
           return;
         }
       }
     );
+  }
+
+  /**
+   * 対象サービスタイプを設定しサービス一覧画面に遷移する
+   * @param targetService
+   */
+  private openSerchServiceList(targetService: string) {
+    this.router.navigate(["service_list"],
+    { queryParams:{
+      areaNum :this.serchCondition.areaNum,
+      category: this.serchCondition.category,
+      targetService: targetService
+    }});
   }
 
 
