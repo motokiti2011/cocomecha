@@ -17,6 +17,10 @@ import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { FactoryMenuComponent } from '../factory-menu/factory-menu.component';
 import { UploadService } from 'src/app/page/service/upload.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-factory-mechanic-menu',
@@ -85,6 +89,11 @@ export class FactoryMechanicMenuComponent implements OnInit {
 
   public form!: FormGroup;  // テンプレートで使用するフォームを宣言
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
 
   constructor(
     private activeRouter: ActivatedRoute,
@@ -95,9 +104,12 @@ export class FactoryMechanicMenuComponent implements OnInit {
     private builder: FormBuilder,
     private cognito: CognitoService,
     private s3: UploadService,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.activeRouter.queryParams.subscribe(params => {
       if (params['mechanicId'] != '') {
         const mechanicId = params['mechanicId'];
@@ -113,7 +125,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
         this.user = user[0];
-        if(this.user.officeId != '0' && this.user.officeId != null) {
+        if (this.user.officeId != '0' && this.user.officeId != null) {
           // 工場登録ある場合表示
           this.factoryResistDiv = true;
         }
@@ -122,6 +134,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
       });
     } else {
       alert('ログインが必要です');
+      // ローディング解除
+      this.overlayRef.detach();
       this.router.navigate(["/main_menu"]);
     }
   }
@@ -140,7 +154,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
   onResister() {
     this.setQualification();
     this.inputCheck();
-    if(this.imageFile != null) {
+    if (this.imageFile != null) {
       this.setImageUrl();
     } else {
       this.mechanicResister();
@@ -190,19 +204,19 @@ export class FactoryMechanicMenuComponent implements OnInit {
     this.setQualification();
   }
 
-/**
- * アップロードファイル選択時イベント
- * @param event
- */
+  /**
+   * アップロードファイル選択時イベント
+   * @param event
+   */
   onInputChange(event: any) {
     const file = event.target.files[0];
     console.log(file);
     this.imageFile = file;
   }
 
-/**
- * 工場情報の表示切替を行う
- */
+  /**
+   * 工場情報の表示切替を行う
+   */
   onFactoryDisp() {
     if (!this.factoryDispDiv) {
       this.factoryBtnText = '閉じる';
@@ -225,7 +239,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
    */
   onFcMcServiceList() {
     this.router.navigate(["fcmc-manegement"],
-     { queryParams: { serviceId: '2'} });
+      { queryParams: { serviceId: '2' } });
   }
 
   /**
@@ -233,7 +247,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
    */
   onFcMcInpulaetion() {
     this.router.navigate(["fcmc-implaetion"],
-     { queryParams: { serviceId: '2'} });
+      { queryParams: { serviceId: '2' } });
   }
 
 
@@ -340,8 +354,12 @@ export class FactoryMechanicMenuComponent implements OnInit {
             this.getOfficeInfo(this.mechanicInfo.officeId);
           }
         }
+        // ローディング解除
+        this.overlayRef.detach();
       } else {
         alert('メカニック情報が取得できませんでした。')
+        // ローディング解除
+        this.overlayRef.detach();
         this.router.navigate(["/main_menu"]);
         return;
       }
@@ -370,8 +388,9 @@ export class FactoryMechanicMenuComponent implements OnInit {
         } else {
           this.officeEditMode = true;
         }
-
       }
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 

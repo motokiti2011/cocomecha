@@ -11,6 +11,10 @@ import { AuthUserService } from '../../auth/authUser.service';
 import { CognitoService } from '../../auth/cognito.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { user } from 'src/app/entity/user';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-transaction-menu',
@@ -44,18 +48,24 @@ export class TransactionMenuComponent implements OnInit {
     { label: '詳細表示', value: 'detailDisplay', disabled: false },
   ];
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     private router: Router,
     private service: TransactionMenuService,
     private cognito: CognitoService,
     private auth: AuthUserService,
-
+    private overlay: Overlay,
 
   ) { }
 
   ngOnInit(): void {
-    this.authUserSetting();
     this.initDisplay();
+    this.authUserSetting();
     // 初回表示画面をセット
     this.currentTab = MyListComponent;
   }
@@ -64,6 +74,8 @@ export class TransactionMenuComponent implements OnInit {
    * アクセスユーザー情報の取得設定を行う
    */
   private authUserSetting() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     // ログイン検証
     const authUser = this.cognito.initAuthenticated();
     if(authUser == null) {
@@ -71,7 +83,6 @@ export class TransactionMenuComponent implements OnInit {
       this.router.navigate(["/main_menu"]);
       return;
     }
-
     this.service.getUser(authUser).subscribe(result => {
       if(result[0] != null) {
         this.acceseUser = result[0];
@@ -83,8 +94,12 @@ export class TransactionMenuComponent implements OnInit {
         }
         // Subjectにユーザー情報をセットする。
         this.auth.login(acceseUser);
+        // ローディング解除
+        this.overlayRef.detach();
       } else {
         alert('情報が取得できませんでした。再度アクセスしてください');
+        // ローディング解除
+        this.overlayRef.detach();
         this.router.navigate(["/main_menu"]);
         return;
       }

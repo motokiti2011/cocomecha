@@ -19,6 +19,10 @@ import {
 } from 'lodash';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-tansaction-complete',
@@ -65,6 +69,12 @@ export class TansactionCompleteComponent implements OnInit {
 
   selectType = '0';
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     private location: Location,
     private router: Router,
@@ -72,7 +82,7 @@ export class TansactionCompleteComponent implements OnInit {
     private compService: TansactionCompleteService,
     private auth: AuthUserService,
     public modal: MatDialog,
-
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
@@ -83,6 +93,8 @@ export class TansactionCompleteComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.auth.userInfo$.subscribe(user => {
       // 未認証の場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
@@ -100,6 +112,8 @@ export class TansactionCompleteComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
           console.log(result);
+          // ローディング解除
+          this.overlayRef.detach();
           this.onReturn();
           return;
         });
@@ -110,6 +124,8 @@ export class TansactionCompleteComponent implements OnInit {
       // データを取得
       this.compService.getTransactionCompSlip(this.loginUser.userId, this.selectType).subscribe(data => {
         this.detailList = this.compService.dispContentsSlip(data)
+        // ローディング解除
+        this.overlayRef.detach();
       });
     });
 

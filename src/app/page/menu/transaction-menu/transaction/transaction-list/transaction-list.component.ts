@@ -20,7 +20,11 @@ import { loginUser } from 'src/app/entity/loginUser';
 // import { ServiceContents } from 'src/app/mock-test';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
-import { transactionContents,dispTransactionContents } from 'src/app/entity/transactionContents';
+import { transactionContents, dispTransactionContents } from 'src/app/entity/transactionContents';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-transaction-list',
@@ -65,7 +69,13 @@ export class TransactionListComponent implements OnInit {
   ];
 
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null};
+  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null };
+
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
 
   constructor(
     private location: Location,
@@ -74,6 +84,7 @@ export class TransactionListComponent implements OnInit {
     private Menuservice: TransactionMenuService,
     private auth: AuthUserService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
@@ -84,6 +95,8 @@ export class TransactionListComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.auth.userInfo$.subscribe(user => {
       // ユーザー情報取得できない場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
@@ -102,6 +115,8 @@ export class TransactionListComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
           console.log(result);
           this.onReturn();
+          // ローディング解除
+          this.overlayRef.detach();
           return;
         });
       } else {
@@ -111,6 +126,8 @@ export class TransactionListComponent implements OnInit {
       // データを取得
       this.service.getTransactionSlip(this.loginUser.userId, '0').subscribe(data => {
         this.detailList = this.service.dispContentsSlip(data)
+        // ローディング解除
+        this.overlayRef.detach();
       });
     });
   }
@@ -144,49 +161,49 @@ export class TransactionListComponent implements OnInit {
    * 一括選択チェックボックスイベント
    */
   bulkSelection() {
-  //   console.log(this.hedSelection)
-  //   const dispList: detailList[] = _cloneDeep(this.detailList);
+    //   console.log(this.hedSelection)
+    //   const dispList: detailList[] = _cloneDeep(this.detailList);
 
-  //   dispList.forEach((content) => {
-  //     // check をすべてヘッダと同じ状態にする
-  //     content.check = this.hedSelection;
+    //   dispList.forEach((content) => {
+    //     // check をすべてヘッダと同じ状態にする
+    //     content.check = this.hedSelection;
 
-  //     if (this.hedSelection) {
-  //       this.selectionList.push(content.id)
-  //     } else {
-  //       _pull(this.selectionList, content.id)
-  //     }
-  //   });
-  //   this.detailList = dispList;
+    //     if (this.hedSelection) {
+    //       this.selectionList.push(content.id)
+    //     } else {
+    //       _pull(this.selectionList, content.id)
+    //     }
+    //   });
+    //   this.detailList = dispList;
 
-  //   // 削除ボタンの制御
-  //   if (this.selectionList.length > 0) {
-  //     this.checkbutton = false;
-  //   } else {
-  //     this.checkbutton = true;
-  //   }
+    //   // 削除ボタンの制御
+    //   if (this.selectionList.length > 0) {
+    //     this.checkbutton = false;
+    //   } else {
+    //     this.checkbutton = true;
+    //   }
 
   }
 
   /** 削除ボタン押下時のイベント */
   deleteCheck() {
-  //   const List: [] = _cloneDeep(this.selectionList);
-  //   const deleteList: detailList[] = []
+    //   const List: [] = _cloneDeep(this.selectionList);
+    //   const deleteList: detailList[] = []
 
-  //   List.forEach((select) => {
-  //     // 削除対象を取得する
-  //     if (_find(this.detailList, disp => disp.id === select)) {
-  //       deleteList.push(_find(this.detailList, disp => disp.id === select));
-  //     }
-  //   });
+    //   List.forEach((select) => {
+    //     // 削除対象を取得する
+    //     if (_find(this.detailList, disp => disp.id === select)) {
+    //       deleteList.push(_find(this.detailList, disp => disp.id === select));
+    //     }
+    //   });
 
-  //   // 差集合を抽出
-  //   const dispList = _difference(this.detailList, deleteList);
-  //   // 表示リストを書き換える。
-  //   this.detailList = _cloneDeep(dispList);
+    //   // 差集合を抽出
+    //   const dispList = _difference(this.detailList, deleteList);
+    //   // 表示リストを書き換える。
+    //   this.detailList = _cloneDeep(dispList);
 
-  //   // 削除するデータをＡＰＩへ
-  //   /**  */
+    //   // 削除するデータをＡＰＩへ
+    //   /**  */
 
   }
 

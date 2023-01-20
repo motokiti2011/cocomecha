@@ -20,6 +20,9 @@ import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { BrowsingHistoryService } from './browsing-history.service';
 import { browsingHistory } from 'src/app/entity/browsingHistory';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-browsing-history',
@@ -57,7 +60,13 @@ export class BrowsingHistoryComponent implements OnInit {
     { id: 4, value: '価格が高い順' },
   ];
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '',mechanicId:null, officeId:null};
+  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null };
+
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
 
   constructor(
     private location: Location,
@@ -66,6 +75,7 @@ export class BrowsingHistoryComponent implements OnInit {
     private browsingHistoryService: BrowsingHistoryService,
     private auth: AuthUserService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
@@ -76,6 +86,8 @@ export class BrowsingHistoryComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.auth.userInfo$.subscribe(user => {
       // ユーザー情報取得できない場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
@@ -93,6 +105,8 @@ export class BrowsingHistoryComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
           console.log(result);
+          // ローディング解除
+          this.overlayRef.detach();
           this.onReturn();
           return;
         });
@@ -104,6 +118,8 @@ export class BrowsingHistoryComponent implements OnInit {
       this.browsingHistoryService.getMyBrosingHistory(this.loginUser.userId).subscribe(data => {
         console.log(data);
         this.detailList = data;
+        // ローディング解除
+        this.overlayRef.detach();
       });
     });
 

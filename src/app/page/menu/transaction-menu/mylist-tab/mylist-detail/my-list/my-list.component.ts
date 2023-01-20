@@ -13,12 +13,14 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
-import { userMyList,dispUserMyList } from 'src/app/entity/userMyList';
+import { userMyList, dispUserMyList } from 'src/app/entity/userMyList';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { MyListService } from './my-list.service';
-
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 
 
 @Component({
@@ -36,7 +38,7 @@ export class MyListComponent implements OnInit {
   };
 
   /** 表示用リスト */
-  detailList:dispUserMyList[] = [];
+  detailList: dispUserMyList[] = [];
 
   // /** チェックリスト */
   // selectionList: any = [];
@@ -61,7 +63,13 @@ export class MyListComponent implements OnInit {
   /** メッセージ通知 */
   messageAlert = '';
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null};
+  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null };
+
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
 
   constructor(
     private location: Location,
@@ -69,6 +77,7 @@ export class MyListComponent implements OnInit {
     private mylistservice: MyListService,
     private auth: AuthUserService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
@@ -79,6 +88,8 @@ export class MyListComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.auth.userInfo$.subscribe(user => {
       // ユーザー情報取得できない場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
@@ -96,6 +107,8 @@ export class MyListComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
           console.log(result);
+          // ローディング解除
+          this.overlayRef.detach();
           this.onReturn();
           return;
         });
@@ -106,10 +119,12 @@ export class MyListComponent implements OnInit {
       // データを取得
       this.mylistservice.getMyList(this.loginUser.userId, '0').subscribe(data => {
         console.log(data);
-        if(data.length === 0) {
+        if (data.length === 0) {
           // data.push(this.mock);
         }
         this.detailList = this.mylistservice.displayFormatdisplayFormat(data);
+        // ローディング解除
+        this.overlayRef.detach();
       });
     });
 
@@ -194,7 +209,7 @@ export class MyListComponent implements OnInit {
    * @param content
    */
   contentsDetail(content: dispUserMyList) {
-    this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.slipNo, searchTargetService:content.serviceType } });
+    this.router.navigate(["service-detail-component"], { queryParams: { serviceId: content.slipNo, searchTargetService: content.serviceType } });
   }
 
   /**
@@ -202,20 +217,20 @@ export class MyListComponent implements OnInit {
    *
    */
   changeOrder() {
-  //   console.log(this.selected)
-  //   const order = _find(this.orderMenu, order => order.value === this.selected)
+    //   console.log(this.selected)
+    //   const order = _find(this.orderMenu, order => order.value === this.selected)
 
-  //   if (!_isNil(order)) {
-  //     this.detailList = this.service.sortOrderList(this.detailList, order.id);
-  //     console.log(this.detailList);
-  //   }
+    //   if (!_isNil(order)) {
+    //     this.detailList = this.service.sortOrderList(this.detailList, order.id);
+    //     console.log(this.detailList);
+    //   }
   }
 
 
   /**
    * 前画面に戻る
    */
-   onReturn() {
+  onReturn() {
     this.location.back();
   }
 

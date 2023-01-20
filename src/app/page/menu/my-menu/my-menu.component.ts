@@ -3,6 +3,8 @@ import { ApiSerchService } from '../../service/api-serch.service';
 import { CognitoService } from '../../auth/cognito.service';
 import { Router } from '@angular/router';
 import { user } from 'src/app/entity/user';
+import { loginUser } from 'src/app/entity/loginUser';
+import { AuthUserService } from '../../auth/authUser.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -19,6 +21,7 @@ export class MyMenuComponent implements OnInit {
     private apiservice: ApiSerchService,
     private cognito: CognitoService,
     private router: Router,
+    private auth: AuthUserService,
     private overlay: Overlay,
   ) { }
 
@@ -57,6 +60,14 @@ export class MyMenuComponent implements OnInit {
       this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
       this.apiservice.getUser(authUser).subscribe(user => {
         console.log(user);
+        const acceseUser:loginUser = {
+          userId: authUser,
+          userName: user[0].userName,
+          mechanicId: user[0].mechanicId,
+          officeId: user[0].officeId
+        }
+        // Subjectにユーザー情報をセットする。
+        this.auth.login(acceseUser);
         this.user = user[0];
         this.setDispInfo(user[0]);
         this.isMechanic(user[0]);

@@ -21,6 +21,10 @@ import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-favorite',
@@ -59,6 +63,12 @@ export class FavoriteComponent implements OnInit {
   /** ログインユーザー情報 */
   acceseUser = ''
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
 
   constructor(
     private location: Location,
@@ -67,6 +77,7 @@ export class FavoriteComponent implements OnInit {
     private favoriteService: FavoriteService,
     private cognito: CognitoService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
@@ -77,6 +88,8 @@ export class FavoriteComponent implements OnInit {
    * 表示リストの初期設定を行います。
    */
   private setListSetting() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     const user = this.cognito.initAuthenticated();
     // ユーザー情報取得できない場合前画面へ戻る
     if (user == undefined || user == null || user == '') {
@@ -94,6 +107,8 @@ export class FavoriteComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         console.log(result);
+        // ローディング解除
+        this.overlayRef.detach();
         this.onReturn();
         return;
       });
@@ -105,6 +120,8 @@ export class FavoriteComponent implements OnInit {
     this.favoriteService.getFavoriteList(this.acceseUser).subscribe(data => {
       console.log(data);
       this.detailList = data;
+      // ローディング解除
+      this.overlayRef.detach();
     });
 
   }
@@ -208,9 +225,9 @@ export class FavoriteComponent implements OnInit {
     }
   }
 
-/**
- * 前画面に戻る
- */
+  /**
+   * 前画面に戻る
+   */
   onReturn() {
     this.location.back();
   }

@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { user } from 'src/app/entity/user';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-factory-mechanic-favorite-menu',
@@ -18,23 +21,32 @@ export class FactoryMechanicFavoriteMenuComponent implements OnInit {
   /** ユーザー情報 */
   user?: user;
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     private cognito: CognitoService,
     private router: Router,
     private apiSerchService: ApiSerchService,
-    private apiGsiSerchService: ApiGsiSerchService
+    private apiGsiSerchService: ApiGsiSerchService,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
     // ログイン検証
     const authUser = this.cognito.initAuthenticated();
-    if(authUser == null) {
+    if (authUser == null) {
       alert('ログインが必要です');
       this.router.navigate(["/main_menu"]);
       return;
     }
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.apiSerchService.getUser(authUser).subscribe(res => {
-      if(res != null) {
+      if (res != null) {
         // ユーザー情報を設定
         this.user = res[0];
         this.getFavoriteList(authUser);
@@ -49,6 +61,8 @@ export class FactoryMechanicFavoriteMenuComponent implements OnInit {
   private getFavoriteList(authUser: string) {
     this.apiGsiSerchService.serchFcMcFavorite(authUser).subscribe(res => {
       this.favoriteList = res;
+      // ローディング解除
+      this.overlayRef.detach();
     })
   }
 

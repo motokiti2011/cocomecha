@@ -5,6 +5,10 @@ import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { user } from 'src/app/entity/user';
 import { mcfcItem } from 'src/app/entity/mcfcItem';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-factory-mechanic-contents-management',
@@ -20,6 +24,11 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
   /** サービスタイプ */
   serviceType: string = '';
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
 
   constructor(
     private router: Router,
@@ -27,9 +36,12 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
     private apiSerchService: ApiSerchService,
     private apiUniqService: ApiUniqueService,
     private activeRouter: ActivatedRoute,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.activeRouter.queryParams.subscribe(params => {
       this.serviceType = params['serviceType']
       // ログイン検証
@@ -37,6 +49,8 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
       if (authUser == null) {
         alert('ログインが必要です');
         this.router.navigate(["/main_menu"]);
+        // ローディング解除
+        this.overlayRef.detach();
         return;
       }
       this.apiSerchService.getUser(authUser).subscribe(res => {
@@ -55,14 +69,18 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
    */
   private getMcFcItemList() {
     let serchId = this.user?.mechanicId;
-    if(this.serviceType == '1') {
+    if (this.serviceType == '1') {
       serchId = this.user?.officeId;
     }
-    if(serchId == null) {
+    if (serchId == null) {
+      // ローディング解除
+      this.overlayRef.detach();
       return;
     }
     this.apiUniqService.getMcFcItemList(serchId, this.serviceType).subscribe(res => {
       this.itemList = res[0];
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
