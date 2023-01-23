@@ -42,13 +42,13 @@ export interface slipDetailInfo {
   // 作業場所情報
   workAreaInfo: string;
   // 希望日
-  preferredDate: string;
+  preferredDate: number;
   // 希望時間
   preferredTime: string;
   // 完了日
-  completionDate: string;
+  completionDate: number;
   // 取引完了日
-  transactionCompletionDate: string;
+  transactionCompletionDate: number;
   // サムネイルURL
   thumbnailUrl: string;
   // 画像URLリスト
@@ -111,13 +111,13 @@ export const defaultSlip: slipDetailInfo = {
   // 作業場所情報
   workAreaInfo: '',
   // 希望日
-  preferredDate: '',
+  preferredDate: 0,
   // 希望時間
   preferredTime: '',
   // 完了日
-  completionDate: '',
+  completionDate: 0,
   // 取引完了日
-  transactionCompletionDate: '',
+  transactionCompletionDate: 0,
   // サムネイルURL
   thumbnailUrl: '',
   // 画像URLリスト

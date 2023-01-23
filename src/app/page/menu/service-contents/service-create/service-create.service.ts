@@ -89,13 +89,13 @@ export class ServiceCreateService {
       // 作業場所情報
       workAreaInfo: content.workArea,
       // 希望日
-      preferredDate: String(content.preferredDate),
+      preferredDate: content.preferredDate,
       // 希望時間
       preferredTime: String(content.preferredTime),
       // 完了日
-      completionDate: String(content.preferredDate),
+      completionDate: content.preferredDate,
       // 取引完了日
-      transactionCompletionDate: '0',
+      transactionCompletionDate: 0,
       // サムネイルURL
       thumbnailUrl: imageData.samneil,
       // 画像URLリスト

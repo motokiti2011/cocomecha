@@ -66,6 +66,7 @@ import { FactoryMechanicContentsMenuComponent } from './page/menu/my-menu/factor
 import { FactoryMechanicContentsManagementComponent } from './page/menu/my-menu/factory-mechanic-contents-management/factory-mechanic-contents-management.component';
 import { FactoryMechanicImpletionComponent } from './page/menu/my-menu/factory-mechanic-impletion/factory-mechanic-impletion.component';
 import { ServiceEvaluationComponent } from './page/menu/service-contents/service-evaluation/service-evaluation.component';
+import { ServiceRelistedComponent } from './page/menu/service-contents/service-relisted/service-relisted.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -136,6 +137,7 @@ const ROUTE_TABLE: Routes = [
     FactoryMechanicContentsManagementComponent,
     FactoryMechanicImpletionComponent,
     ServiceEvaluationComponent,
+    ServiceRelistedComponent,
   ],
   entryComponents: [
     TransactionListComponent,

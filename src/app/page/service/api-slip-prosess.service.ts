@@ -80,6 +80,29 @@ export class ApiSlipProsessService {
   }
 
 
+  /**
+   * 再出品用の期限切れ伝票を取得する
+   * @param serviceType 
+   * @param slipNo 
+   * @returns 
+   */
+  public getrelistedService(serviceType: string, slipNo: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "RELISTEDSERVICE",
+      "Keys": {
+        "slipNo" : slipNo,
+        "serviceType" : serviceType,
+      }
+    };
+    return this.http.post<any>(this.apiEndPoint + '/relistedservice', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
 
 
 }

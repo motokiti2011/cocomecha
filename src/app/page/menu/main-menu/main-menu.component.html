@@ -4,12 +4,29 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-7"></div>
-    <div class="float-right h_menu">
-      <div class="menu_item item" (click)="serviceSerchConditions()">サービス・依頼を探す</div>
-      <div class="menu_item item" (click)="serviceReqest()">依頼する</div>
-      <div class="menu_item item" (click)="serviceExhibit()">出品する</div>
+    <div class="col-1"></div>
+
+    <div *ngIf="!authUserDiv; else elseContent">
+        <!-- ログイン前 -->
+        <input type="button" class="btn-border" on-click="onSinup()" value="新規登録">
     </div>
+    <ng-template #elseContent>
+      <!-- ログイン後 -->
+      <div *ngIf="temporaryUserDiv; else elseContent">
+        <div class="menu_item item" (click)="onUserResister()">ユーザー登録</div>
+        <p>ユーザー登録が未完了です。登録をしてください。</p>
+      </div>
+      <ng-template #elseContent>
+        <div class="menu_item item" (click)="onMypage()">マイページ</div>
+      </ng-template>
+    </ng-template>
+
+    <div class="col-4"></div>
+
+    <div class="menu_item item" (click)="serviceSerchConditions()">サービス・依頼を探す</div>
+    <div class="menu_item item" (click)="serviceReqest()">依頼する</div>
+    <div class="menu_item item" (click)="serviceExhibit()">出品する</div>
+
   </div>
 </div>
 

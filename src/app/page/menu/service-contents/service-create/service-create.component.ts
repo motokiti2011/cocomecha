@@ -62,7 +62,7 @@ export class ServiceCreateComponent implements OnInit {
   areaSelect = ''
 
   /** カテゴリー選択状態初期値 */
-  categorySelect = '';
+  categorySelect = '1';
 
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
@@ -85,7 +85,6 @@ export class ServiceCreateComponent implements OnInit {
   /** 必須フラグ */
   titleDiv = true;
   areaDiv = true;
-  categoryDiv = true;
   priceDiv = true;
   explanationDiv = true;
   preferredDateDiv = true;
@@ -347,14 +346,6 @@ export class ServiceCreateComponent implements OnInit {
       this.areaDiv = false;
     }
 
-    // カテゴリー選択状況変更監視
-    if (_isNil(this.inputData.category)
-      || this.inputData.category === '0' || this.inputData.category === '') {
-      this.categoryDiv = true;
-    } else {
-      this.categoryDiv = false;
-    }
-
     // // 価格選択状況変更監視
     // 価格のイベント処理でおこなう
 
@@ -367,7 +358,7 @@ export class ServiceCreateComponent implements OnInit {
       this.explanationDiv = false;
     }
 
-    if (!this.titleDiv && !this.areaDiv && !this.categoryDiv
+    if (!this.titleDiv && !this.areaDiv 
       && !this.priceDiv && !this.explanationDiv && !this.preferredDateDiv
       && !this.timeDiv) {
       // 確定ボタン活性

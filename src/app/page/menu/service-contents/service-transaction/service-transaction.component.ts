@@ -91,7 +91,7 @@ export class ServiceTransactionComponent implements OnInit {
       this.service.getService(this.dispSlipId, this.serviceType).subscribe(data => {
         this.slip = data[0];
         this.dispTitle = this.slip.title;
-        this.dispYmd = this.slip.completionDate;
+        this.dispYmd = String(this.slip.completionDate);
         this.dispPrice = this.slip.price;
         this.dispArea = this.service.areaNameSetting(this.slip.areaNo1);
         this.dispExplanation = this.slip.explanation;
