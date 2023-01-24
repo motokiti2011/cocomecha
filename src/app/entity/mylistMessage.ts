@@ -42,5 +42,7 @@ export const mylistMessages = {
   // 完了予定日が変更。
   COMP_DATE_CHANGE: '完了予定日が変更されました。',
   // 評価依頼。
-  EVALUATION_REQ: '評価をおこなってください。'
+  EVALUATION_REQ: '評価をおこなってください。',
+  // 再出品。
+  RELISTED_SERVICE: '再出品しました。'  
 } as const;

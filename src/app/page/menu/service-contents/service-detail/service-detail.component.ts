@@ -12,6 +12,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 
+
+
 @Component({
   selector: 'app-service-detail',
   templateUrl: './service-detail.component.html',
@@ -20,11 +22,9 @@ import { ComponentPortal } from '@angular/cdk/portal';
 export class ServiceDetailComponent implements OnInit {
 
 
-  // image : {short:string, src:string} = {short: '', src: ''};
-  // // {short: '1', src: "assets/images/noimage.png"}
 
-  images : image[] = [];
-
+  images: image[] = [];
+  /** サービスタイプ */
   serviceType = '';
 
   /** サービスID */
@@ -41,9 +41,9 @@ export class ServiceDetailComponent implements OnInit {
   dispExplanation: string = ''
   /** 表示伝票情報 */
   dispContents: slipDetailInfo = defaultSlip;
-  // {  // 伝票番号
-  //   slipNo: '',userId: '',userName: '', title: '',category: '',area: '',price: '',bidMethod: '',bidderId: '',bidEndDate: '',
-  //   explanation: '',displayDiv: '',preferredDate: '',preferredTime: '',completionDate: '',deleteDiv: '',imageUrl: '',messageOpenLebel:'1'};
+
+  /** 再出品区分 */
+  relistedDiv = false;
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -82,6 +82,9 @@ export class ServiceDetailComponent implements OnInit {
         this.dispArea = this.dispContents.areaNo1;
         this.dispExplanation = this.dispContents.explanation;
         this.images = this.service.setImages(this.dispContents.imageUrlList)
+        if (this.dispContents.processStatus == '3') {
+          this.relistedDiv = true;
+        }
         // ローディング解除
         this.overlayRef.detach();
       })
@@ -106,14 +109,15 @@ export class ServiceDetailComponent implements OnInit {
    * 取引するボタン押下時の処理
    */
   onTransaction() {
-    console.log('serviceType1:'+this.serviceType)
+    console.log('serviceType1:' + this.serviceType)
     this.router.navigate(["service-transaction"],
-      { queryParams: {
-        slipNo: this.dispContents.slipNo,
-        serviceType: this.serviceType,
-        status: false
-      }
-    });
+      {
+        queryParams: {
+          slipNo: this.dispContents.slipNo,
+          serviceType: this.serviceType,
+          status: false
+        }
+      });
   }
 
   // /**
@@ -145,17 +149,36 @@ export class ServiceDetailComponent implements OnInit {
    */
   onTransactionStatus() {
     this.router.navigate(["service-transaction"],
-      { queryParams: {
-        slipNo: this.dispContents.slipNo,
-        serviceType: this.serviceType,
-        status: true } });
+      {
+        queryParams: {
+          slipNo: this.dispContents.slipNo,
+          serviceType: this.serviceType,
+          status: true
+        }
+      });
+  }
+
+  /**
+   * 再出品ボタン押下イベント
+   */
+  onRelisted() {
+    this.router.navigate(["service-relisted"],
+      {
+        queryParams: {
+          slipNo: this.dispContents.slipNo,
+          serviceType: this.serviceType
+        }
+      });
+
   }
 
 
+
+
   /**
- * 戻るボタン押下イベント
- * @return void
- */
+   * 戻るボタン押下イベント
+   * @return void
+   */
   goBack(): void {
     this.location.back();
   }

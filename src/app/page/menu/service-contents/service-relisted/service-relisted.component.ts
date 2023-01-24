@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { ApiSlipProsessService } from 'src/app/page/service/api-slip-prosess.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { user } from 'src/app/entity/user';
 import { serviceContents, initServiceContent } from 'src/app/entity/serviceContents';
-import { 
+import {
   createServiceSelect,
   timeData,
   userWorkArea,
@@ -32,6 +34,7 @@ import {
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
 
 /**
  * 再出品コンポーネント
@@ -46,10 +49,9 @@ export class ServiceRelistedComponent implements OnInit {
   /** タイトル */
   title = '';
   /** 再出品伝票 */
-  relistedService: serviceContents = initServiceContent;
+  relistedService: salesServiceInfo = defaulsalesService;
   /** 作成ユーザー情報 */
   userInfo?: user;
-
 
   /** 入力中データ情報 */
   inputData: serviceContents = initServiceContent;
@@ -122,8 +124,8 @@ export class ServiceRelistedComponent implements OnInit {
   /** locationリスト */
   locationList: string[] = [];
 
-
-
+  /** サービスタイプ */
+  serviceType = '';
 
 
   overlayRef = this.overlay.create({
@@ -138,6 +140,7 @@ export class ServiceRelistedComponent implements OnInit {
     private activeRouter: ActivatedRoute,
     private cognito: CognitoService,
     private apiService: ApiSerchService,
+    private apiUniqueService: ApiUniqueService,
     private apiSlipService: ApiSlipProsessService,
   ) { }
 
@@ -165,18 +168,45 @@ export class ServiceRelistedComponent implements OnInit {
         this.activeRouter.queryParams.subscribe(params => {
           // 再出品対象の伝票情報を取得
           const serviceType = params['serviceType'];
+          this.serviceType = serviceType;
           const slipNo = params['slipNo'];
-          this.apiSlipService.getrelistedService(serviceType, slipNo).subscribe(result => {
-            console.log(result);
-            // 伝票情報取得
-            this.relistedService = result[0] 
-          });
+          if (serviceType == '0') {
+            this.getslipDetial(slipNo);
+          } else {
+            this.getserviceContents(slipNo);
+          }
         });
       });
     }
     // ローディング解除
     this.overlayRef.detach();
   }
+
+  /**
+   * 伝票情報を取得し表示
+   * @param slipNo 
+   */
+  private getslipDetial(slipNo: string) {
+    this.apiUniqueService.getSlip(slipNo).subscribe(result => {
+      console.log(result);
+      // 伝票情報取得
+      this.relistedService = result[0]
+    });
+  }
+
+  /**
+   * サービス商品情報を取得し表示
+   * @param slipNo 
+   */
+  private getserviceContents(slipNo: string) {
+    this.apiUniqueService.getServiceContents(slipNo).subscribe(result => {
+      console.log(result);
+      // 伝票情報取得
+      this.relistedService = result[0]
+    });
+  }
+
+
 
 
   inputTitle() {
@@ -248,7 +278,70 @@ export class ServiceRelistedComponent implements OnInit {
     });
   }
 
+  /**
+   * 決定押下イベント
+   */
   getResult() {
+    const updateService: salesServiceInfo = this.createData();
+
+    this.apiSlipService.relistedService(this.serviceType, updateService).subscribe(res => {
+      console.log(res);
+    })
+  }
+
+  /**
+   * 更新データ作成
+   * @returns 
+   */
+  private createData(): salesServiceInfo {
+    let mechanicId = '0';
+    let officeId = '0';
+    if (this.serviceType != '0') {
+      if (this.relistedService.slipAdminMechanicId) {
+        mechanicId = this.relistedService.slipAdminMechanicId
+      }
+      if (this.relistedService.slipAdminOfficeId) {
+        officeId = this.relistedService.slipAdminOfficeId
+      }
+    }
+    return  {
+      slipNo: this.relistedService.slipNo, // 伝票番号
+      deleteDiv: this.relistedService.deleteDiv, // 削除区分
+      category: this.relistedService.category, // サービスカテゴリー
+      slipAdminUserId: this.relistedService.slipAdminUserId, // 伝票管理者ユーザーID
+      slipAdminUserName: '', // 伝票管理者ユーザー名
+      slipAdminOfficeId: officeId, // 伝票管理事業所ID
+      slipAdminOfficeName: '', // 伝票管理事業所名
+      slipAdminMechanicId: mechanicId, // 伝票管理メカニックID
+      slipAdminMechanicName: '', // 伝票管理メカニック名
+      adminDiv: this.relistedService.adminDiv, // 管理者区分
+      title: this.relistedService.title, // タイトル
+      areaNo1: this.relistedService.areaNo1, // サービス地域1
+      areaNo2: this.relistedService.areaNo2, // サービス地域2
+      price: this.relistedService.price, // 価格
+      bidMethod: this.relistedService.bidMethod, // 入札方式
+      bidderId: this.relistedService.bidderId, // 入札者ID
+      bidEndDate: this.relistedService.bidEndDate, // 入札終了日
+      explanation: this.relistedService.explanation, // 説明
+      displayDiv: this.relistedService.displayDiv, // 表示区分
+      processStatus: this.relistedService.processStatus, // 工程ステータス
+      targetService: this.relistedService.targetService, // 対象サービス内容
+      targetVehicleId: this.relistedService.targetVehicleId, // 対象車両ID
+      targetVehicleName: this.relistedService.targetVehicleName, // 対象車両名
+      targetVehicleInfo: this.relistedService.targetVehicleInfo, // 対象車両情報
+      workAreaInfo: this.relistedService.workAreaInfo, // 作業場所情報
+      preferredDate: this.relistedService.preferredDate, // 希望日
+      preferredTime: this.relistedService.preferredTime, // 希望時間
+      completionDate: this.relistedService.completionDate, // 完了日
+      transactionCompletionDate: this.relistedService.transactionCompletionDate, // 取引完了日
+      thumbnailUrl: this.relistedService.thumbnailUrl, // サムネイルURL
+      imageUrlList: this.relistedService.imageUrlList, // 画像URLリスト
+      messageOpenLebel: this.relistedService.messageOpenLebel, // メッセージ公開レベル
+      updateUserId: '', // 更新ユーザーID
+      created: this.relistedService.created, // 登録年月日
+      updated: '' // 更新日時
+    }
+
 
   }
 

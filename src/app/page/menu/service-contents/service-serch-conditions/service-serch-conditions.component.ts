@@ -28,11 +28,11 @@ export class ServiceSerchConditionsComponent implements OnInit {
   /**
    * 検索条件
    */
-  serchCondition : serchCondition = {
+  serchCondition: serchCondition = {
     mapOffsetX: 0,
     mapOffsetY: 0,
-    areaNum:0,
-    category : 0,
+    areaNum: 0,
+    category: 0,
   }
 
   overlayRef = this.overlay.create({
@@ -42,12 +42,12 @@ export class ServiceSerchConditionsComponent implements OnInit {
   });
 
   /** モーダルデータ */
-  modalData?: {serchType: string, value: string};
+  modalData?: { serchType: string, value: string };
 
   constructor(
     private location: Location,
     private service: ServiceSerchConditionsService,
-    private router:Router,
+    private router: Router,
     public modal: MatDialog,
     private overlay: Overlay,
   ) { }
@@ -59,7 +59,7 @@ export class ServiceSerchConditionsComponent implements OnInit {
    * 戻るボタン押下イベント
    * @return void
    */
-   goBack():void {
+  goBack(): void {
     this.location.back();
   }
 
@@ -68,18 +68,18 @@ export class ServiceSerchConditionsComponent implements OnInit {
    * mapがクリックされた場合に座標情報からクリック位置を決定する
    * @param e 座標情報
    */
-  mapSelect(e:any) {
+  mapSelect(e: any) {
     this.offsetX = e.offsetX
     this.offsetY = e.offsetY
 
-    this.serchCondition.mapOffsetX =  e.offsetX;
+    this.serchCondition.mapOffsetX = e.offsetX;
     this.serchCondition.mapOffsetY = e.offsetY;
     const serchResult = this.service.coordinateMap(this.serchCondition);
 
     // 戻り値が0以外の場合検索結果を格納の上画面遷移
-    if(serchResult > 0) {
+    if (serchResult > 0) {
       this.serchCondition.areaNum = serchResult;
-      const serchData = {serchType: 'area', value: String(serchResult) }
+      const serchData = { serchType: 'area', value: String(serchResult) }
       this.onSerchServiceModal(serchData);
     }
   }
@@ -89,10 +89,10 @@ export class ServiceSerchConditionsComponent implements OnInit {
    * サービス一覧画面に遷移する。
    * @param i 件名管理ID
    */
-  areaSelect(i:number) {
+  areaSelect(i: number) {
     // 検索条件の都道府県IDに選択地を設定する
     this.serchCondition.areaNum = i;
-    const serchData = {serchType: 'area', value: String(i) }
+    const serchData = { serchType: 'area', value: String(i) }
     this.onSerchServiceModal(serchData);
   }
 
@@ -100,10 +100,10 @@ export class ServiceSerchConditionsComponent implements OnInit {
    * サービス内容から探すが選択された際の処理
    * @param i サービスカテゴリー選択値
    */
-   contentsSelect(i:number) {
+  contentsSelect(i: number) {
     // 検索条件のサービスカテゴリーIDに設定する
     this.serchCondition.category = i;
-    const serchData = {serchType: 'category', value: String(i) }
+    const serchData = { serchType: 'category', value: String(i) }
     this.onSerchServiceModal(serchData);
   }
 
@@ -111,7 +111,7 @@ export class ServiceSerchConditionsComponent implements OnInit {
   /**
    * 検索サービスモーダルを展開する
    */
-  private onSerchServiceModal(serchData: {serchType: string,value: string}) {
+  private onSerchServiceModal(serchData: { serchType: string, value: string }) {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     const dialogRef = this.modal.open(SerchServiceModalComponent, {
@@ -123,7 +123,9 @@ export class ServiceSerchConditionsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result !== null && result !== '') {
-          if(result == undefined) {
+          if (result == undefined) {
+            // ローディング解除
+            this.overlayRef.detach();
             return;
           }
           this.targetService = result;
@@ -146,11 +148,13 @@ export class ServiceSerchConditionsComponent implements OnInit {
    */
   private openSerchServiceList(targetService: string) {
     this.router.navigate(["service_list"],
-    { queryParams:{
-      areaNum :this.serchCondition.areaNum,
-      category: this.serchCondition.category,
-      targetService: targetService
-    }});
+      {
+        queryParams: {
+          areaNum: this.serchCondition.areaNum,
+          category: this.serchCondition.category,
+          targetService: targetService
+        }
+      });
   }
 
 

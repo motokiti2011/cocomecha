@@ -1,6 +1,7 @@
 
 <div class="content">
   <div class="button-area">
+    
     <div class="button-item">
       <input type="button" class="btn-border" on-click="onTransaction()" value="取引する">
     </div>
@@ -10,6 +11,14 @@
     <div class="button-item">
       <input type="button" class="btn-border" on-click="onTransactionStatus()" value="現在の取引状況を確認する">
     </div>
+
+    <div *ngIf="relistedDiv">
+      <div class="button-item">
+        <input type="button" class="btn-border" on-click="onRelisted()" value="再出品">
+      </div>
+    </div>
+
+
   </div>
 
   <div class="contents-area">

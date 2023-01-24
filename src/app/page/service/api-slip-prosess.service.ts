@@ -4,6 +4,7 @@ import { Observable, of, tap } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { serviceTransactionRequest } from 'src/app/entity/serviceTransactionRequest';
+import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -83,16 +84,44 @@ export class ApiSlipProsessService {
   /**
    * 再出品用の期限切れ伝票を取得する
    * @param serviceType 
-   * @param slipNo 
+   * @param serviceContents
    * @returns 
    */
-  public getrelistedService(serviceType: string, slipNo: string): Observable<any> {
+  public relistedService(serviceType: string, serviceContents:salesServiceInfo ): Observable<any> {
     // リクエストボディ生成
     const body = {
       "OperationType": "RELISTEDSERVICE",
       "Keys": {
-        "slipNo" : slipNo,
-        "serviceType" : serviceType,
+        "slipNo" : serviceContents.slipNo,
+        "deleteDiv" : serviceContents.deleteDiv,
+        "category" : serviceContents.category,
+        "slipAdminUserId" : serviceContents.slipAdminUserId,
+        "slipAdminOfficeId" : serviceContents.slipAdminOfficeId,
+        "slipAdminMechanicId" : serviceContents.slipAdminMechanicId,
+        "adminDiv" : serviceContents.adminDiv,
+        "title" : serviceContents.title,
+        "areaNo1" : serviceContents.areaNo1,
+        "areaNo2" : serviceContents.areaNo2,
+        "price" : serviceContents.price,
+        "bidMethod" : serviceContents.bidMethod,
+        "bidderId" : serviceContents.bidderId,
+        "bidEndDate" : serviceContents.bidEndDate,
+        "explanation" : serviceContents.explanation,
+        "displayDiv" : serviceContents.displayDiv,
+        "targetService" : serviceContents.targetService,
+        "targetVehicleId" : serviceContents.targetVehicleId,
+        "targetVehicleName" : serviceContents.targetVehicleName,
+        "targetVehicleInfo" : serviceContents.targetVehicleInfo,
+        "workAreaInfo" : serviceContents.workAreaInfo,
+        "preferredDate" : serviceContents.preferredDate,
+        "preferredTime" : serviceContents.preferredTime,
+        "completionDate" : serviceContents.completionDate,
+        "transactionCompletionDate" : serviceContents.transactionCompletionDate,
+        "thumbnailUrl" : serviceContents.thumbnailUrl,
+        "imageUrlList" : serviceContents.imageUrlList,
+        "messageOpenLebel" : serviceContents.messageOpenLebel,
+        "updateUserId" : serviceContents.updateUserId,
+        "created" : serviceContents.created
       }
     };
     return this.http.post<any>(this.apiEndPoint + '/relistedservice', body).pipe(
