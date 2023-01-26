@@ -149,7 +149,7 @@ export class MainMenuComponent implements OnInit {
           // 仮登録ユーザーのためユーザー登録メッセージを表示
           this.temporaryUserDiv = true;
         } else {
-          this.loginUser.userName = data.userName;
+          // this.loginUser.userName = data.userName;
           this.temporaryUserDiv = false;
         }
       } else {
