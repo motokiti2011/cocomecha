@@ -57,3 +57,17 @@ p {
   font-size: 1.0rem;
   font-weight: 500;
 }
+
+
+.item {
+  margin-top: 15px;
+  // text-align:center;
+  font-size: large;
+}
+
+.item:hover {
+  // color: #fff;
+  text-decoration:underline;
+  // background: #dddddd;
+}
+

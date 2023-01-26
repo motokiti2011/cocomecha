@@ -14,6 +14,8 @@
 
 #modal-title {
   font-size: 22px;
+  margin: 20px 0px 10px 5px;
+
 }
 
 #modal-footer {
@@ -22,19 +24,27 @@
 }
 
 #close {
-  margin-left: 10vh;
+  margin-left: 40px;
 }
 
 
 #name {
-  width: 80%;
-  height: 25px;
+  width: 75%;
+  height: 30px;
+  margin-bottom: 20px;
 }
 
 #passwd {
-  width: 80%;
-  height: 25px;
+  width: 75%;
+  height: 30px;
+  margin-bottom: 10;
 }
+
+.btn {
+  width: 75%;
+  margin-top: 30px;
+}
+
 
 .form {
   margin-top: 10%;
@@ -57,4 +67,8 @@
   margin-left: 5vh;
   color: blue;
 }
+
+// .form-control {
+//   width: 300px;
+// }
 

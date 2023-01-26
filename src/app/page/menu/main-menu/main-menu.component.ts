@@ -5,7 +5,8 @@ import { loginUser } from 'src/app/entity/loginUser';
 import { AuthUserService } from '../../auth/authUser.service';
 import { CognitoService } from '../../auth/cognito.service';
 import { ApiSerchService } from '../../service/api-serch.service';
-
+import { LoginComponent } from '../../modal/login/login.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-main-menu',
@@ -19,6 +20,7 @@ export class MainMenuComponent implements OnInit {
     private cognito: CognitoService,
     private authUserService: AuthUserService,
     private apiService: ApiSerchService,
+    public loginModal: MatDialog,
   ) { }
 
   /** 子コンポーネントを読み込む */
@@ -31,11 +33,19 @@ export class MainMenuComponent implements OnInit {
   // 認証有無フラグ
   authUserDiv = false;
 
+  login = {
+    userName: '',
+    passwd: '',
+    selected: false,
+    reissuePasswd: false,
+    newResister: false
+  }
+
+
   ngOnInit(): void {
     this.authenticated();
     this.child.ngOnInit();
   }
-
 
   /**
    * サービスを依頼する
@@ -107,8 +117,8 @@ export class MainMenuComponent implements OnInit {
     const authUser = this.cognito.initAuthenticated();
 
     if (authUser !== null) {
-      // ログイン状態の場合
       this.authUserDiv = true;
+      // ログイン状態の場合
       const log = this.cognito.getCurrentUserIdToken();
       console.log(log);
       // 認証済の場合表示するユーザー情報を取得
@@ -147,6 +157,63 @@ export class MainMenuComponent implements OnInit {
       }
     });
   }
+
+
+
+
+  /**
+   * ユーザー認証(ログイン)を行う
+   */
+  onLogin() {
+    console.log('user-login');
+
+    const dialogRef = this.loginModal.open(LoginComponent, {
+      width: '400px',
+      height: '450px',
+      data: this.login
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        console.log(result);
+        if (result !== undefined) {
+          this.login = result;
+          // 画面遷移の結果でモーダルを閉じた場合、各画面に遷移する。
+          if (this.login.reissuePasswd) {
+            // パスワード画面に遷移
+            this.router.navigate(["reissue_passwd_component"])
+            return;
+          }
+          if (this.login.newResister) {
+            // 新規登録画面に遷移
+            console.log("newResister");
+            this.router.navigate(["sign-up-component"])
+            return;
+          }
+          if(this.login.userName) {
+            // ユーザー情報を取得
+            // ログイン状態を保持する。
+            this.authenticated();
+            return;
+          }
+        } else {
+          this.authenticated();
+          return;
+        }
+      }
+    );
+  }
+
+  /**
+   * ログアウト押下時
+   */
+    onLogout() {
+      this.authUserDiv = false;
+      this.cognito.logout();
+      this.authUserService.logout;
+      this.loginUser.userName = 'ログイン';
+      this.authenticated();
+    }
 
 
 
