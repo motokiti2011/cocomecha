@@ -23,12 +23,15 @@ export class EditUserInfoComponent implements OnInit {
   inputData = {
     userName: '',
     mailAdress: '',
-    TelNo1: '',
-    TelNo2: '',
+    telNo1_1: '',
+    telNo1_2: '',
+    telNo1_3: '',
+    // TelNo2: '',
     areaNo1: '',
     areaNo2: '',
     adress: '',
-    postCode: '',
+    postCode1: '',
+    postCode2: '',
     introduction: '',
   }
 
@@ -114,13 +117,13 @@ export class EditUserInfoComponent implements OnInit {
   inputCheck() {
     this.user.userName = this.inputData.userName;
     this.user.mailAdress = this.inputData.mailAdress;
-    this.user.TelNo1 = this.inputData.TelNo1;
-    this.user.TelNo2 = this.inputData.TelNo2;
+    this.user.TelNo1 = this.setTelNo();
+    // this.user.TelNo2 = this.inputData.TelNo2;
     this.user.areaNo1 = this.inputData.areaNo1;
     this.user.areaNo2 = this.inputData.areaNo2;
     this.user.adress = this.inputData.adress;
     this.user.profileImageUrl = ''; // 仮
-    this.user.postCode = this.inputData.postCode;
+    this.user.postCode = this.setPostCode();
     this.user.introduction = this.inputData.introduction;
 
   }
@@ -136,14 +139,26 @@ export class EditUserInfoComponent implements OnInit {
     this.apiService.getUser(userId).subscribe(data => {
       if(data[0]) {
         this.user = data[0];
+        let telNo = {tel1: '' ,tel2: '' ,tel3: '' }
+        if(this.user.TelNo1) {
+          telNo = this.splitTelNo(this.user.TelNo1);
+        }
+        let postCode = {post1: '' ,post2: ''}
+        if(this.user.postCode) {
+          postCode = this.splitPostCode(this.user.postCode);
+        }
+        
+
         this.inputData.userName = this.user.userName;
         this.inputData.mailAdress = this.user.mailAdress;
-        this.inputData.TelNo1 = this.isSerParm(this.user.TelNo1,'tel');
-        this.inputData.TelNo2 = this.isSerParm(this.user.TelNo2,'tel');
+        this.inputData.telNo1_1 = telNo.tel1;
+        this.inputData.telNo1_2 = telNo.tel2;
+        this.inputData.telNo1_3 = telNo.tel3;
         this.inputData.areaNo1 = this.isSerParm(this.user.areaNo1,'area1');
         this.inputData.areaNo2 = this.isSerParm(this.user.areaNo2,'area2');
         this.inputData.adress = this.isSerParm(this.user.adress,'adress');
-        this.inputData.postCode = this.isSerParm(this.user.postCode,'postCode');
+        this.inputData.postCode1 = postCode.post1;
+        this.inputData.postCode2 = postCode.post2;
       } else {
         alert('データが取得できませんでした。再度アクセスしてください')
         this.location.back();
@@ -152,7 +167,50 @@ export class EditUserInfoComponent implements OnInit {
   }
 
 
+  /******************    後日formサービスに移行予定   **********************/
+  /**
+   * 電話番号を分割する
+   * @param telNo 
+   * @returns 
+   */
+  private splitTelNo(telNo: string) : {tel1: string ,tel2: string ,tel3: string } {
+    const spritTelNo = telNo.split('-');
+    const result = {tel1: spritTelNo[0] ,tel2: spritTelNo[1] ,tel3: spritTelNo[2] }
+    return result;
+  }
 
+  /**
+   * 入力値から登録データ電話番号を作成する
+   * @returns 
+   */
+  private setTelNo(): string {
+    return this.inputData.telNo1_1 + '-'
+     + this.inputData.telNo1_2 + '-'
+     + this.inputData.telNo1_3;     
+  }
+
+
+  /**
+   * 電話番号を分割する
+   * @param telNo 
+   * @returns 
+   */
+  private splitPostCode(postCode: string) : {post1: string ,post2: string} {
+    const spritTelNo = postCode.split('-');
+    const result = {post1: spritTelNo[0] ,post2: spritTelNo[1] }
+    return result;
+  }
+
+
+  /**
+   * 入力値から登録データ電話番号を作成する
+   * @returns 
+   */
+  private setPostCode(): string {
+    return this.inputData.postCode1
+    + '-' + this.inputData.postCode2;
+  }
+  /******************    後日formサービスに移行予定   **********************/
 
   /**
    * イメージを設定する
@@ -183,12 +241,12 @@ export class EditUserInfoComponent implements OnInit {
       this.user.corporationDiv = '0';
       this.user.userName = this.inputData.userName;
       this.user.mailAdress = this.inputData.mailAdress;
-      this.user.TelNo1 = this.inputData.TelNo1;
+      this.user.TelNo1 = this.setTelNo();
       this.user.areaNo1 = this.inputData.areaNo1;
       this.user.areaNo2 = this.inputData.areaNo2;
       this.user.adress = this.inputData.adress;
       this.user.profileImageUrl = ''; // 仮
-      this.user.postCode = this.inputData.postCode;
+      this.user.postCode = this.setPostCode();
       this.user.introduction = this.inputData.introduction;
 
       this.apiService.postUser(this.user).subscribe(result => {
