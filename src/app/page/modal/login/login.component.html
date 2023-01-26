@@ -5,33 +5,34 @@
     <div class="col-1"></div>
     <button id="close" mat-button (click)="closeModal()">✖</button>
   </div>
-  
-  <div class="row">
-    <div class="col-1"></div>
-      <label>ユーザー名</label>    
+
+  <div *ngIf="!loading">
+    <div class="row">
+      <div class="col-1"></div>
+        <label>ユーザー名</label>    
+    </div>
+
+    <div class="row">
+      <div class="col-1"></div>
+        <input type="text" class="form-control" id="name" name="name" [(ngModel)]="data.userName" />    
+    </div>
+
+    <div class="row">
+      <div class="col-1"></div>
+      <label>パスワード</label>
+    </div>
+    
+    <div class="row">
+      <div class="col-1"></div>
+      <input type="password" class="form-control" id="passwd" name="passwd" [(ngModel)]="data.passwd" />
+    </div>
+
+    <div class="row">
+      <div class="col-1"></div>
+      <button type="submit" class="btn btn-primary" on-click="btnAction()">ログイン</button>
+    </div>
   </div>
 
-  <div class="row">
-    <div class="col-1"></div>
-      <input type="text" class="form-control" id="name" name="name" [(ngModel)]="data.userName" />    
-  </div>
-
-  <div class="row">
-    <div class="col-1"></div>
-    <label>パスワード</label>
-  </div>
-  
-  <div class="row">
-    <div class="col-1"></div>
-    <input type="password" class="form-control" id="passwd" name="passwd" [(ngModel)]="data.passwd" />
-  </div>
-
-
-  <div class="row">
-    <div class="col-1"></div>
-    <button type="submit" class="btn btn-primary" on-click="btnAction()">ログイン</button>
-  </div>
-  
   <div *ngIf="loading">
     <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
   </div>
