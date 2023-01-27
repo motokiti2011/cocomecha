@@ -2,11 +2,92 @@
   display: flex;
 }
 
-.row {
-  margin: 30px 10px 10px 40px;
+.sid_menu {
+  width: 300px;
+  margin: 10px 0px 0px 40px;
 }
+
+// .row {
+//   margin: 30px 10px 10px 40px;
+// }
 
 
 .high-form {
   height: 120px;
+}
+
+
+.main {
+  width: 850px;
+  margin: 5px 0px 0px 40px;
+
+  .row_item {
+    margin: 20px 0px 0px 0px;
+  }
+
+  .form_title {
+    font-size: x-large;
+    text-align: center;
+    margin: 10px 0px 20px 0px;
+  }
+
+  #name {
+    width: 280px;
+  }
+
+  #email {
+    width: 280px;
+  }
+
+  
+
+  #qualification {
+    margin-bottom: 15px;
+    width: 280px;
+  }
+
+  .item {
+    text-align: center;
+  }
+
+}
+
+.btn_area {
+  margin-left: 20px;
+  width: 150px;
+  .btn {
+    font-size: small;
+  }
+}
+
+.add_form {
+  margin-left: 15px;
+}
+
+
+
+.add_qualification {
+  display: flex;
+  // margin-left: 15px;
+  .add_btn_area {
+    margin: 15px 15px 15px 15px;
+  }
+
+
+  .del_btn {
+    font-size: small;
+    margin: 0px 0px 15px 20px;
+    width: 50px;
+  }
+}
+
+
+.mandatory {
+  width: 50px;
+  color: #ffff;
+  background-color: #cc0000;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  font-size: 14px;
+  text-align: center;
 }
