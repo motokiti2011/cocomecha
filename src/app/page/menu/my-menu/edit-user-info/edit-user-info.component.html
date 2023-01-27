@@ -12,7 +12,7 @@
         <div class="col-4"></div>
         <div class="col-6">
           <div class="form_title">ユーザー登録情報編集</div>
-        </div>        
+        </div>
       </div>
 
       <div class="row">
@@ -23,7 +23,8 @@
             <div class="mandatory">必須</div>
           </div>
           <div class="col-6">
-            <input class="form-control" id="name" type="text" [(ngModel)]="inputData.userName" />
+            <!-- <input class="form-control" id="name" type="text" [(ngModel)]="inputData.userName" /> -->
+            <input class="form-control" id="name" type="text" [formControl]="name" />
           </div>
           <div class="col-1"></div>
       </div>
@@ -36,7 +37,8 @@
             <div class="mandatory">必須</div>
           </div>
           <div class="col-6">
-            <input class="form-control" id="email" type="email" [(ngModel)]="inputData.mailAdress" />
+            <!-- <input class="form-control" id="email" type="email" [(ngModel)]="inputData.mailAdress" /> -->
+            <input class="form-control" id="email" type="text" [formControl]="mail" />
           </div>
           <div class="col-1"></div>
       </div>
@@ -50,14 +52,17 @@
           </div>
           <div class="col-6">
             <div class="tel_forms">
-              <input class="form-control" id="tel" type="tel" [(ngModel)]="inputData.telNo1_1" />
+              <input class="form-control" id="tel" type="tel" [formControl]="telNo1" />
               <p>-</p>
-              <input class="form-control" id="tel2" type="tel" [(ngModel)]="inputData.telNo1_2" />
+              <input class="form-control" id="tel2" type="tel" [formControl]="telNo2" />
               <p>-</p>
-              <input class="form-control" id="tel3" type="tel" [(ngModel)]="inputData.telNo1_3" />
+              <input class="form-control" id="tel3" type="tel" [formControl]="telNo3" />
             </div>
           </div>
           <div class="col-1"></div>
+          <!-- <span *ngIf="telNo1.errors?.required">tel1</span>
+          <span *ngIf="telNo2.errors?.required">tel2</span>
+          <span *ngIf="telNo3.errors?.required">tel3</span> -->
       </div>
 
 
@@ -68,9 +73,9 @@
           <div class="col-2"></div>
           <div class="col-6">
             <div class="post_forms">
-              <input class="form-control" id="postCode" type="text" [(ngModel)]="inputData.postCode1" />
+              <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" />
               <p class="mainus">-</p>
-              <input class="form-control" id="postCode" type="text" [(ngModel)]="inputData.postCode2" />
+              <input class="form-control" id="postCode" type="tel" [formControl]="postCode2" />
             </div>
           </div>
           <div class="col-1"></div>
@@ -144,9 +149,10 @@
         <div class="col-4"></div>
         <div class="col-6">
           <div class="bt_area">
-            <button type="submit" class="btn btn-primary" on-click="onResister()">変更する</button>
+            <button type="submit" class="btn btn-primary"
+            on-click="onResister()" [disabled]="groupForm.invalid">変更する</button>
           </div>
-        </div>        
+        </div>
       </div>
 
 

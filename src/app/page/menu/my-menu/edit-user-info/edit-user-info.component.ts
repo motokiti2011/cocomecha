@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { user, initUserInfo} from 'src/app/entity/user';
@@ -10,7 +11,7 @@ import {
   filter as _filter,
   isNil as _isNil,
   cloneDeep as _cloneDeep,
-} from 'lodash';
+} from 'lodash'
 import { UploadService } from 'src/app/page/service/upload.service';
 
 @Component({
@@ -20,21 +21,62 @@ import { UploadService } from 'src/app/page/service/upload.service';
 })
 export class EditUserInfoComponent implements OnInit {
 
+  /** フォームコントロール */
+  name = new FormControl('名前',[
+    Validators.required
+  ]);
+
+  mail = new FormControl('',[
+    Validators.required,
+    Validators.email
+  ]);
+
+  telNo1 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  telNo2 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  telNo3 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  postCode1 = new FormControl('',[
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(3)
+  ]);
+
+  postCode2 = new FormControl('',[
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  /** フォームグループオブジェクト */
+  groupForm = this.builder.group({
+    name: this.name,
+    mail: this.mail,
+    telNo1: this.telNo1,
+    telNo2: this.telNo2,
+    telNo3: this.telNo3,
+    postCode1: this.postCode1,
+    postCode2: this.postCode2
+  })
+
+  /** その他インプットデータ */
   inputData = {
-    userName: '',
-    mailAdress: '',
-    telNo1_1: '',
-    telNo1_2: '',
-    telNo1_3: '',
-    // TelNo2: '',
     areaNo1: '',
     areaNo2: '',
     adress: '',
-    postCode1: '',
-    postCode2: '',
     introduction: '',
   }
-
 
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
@@ -51,6 +93,7 @@ export class EditUserInfoComponent implements OnInit {
     private apiService: ApiSerchService,
     private router: Router,
     private s3: UploadService,
+    private builder: FormBuilder,
   ) { }
 
 
@@ -94,8 +137,6 @@ export class EditUserInfoComponent implements OnInit {
     this.imageFile = file;
   }
 
-
-
   /**
    * 登録ボタン押下イベント
    */
@@ -107,16 +148,11 @@ export class EditUserInfoComponent implements OnInit {
     } else {
       this.userResister();
     }
-
-    // this.apiService.postUser(this.user).subscribe(result => {
-    //   console.log(result);
-    // });
-
   }
 
   inputCheck() {
-    this.user.userName = this.inputData.userName;
-    this.user.mailAdress = this.inputData.mailAdress;
+    this.user.userName = this.name.value;
+    this.user.mailAdress = this.mail.value;
     this.user.TelNo1 = this.setTelNo();
     // this.user.TelNo2 = this.inputData.TelNo2;
     this.user.areaNo1 = this.inputData.areaNo1;
@@ -147,18 +183,18 @@ export class EditUserInfoComponent implements OnInit {
         if(this.user.postCode) {
           postCode = this.splitPostCode(this.user.postCode);
         }
-        
 
-        this.inputData.userName = this.user.userName;
-        this.inputData.mailAdress = this.user.mailAdress;
-        this.inputData.telNo1_1 = telNo.tel1;
-        this.inputData.telNo1_2 = telNo.tel2;
-        this.inputData.telNo1_3 = telNo.tel3;
+
+        this.name.setValue(this.user.userName);
+        this.mail.setValue(this.user.mailAdress);
+        this.telNo1.setValue(telNo.tel1);
+        this.telNo2.setValue(telNo.tel2);
+        this.telNo3.setValue(telNo.tel3);
         this.inputData.areaNo1 = this.isSerParm(this.user.areaNo1,'area1');
         this.inputData.areaNo2 = this.isSerParm(this.user.areaNo2,'area2');
         this.inputData.adress = this.isSerParm(this.user.adress,'adress');
-        this.inputData.postCode1 = postCode.post1;
-        this.inputData.postCode2 = postCode.post2;
+        this.postCode1.setValue(postCode.post1);
+        this.postCode2.setValue(postCode.post2);
       } else {
         alert('データが取得できませんでした。再度アクセスしてください')
         this.location.back();
@@ -170,8 +206,8 @@ export class EditUserInfoComponent implements OnInit {
   /******************    後日formサービスに移行予定   **********************/
   /**
    * 電話番号を分割する
-   * @param telNo 
-   * @returns 
+   * @param telNo
+   * @returns
    */
   private splitTelNo(telNo: string) : {tel1: string ,tel2: string ,tel3: string } {
     const spritTelNo = telNo.split('-');
@@ -181,19 +217,19 @@ export class EditUserInfoComponent implements OnInit {
 
   /**
    * 入力値から登録データ電話番号を作成する
-   * @returns 
+   * @returns
    */
   private setTelNo(): string {
-    return this.inputData.telNo1_1 + '-'
-     + this.inputData.telNo1_2 + '-'
-     + this.inputData.telNo1_3;     
+    return this.telNo1.value + '-'
+     + this.telNo2.value + '-'
+     + this.telNo3.value;
   }
 
 
   /**
    * 電話番号を分割する
-   * @param telNo 
-   * @returns 
+   * @param telNo
+   * @returns
    */
   private splitPostCode(postCode: string) : {post1: string ,post2: string} {
     const spritTelNo = postCode.split('-');
@@ -204,11 +240,11 @@ export class EditUserInfoComponent implements OnInit {
 
   /**
    * 入力値から登録データ電話番号を作成する
-   * @returns 
+   * @returns
    */
   private setPostCode(): string {
-    return this.inputData.postCode1
-    + '-' + this.inputData.postCode2;
+    return this.postCode1.value
+    + '-' + this.postCode2.value
   }
   /******************    後日formサービスに移行予定   **********************/
 
@@ -232,15 +268,14 @@ export class EditUserInfoComponent implements OnInit {
    */
   private userResister() {
     console.log(this.inputData);
-    if(_isNil(this.inputData.userName) || this.inputData.userName == ''
-    || _isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == ''
-    || _isNil(this.inputData.mailAdress) || this.inputData.mailAdress == '') {
+    if( _isNil(this.inputData.areaNo1)
+    || this.inputData.areaNo1 == '') {
       alert('必須項目です。');
     } else {
       this.user.userValidDiv = '0';
       this.user.corporationDiv = '0';
-      this.user.userName = this.inputData.userName;
-      this.user.mailAdress = this.inputData.mailAdress;
+      this.user.userName = this.name.value;
+      this.user.mailAdress = this.mail.value;
       this.user.TelNo1 = this.setTelNo();
       this.user.areaNo1 = this.inputData.areaNo1;
       this.user.areaNo2 = this.inputData.areaNo2;
@@ -254,7 +289,8 @@ export class EditUserInfoComponent implements OnInit {
           // TODO
           alert('失敗');
         }
-        this.router.navigate(["/main_menu"])
+        alert('変更しました。');
+        // this.router.navigate(["/main_menu"])
       });
     }
   }
