@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { mechanicInfo, initMechanicInfo } from 'src/app/entity/mechanicInfo';
 import { officeInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
-import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import {
   find as _find,
   filter as _filter,
@@ -13,10 +11,12 @@ import {
   cloneDeep as _cloneDeep,
 } from 'lodash';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
-import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { MechanicMenuComponent } from '../mechanic-menu/mechanic-menu.component';
 import { FactoryMenuComponent } from '../factory-menu/factory-menu.component';
-import { UploadService } from 'src/app/page/service/upload.service';
+import { FactoryMechanicImpletionComponent } from '../factory-mechanic-impletion/factory-mechanic-impletion.component';
+import { FactoryMechanicContentsManagementComponent } from '../factory-mechanic-contents-management/factory-mechanic-contents-management.component';
+
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -32,6 +32,22 @@ export class FactoryMechanicMenuComponent implements OnInit {
   /** 子コンポーネントを読み込む */
   @ViewChild(FactoryMenuComponent) child!: FactoryMenuComponent;
 
+  /** 現在のタブ */
+  currentTab: any;
+  /** 表示タブ */
+  displayTab: any;
+  /** acceseUser */
+  acceseUser?: user;
+
+  /** タブメニューデータ */
+  tabs = [
+    { name: 'メカニック情報', contents: MechanicMenuComponent, current: true },
+    { name: '工場情報', contents: FactoryMenuComponent, current: false },
+    { name: '出品中商品一覧', contents: FactoryMechanicContentsManagementComponent, current: false },
+    { name: '評価', contents: FactoryMechanicImpletionComponent, current: false },
+  ];
+
+
   // ユーザー情報
   user: user = initUserInfo;
   // メカニック情報
@@ -39,55 +55,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
   // 工場情報
   officeInfo: officeInfo = initOfficeInfo;
 
-  // 保有資格情報
-  qualification = '';
-  // 保有資格情報配列
-  qualificationList: string[] = []
-  // 工場区分
-  officeDiv = false;
-  // 工場情報表示モード
-  factoryDispDiv = false;
-  // 工場表示切替ボタンテキスト
-  factoryBtnText = '工場情報を編集する'
-  // 工場情報編集モード
-  officeEditMode = false;
-  // 管理アドレス区分
-  adminAdress = '0';
-  // 事業所紐付き区分
-  officeConnectionDiv = '0';
-
-  // 入力データ
-  inputData = {
-    // メカニック名
-    mechanicName: '',
-    // 管理ユーザーID
-    adminUserId: '',
-    // 管理アドレス区分
-    adminAddressDiv: '',
-    // 管理メールアドレス
-    mailAdress: '',
-    // 事業所紐づき区分
-    officeConnectionDiv: '0',
-    // 保有資格情報
-    qualification: [''],
-    // 得意作業
-    specialtyWork: '',
-    // プロフィール画像URL
-    profileImageUrl: '',
-    // 紹介文
-    introduction: ''
-  }
-
-  /** 地域情報 */
-  areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
-  areaSelect = '';
-
-  imageFile: any = null;
-
   /** 工場登録有無区分 */
   factoryResistDiv = false;
-
-  public form!: FormGroup;  // テンプレートで使用するフォームを宣言
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -99,11 +68,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
     private activeRouter: ActivatedRoute,
     private location: Location,
     private apiService: ApiSerchService,
-    private apiUniqeService: ApiUniqueService,
     private router: Router,
-    private builder: FormBuilder,
     private cognito: CognitoService,
-    private s3: UploadService,
     private overlay: Overlay,
   ) { }
 
@@ -113,6 +79,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
     this.activeRouter.queryParams.subscribe(params => {
       if (params['mechanicId'] != '') {
         const mechanicId = params['mechanicId'];
+        // 初回表示画面をセット
+        this.currentTab = MechanicMenuComponent;
         this.getMechanicInfo(mechanicId);
       } else {
         alert('メカニック・工場情報が取得できませんでした。');
@@ -129,8 +97,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
           // 工場登録ある場合表示
           this.factoryResistDiv = true;
         }
-        this.inputData.adminUserId = user[0].userId;
-        this.initForm();
+        // ローディング解除
+        this.overlayRef.detach();
       });
     } else {
       alert('ログインが必要です');
@@ -141,90 +109,59 @@ export class FactoryMechanicMenuComponent implements OnInit {
   }
 
   /**
+   * タブ選択状態により表示するコンポーネントを切り替える
+   */
+  private migrationDisplay(): void {
+
+    if (_isNil(this.displayTab)) {
+      this.displayTab = _find(this.tabs, { current: true });
+    }
+
+    switch (this.displayTab.contents) {
+      case MechanicMenuComponent:
+        this.currentTab = MechanicMenuComponent;
+        break;
+      case FactoryMenuComponent:
+        this.currentTab = FactoryMenuComponent;
+        break;
+      case FactoryMechanicContentsManagementComponent:
+        this.currentTab = FactoryMechanicContentsManagementComponent;
+        break;
+      case FactoryMechanicImpletionComponent:
+        this.currentTab = FactoryMechanicImpletionComponent;
+        break;
+    }
+  }
+
+
+
+  /**
+   * ボタンがクリックされた時のイベントハンドラ
+   * @param {any} $event イベント情報
+   * @memberof SwitchTabComponent
+   */
+  onClick($event: any) {
+    // 表示方式情報とタブ選択情報により遷移先を変更
+    // const selectTab = _find(this.tabs , {name:$event.target.innerHTML});
+    this.displayTab = _find(this.tabs, { name: $event.target.innerHTML });
+
+    // 選択状態フラグを切替える
+    this.tabs.forEach((tab) => {
+      if (tab.name === this.displayTab.name) {
+        tab.current = true;
+      } else {
+        tab.current = false;
+      }
+    });
+    this.migrationDisplay();
+  }
+
+  /**
    * 戻るボタン押下イベント
    * @return void
    */
   goBack(): void {
     this.location.back();
-  }
-
-  /**
-   * 登録するボタン押下イベント
-   */
-  onResister() {
-    this.setQualification();
-    this.inputCheck();
-    if (this.imageFile != null) {
-      this.setImageUrl();
-    } else {
-      this.mechanicResister();
-    }
-  }
-
-  /**
-   * ユーザー登録情報と合わせるボタン押下時イベント
-   * @param e
-   */
-  onSomeUserInfo(e: string) {
-    console.log(e);
-  }
-
-  // FormBuilderを使って初期フォームを作成します。フォームの塊のFormGroupとしています。
-  initForm() {
-    this.form = this.builder.group({
-      name: [''],
-      // フォームを追加したり、削除したりするために、FormArrayを設定しています。
-      options: this.builder.array([])
-    });
-  }
-
-  // 追加ボタンがおされたときに追加したいフォームを定義しています。returnでFormGroupを返しています。
-  get optionForm(): FormGroup {
-    return this.builder.group({
-      name: [''],
-    });
-  }
-
-  // FormのOption部分を取り出しています。
-  get options(): FormArray {
-    return this.form.get('options') as FormArray;
-  }
-
-  // 追加ボタンがクリックされたときに実行する関数です。
-  addOptionForm() {
-    this.options.push(this.optionForm);
-  }
-
-  // removeAtでインデックスを指定することで、FormArrayのフォームを削除します。
-  removeOptionForm(idx: number) {
-    this.options.removeAt(idx);
-  }
-
-  test1() {
-    this.setQualification();
-  }
-
-  /**
-   * アップロードファイル選択時イベント
-   * @param event
-   */
-  onInputChange(event: any) {
-    const file = event.target.files[0];
-    console.log(file);
-    this.imageFile = file;
-  }
-
-  /**
-   * 工場情報の表示切替を行う
-   */
-  onFactoryDisp() {
-    if (!this.factoryDispDiv) {
-      this.factoryBtnText = '閉じる';
-      this.factoryDispDiv = true;
-      return;
-    }
-    this.factoryDispDiv = false
-    this.factoryBtnText = '工場情報を編集する';
   }
 
   /**
@@ -255,88 +192,6 @@ export class FactoryMechanicMenuComponent implements OnInit {
 
   /************  以下内部処理 ****************/
 
-  /**
-   * イメージを設定する
-   */
-  private setImageUrl() {
-    this.s3.onManagedUpload(this.imageFile).then((data) => {
-      if (data) {
-        console.log(data);
-        this.mechanicInfo.profileImageUrl = data.Location;
-        this.mechanicResister();
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-  }
-
-  /**
-   * メカニック情報登録
-   */
-  private mechanicResister() {
-    // this.setQualification();
-    // this.inputCheck();
-    console.log(this.inputData);
-    console.log(this.mechanicInfo);
-    this.apiUniqeService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
-      if (result != 200) {
-        alert('失敗しました')
-      } else {
-        alert('登録成功')
-        this.router.navigate(["/main_menu"]);
-      }
-    });
-  }
-
-  /**
-   * 資格情報をデータに格納する
-   */
-  private setQualification() {
-    const qualificationArray = this.options.value as { name: string }[];
-    const result: string[] = []
-    // 資格情報を格納
-    const qualificationForm = this.form.value.name.replace(/\s+/g, '');
-    if (qualificationForm != ''
-      || qualificationForm != null) {
-      result.push(this.form.value.name);
-    }
-    // 追加入力した資格情報を格納
-    if (qualificationArray.length > 0) {
-      qualificationArray.forEach(s => {
-        // 空白削除
-        const qualification = s.name.replace(/\s+/g, '');
-        if (qualification != '' && qualification != null) {
-          result.push(s.name)
-        }
-      });
-    }
-    this.inputData.qualification = result;
-  }
-
-  /**
-   * 入力チェック
-   */
-  private inputCheck() {
-    let message: string[] = []
-    if (this.inputData.mechanicName == '' || this.inputData.mechanicName == null) {
-      message.push('名称')
-    }
-    if (this.inputData.mailAdress == '' || this.inputData.mailAdress == null) {
-      message.push('電話番号')
-    }
-    if (this.inputData.introduction == '' || this.inputData.introduction == null) {
-      message.push('紹介文')
-    }
-    this.mechanicInfo.mechanicName = this.inputData.mechanicName;
-    this.mechanicInfo.adminUserId = this.inputData.adminUserId;
-    this.mechanicInfo.adminAddressDiv = this.adminAdress;
-    this.mechanicInfo.mailAdress = this.inputData.mailAdress;
-    this.mechanicInfo.officeConnectionDiv = this.officeConnectionDiv
-    this.mechanicInfo.qualification = this.inputData.qualification;
-    this.mechanicInfo.specialtyWork = this.inputData.specialtyWork;
-    // this.mechanicInfo.profileImageUrl = this.inputData.profileImageUrl;
-    this.mechanicInfo.introduction = this.inputData.introduction;
-  }
 
   /**
    * メカニック情報を取得する
@@ -347,8 +202,6 @@ export class FactoryMechanicMenuComponent implements OnInit {
       // メカニック情報取得後企業コードをチェック
       if (result[0] != undefined || result[0] != null) {
         this.mechanicInfo = result[0];
-        // メカニック情報を画面に設定
-        this.setMechanicInfo();
         if (this.mechanicInfo.officeId != null) {
           if (this.mechanicInfo.officeId !== '0') {
             this.getOfficeInfo(this.mechanicInfo.officeId);
@@ -382,67 +235,11 @@ export class FactoryMechanicMenuComponent implements OnInit {
         } else {
           this.factoryResistDiv = false;
         }
-        // 管理ユーザー情報が空白の場合
-        if (this.officeInfo.adminIdList.length = 0) {
-          this.officeEditMode = false;
-        } else {
-          this.officeEditMode = true;
-        }
       }
       // ローディング解除
       this.overlayRef.detach();
     });
   }
-
-  /**
-   * 画面にメカニック情報を設定する
-   */
-  private setMechanicInfo() {
-    this.inputData.mechanicName = this.mechanicInfo.mechanicName;
-    this.inputData.adminUserId = this.mechanicInfo.adminUserId;
-    this.inputData.adminAddressDiv = this.mechanicInfo.adminAddressDiv;
-    this.inputData.mailAdress = this.setParam(this.mechanicInfo.mailAdress);
-    this.inputData.officeConnectionDiv = this.mechanicInfo.officeConnectionDiv;
-    this.inputData.specialtyWork = this.setParam(this.mechanicInfo.specialtyWork);
-    this.inputData.profileImageUrl = this.setParam(this.mechanicInfo.profileImageUrl);
-    this.inputData.introduction = this.setParam(this.mechanicInfo.introduction);
-    // 保有資格は別途設定
-    this.initQualification(this.mechanicInfo.qualification);
-  }
-
-  /**
-   * 入力データにパラメータ設定を行う
-   * @param param
-   */
-  private setParam(param: string | null): string {
-    if (param == null) {
-      return '';
-    }
-    return param;
-  }
-
-  /**
-   * 入力データにパラメータ設定を行う
-   * @param param
-   */
-  private initQualification(param: string[] | null) {
-    if (param == null) {
-      return;
-    }
-    let count = 0;
-    param.forEach(l => {
-      if (count == 0) {
-        this.form.value.name = l;
-      }
-      const quForm = this.builder.group({
-        name: [l],
-      });
-      this.options.push(quForm);
-      count++;
-    })
-    this.setQualification();
-  }
-
 
 
 

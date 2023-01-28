@@ -1,59 +1,96 @@
+<div class="main">
 
-
-  <div class="container">
-    <div class="row">
-      <div class="col-2"></div>
-      <h1>工場情報</h1>
+  <div *ngIf="fcRegisDiv; else elseContent">
+    <div>
+      <button type="submit" class="btn btn-primary btn_init_register" on-click="onInitFactory()">工場登録はこちらから</button>
     </div>
-
-    <div class="row">
-      <div class="col-2">工場表示名</div>
-      <div class="col-1">必須</div>
-      <input class="col-4" id="id" type="text" [(ngModel)]="dispInfo.officeName" />
-    </div>
-
-    <div class="row">
-      <div class="col-2">工場連絡先</div>
-      <div class="col-1">必須</div>
-      <input class="col-4" id="email" type="email" [(ngModel)]="dispInfo.officeMailAdress" />
-
-    </div>
-
-    <div class="row">
-      <div class="col-2">工場所在地</div>
-      <div class="col-1"></div>
-      <input class="col-4 high-form" type="text" [(ngModel)]="dispInfo.officeArea1" />
-    </div>
-
-    <div class="row">
-      <div class="col-2">営業時間</div>
-      <div class="col-1"></div>
-      <input class="col-4 high-form" id="area" type="text" [(ngModel)]="dispInfo.businessHours" />
-    </div>
-
-    <div class="row">
-      <div class="col-2">拠点情報</div>
-      <div class="col-1"></div>
-        <input class="col-4" id="area" type="text" [(ngModel)]="dispInfo.officeArea" />
-    </div>
-
-    <div class="row">
-      <div class="col-2">プロフィール画像</div>
-      <div class="col-1"></div>
-      <input class="col-4" type="file" accept="*/*" (change)="onInputChange($event)">
-    </div>
-
-    <div class="row">
-      <div class="col-3"></div>
-      <input class="col-2" type="button" class="btn" on-click="onResister()" value="登録">
-    </div>
-
-    <div class="row">
-      <button type="button" class="btn btn-outline-primary" (click)="onFcMcServiceList()">工場から出品中の商品一覧はこちら</button>
-    </div>
-
-    <div class="row">
-      <button type="button" class="btn btn-outline-primary" (click)="onFcMcInpulaetion()">評価情報はこちら</button>
-    </div>
-
   </div>
+  <ng-template #elseContent>
+
+    <div class="container">
+
+      <div class="row row_item">
+        <div class="col-3 item">工場名</div>
+        <div class="col-5">
+          <input class="form-control" id="id" type="text" [(ngModel)]="dispInfo.officeName" />
+        </div>
+        <div class="col-1">
+          <div>公開されます。</div>
+        </div>
+      </div>
+
+
+      <div class="row row_item">
+        <div class="col-3 item">工場連絡先</div>
+        <div class="col-5">
+          <input class="form-control" id="id" type="text" [(ngModel)]="dispInfo.officeMailAdress" />
+          <!-- <input class="col-4" id="email" type="email" [(ngModel)]="dispInfo.officeMailAdress" /> -->
+        </div>
+        <div class="col-1">
+          <div>公開されます。</div>
+        </div>
+      </div>
+
+
+      <div class="row row_item">
+        <div class="col-3 item">工場所在地</div>
+        <div class="col-1">
+          <div class="mandatory">必須</div>
+        </div>
+        <div class="col-5">
+          <input class="form-control" id="id" type="text" [(ngModel)]="dispInfo.officeArea1" />
+          <!-- <input class="col-4 high-form" type="text" [(ngModel)]="dispInfo.officeArea1" /> -->
+        </div>
+      </div>
+
+
+      <div class="row row_item">
+        <div class="col-3 item">営業時間</div>
+        <div class="col-1">
+          <div class="mandatory">必須</div>
+        </div>
+        <div class="col-5">
+          <input class="form-control" id="area" type="text" [(ngModel)]="dispInfo.businessHours" />
+        </div>
+      </div>
+
+      <div class="row row_item">
+        <div class="col-3 item">営業時間</div>
+        <div class="col-1">
+          <div class="mandatory">必須</div>
+        </div>
+        <div class="col-5">
+          <input class="form-control" id="area" type="text" [(ngModel)]="dispInfo.businessHours" />
+        </div>
+      </div>
+
+      <div class="row row_item">
+        <div class="col-3 item">拠点情報</div>
+        <div class="col-1">
+          <div class="mandatory">必須</div>
+        </div>
+        <div class="col-5">
+          <input class="form-control" id="area" type="text" [(ngModel)]="dispInfo.officeArea" />
+        </div>
+      </div>
+
+      <div class="row row_item">
+        <div class="col-3 item">プロフィール画像</div>
+        <div class="col-1"></div>
+        <div class="col-5">
+          <input type="file" accept="*/*" (change)="onInputChange($event)">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+          <div class="bt_area">
+            <button type="submit" class="btn btn-primary" on-click="onResister()">登録</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </ng-template>
+</div>

@@ -67,6 +67,9 @@ export class FactoryRegisterComponent implements OnInit {
 
   public form!: FormGroup;  // テンプレートで使用するフォームを宣言
 
+  // 作業内容
+  workContentsOne = '';
+
 
   constructor(
     private builder: FormBuilder,
@@ -218,12 +221,9 @@ export class FactoryRegisterComponent implements OnInit {
     const result: string[] = []
 
     // 資格情報を格納
-    const contents = this.form.value.name.replace(/\s+/g, '');
-    if(contents != ''
-    || contents != null ) {
-      console.log(contents);
-      console.log(this.form.value.name);
-      result.push(this.form.value.name);
+    const contents = this.workContentsOne.replace(/\s+/g, '');
+    if(contents != '' && contents != null ) {
+      result.push(this.workContentsOne);
     }
     // 追加入力した資格情報を格納
     if(businessContentArray.length > 0) {
