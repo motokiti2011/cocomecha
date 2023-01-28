@@ -7,11 +7,11 @@ export interface officeInfo {
   officeTel: string[];
   // 事業所メールアドレス
   officeMailAdress: string;
-  // 事業所所在地１
+  // 事業所所在地１（地域）
   officeArea1: string;
-  // 事業所所在地２
+  // 事業所所在地２（市町村）
   officeArea: string;
-  // 事業所所在地
+  // 事業所所在地（その他）
   officeAdress: string;
   // 事業所郵便番号
   officePostCode: string;
@@ -31,6 +31,8 @@ export interface officeInfo {
   officePR: string;
   // 事業所PR画像URL
   officePRimageURL: string;
+  // 事業所形態リスト
+  officeFormList: Array<officeForm> | null;
 }
 
 /**
@@ -56,6 +58,17 @@ export interface employee {
   // 所属区分
   belongsDiv: string| null;
 }
+
+/**
+ * 事業形態
+ */
+export interface officeForm {
+  // 業務形態区分
+  officeFormDiv: string;
+  // 業務形態区分名称
+  officeFormDivName: string| null;
+}
+
 
 export const initOfficeInfo = {
   // 事業所ID
@@ -90,4 +103,6 @@ export const initOfficeInfo = {
   officePR: '',
   // 事業所PR画像URL
   officePRimageURL: '',
+  // 業務形態区分リスト
+  officeFormList: null
 }

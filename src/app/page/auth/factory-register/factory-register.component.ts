@@ -1,13 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { ApiSerchService } from '../../service/api-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
 import { officeInfo, employee, baseInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { UploadService } from '../../service/upload.service';
+import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
+import {
+  find as _find,
+  filter as _filter,
+  isNil as _isNil,
+  cloneDeep as _cloneDeep,
+} from 'lodash'
 
 @Component({
   selector: 'app-factory-register',
@@ -18,8 +25,6 @@ export class FactoryRegisterComponent implements OnInit {
 
   // 入力データ
   inputData = {
-    // 工場名
-    officeName: '',
     // 事業所所在地１
     officeArea1: '',
     // 事業所所在地２
@@ -30,8 +35,7 @@ export class FactoryRegisterComponent implements OnInit {
     officePostCode: '',
     // 事業所電話番号リスト
     officeTel: [],
-    // 事業所メールアドレス
-    officeMailAdress: '',
+
     // 営業時間
     businessHours: '',
     // 事業所PR
@@ -41,6 +45,21 @@ export class FactoryRegisterComponent implements OnInit {
   }
   // 事業所情報
   officeInfo:officeInfo = initOfficeInfo;
+
+    /** 地域情報 */
+  areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
+  areaSelect = '';
+
+  // 工場名
+  officeName = new FormControl('', [
+    Validators.required
+  ]);
+
+  // 事業所メールアドレス
+  officeMailAdress = new FormControl('', [
+    Validators.required,
+    Validators.email
+  ]);
 
   // 電話番号
   telNo = '';
@@ -58,6 +77,8 @@ export class FactoryRegisterComponent implements OnInit {
   restHoursStart = '';
   // 休憩時間(開始)
   restHoursEnd = '';
+  // 作業内容
+  workContentsOne = '';
   // 業務内容
   businessContentList: string[] = [];
 
@@ -67,8 +88,6 @@ export class FactoryRegisterComponent implements OnInit {
 
   public form!: FormGroup;  // テンプレートで使用するフォームを宣言
 
-  // 作業内容
-  workContentsOne = '';
 
 
   constructor(
@@ -163,6 +182,13 @@ export class FactoryRegisterComponent implements OnInit {
     }
   }
 
+  /**
+   * 地域選択イベント
+   */
+  selectArea() {
+
+  }
+
   goBack() {
     this.location.back();
   }
@@ -192,14 +218,15 @@ export class FactoryRegisterComponent implements OnInit {
     // 業務内容情報を設定
     this.setbusinessContent();
     // 更新データ設定
-    this.officeInfo.officeName = this.inputData.officeName;
+    this.officeInfo.officeName = this.officeName.value;
     this.officeInfo.officeTel = this.inputData.officeTel;
-    this.officeInfo.officeMailAdress = this.inputData.officeMailAdress;
+    this.officeInfo.officeMailAdress = this.officeMailAdress.value;
     this.officeInfo.officeArea1 = this.inputData.officeArea1;
     this.officeInfo.officeArea = this.inputData.officeArea;
     this.officeInfo.officeAdress = this.inputData.officeAdress;
     this.officeInfo.officePostCode = this.inputData.officePostCode;
     this.officeInfo.workContentList = this.businessContentList;
+
     // TODO
     this.officeInfo.businessHours = [];
     this.officeInfo.baseInfoList = [];
