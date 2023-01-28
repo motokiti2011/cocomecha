@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { mechanicInfo, initMechanicInfo } from 'src/app/entity/mechanicInfo';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
@@ -34,7 +34,7 @@ export class MechanicRegisterComponent implements OnInit {
   // 保有資格情報
   qualification = '';
   // 保有資格情報配列
-  qualificationList:string[] = [];
+  qualificationList: string[] = [];
 
   // 工場区分
   officeDiv = false;
@@ -44,23 +44,41 @@ export class MechanicRegisterComponent implements OnInit {
 
   // 事業所紐付き区分
   officeConnectionDiv = '0';
+  qualificationOne = '';
+
+  /** フォームコントロール */
+  // メカニック名
+  mechanicName = new FormControl('', [
+    Validators.required
+  ]);
+  // 管理メールアドレス
+  mailAdress = new FormControl('', [
+    Validators.required,
+    Validators.email
+  ]);
+
+  /** 必須フォームグループオブジェクト */
+  requiredForm = this.builder.group({
+    mechanicName: this.mechanicName,
+    mailAdress: this.mailAdress,
+  })
+
+
 
   // 入力データ
   inputData = {
     // メカニックID
     mechanicId: '',
-    // メカニック名
-    mechanicName: '',
     // 管理ユーザーID
     adminUserId: '',
     // 管理アドレス区分
     adminAddressDiv: '',
-    // 管理メールアドレス
-    mailAdress: null,
     // 事業所紐づき区分
     officeConnectionDiv: '0',
     // 事業所ID
-    officeId: null,
+    officeId: '',
+    // 事業所名
+    officeName: null,
     // 保有資格情報
     qualification: [''],
     // 得意作業
@@ -68,7 +86,7 @@ export class MechanicRegisterComponent implements OnInit {
     // プロフィール画像URL
     profileImageUrl: '',
     // 紹介文
-    introduction: null
+    introduction: ''
   }
 
   /** 地域情報 */
@@ -91,10 +109,11 @@ export class MechanicRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     const authUser = this.cognito.initAuthenticated();
-    if(authUser !== null) {
+    if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
         this.inputData.adminUserId = user[0].userId;
+        this.user = user[0];
         this.initForm();
       });
     } else {
@@ -125,7 +144,7 @@ export class MechanicRegisterComponent implements OnInit {
    * 登録するボタン押下イベント
    */
   onResister() {
-    if(this.imageFile != null) {
+    if (this.imageFile != null) {
       this.setImageUrl();
     } else {
       this.mechanicResister();
@@ -136,15 +155,36 @@ export class MechanicRegisterComponent implements OnInit {
    * ユーザー登録情報と合わせるボタン押下時イベント
    * @param e
    */
-  onSomeUserInfo(e:string) {
-    console.log(e);
+  onSomeUserInfo(e: string) {
+    if (e === '1') {
+      // 名称を設定
+      this.mechanicName.setValue(this.user.userName);
+    } else if (e === '3') {
+      // アドレスを設定
+      this.mailAdress.setValue(this.user.mailAdress);
+    } else if (e === '4') {
+      // 紹介文を設定
+      if (this.user.introduction) {
+        this.inputData.introduction = this.user.introduction;
+      }
+    }
+
   }
+
+  /**
+   * 工場を検索する
+   */
+  onSerchFactory() {
+    const one = '1'
+    this.inputData.officeId = one;
+  }
+
+
 
   // FormBuilderを使って初期フォームを作成します。フォームの塊のFormGroupとしています。
   initForm() {
     this.form = this.builder.group({
       name: [''],
-      // フォームを追加したり、削除したりするために、FormArrayを設定しています。
       options: this.builder.array([])
     });
   }
@@ -203,7 +243,7 @@ export class MechanicRegisterComponent implements OnInit {
     console.log(this.inputData);
     console.log(this.mechanicInfo);
     this.apiUniqueService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
-      if(result != 200 ) {
+      if (result != 200) {
         alert('失敗しました')
       } else {
         alert('登録成功')
@@ -217,20 +257,20 @@ export class MechanicRegisterComponent implements OnInit {
    * 資格情報をデータに格納する
    */
   private setQualification() {
-    const qualificationArray = this.options.value as {name:string}[];
+    console.log(this.qualificationOne);
+    const qualificationArray = this.options.value as { name: string }[];
     const result: string[] = []
     // 資格情報を格納
-    const qualificationForm = this.form.value.name.replace(/\s+/g, '');
-    if(qualificationForm != ''
-    || qualificationForm != null ) {
-      result.push(this.form.value.name);
+    const qualificationForm = this.qualificationOne.replace(/\s+/g, '');
+    if (qualificationForm != '' && qualificationForm != null) {
+      result.push(this.qualificationOne);
     }
     // 追加入力した資格情報を格納
-    if(qualificationArray.length > 0) {
+    if (qualificationArray.length > 0) {
       qualificationArray.forEach(s => {
         // 空白削除
         const qualification = s.name.replace(/\s+/g, '');
-        if(qualification != '' && qualification != null) {
+        if (qualification != '' && qualification != null) {
           result.push(s.name)
         }
       });
@@ -243,21 +283,15 @@ export class MechanicRegisterComponent implements OnInit {
    */
   private inputCheck() {
     let message: string[] = []
-    if(this.inputData.mechanicName == '' || this.inputData.mechanicName == null) {
-      message.push('名称')
-    }
-    if(this.inputData.mailAdress == '' || this.inputData.mailAdress == null) {
-      message.push('電話番号')
-    }
-    if(this.inputData.introduction == '' || this.inputData.introduction == null) {
+    if (this.inputData.introduction == '' || this.inputData.introduction == null) {
       message.push('紹介文')
     }
     this.mechanicInfo.mechanicId = '0'
     this.mechanicInfo.validDiv = '0'
-    this.mechanicInfo.mechanicName = this.inputData.mechanicName;
+    this.mechanicInfo.mechanicName = this.mechanicName.value;
     this.mechanicInfo.adminUserId = this.inputData.adminUserId;
     this.mechanicInfo.adminAddressDiv = this.adminAdress;
-    this.mechanicInfo.mailAdress = this.inputData.mailAdress;
+    this.mechanicInfo.mailAdress = this.mailAdress.value;
     this.mechanicInfo.officeConnectionDiv = this.officeConnectionDiv
     this.mechanicInfo.officeId = this.inputData.officeId;
     this.mechanicInfo.qualification = this.inputData.qualification;

@@ -39,8 +39,6 @@
     width: 280px;
   }
 
-  
-
   #qualification {
     margin-bottom: 15px;
     width: 280px;
@@ -55,24 +53,35 @@
 .btn_area {
   margin-left: 20px;
   width: 150px;
+
   .btn {
     font-size: small;
   }
 }
 
 .add_form {
-  margin-left: 15px;
+  display: flex;
+  // margin-left: 15px;
+}
+
+.qualification {
+  // display: flex;
+  .btn_area {
+    display: flex;
+    margin: 15px 15px 15px 70px;
+    // margin-left: 15px;
+  }
 }
 
 
 
 .add_qualification {
   display: flex;
-  // margin-left: 15px;
   .add_btn_area {
+    display: flex;
     margin: 15px 15px 15px 15px;
+    // margin-left: 15px;
   }
-
 
   .del_btn {
     font-size: small;
@@ -90,4 +99,20 @@
   border-radius: 0.5em;
   font-size: 14px;
   text-align: center;
+}
+
+.office_msg {
+  font-size: small;
+}
+
+
+
+.bt_area {
+  margin: 20px 0px 10px 20px;
+  text-align: center;
+
+  .btn {
+    width: 200px;
+    height: 40px;
+  }
 }
