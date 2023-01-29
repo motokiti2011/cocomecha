@@ -21,6 +21,11 @@
         <div class="col-4">
           <input class="form-control" id="name" type="text" [formControl]="officeName" />
         </div>
+        <div class="col-1"></div>
+        <div class="btn_area">
+          <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('1')">ユーザー登録を反映</button>
+        </div>
+
       </div>
 
       <div class="row mt-2">
@@ -38,7 +43,9 @@
           </div>
         </div>
         <div class="col-1"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">メカニック情報と合わせる</button>
+        <div class="btn_area">
+          <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('2')">ユーザー登録を反映</button>
+        </div>
       </div>
 
       <div class="row mt-2">
@@ -50,21 +57,24 @@
           <input class="form-control" id="email" type="email" [formControl]="officeMailAdress" />
         </div>
         <div class="col-1"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">メカニック情報と合わせる</button>
+        <div class="btn_area">
+          <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('3')">ユーザー登録を反映</button>
+        </div>
       </div>
 
-      <div class="row mt-2">
-        <div class="col-2">工場所在地</div>
-        <div class="col-2"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">ユーザー登録情報と合わせる</button>
+
+      <div class="row mt-2 factory_adress">
+        <div class="col-3"></div>
+        <div class="col-3 adress">工場所在地</div>
+        <div class="btn_area">
+          <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">ユーザー登録を反映</button>
+        </div>
       </div>
 
 
       <div class="row mt-2">
         <div class="col-2">郵便番号</div>
-        <div class="col-1">
-          <div class="mandatory">必須</div>
-        </div>
+        <div class="col-1"></div>
         <div class="col-4">
           <div class="post_forms">
             <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" />
@@ -84,9 +94,10 @@
           <div class="mandatory">必須</div>
         </div>
         <div class="col-4">
-          <select id="area-select" name="area" [(ngModel)]="inputData.officeArea1" (change)="selectArea()">
+          <select id="area-select" name="area" [formControl]="officeArea1"  (change)="selectArea()">
             <option value="">地域を選択してください。</option>
-            <option *ngFor="let area of areaData" [value]="area.prefectures" [selected]="area.prefectures === areaSelect">
+            <option *ngFor="let area of areaData" [value]="area.prefectures"
+              [selected]="area.prefectures === areaSelect">
               {{area.prefectures}}</option>
           </select>
         </div>
@@ -114,12 +125,11 @@
           <div class="mandatory">必須</div>
         </div>
         <div class="col-4">
-          <input class="form-control" id="name" type="text" [(ngModel)]="inputData.officeAdress" />
+          <input class="form-control" id="name" type="text" [formControl]="officeAdress" />
         </div>
         <!-- <div class="col-1"></div>
         <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
       </div>
-
 
 
 
@@ -216,7 +226,8 @@
         <div class="col-2"></div>
         <div class="col-6">
           <div class="bt_area">
-            <button type="submit" class="btn btn-primary" on-click="onRegister()">登録</button>
+            <button type="submit" class="btn btn-primary" 
+            on-click="onRegister()"  [disabled]="groupForm.invalid">登録</button>
           </div>
         </div>
       </div>

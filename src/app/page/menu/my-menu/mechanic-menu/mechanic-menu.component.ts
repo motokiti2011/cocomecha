@@ -133,6 +133,8 @@ export class MechanicMenuComponent implements OnInit {
         }
         this.inputData.adminUserId = user[0].userId;
         this.initForm();
+        // ローディング解除
+        this.overlayRef.detach();
       });
     } else {
       alert('ログインが必要です');

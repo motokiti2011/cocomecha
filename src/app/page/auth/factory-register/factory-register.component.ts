@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@ang
 import { ApiSerchService } from '../../service/api-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
+import { FormService } from '../../service/form.service';
 import { officeInfo, employee, baseInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { UploadService } from '../../service/upload.service';
@@ -25,10 +26,6 @@ export class FactoryRegisterComponent implements OnInit {
 
   // 入力データ
   inputData = {
-    // 事業所所在地１
-    officeArea1: '',
-    // 事業所所在地
-    officeAdress: '',
     // 事業所郵便番号
     officePostCode: '',
     // 事業所電話番号リスト
@@ -36,14 +33,14 @@ export class FactoryRegisterComponent implements OnInit {
     // 営業時間
     businessHours: '',
     // 事業所PR
-    officePR:  '',
+    officePR: '',
     // 事業所PR画像URL
     officePRimageURL: ''
   }
   // 事業所情報
-  officeInfo:officeInfo = initOfficeInfo;
+  officeInfo: officeInfo = initOfficeInfo;
 
-    /** 地域情報 */
+  /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
 
@@ -58,6 +55,46 @@ export class FactoryRegisterComponent implements OnInit {
     Validators.email
   ]);
 
+
+  // 郵便番号１
+  postCode1 = new FormControl('', [
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(3)
+  ]);
+
+  // 郵便番号２
+  postCode2 = new FormControl('', [
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // 電話番号１
+  telNo1 = new FormControl('', [
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // 電話番号２
+  telNo2 = new FormControl('', [
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // 電話番号３
+  telNo3 = new FormControl('', [
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  
+  // 事業所所在地(地域)
+  officeArea1 = new FormControl('', [
+    Validators.required
+  ]);
+
   // 事業所所在地（市町村）
   officeArea = new FormControl('', [
     Validators.required
@@ -68,41 +105,25 @@ export class FactoryRegisterComponent implements OnInit {
     Validators.required
   ]);
 
-  postCode1 = new FormControl('',[
-    Validators.pattern('[0-9 ]*'),
-    Validators.maxLength(3)
-  ]);
 
-  postCode2 = new FormControl('',[
-    Validators.pattern('[0-9 ]*'),
-    Validators.maxLength(4)
-  ]);
+  /** フォームグループオブジェクト */
+  groupForm = this.builder.group({
+    officeName: this.officeName,
+    officeMailAdress: this.officeMailAdress,
+    officeArea1: this.officeArea1,
+    officeArea: this.officeArea,
+    officeAdress: this.officeAdress,
+    postCode1: this.postCode1,
+    postCode2: this.postCode2,
+    telNo1: this.telNo1,
+    telNo2: this.telNo2,
+    telNo3: this.telNo3,
+  })
 
-
-  telNo1 = new FormControl('',[
-    Validators.required,
-    Validators.pattern('[0-9 ]*'),
-    Validators.maxLength(4)
-  ]);
-
-  telNo2 = new FormControl('',[
-    Validators.required,
-    Validators.pattern('[0-9 ]*'),
-    Validators.maxLength(4)
-  ]);
-
-  telNo3 = new FormControl('',[
-    Validators.required,
-    Validators.pattern('[0-9 ]*'),
-    Validators.maxLength(4)
-  ]);
-
-  // 電話番号
-  telNo = '';
   // 管理設定ユーザー
   adminSettingUser = '';
   // 従業員リスト
-  employeeList:employee[] = [];
+  employeeList: employee[] = [];
   // 拠点情報リスト
   baseInfoList: baseInfo[] = [];
   // 営業時間（開始）businessHours
@@ -117,14 +138,12 @@ export class FactoryRegisterComponent implements OnInit {
   workContentsOne = '';
   // 業務内容
   businessContentList: string[] = [];
-
+  // ユーザー情報
   user: user = initUserInfo;
-
+  // 画像情報
   imageFile: any = null;
-
-  public form!: FormGroup;  // テンプレートで使用するフォームを宣言
-
-
+  // テンプレートで使用するフォームを宣言
+  public form!: FormGroup;
 
   constructor(
     private builder: FormBuilder,
@@ -134,11 +153,12 @@ export class FactoryRegisterComponent implements OnInit {
     private cognito: CognitoService,
     private location: Location,
     private s3: UploadService,
+    private formService: FormService,
   ) { }
 
   ngOnInit(): void {
     const authUser = this.cognito.initAuthenticated();
-    if(authUser !== null) {
+    if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
         this.user = user[0];
@@ -188,10 +208,10 @@ export class FactoryRegisterComponent implements OnInit {
     this.setbusinessContent();
   }
 
-/**
- * アップロードファイル選択時イベント
- * @param event
- */
+  /**
+   * アップロードファイル選択時イベント
+   * @param event
+   */
   onInputChange(event: any) {
     const file = event.target.files[0];
     console.log(file);
@@ -203,15 +223,42 @@ export class FactoryRegisterComponent implements OnInit {
    * ユーザー登録情報と合わせるボタン押下時イベント
    * @param e
    */
-  onSomeUserInfo(e:string) {
-    console.log(e);
+  onSomeUserInfo(e: string) {
+    if (e === '1') {
+      // 名称を設定
+      this.officeName.setValue(this.user.userName);
+    } else if (e === '2') {
+      // 電話番号を設定
+      const telNo = this.formService.splitTelNo(this.user.TelNo1);
+      this.telNo1.setValue(telNo.tel1);
+      this.telNo2.setValue(telNo.tel2);
+      this.telNo3.setValue(telNo.tel3);
+    } else if (e === '3') {
+      // アドレスを設定
+      this.officeMailAdress.setValue(this.user.mailAdress);
+    } else if (e === '4') {
+      // 所在地情報を設定
+      this.officeArea1.setValue(this.user.areaNo1);
+      if (this.user.areaNo2) {
+        this.officeArea.setValue(this.user.areaNo2);
+      }
+      if (this.user.adress) {
+        this.officeAdress.setValue(this.user.adress);
+      }
+      if (this.user.postCode) {
+        const post = this.formService.splitPostCode(this.user.postCode);
+        this.postCode1.setValue(post.post1);
+        this.postCode2.setValue(post.post2);
+      }
+    }
+
   }
 
   /**
    * 登録するボタン押下イベント
    */
   onRegister() {
-    if(this.imageFile != null) {
+    if (this.imageFile != null) {
       this.setImageUrl();
     } else {
       this.officeResister();
@@ -222,7 +269,8 @@ export class FactoryRegisterComponent implements OnInit {
    * 地域選択イベント
    */
   selectArea() {
-
+    console.log('地域')
+    console.log(this.areaSelect)
   }
 
   goBack() {
@@ -257,11 +305,12 @@ export class FactoryRegisterComponent implements OnInit {
     this.officeInfo.officeName = this.officeName.value;
     this.officeInfo.officeTel = this.inputData.officeTel;
     this.officeInfo.officeMailAdress = this.officeMailAdress.value;
-    this.officeInfo.officeArea1 = this.inputData.officeArea1;
+    this.officeInfo.officeArea1 = this.formService.setAreaId(this.officeArea1.value);
     this.officeInfo.officeArea = this.officeArea.value;
-    this.officeInfo.officeAdress = this.inputData.officeAdress;
-    this.officeInfo.officePostCode = this.inputData.officePostCode;
+    this.officeInfo.officeAdress = this.officeAdress.value;
+    this.officeInfo.officePostCode = this.formService.setPostCode(this.postCode1.value, this.postCode2.value);
     this.officeInfo.workContentList = this.businessContentList;
+    this.officeInfo.officeTel.push(this.formService.setTelNo(this.telNo1.value, this.telNo2.value, this.telNo3.value))
 
     // TODO
     this.officeInfo.businessHours = [];
@@ -272,6 +321,13 @@ export class FactoryRegisterComponent implements OnInit {
 
     this.apiUniqueService.postFactory(this.officeInfo, this.user.userId, this.user.mechanicId).subscribe(result => {
       console.log(result);
+      if(result == 200) {
+        alert('登録完了')
+        // this.router.navigate(["/main_menu"]);
+        this.location.back();
+      } else {
+        alert('登録失敗しました：ステータス['+ result + ']');
+      }
     });
   }
 
@@ -280,20 +336,20 @@ export class FactoryRegisterComponent implements OnInit {
    * 業務内容情報をデータに格納する
    */
   private setbusinessContent() {
-    const businessContentArray = this.options.value as {name:string}[];
+    const businessContentArray = this.options.value as { name: string }[];
     const result: string[] = []
 
     // 資格情報を格納
     const contents = this.workContentsOne.replace(/\s+/g, '');
-    if(contents != '' && contents != null ) {
+    if (contents != '' && contents != null) {
       result.push(this.workContentsOne);
     }
     // 追加入力した資格情報を格納
-    if(businessContentArray.length > 0) {
+    if (businessContentArray.length > 0) {
       businessContentArray.forEach(s => {
         // 空白削除
         const businessContent = s.name.replace(/\s+/g, '');
-        if(businessContent != '' && businessContent != null) {
+        if (businessContent != '' && businessContent != null) {
           result.push(s.name)
         }
       });

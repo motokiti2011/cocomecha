@@ -114,6 +114,14 @@ export class FactoryMenuComponent implements OnInit {
    * 工場情報を取得する
    */
   private officeSetting() {
+    if(!this.user?.officeId) {
+      return;
+    }
+    this.apiService.getOfficeInfo(this.user.officeId).subscribe(res => {
+      console.log(res);
+    });
+
+
     // ローディング解除
     this.overlayRef.detach();
   }

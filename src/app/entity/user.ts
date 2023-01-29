@@ -10,7 +10,7 @@ export interface user {
   // メールアドレス
   mailAdress: string;
   // 電話番号1
-  TelNo1: string | null;
+  TelNo1: string;
   // 電話番号2
   TelNo2: string | null;
   // 地域1
@@ -54,7 +54,7 @@ export const initUserInfo : user = {
       // メールアドレス
       mailAdress: '',
       // 電話番号1
-      TelNo1: null,
+      TelNo1: '',
       // 電話番号2
       TelNo2: null,
       // 地域1

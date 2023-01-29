@@ -145,9 +145,19 @@
     }
   }
 
+  .btn_area {
+    margin-left: 20px;
+    width: 150px;
+  
+    .btn {
+      font-size: small;
+    }
+  }
 
-
-
+  .adress {
+    text-align: center;
+    font-size: x-large;
+  }
 
 
 }

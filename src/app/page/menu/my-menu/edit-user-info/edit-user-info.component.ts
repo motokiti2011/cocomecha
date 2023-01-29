@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { FormService } from 'src/app/page/service/form.service';
 import { user, initUserInfo} from 'src/app/entity/user';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import {
@@ -94,6 +95,7 @@ export class EditUserInfoComponent implements OnInit {
     private router: Router,
     private s3: UploadService,
     private builder: FormBuilder,
+    private form: FormService,
   ) { }
 
 
@@ -153,13 +155,13 @@ export class EditUserInfoComponent implements OnInit {
   inputCheck() {
     this.user.userName = this.name.value;
     this.user.mailAdress = this.mail.value;
-    this.user.TelNo1 = this.setTelNo();
+    this.user.TelNo1 = this.form.setTelNo(this.telNo1.value,this.telNo2.value,this.telNo3.value);
     // this.user.TelNo2 = this.inputData.TelNo2;
     this.user.areaNo1 = this.inputData.areaNo1;
     this.user.areaNo2 = this.inputData.areaNo2;
     this.user.adress = this.inputData.adress;
     this.user.profileImageUrl = ''; // 仮
-    this.user.postCode = this.setPostCode();
+    this.user.postCode = this.form.setPostCode(this.postCode1.value, this.postCode2.value);
     this.user.introduction = this.inputData.introduction;
 
   }
@@ -177,11 +179,11 @@ export class EditUserInfoComponent implements OnInit {
         this.user = data[0];
         let telNo = {tel1: '' ,tel2: '' ,tel3: '' }
         if(this.user.TelNo1) {
-          telNo = this.splitTelNo(this.user.TelNo1);
+          telNo = this.form.splitTelNo(this.user.TelNo1);
         }
         let postCode = {post1: '' ,post2: ''}
         if(this.user.postCode) {
-          postCode = this.splitPostCode(this.user.postCode);
+          postCode = this.form.splitPostCode(this.user.postCode);
         }
 
 
@@ -201,52 +203,6 @@ export class EditUserInfoComponent implements OnInit {
       }
     });
   }
-
-
-  /******************    後日formサービスに移行予定   **********************/
-  /**
-   * 電話番号を分割する
-   * @param telNo
-   * @returns
-   */
-  private splitTelNo(telNo: string) : {tel1: string ,tel2: string ,tel3: string } {
-    const spritTelNo = telNo.split('-');
-    const result = {tel1: spritTelNo[0] ,tel2: spritTelNo[1] ,tel3: spritTelNo[2] }
-    return result;
-  }
-
-  /**
-   * 入力値から登録データ電話番号を作成する
-   * @returns
-   */
-  private setTelNo(): string {
-    return this.telNo1.value + '-'
-     + this.telNo2.value + '-'
-     + this.telNo3.value;
-  }
-
-
-  /**
-   * 電話番号を分割する
-   * @param telNo
-   * @returns
-   */
-  private splitPostCode(postCode: string) : {post1: string ,post2: string} {
-    const spritTelNo = postCode.split('-');
-    const result = {post1: spritTelNo[0] ,post2: spritTelNo[1] }
-    return result;
-  }
-
-
-  /**
-   * 入力値から登録データ電話番号を作成する
-   * @returns
-   */
-  private setPostCode(): string {
-    return this.postCode1.value
-    + '-' + this.postCode2.value
-  }
-  /******************    後日formサービスに移行予定   **********************/
 
   /**
    * イメージを設定する
@@ -276,12 +232,12 @@ export class EditUserInfoComponent implements OnInit {
       this.user.corporationDiv = '0';
       this.user.userName = this.name.value;
       this.user.mailAdress = this.mail.value;
-      this.user.TelNo1 = this.setTelNo();
+      this.user.TelNo1 = this.form.setTelNo(this.telNo1.value,this.telNo2.value,this.telNo3.value);
       this.user.areaNo1 = this.inputData.areaNo1;
       this.user.areaNo2 = this.inputData.areaNo2;
       this.user.adress = this.inputData.adress;
       this.user.profileImageUrl = ''; // 仮
-      this.user.postCode = this.setPostCode();
+      this.user.postCode = this.form.setPostCode(this.postCode1.value, this.postCode2.value);
       this.user.introduction = this.inputData.introduction;
 
       this.apiService.postUser(this.user).subscribe(result => {
