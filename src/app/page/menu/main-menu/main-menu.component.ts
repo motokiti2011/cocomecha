@@ -222,5 +222,12 @@ export class MainMenuComponent implements OnInit {
     this.router.navigate(["/factory-register"]);
   }
 
+/**
+ * ご登録の車両情報はこちらボタン押下イベント
+ */
+  onVehcleInfo() {
+    this.router.navigate(["/vehicle-register"]);
+    console.log('vehicle-register')
+  }
 
 }

@@ -22,9 +22,9 @@ export class FormService {
    * @param telNo
    * @returns
    */
-  public splitTelNo(telNo: string) : {tel1: string ,tel2: string ,tel3: string } {
+  public splitTelNo(telNo: string): { tel1: string, tel2: string, tel3: string } {
     const spritTelNo = telNo.split('-');
-    const result = {tel1: spritTelNo[0] ,tel2: spritTelNo[1] ,tel3: spritTelNo[2] }
+    const result = { tel1: spritTelNo[0], tel2: spritTelNo[1], tel3: spritTelNo[2] }
     return result;
   }
 
@@ -42,9 +42,9 @@ export class FormService {
    * @param postCode
    * @returns
    */
-  public splitPostCode(postCode: string) : {post1: string ,post2: string} {
+  public splitPostCode(postCode: string): { post1: string, post2: string } {
     const spritTelNo = postCode.split('-');
-    const result = {post1: spritTelNo[0] ,post2: spritTelNo[1] }
+    const result = { post1: spritTelNo[0], post2: spritTelNo[1] }
     return result;
   }
 
@@ -52,7 +52,7 @@ export class FormService {
    * 郵便番号を作成する
    * @returns
    */
-  public setPostCode(postCode1:string, postCode2:string ): string {
+  public setPostCode(postCode1: string, postCode2: string): string {
     return postCode1 + '-' + postCode2
   }
 
@@ -62,9 +62,9 @@ export class FormService {
    * @param Hour
    * @returns
    */
-  public splitHour(Hour: string) : {hourS: string ,hourE: string} {
+  public splitHour(Hour: string): { hourS: string, hourE: string } {
     const spritHour = Hour.split(':');
-    const result = {hourS: spritHour[0] ,hourE: spritHour[1] }
+    const result = { hourS: spritHour[0], hourE: spritHour[1] }
     return result;
   }
 
@@ -73,9 +73,9 @@ export class FormService {
    * @param Hour
    * @returns
    */
-  public splitHourMonth(Hour: string) : {hour: string ,month: string} {
+  public splitHourMonth(Hour: string): { hour: string, month: string } {
     const spritHour = Hour.split(':');
-    const result = {hour: spritHour[0] ,month: spritHour[1] }
+    const result = { hour: spritHour[0], month: spritHour[1] }
     return result;
   }
 
@@ -84,18 +84,18 @@ export class FormService {
    * 時間を作成する
    * @returns
    */
-  public setHour(HourS:string, HourE:string ): string {
+  public setHour(HourS: string, HourE: string): string {
     return HourS + '-' + HourE
   }
-  
+
 
   /**
    * 地域情報からIDを取得する
    * @returns
    */
-  public setAreaId(area:string): string {
+  public setAreaId(area: string): string {
     const select = _find(this.areaData, data => data.prefectures === area)
-    if(select) {
+    if (select) {
       return String(select.id);
     }
     return ''
@@ -106,13 +106,15 @@ export class FormService {
    * IDから地域情報を取得する
    * @returns
    */
-    public setAreaName(areaId:string): string {
-      const select = _find(this.areaData, data => data.id === Number(areaId))
-      if(select) {
-        return select.prefectures;
-      }
-      return ''
+  public setAreaName(areaId: string): string {
+    const select = _find(this.areaData, data => data.id === Number(areaId))
+    if (select) {
+      return select.prefectures;
     }
+    return ''
+  }
+
+  
 
 
 }

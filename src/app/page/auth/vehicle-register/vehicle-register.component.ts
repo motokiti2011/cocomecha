@@ -7,7 +7,9 @@ import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { UploadService } from '../../service/upload.service';
-import { userVehicle, vehicleNumberPlate } from 'src/app/entity/userVehicle';
+import { userVehicle, vehicleNumberPlate, selectEraName } from 'src/app/entity/userVehicle';
+import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'app-vehicle-register',
@@ -23,6 +25,70 @@ export class VehicleRegisterComponent implements OnInit {
     kana: '',
     serialNum: ''
   }
+
+  // ナンバー（地域）
+  vehicleNoAreaName = new FormControl('', [
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // ナンバー（分類番号）
+  vehicleNoClassificationNum = new FormControl('', [
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // ナンバー（かな）
+  vehicleNoKana = new FormControl('', [
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // ナンバー（一連指定番号）
+  vehicleNoSerialNum = new FormControl('', [
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // 元号（ID）
+  eraId = new FormControl('1', [
+    Validators.pattern('[0-9 ]*'),
+  ]);
+
+  // 初年度（年）
+  firstRegistrationYear = new FormControl('', [
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // 初年度（月）
+  firstRegistrationMonth = new FormControl('', [
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+
+  // 車検満了日（年）
+  inspectionExpirationYear = new FormControl('', [
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // 車検満了日（月）
+  inspectionExpirationMonth = new FormControl('', [
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  // 車検満了日（日）
+  inspectionExpirationDay = new FormControl('', [
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
 
   // 入力データ
   inputData = {
@@ -43,7 +109,7 @@ export class VehicleRegisterComponent implements OnInit {
     // 走行距離
     mileage: '',
     // 初年度登録日
-    firstRegistrationDate:  '',
+    firstRegistrationDate: '',
     // 車検満了日
     inspectionExpirationDate: ''
   }
@@ -51,6 +117,9 @@ export class VehicleRegisterComponent implements OnInit {
   user: user = initUserInfo;
   /** 車両リスト　*/
   vehicleList: userVehicle[] = [];
+  /** 元号セレクト */
+  eraData = selectEraName
+  eraSelect = '1';
 
   constructor(
     private apiService: ApiSerchService,
@@ -64,7 +133,7 @@ export class VehicleRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     const authUser = this.cognito.initAuthenticated();
-    if(authUser !== null) {
+    if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
         this.user = user[0];
@@ -82,7 +151,7 @@ export class VehicleRegisterComponent implements OnInit {
    * ユーザー登録情報と合わせるボタン押下時イベント
    * @param e
    */
-  onSomeUserInfo(e:string) {
+  onSomeUserInfo(e: string) {
     console.log(e);
   }
 
@@ -114,18 +183,22 @@ export class VehicleRegisterComponent implements OnInit {
    */
   private vehicleResister() {
     console.log(this.inputData);
-    const userVehicle :userVehicle = {
-      vehicleId : '',
+    const userVehicle: userVehicle = {
+      vehicleId: '',
       userId: this.user.userId,
       vehicleName: this.inputData.vehicleName,
-      vehicleNo: this.numberPleateData,
+      vehicleNo: this.setVehicleNo(),
+      vehicleNoAreaName: this.vehicleNoAreaName.value,
+      vehicleNoClassificationNum: this.vehicleNoClassificationNum.value,
+      vehicleNoKana: this.vehicleNoKana.value,
+      vehicleNoSerialNum: this.vehicleNoSerialNum.value,
       chassisNo: this.inputData.chassisNo,
       designatedClassification: this.inputData.designatedNo,
       coler: this.inputData.coler,
       colerNo: this.inputData.colerNo,
-      mileage: this.inputData.mileage,
-      firstRegistrationDate: this.inputData.firstRegistrationDate,
-      inspectionExpirationDate: this.inputData.inspectionExpirationDate,
+      mileage: Number(this.inputData.mileage),
+      firstRegistrationDate: this.setFirstRegistrationData(),
+      inspectionExpirationDate: this.setInspectionExpirationData(),
       updateUserId: '',
       created: '',
       updated: ''
@@ -135,6 +208,37 @@ export class VehicleRegisterComponent implements OnInit {
     })
   }
 
+
+  /**
+   * ナンバーを合体させる
+   * @returns 
+   */
+  private setVehicleNo(): string {
+    return this.vehicleNoAreaName.value + '-'
+      + this.vehicleNoClassificationNum.value + '-'
+      + this.vehicleNoKana.value + '-'
+      + this.vehicleNoSerialNum.value;
+  }
+
+  /**
+   * 初年度年月を合体させる
+   * @returns 
+   */
+  private setFirstRegistrationData(): string {
+    return this.eraId.value + '/'
+      + this.firstRegistrationYear.value + '/'
+      + this.firstRegistrationMonth.value;
+  }
+
+  /**
+   * 車検満了日を合体させる
+   * @returns 
+   */
+  private setInspectionExpirationData(): string {
+    return this.inspectionExpirationYear.value + '/'
+      + this.inspectionExpirationMonth.value + '/'
+      + this.inspectionExpirationDay.value;
+  }
 
 
 
