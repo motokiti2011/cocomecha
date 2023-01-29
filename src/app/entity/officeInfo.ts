@@ -33,6 +33,8 @@ export interface officeInfo {
   officePRimageURL: string;
   // 事業所形態リスト
   officeFormList: Array<officeForm> | null;
+  // 作成日
+  created: string;
 }
 
 /**
@@ -104,5 +106,7 @@ export const initOfficeInfo = {
   // 事業所PR画像URL
   officePRimageURL: '',
   // 業務形態区分リスト
-  officeFormList: null
+  officeFormList: null,
+  // 作成日
+  created: ''
 }

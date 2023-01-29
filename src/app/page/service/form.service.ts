@@ -28,7 +28,6 @@ export class FormService {
     return result;
   }
 
-
   /**
    * 電話番号を作成する
    * @returns
@@ -36,6 +35,7 @@ export class FormService {
   public setTelNo(telNo1: string, telNo2: string, telNo3: string): string {
     return telNo1 + '-' + telNo2 + '-' + telNo3;
   }
+
 
   /**
    * 郵便番号を分割する
@@ -48,7 +48,6 @@ export class FormService {
     return result;
   }
 
-
   /**
    * 郵便番号を作成する
    * @returns
@@ -57,7 +56,39 @@ export class FormService {
     return postCode1 + '-' + postCode2
   }
 
+
+  /**
+   * 時間を分割する
+   * @param Hour
+   * @returns
+   */
+  public splitHour(Hour: string) : {hourS: string ,hourE: string} {
+    const spritHour = Hour.split(':');
+    const result = {hourS: spritHour[0] ,hourE: spritHour[1] }
+    return result;
+  }
+
+  /**
+   * 時間をさらに分割する
+   * @param Hour
+   * @returns
+   */
+  public splitHourMonth(Hour: string) : {hour: string ,month: string} {
+    const spritHour = Hour.split(':');
+    const result = {hour: spritHour[0] ,month: spritHour[1] }
+    return result;
+  }
+
+
+  /**
+   * 時間を作成する
+   * @returns
+   */
+  public setHour(HourS:string, HourE:string ): string {
+    return HourS + '-' + HourE
+  }
   
+
   /**
    * 地域情報からIDを取得する
    * @returns
@@ -71,6 +102,17 @@ export class FormService {
   }
 
 
+  /**
+   * IDから地域情報を取得する
+   * @returns
+   */
+    public setAreaName(areaId:string): string {
+      const select = _find(this.areaData, data => data.id === Number(areaId))
+      if(select) {
+        return select.prefectures;
+      }
+      return ''
+    }
 
 
 }

@@ -292,7 +292,7 @@ export class ApiSerchService {
         "officeId": officeId
       }
     };
-    return this.http.post<officeInfo>(this.apiEndPoint + '/mechanicinfo', body).pipe(
+    return this.http.post<officeInfo>(this.apiEndPoint + '/officeinfo', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: officeInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -381,6 +381,44 @@ export class ApiSerchService {
     return this.http.post<userVehicle>(this.apiEndPoint + '/uservehicleinfo', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: userVehicle) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+  /**
+   * ユーザー車両情報を登録する
+   * @param mechanicId
+   * @returns
+   */
+  public postOffice(data: officeInfo): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "PUT",
+      "Keys": {
+        "officeId":  data.officeId,
+        "officeName": data.officeName,
+        "officeTel": data.officeTel,
+        "officeMailAdress": data.officeMailAdress,
+        "officeArea1": data.officeArea1,
+        "officeArea": data.officeArea,
+        "officeAdress": data.officeAdress,
+        "officePostCode": data.officePostCode,
+        'workContentList' : data.workContentList,
+        "businessHours": data.businessHours,
+        "adminBaseId": data.adminBaseId,
+        "baseInfoList": data.baseInfoList,
+        "adminIdList": data.adminIdList,
+        "employeeList": data.employeeList,
+        "officePR": data.officePR,
+        "officePRimageURL": data.officePRimageURL,
+        "officeFormList": data.officeFormList,
+        "created": data.created,        
+      }
+    };
+    return this.http.post<officeInfo>(this.apiEndPoint + '/officeinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: officeInfo) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );

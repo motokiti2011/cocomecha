@@ -278,8 +278,7 @@ export class MechanicMenuComponent implements OnInit {
    * メカニック情報登録
    */
   private mechanicResister() {
-    // this.setQualification();
-    // this.inputCheck();
+    this.setQualification();
     console.log(this.inputData);
     console.log(this.mechanicInfo);
     this.apiUniqeService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
@@ -378,14 +377,6 @@ export class MechanicMenuComponent implements OnInit {
     this.apiService.getOfficeInfo(officeId).subscribe(result => {
       if (result[0] != undefined || result[0] != null) {
         this.officeInfo = result[0];
-        // // 工場名が未設定の場合
-        // if (this.officeInfo.officeName == ''
-        //   || this.officeInfo == null) {
-        //   // 登録画面、所属工場情報のボタンを表示
-        //   this.factoryResistDiv = true;
-        // } else {
-        //   this.factoryResistDiv = false;
-        // }
         // 管理ユーザー情報が空白の場合
         if (this.officeInfo.adminIdList.length = 0) {
           this.officeEditMode = false;
