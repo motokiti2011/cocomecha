@@ -24,8 +24,38 @@
       </div>
 
       <div class="row mt-2">
+        <div class="col-2">工場電話番号</div>
+        <div class="col-1">
+          <div class="mandatory">必須</div>
+        </div>
+        <div class="col-4">
+          <div class="tel_forms">
+            <input class="form-control" id="tel" type="tel" [formControl]="telNo1" />
+            <p>-</p>
+            <input class="form-control" id="tel2" type="tel" [formControl]="telNo2" />
+            <p>-</p>
+            <input class="form-control" id="tel3" type="tel" [formControl]="telNo3" />
+          </div>
+        </div>
+        <div class="col-1"></div>
+        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">メカニック情報と合わせる</button>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-2">工場メールアドレス</div>
+        <div class="col-1">
+          <div class="mandatory">必須</div>
+        </div>
+        <div class="col-4">
+          <input class="form-control" id="email" type="email" [formControl]="officeMailAdress" />
+        </div>
+        <div class="col-1"></div>
+        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">メカニック情報と合わせる</button>
+      </div>
+
+      <div class="row mt-2">
         <div class="col-2">工場所在地</div>
-        <div class="col-3"></div>
+        <div class="col-2"></div>
         <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">ユーザー登録情報と合わせる</button>
       </div>
 
@@ -36,7 +66,12 @@
           <div class="mandatory">必須</div>
         </div>
         <div class="col-4">
-          <input class="form-control" id="name" type="text" [(ngModel)]="inputData.officePostCode" />
+          <div class="post_forms">
+            <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" />
+            <p class="mainus">-</p>
+            <input class="form-control" id="postCode" type="tel" [formControl]="postCode2" />
+          </div>
+          <!-- <input class="form-control" id="name" type="text" [(ngModel)]="inputData.officePostCode" /> -->
         </div>
         <!-- <div class="col-1"></div>
         <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
@@ -66,7 +101,7 @@
           <div class="mandatory">必須</div>
         </div>
         <div class="col-4">
-          <input class="form-control" id="name" type="text" [(ngModel)]="inputData.officeArea" />
+          <input class="form-control" id="name" type="text" [formControl]="officeArea" />
         </div>
         <!-- <div class="col-1"></div>
         <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
@@ -86,29 +121,9 @@
       </div>
 
 
-      <div class="row mt-2">
-        <div class="col-2">工場電話番号</div>
-        <div class="col-1">
-          <div class="mandatory">必須</div>
-        </div>
-        <div class="col-4">
-          <input class="form-control" id="name" type="text" [(ngModel)]="telNo" />
-        </div>
-        <!-- <div class="col-1"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
-      </div>
 
-      <div class="row mt-2">
-        <div class="col-2">工場メールアドレス</div>
-        <div class="col-1"></div>
-        <div class="col-4">
-          <input class="form-control" id="email" type="email" [formControl]="officeMailAdress" />
-        </div>
-        <!-- <div class="col-1"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
-      </div>
 
-      <div class="row mt-2">
+      <!-- <div class="row mt-2">
         <div class="col-2">営業時間</div>
         <div class="col-1"></div>
         <div class="col-2">
@@ -118,8 +133,6 @@
         <div class="col-2">
           <input class="form-control" id="hours" type="text" [(ngModel)]="businessHoursEnd" />
         </div>
-        <!-- <div class="col-2"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
       </div>
 
       <div class="row mt-2">
@@ -132,8 +145,6 @@
         <div class="col-2">
           <input class="form-control" id="hours" type="text" [(ngModel)]="restHoursEnd" />
         </div>
-        <!-- <div class="col-2"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
       </div>
 
       <div class="row mt-2">
@@ -166,24 +177,17 @@
         </div>
       </div>
 
-
-
       <div class="row mt-2">
         <div class="col-2">工場PR文</div>
         <div class="col-1"></div>
         <textarea cols="40" rows="6" id="introduction" [(ngModel)]="inputData.officePR"></textarea>
-        <!-- <div class="col-1"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
       </div>
-
-
-
 
       <div class="row mt-2">
         <div class="col-2">工場紹介画像</div>
         <div class="col-1"></div>
         <input type="file" accept="*/*" (change)="onInputChange($event)">
-      </div>
+      </div> -->
 
       <!-- <div class="row m-5">
       <div class="col-6">以下は公開されない工場情報の設定となります。</div>

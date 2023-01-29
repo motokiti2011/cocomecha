@@ -27,15 +27,12 @@ export class FactoryRegisterComponent implements OnInit {
   inputData = {
     // 事業所所在地１
     officeArea1: '',
-    // 事業所所在地２
-    officeArea: '',
     // 事業所所在地
     officeAdress: '',
     // 事業所郵便番号
     officePostCode: '',
     // 事業所電話番号リスト
     officeTel: [],
-
     // 営業時間
     businessHours: '',
     // 事業所PR
@@ -59,6 +56,45 @@ export class FactoryRegisterComponent implements OnInit {
   officeMailAdress = new FormControl('', [
     Validators.required,
     Validators.email
+  ]);
+
+  // 事業所所在地（市町村）
+  officeArea = new FormControl('', [
+    Validators.required
+  ]);
+
+  // 事業所所在地（住所その他）
+  officeAdress = new FormControl('', [
+    Validators.required
+  ]);
+
+  postCode1 = new FormControl('',[
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(3)
+  ]);
+
+  postCode2 = new FormControl('',[
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+
+  telNo1 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  telNo2 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  telNo3 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
   ]);
 
   // 電話番号
@@ -222,7 +258,7 @@ export class FactoryRegisterComponent implements OnInit {
     this.officeInfo.officeTel = this.inputData.officeTel;
     this.officeInfo.officeMailAdress = this.officeMailAdress.value;
     this.officeInfo.officeArea1 = this.inputData.officeArea1;
-    this.officeInfo.officeArea = this.inputData.officeArea;
+    this.officeInfo.officeArea = this.officeArea.value;
     this.officeInfo.officeAdress = this.inputData.officeAdress;
     this.officeInfo.officePostCode = this.inputData.officePostCode;
     this.officeInfo.workContentList = this.businessContentList;

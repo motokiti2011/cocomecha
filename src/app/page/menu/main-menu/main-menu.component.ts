@@ -207,14 +207,20 @@ export class MainMenuComponent implements OnInit {
   /**
    * ログアウト押下時
    */
-    onLogout() {
-      this.authUserDiv = false;
-      this.cognito.logout();
-      this.authUserService.logout;
-      this.loginUser.userName = 'ログイン';
-      this.authenticated();
-    }
+  onLogout() {
+    this.authUserDiv = false;
+    this.cognito.logout();
+    this.authUserService.logout;
+    this.loginUser.userName = 'ログイン';
+    this.authenticated();
+  }
 
+  /**
+   * 工場登録（本所属工場新規登録）
+   */
+  onFactoryResister() {
+    this.router.navigate(["/factory-register"]);
+  }
 
 
 }

@@ -44,7 +44,7 @@
   #introduction {
     margin: 0px 15px 20px 0px;
   }
-  
+
   .item {
     text-align: center;
   }
@@ -99,8 +99,37 @@
       // margin-left: 15px;
     }
   }
-  
-  
+
+  .post_forms {
+    display: flex;
+    font-size: 20px;
+    .mainus {
+      margin: 0px 10px 0px 10px;
+    }
+    #postCode {
+      width: 100px;
+      // margin: 0px 10px 0px 0px;
+    }
+  }
+
+  .tel_forms {
+    display: flex;
+    font-size: 20px;
+    #tel {
+      width: 80px;
+      margin: 0px 10px 0px 0px;
+    }
+    #tel2 {
+      width: 80px;
+      margin: 0px 5px 0px 5px;
+    }
+    #tel3 {
+      width: 80px;
+      margin: 0px 0px 0px 10px;
+    }
+  }
+
+
   .add_work_contents {
     display: flex;
     .add_btn_area {
@@ -108,14 +137,14 @@
       margin: 15px 15px 15px 15px;
       // margin-left: 15px;
     }
-  
+
     .del_btn {
       font-size: small;
       margin: 0px 0px 15px 20px;
       width: 50px;
     }
   }
-  
+
 
 
 
