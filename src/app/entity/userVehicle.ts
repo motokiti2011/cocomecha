@@ -16,7 +16,7 @@ export interface userVehicle {
   // 車両番号(ナンバー)一連指定番号
   vehicleNoSerialNum: string;
   // 車台番号
-  chassisNo: string;
+  chassisNo: string[];
   // 指定類別
   designatedClassification: string;
   // カラー
@@ -69,8 +69,29 @@ export interface firstRegistrationDate {
 export const selectEraName = [
   { id: '0', name: '昭和'},
   { id: '1', name: '平成'},
-  { id: '2', name: '令和'}    
+  { id: '2', name: '令和'}
 ]
+
+/**
+ * カラー
+ */
+export const selectColoer = [
+  { id: '0', name: 'ホワイト'},
+  { id: '1', name: 'ブラック'},
+  { id: '2', name: 'シルバー'},
+  { id: '3', name: 'ゴールド'},
+  { id: '4', name: 'グレー'},
+  { id: '5', name: 'レッド'},
+  { id: '6', name: 'ブルー'},
+  { id: '7', name: 'イエロー'},
+  { id: '8', name: 'ブラウン'},
+  { id: '9', name: 'グリーン'},
+  { id: '10', name: 'ピンク'},
+  { id: '11', name: 'パープル'},
+  { id: '12', name: 'オレンジ'},
+  { id: '13', name: 'ライトブルー'},
+]
+
 
 /**
  * 車検満了日
@@ -81,7 +102,7 @@ export interface inspectionExpirationDate {
   // 月
   month: string;
   // 日
-  day: string;  
+  day: string;
 }
 
 

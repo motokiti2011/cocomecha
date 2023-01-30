@@ -51,25 +51,24 @@
       <div class="row mt-2">
         <div class="col-3">車両名</div>
         <div class="col-1">必須</div>
-        <input class="form-control col-5" id="id" type="text" [(ngModel)]="inputData.vehicleName" />
+        <input class="form-control col-5" id="id" type="text" [(ngModel)]="inputData.vehicleName" placeholder="車両名"/>
       </div>
 
       <div class="row mt-2">
         <div class="col-3">車両番号<br>（ナンバー）</div>
         <div class="col-1"></div>
-        <input class="form-control" id="np_area" type="text" [formControl]="vehicleNoAreaName" />
-        <input class="form-control" id="np_class" type="text" [formControl]="vehicleNoClassificationNum" />
-        <input class="form-control" id="np_kana" type="text" [formControl]="vehicleNoKana" />
-        <input class="form-control" id="np_serua" type="text" [formControl]="vehicleNoSerialNum" />
+        <input class="form-control" id="np_area" type="text" [formControl]="vehicleNoAreaName" placeholder="北海道"/>
+        <input class="form-control" id="np_class" type="text" [formControl]="vehicleNoClassificationNum" placeholder="300"/>
+        <input class="form-control" id="np_kana" type="text" [formControl]="vehicleNoKana" placeholder="あ"/>
+        <input class="form-control" id="np_serua" type="text" [formControl]="vehicleNoSerialNum" placeholder="1234"/>
         <div class="col-1"></div>
       </div>
 
       <div class="row mt-2">
         <div class="col-3">車台番号<br>（フレームNo.）</div>
         <div class="col-1"></div>
-        <!-- <div class="col-4"> -->
-        <input class="form-control col-5" id="id" type="text" [(ngModel)]="inputData.chassisNo" />
-        <!-- </div> -->
+        <input class="form-control" id="model" type="text" [formControl]="modelNo" placeholder="型式"/>
+        <input class="form-control" id="chassisNo" type="text" [formControl]="chassisNo" placeholder="車台番号"/>
         <div class="col-1"></div>
       </div>
 
@@ -77,8 +76,8 @@
       <div class="row mt-2">
         <div class="col-3">指定番号<br>類別区分番号</div>
         <div class="col-1"></div>
-        <input class="form-control" id="designated" type="text" [(ngModel)]="inputData.designatedNo" />
-        <input class="form-control" id="designated" type="text" [(ngModel)]="inputData.classificationNo" />
+        <input class="form-control" id="designated" type="text" [formControl]="designatedNo" placeholder="12345" />
+        <input class="form-control" id="designated" type="text" [formControl]="classificationNo" placeholder="0001" />
         <div class="col-2"></div>
       </div>
 
@@ -86,8 +85,15 @@
       <div class="row mt-2">
         <div class="col-3">カラー<br>カラーNo.</div>
         <div class="col-1"></div>
-        <input class="form-control" id="coler" type="text" [(ngModel)]="inputData.coler" />
-        <input class="form-control" id="coler" type="text" [(ngModel)]="inputData.colerNo" />
+
+        <select id="date_select" name="coler" [formControl]="colerId">
+          <option value="">カラーを選択してください。</option>
+          <option *ngFor="let coler of coloerData" [value]="coler.name"
+            [selected]="coler.name === coloerSelect">
+            {{coler.name}}</option>
+        </select>
+        <!-- <input class="form-control" id="coler" type="text" [(ngModel)]="inputData.coler" />
+        <input class="form-control" id="coler" type="text" [(ngModel)]="inputData.colerNo" /> -->
         <div class="col-1"></div>
       </div>
 
@@ -95,7 +101,7 @@
       <div class="row mt-2">
         <div class="col-3">走行距離</div>
         <div class="col-1"></div>
-        <input class="form-control col-3" id="area" type="text" [(ngModel)]="inputData.mileage" />
+        <input class="form-control col-3" id="area" type="text" [(ngModel)]="inputData.mileage" placeholder="12345"/>
         <div class="supplement">Km</div>
         <div class="col-1"></div>
       </div>
