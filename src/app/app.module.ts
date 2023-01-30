@@ -68,6 +68,8 @@ import { FactoryMechanicImpletionComponent } from './page/menu/my-menu/factory-m
 import { ServiceEvaluationComponent } from './page/menu/service-contents/service-evaluation/service-evaluation.component';
 import { ServiceRelistedComponent } from './page/menu/service-contents/service-relisted/service-relisted.component';
 import { MechanicMenuComponent } from './page/menu/my-menu/mechanic-menu/mechanic-menu.component';
+import { VehicleMenuComponent } from './page/menu/my-menu/vehicle-menu/vehicle-menu.component';
+import { EditVehicleInfoComponent } from './page/menu/my-menu/edit-vehicle-info/edit-vehicle-info.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -92,7 +94,8 @@ const ROUTE_TABLE: Routes = [
   { path: 'fcmc-manegement', component: FactoryMechanicContentsManagementComponent, canActivate: [RoutingGuard] },
   { path: 'fcmc-implaetion', component: FactoryMechanicImpletionComponent, canActivate: [RoutingGuard] },
   { path: 'service-evaluation', component: ServiceEvaluationComponent, canActivate: [RoutingGuard] },
-  { path: 'service-relisted', component: ServiceRelistedComponent, canActivate: [RoutingGuard] }  
+  { path: 'service-relisted', component: ServiceRelistedComponent, canActivate: [RoutingGuard] },
+  { path: 'vehicle-menu', component: VehicleMenuComponent, canActivate: [RoutingGuard] }  
 ]
 
 @NgModule({
@@ -141,6 +144,8 @@ const ROUTE_TABLE: Routes = [
     ServiceEvaluationComponent,
     ServiceRelistedComponent,
     MechanicMenuComponent,
+    VehicleMenuComponent,
+    EditVehicleInfoComponent,
   ],
   entryComponents: [
     TransactionListComponent,

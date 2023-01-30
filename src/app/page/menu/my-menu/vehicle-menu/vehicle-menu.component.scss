@@ -1,0 +1,60 @@
+.main-content {
+  display: flex;
+}
+
+.sid_menu {
+  width: 300px;
+  margin: 10px 0px 0px 40px;
+}
+
+table {
+  // border: 2px #ff0000 solid;
+  border-collapse: collapse;
+  font-size: 1px;
+
+  th {
+    // border: 2px #ff0000 solid;
+    font-size: medium;
+    text-align: center;
+  }
+
+  td {
+    border: 2px #ff0000 solid;
+    text-align: center;
+    font-size: medium;
+  }
+
+  .select_point {
+    cursor:pointer;
+    color: blue;
+  }
+
+  #no {
+    width: 60px;
+  }
+
+  #name {
+    width: 300px;
+  }
+
+  #fleam_number {
+    width: 300px;
+  }
+
+  #mileage {
+    width: 200px;
+  }
+
+  #inspection_expiration {
+    width: 300px;
+  }
+
+  #history {
+    width: 150px;
+  }
+
+  #del {
+    width: 150px;
+  }
+
+}

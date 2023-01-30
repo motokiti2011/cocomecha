@@ -28,28 +28,28 @@ export class VehicleRegisterComponent implements OnInit {
 
   // ナンバー（地域）
   vehicleNoAreaName = new FormControl('', [
-    Validators.required,
-    Validators.pattern('[0-9 ]*'),
-    Validators.maxLength(4)
+    // Validators.required,
+    // Validators.pattern('[0-9 ]*'),
+    // Validators.maxLength(4)
   ]);
 
   // ナンバー（分類番号）
   vehicleNoClassificationNum = new FormControl('', [
-    Validators.required,
+    // Validators.required,
     Validators.pattern('[0-9 ]*'),
-    Validators.maxLength(4)
+    Validators.maxLength(3)
   ]);
 
   // ナンバー（かな）
   vehicleNoKana = new FormControl('', [
-    Validators.required,
-    Validators.pattern('[0-9 ]*'),
-    Validators.maxLength(4)
+    // Validators.required,
+    // Validators.pattern('[0-9 ]*'),
+    // Validators.maxLength(4)
   ]);
 
   // ナンバー（一連指定番号）
   vehicleNoSerialNum = new FormControl('', [
-    Validators.required,
+    // Validators.required,
     Validators.pattern('[0-9 ]*'),
     Validators.maxLength(4)
   ]);
@@ -61,7 +61,7 @@ export class VehicleRegisterComponent implements OnInit {
 
   // 車台番号
   chassisNo = new FormControl('', [
-    Validators.required,
+    // Validators.required,
     Validators.pattern('[a-zA-Z0-9 ]*'),
   ]);
 
@@ -76,16 +76,20 @@ export class VehicleRegisterComponent implements OnInit {
     Validators.pattern('[0-9 ]*'),
   ]);
 
-  // 元号（ID）
-  eraId = new FormControl('1', [
+  // 走行距離
+  mileage = new FormControl('1', [
     Validators.pattern('[0-9 ]*'),
   ]);
 
-  // カラー（ID）
-  colerId = new FormControl('1', [
-    Validators.pattern('[0-9 ]*'),
-  ]);
+  // // 元号（ID）
+  // eraId = new FormControl('1', [
+  //   Validators.pattern('[0-9 ]*'),
+  // ]);
 
+  // // カラー（ID）
+  // colerId = new FormControl('1', [
+  //   Validators.pattern('[0-9 ]*'),
+  // ]);
 
   // 初年度（年）
   firstRegistrationYear = new FormControl('', [
@@ -118,45 +122,52 @@ export class VehicleRegisterComponent implements OnInit {
     Validators.maxLength(4)
   ]);
 
+  /** フォームグループオブジェクト */
+  groupForm = this.builder.group({
+    vehicleNoAreaName: this.vehicleNoAreaName,
+    vehicleNoClassificationNum: this.vehicleNoClassificationNum,
+    vehicleNoKana: this.vehicleNoKana,
+    vehicleNoSerialNum: this.vehicleNoSerialNum,
+    modelNo: this.modelNo,
+    chassisNo: this.chassisNo,
+    designatedNo: this.designatedNo,
+    classificationNo: this.classificationNo,
+    mileage: this.mileage,
+    // eraId: this.eraId,
+    // colerId: this.colerId,
+    firstRegistrationYear: this.firstRegistrationYear,
+    firstRegistrationMonth: this.firstRegistrationMonth,
+    inspectionExpirationYear: this.inspectionExpirationYear,
+    inspectionExpirationMonth: this.inspectionExpirationMonth,
+    inspectionExpirationDay: this.inspectionExpirationDay,
+
+  })
+
   // 入力データ
   inputData = {
     // 車両名
     vehicleName: '',
-    // 車両番号
-    vehicleNo: this.numberPleateData,
-    // 車台番号
-    chassisNo: '',
-    // 指定番号
-    designatedNo: '',
-    // 類別区分番号
-    classificationNo: '',
-    // カラー
-    coler: '',
     // カラーNo
     colerNo: '',
-    // 走行距離
-    mileage: '',
-    // 初年度登録日
-    firstRegistrationDate: '',
-    // 車検満了日
-    inspectionExpirationDate: ''
   }
+
   /** ユーザー情報　*/
   user: user = initUserInfo;
   /** 車両リスト　*/
   vehicleList: userVehicle[] = [];
   /** 元号セレクト */
   eraData = selectEraName
-  eraSelect = '1';
+  eraSelect = '';
 
   /** カラーセレクト */
   coloerData = selectColoer
-  coloerSelect = '1';
+  coloerSelect = '';
 
 
   constructor(
     private apiService: ApiSerchService,
     private apiGsiService: ApiGsiSerchService,
+    private builder: FormBuilder,
     private apiUniqueService: ApiUniqueService,
     private router: Router,
     private cognito: CognitoService,
@@ -227,18 +238,28 @@ export class VehicleRegisterComponent implements OnInit {
       vehicleNoSerialNum: this.vehicleNoSerialNum.value,
       chassisNo: this.serChassisNo(),
       designatedClassification: this.designatedClassification(),
-      coler: this.colerId.value,
+      coler: this.coloerSelect,
       colerNo: this.inputData.colerNo,
-      mileage: Number(this.inputData.mileage),
+      mileage: Number(this.mileage.value),
       firstRegistrationDate: this.setFirstRegistrationData(),
       inspectionExpirationDate: this.setInspectionExpirationData(),
       updateUserId: '',
       created: '',
       updated: ''
     }
+
+    console.log(userVehicle);
+
     this.apiService.postUserVehicle(userVehicle).subscribe(result => {
+      if(result === 200) {
+        alert('登録OK')
+        this.getVehicleList();
+      } else {
+        alert('登録失敗しました。')
+      }
+
       console.log(result);
-    })
+    });
   }
 
 
@@ -258,7 +279,7 @@ export class VehicleRegisterComponent implements OnInit {
    * @returns
    */
   private setFirstRegistrationData(): string {
-    return this.eraId.value + '/'
+    return this.eraSelect + '/'
       + this.firstRegistrationYear.value + '/'
       + this.firstRegistrationMonth.value;
   }
@@ -278,7 +299,7 @@ export class VehicleRegisterComponent implements OnInit {
    * 車台番号を設定する
    * @returns
    */
-  private serChassisNo():string[] {
+  private serChassisNo(): string[] {
     let result = []
     result[0] = this.modelNo.value;
     result[1] = this.chassisNo.value;
@@ -289,11 +310,10 @@ export class VehicleRegisterComponent implements OnInit {
    * 指定類別を設定する
    * @returns
    */
-  private designatedClassification() :string {
+  private designatedClassification(): string {
     return this.designatedNo.value + '/'
-    + this.classificationNo.value
+      + this.classificationNo.value
   }
-
 
 
 }

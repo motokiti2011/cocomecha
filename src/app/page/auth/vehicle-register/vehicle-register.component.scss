@@ -77,9 +77,15 @@
     margin-right: 20px;
   }
 
+  #coler_select {
+    width: 150px;
+    height: 35px;
+  }
+
   #date_select {
-    width: 50px;
-    height: 30px;
+    width: 80px;
+    height: 35px;
+    margin-right: 30px;
   }
 
   #date {
@@ -202,6 +208,16 @@
   .adress {
     text-align: center;
     font-size: x-large;
+  }
+
+  .mandatory {
+    width: 50px;
+    color: #ffff;
+    background-color: #cc0000;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    font-size: 14px;
+    text-align: center;
   }
 
 
