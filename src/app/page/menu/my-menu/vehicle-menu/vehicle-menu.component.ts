@@ -52,13 +52,18 @@ export class VehicleMenuComponent implements OnInit {
 
   /**
    * 車両選択イベント
-   * @param id 
+   * @param id
    */
   onVehicleSelect(id: string) {
     console.log(id);
     // 選択されたIDをキーに車両詳細画面に遷移する
-    // this.router.navigate(["/vehicle-register"]);
-    // console.log('vehicle-register')
+    this.router.navigate(["edit-vehicle"],
+      {
+        queryParams: {vehicleId: id}
+      });
+
+
+
   }
 
 
@@ -90,8 +95,8 @@ export class VehicleMenuComponent implements OnInit {
 
   /**
    * 車検満了日と現在の日付から表示内容を設定する。
-   * @param date 
-   * @returns 
+   * @param date
+   * @returns
    */
   private setInspectionData(date: string): string {
     let result = '未設定です。'

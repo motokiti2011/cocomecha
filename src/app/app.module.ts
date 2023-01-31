@@ -95,7 +95,8 @@ const ROUTE_TABLE: Routes = [
   { path: 'fcmc-implaetion', component: FactoryMechanicImpletionComponent, canActivate: [RoutingGuard] },
   { path: 'service-evaluation', component: ServiceEvaluationComponent, canActivate: [RoutingGuard] },
   { path: 'service-relisted', component: ServiceRelistedComponent, canActivate: [RoutingGuard] },
-  { path: 'vehicle-menu', component: VehicleMenuComponent, canActivate: [RoutingGuard] }  
+  { path: 'vehicle-menu', component: VehicleMenuComponent, canActivate: [RoutingGuard] },
+  { path: 'edit-vehicle', component: EditVehicleInfoComponent, canActivate: [RoutingGuard] }
 ]
 
 @NgModule({

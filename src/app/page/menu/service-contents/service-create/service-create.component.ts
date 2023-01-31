@@ -358,7 +358,7 @@ export class ServiceCreateComponent implements OnInit {
       this.explanationDiv = false;
     }
 
-    if (!this.titleDiv && !this.areaDiv 
+    if (!this.titleDiv && !this.areaDiv
       && !this.priceDiv && !this.explanationDiv && !this.preferredDateDiv
       && !this.timeDiv) {
       // 確定ボタン活性
@@ -677,11 +677,6 @@ export class ServiceCreateComponent implements OnInit {
       }
     });
   }
-
-
-
-
-
 
 
   onDummy() {
