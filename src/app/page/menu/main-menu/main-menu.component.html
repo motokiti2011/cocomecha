@@ -15,7 +15,7 @@
       <!-- ログイン後 -->
       <div *ngIf="temporaryUserDiv; else elseContent">
         <div class="menu_item item" (click)="onUserResister()">ユーザー登録</div>
-        <p>ユーザー登録が未完了です。登録をしてください。</p>
+        <p>ユーザー登録が未完了です。<br>登録をしてください。</p>
       </div>
       <ng-template #elseContent>
         <div class="menu_item item" (click)="onMypage()">マイページ</div>

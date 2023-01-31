@@ -9,10 +9,12 @@ import {
   isNil as _isNil,
   cloneDeep as _cloneDeep,
 } from 'lodash';
-
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { AuthUserService } from '../authUser.service';
 import { ApiSerchService } from '../../service/api-serch.service';
 import { UploadService } from '../../service/upload.service';
+import { FormService } from '../../service/form.service';
+
 
 @Component({
   selector: 'app-user-register',
@@ -24,21 +26,67 @@ export class UserRegisterComponent implements OnInit {
   // ユーザー情報
   user: user = initUserInfo;
 
+
+  /** フォームコントロール */
+  name = new FormControl('名前',[
+    Validators.required
+  ]);
+
+  mail = new FormControl('',[
+    Validators.required,
+    Validators.email
+  ]);
+
+  telNo1 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  telNo2 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  telNo3 = new FormControl('',[
+    Validators.required,
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  postCode1 = new FormControl('',[
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(3)
+  ]);
+
+  postCode2 = new FormControl('',[
+    Validators.pattern('[0-9 ]*'),
+    Validators.maxLength(4)
+  ]);
+
+  /** フォームグループオブジェクト */
+  groupForm = this.builder.group({
+    name: this.name,
+    mail: this.mail,
+    telNo1: this.telNo1,
+    telNo2: this.telNo2,
+    telNo3: this.telNo3,
+    postCode1: this.postCode1,
+    postCode2: this.postCode2
+  })
+
+  /** その他インプットデータ */
   inputData = {
-    userId: '',
-    userName: '',
-    mailAdress: '',
-    TelNo1: '',
     areaNo1: '',
     areaNo2: '',
     adress: '',
-    postCode: '',
     introduction: '',
   }
 
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
-  areaSelect = '';
+  areaSelect = 0;
 
   imageFile: any = null;
 
@@ -48,6 +96,8 @@ export class UserRegisterComponent implements OnInit {
     private apiService: ApiSerchService,
     private router: Router,
     private s3: UploadService,
+    private builder: FormBuilder,
+    private form: FormService,
   ) { }
 
   ngOnInit(): void {
@@ -57,8 +107,7 @@ export class UserRegisterComponent implements OnInit {
         this.location.back();
         return;
       }
-      this.inputData.userId = user.userId;
-
+      this.user.userId = user.userId;
     });
   }
 
@@ -132,23 +181,20 @@ export class UserRegisterComponent implements OnInit {
    */
   private userResister() {
     console.log(this.inputData);
-    if(_isNil(this.inputData.userId) || this.inputData.userId == ''
-    || _isNil(this.inputData.userName) || this.inputData.userName == ''
-    || _isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == ''
-    || _isNil(this.inputData.mailAdress) || this.inputData.mailAdress == '') {
+    if(_isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == '') {
       alert('必須項目です。');
     } else {
-      this.user.userId = this.inputData.userId;
+      this.user.userId = this.user.userId;
       this.user.userValidDiv = '0';
       this.user.corporationDiv = '0';
-      this.user.userName = this.inputData.userName;
-      this.user.mailAdress = this.inputData.mailAdress;
-      this.user.TelNo1 = this.inputData.TelNo1;
-      this.user.areaNo1 = this.inputData.areaNo1;
+      this.user.userName = this.name.value;
+      this.user.mailAdress = this.mail.value;
+      this.user.TelNo1 = this.form.setTelNo(this.telNo1.value, this.telNo2.value, this.telNo3.value );
+      this.user.areaNo1 = String(this.areaSelect);
       this.user.areaNo2 = this.inputData.areaNo2;
       this.user.adress = this.inputData.adress;
       this.user.profileImageUrl = ''; // 仮
-      this.user.postCode = this.inputData.postCode;
+      this.user.postCode = this.form.setPostCode(this.postCode1.value, this.postCode2.value);
       this.user.introduction = this.inputData.introduction;
 
       this.apiService.postUser(this.user).subscribe(result => {
