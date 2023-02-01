@@ -6,7 +6,6 @@
 
   <div class="main">
 
-
     <div class="container">
       <div *ngIf="vehicleList.length">
         <div class="row mt-4">
@@ -36,8 +35,8 @@
                 <td>{{vehicle.vehicleNo}}</td>
                 <td>{{vehicle.mileage | number: '1.0-0'}} Km</td>
                 <td>{{vehicle.inspectionExpirationDate}}</td>
-                <td>履歴はこちら</td>
-                <td>削除はこちら</td>
+                <td><button type="button" class="btn btn-secondary" (click)="onHistory(vehicle.vehicleId)">履歴</button></td>
+                <td><button type="button" class="btn btn-secondary" (click)="onDeleteVehicle(vehicle.vehicleId)">削除</button></td>
               </tr>
             </tbody>
           </table>
@@ -48,10 +47,11 @@
       <div *ngIf="vehicleList.length == 0">
 
         <div>現在登録されている車両はありません。</div>
+        <div><button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">新規登録</button></div>
 
       </div>
 
-      
+
     </div>
 
 

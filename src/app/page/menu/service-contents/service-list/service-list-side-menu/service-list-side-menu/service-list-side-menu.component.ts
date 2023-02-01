@@ -62,7 +62,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   /** ユーザー認証済フラグ */
   userCertificationDiv = false;
   /** 地域情報選択状態初期値 */
-  areaSelect = ''
+  areaSelect = 0;
   /** カテゴリー選択状態初期値 */
   categorySelect = '';
   /** 地域情報データ一覧 */
@@ -90,7 +90,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   ngOnInit(): void {
     // 地域のセレクトボックス初期選択処理
     if (this.serchArea1 != '0') {
-      const initArea = _find(this.areaData, data => data.id == Number(this.serchArea1))?.prefectures;
+      const initArea = _find(this.areaData, data => data.id == Number(this.serchArea1))?.id;
       if (initArea != undefined) {
         this.areaSelect = initArea;
       }
@@ -136,12 +136,12 @@ export class ServiceListSideMenuComponent implements OnInit {
    * 選択した地域情報をイベント発火させ親へと戻す
    */
   onArea() {
-    console.log(this.areaSelect)
-    const areaId = _find(this.areaData, data => data.prefectures == this.areaSelect)?.id
-    if(areaId == undefined ) {
+    // console.log(this.areaSelect)
+    // const areaId = _find(this.areaData, data => data.id == this.areaSelect)?.id
+    if(this.areaSelect == undefined ) {
       this.chengeArea.emit('0');
     } else {
-      this.chengeArea.emit(String(areaId));
+      this.chengeArea.emit(String(this.areaSelect));
     }
 
   }
@@ -151,12 +151,12 @@ export class ServiceListSideMenuComponent implements OnInit {
    * 選択した作業内容をイベント発火させ親へと戻す
    */
   onWorkContents() {
-    console.log(this.categorySelect)
-    const category = _find(this.categoryData,data => data.category === this.categorySelect)?.id
-    if(category === undefined) {
+    // console.log(this.categorySelect)
+    // const category = _find(this.categoryData,data => data.category === this.categorySelect)?.id
+    if(this.categorySelect === undefined) {
       this.chengeArea.emit('0');
     } else {
-      this.chengeArea.emit(String(category));
+      this.chengeArea.emit(String(this.categorySelect));
     }
   }
 
