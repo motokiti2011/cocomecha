@@ -1,16 +1,18 @@
 <div class="button-item">
 
+  <p>地域</p>
+  <select class="area-select" name="area" [(ngModel)]="areaSelect" (change)="onArea()">
+    <option value="">未選択</option>
+    <option *ngFor="let area of areaData" [value]="area.code" [selected]="area.code === areaSelect">
+      {{area.prefectures}}</option>
+  </select>
+
+
+
   <div>
     <input type="button" value="検索する" (click)="onSerch()" />
   </div>
 
-
-  <p>地域</p>
-  <select class="area-select" name="area" [(ngModel)]="areaSelect" (change)="onArea()">
-    <option value="">未選択</option>
-    <option *ngFor="let area of areaData" [value]="area.prefectures" [selected]="area.id === areaSelect">
-      {{area.prefectures}}</option>
-  </select>
 </div>
 
 <div class="button-item">

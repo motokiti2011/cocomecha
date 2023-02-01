@@ -1,31 +1,37 @@
-
-
-<!-- <hr class="line" noshade=""> -->
-
 <div class="container">
   <div class="row">
     <div class="col-1"></div>
 
-    <div *ngIf="!authUserDiv; else elseContent">
-      <!-- ログイン前 -->
-      <div class="menu_item item" (click)="onSinup()">新規登録</div>
-      <div class="menu_item item" (click)="onLogin()">ログイン</div>
-    </div>
-    <ng-template #elseContent>
-      <!-- ログイン後 -->
-      <div *ngIf="temporaryUserDiv; else elseContent">
-        <div class="menu_item item" (click)="onUserResister()">ユーザー登録</div>
-        <p>ユーザー登録が未完了です。<br>登録をしてください。</p>
+    <div class="col-6">
+      <div *ngIf="!authUserDiv; else elseContent">
+        <!-- ログイン前 -->
+        <div class="user_resister">
+          <div class="menu_item item" (click)="onSinup()">新規登録</div>
+          <div class="menu_item item" (click)="onLogin()">ログイン</div>
+        </div>
       </div>
       <ng-template #elseContent>
-        <div class="menu_item item" (click)="onMypage()">マイページ</div>
-        <div class="menu_item item" (click)="onLogout()">ログアウト</div>
+        <!-- ログイン後 -->
+        <div *ngIf="temporaryUserDiv; else elseContent">
+          <div class="user_resister">
+            <div>
+              <div class="menu_item item" (click)="onUserResister()">ユーザー登録</div>
+              <p>ユーザー登録が未完了です。登録をしてください。</p>
+            </div>
+            <div class="menu_item item" (click)="onLogout()">ログアウト</div>
+          </div>
+        </div>
+        <ng-template #elseContent>
+          <div class="user_resister">
+            <div class="menu_item item" (click)="onMypage()">マイページ</div>
+            <div class="menu_item item" (click)="onLogout()">ログアウト</div>
+          </div>
+        </ng-template>
+
+
       </ng-template>
 
-
-    </ng-template>
-
-    <div class="col-4"></div>
+    </div>
 
     <div class="menu_item item" (click)="serviceSerchConditions()">サービス・依頼を探す</div>
     <div class="menu_item item" (click)="serviceReqest()">依頼する</div>
@@ -41,5 +47,5 @@
 <button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">車両情報メニュー</button>
 
 <div class="image-area">
-<img src="assets/images/test1rogo.png" alt="image1">
+  <img src="assets/images/test1rogo.png" alt="image1">
 </div>

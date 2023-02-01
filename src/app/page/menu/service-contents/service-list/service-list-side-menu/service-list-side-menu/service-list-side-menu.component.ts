@@ -15,7 +15,8 @@ import {
 import { Observable, of, forkJoin } from 'rxjs';
 import { catchError, distinct, map, switchMap, tap } from "rxjs/operators";
 import { serchCategoryData } from 'src/app/entity/serchCategory';
-import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
+import { prefecturesCoordinateData, cityApiDate } from 'src/app/entity/prefectures';
+import { ApiAreaSerchService } from 'src/app/page/service/api-area-serch.service';
 import { serviceContents } from 'src/app/entity/serviceContents';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
@@ -25,6 +26,7 @@ import { ServiceListcomponentService } from '../../service-listcomponent.service
 import { Router } from '@angular/router';
 import { serchSidAmount } from 'src/app/entity/serchSid';
 import { noUndefined } from '@angular/compiler/src/util';
+
 
 
 @Component({
@@ -62,7 +64,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   /** ユーザー認証済フラグ */
   userCertificationDiv = false;
   /** 地域情報選択状態初期値 */
-  areaSelect = 0;
+  areaSelect = '';
   /** カテゴリー選択状態初期値 */
   categorySelect = '';
   /** 地域情報データ一覧 */
@@ -85,12 +87,13 @@ export class ServiceListSideMenuComponent implements OnInit {
     private auth: AuthUserService,
     private service: ServiceListcomponentService,
     private router: Router,
+    private areaSerchService: ApiAreaSerchService,
   ) { }
 
   ngOnInit(): void {
     // 地域のセレクトボックス初期選択処理
     if (this.serchArea1 != '0') {
-      const initArea = _find(this.areaData, data => data.id == Number(this.serchArea1))?.id;
+      const initArea = _find(this.areaData, data => data.id == Number(this.serchArea1))?.code;
       if (initArea != undefined) {
         this.areaSelect = initArea;
       }
@@ -143,6 +146,11 @@ export class ServiceListSideMenuComponent implements OnInit {
     } else {
       this.chengeArea.emit(String(this.areaSelect));
     }
+    // 地域セレクト情報のデータを取得する
+    this.areaSerchService.serchCityData(this.areaSelect).subscribe(res => {
+      console.log(res);
+    })
+
 
   }
 

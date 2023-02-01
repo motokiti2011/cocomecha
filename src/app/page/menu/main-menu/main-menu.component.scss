@@ -1,8 +1,4 @@
 
-// .h_menu {
-//   // display: flex;
-// }
-
 .menu_item {
   margin-left: 25px;
 }
@@ -21,20 +17,20 @@
   justify-content: flex-start;
   height:40vh;
   width:100%;
-  // margin: 10%;
 }
 
 
 .item {
   margin-top: 15px;
-  // text-align:center;
   font-size: large;
 }
 
+.user_resister {
+  display: flex;
+}
+
 .item:hover {
-  // color: #fff;
   text-decoration:underline;
-  // background: #dddddd;
 }
 
 
