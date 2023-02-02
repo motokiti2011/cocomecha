@@ -5,7 +5,7 @@ export interface serchCondition {
   // Y座標
   mapOffsetY:	number;
   // 地域ID
-  areaNum: number;
+  areaNum: string;
   // カテゴリー
   category: number;
 

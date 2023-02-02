@@ -57,9 +57,9 @@
         <div class="col-3 item">郵便番号</div>
         <div class="col-5">
           <div class="post_forms">
-            <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" />
+            <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" (change)="onPostCodeSerch()"/>
             <p class="mainus">-</p>
-            <input class="form-control" id="postCode" type="tel" [formControl]="postCode2" />
+            <input class="form-control" id="postCode" type="tel" [formControl]="postCode2" (change)="onPostCodeSerch()"/>
           </div>
         </div>
         <div class="col-3">
@@ -74,8 +74,8 @@
 
           <select id="area-select" name="area" [formControl]="officeArea1" >
             <option value="">地域を選択してください。</option>
-            <option *ngFor="let area of areaData" [value]="area.prefectures"
-              [selected]="area.prefectures === areaSelect">
+            <option *ngFor="let area of areaData" [value]="area.code"
+              [selected]="area.code === areaSelect">
               {{area.prefectures}}</option>
           </select>
 

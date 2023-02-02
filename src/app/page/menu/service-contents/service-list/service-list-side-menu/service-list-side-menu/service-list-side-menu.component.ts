@@ -25,7 +25,7 @@ import { ServiceListcomponentService } from '../../service-listcomponent.service
 import { Router } from '@angular/router';
 import { serchSidAmount } from 'src/app/entity/serchSid';
 import { noUndefined } from '@angular/compiler/src/util';
-import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
+import { area1SelectArea2Data, area1SelectArea2 } from 'src/app/entity/area1SelectArea2';
 
 
 @Component({
@@ -68,8 +68,15 @@ export class ServiceListSideMenuComponent implements OnInit {
   categorySelect = '';
   /** 地域情報データ一覧 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
+  /** 地域２（市町村）データ */
+  areaCityData: area1SelectArea2[] = []
+  /** 地域２（市町村）選択 */
+  citySelect = '';
+
   /** カテゴリーデータ一覧 */
   categoryData = serchCategoryData;
+
+
 
   /** 金額チェックボックスデータ */
   serchAmount = [
@@ -91,10 +98,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   ngOnInit(): void {
     // 地域のセレクトボックス初期選択処理
     if (this.serchArea1 != '0') {
-      const initArea = _find(this.areaData, data => data.id == Number(this.serchArea1))?.code;
-      if (initArea != undefined) {
-        this.areaSelect = initArea;
-      }
+      this.areaSelect = this.serchArea1;
     }
 
     // 作業内容のセレクトボックス初期選択処理
@@ -137,19 +141,24 @@ export class ServiceListSideMenuComponent implements OnInit {
    * 選択した地域情報をイベント発火させ親へと戻す
    */
   onArea() {
-    // console.log(this.areaSelect)
     if(this.areaSelect == undefined ) {
       this.chengeArea.emit('0');
+      this.areaCityData = [];
     } else {
       this.chengeArea.emit(String(this.areaSelect));
+      // 詳細エリア選択のセレクト対象を設定する
+      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect)
     }
-    const city = _find(postCodeInfoData, data => data.prefecturesCode == this.areaSelect)
-
-    console.log(city);
-
-
 
   }
+
+  /**
+   * 地域２（市町村）選択イベント
+   */
+  onAreaCity() {
+    console.log(this.citySelect)
+  }
+
 
   /**
    * 作業内容押下時

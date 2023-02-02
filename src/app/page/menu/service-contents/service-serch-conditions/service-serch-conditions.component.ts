@@ -31,7 +31,7 @@ export class ServiceSerchConditionsComponent implements OnInit {
   serchCondition: serchCondition = {
     mapOffsetX: 0,
     mapOffsetY: 0,
-    areaNum: 0,
+    areaNum: '0',
     category: 0,
   }
 
@@ -77,7 +77,7 @@ export class ServiceSerchConditionsComponent implements OnInit {
     const serchResult = this.service.coordinateMap(this.serchCondition);
 
     // 戻り値が0以外の場合検索結果を格納の上画面遷移
-    if (serchResult > 0) {
+    if (serchResult != '0') {
       this.serchCondition.areaNum = serchResult;
       const serchData = { serchType: 'area', value: String(serchResult) }
       this.onSerchServiceModal(serchData);
@@ -89,7 +89,7 @@ export class ServiceSerchConditionsComponent implements OnInit {
    * サービス一覧画面に遷移する。
    * @param i 件名管理ID
    */
-  areaSelect(i: number) {
+  areaSelect(i: string) {
     // 検索条件の都道府県IDに選択地を設定する
     this.serchCondition.areaNum = i;
     const serchData = { serchType: 'area', value: String(i) }

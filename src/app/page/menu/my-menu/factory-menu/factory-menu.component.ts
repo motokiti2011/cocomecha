@@ -13,7 +13,8 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import { filter as _filter} from 'lodash'
 import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
-
+import { find as _find } from 'lodash'
+import { postCodeInfo, postCodeInfoData } from 'src/app/entity/postCodeInfo';
 
 @Component({
   selector: 'app-factory-menu',
@@ -259,7 +260,7 @@ export class FactoryMenuComponent implements OnInit {
     this.dispInfo.officeName = this.officeName.value;
     this.dispInfo.officeTel[0] = this.formService.setTelNo(this.telNo1.value, this.telNo2.value, this.telNo3.value)
     this.dispInfo.officeMailAdress = this.officeMailAdress.value;
-    this.dispInfo.officeArea1 = this.formService.setAreaId(this.officeArea1.value);
+    this.dispInfo.officeArea1 = this.officeArea1.value;
     this.dispInfo.officePostCode = this.formService.setPostCode(this.postCode1.value, this.postCode2.value);
     this.dispInfo.officePR = this.officeName.value;
     this.apiService.postOffice(this.dispInfo).subscribe(res => {
@@ -279,6 +280,31 @@ export class FactoryMenuComponent implements OnInit {
   onInitFactory() {
     this.router.navigate(["factory-register"]);
   }
+
+  /**
+   * 郵便番号入力時イベント
+   */
+  onPostCodeSerch() {
+    const post1 = this.postCode1.value.replace(/\s+/g, '');
+    const post2 = this.postCode2.value.replace(/\s+/g, '');
+    const post = post1 + post2;
+    // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
+    if(post1 != '' && post2 != '' ) {
+      const postCodeConectData = _find(postCodeInfoData, data => data.postCode == post)
+      if(postCodeConectData) {
+        // 地域1(都道府県名)
+        this.areaSelect = postCodeConectData.prefecturesCode;
+        this.officeArea1.setValue(postCodeConectData.prefecturesCode);
+        // 地域2(市町村)
+        this.dispInfo.officeArea = postCodeConectData.municipality;
+        // 地域3(その他)
+        this.dispInfo.officeAdress = postCodeConectData.townArea;
+      }
+    }
+  }
+
+
+
 
   onSomeUserInfo(e: string) {
 
@@ -320,7 +346,9 @@ export class FactoryMenuComponent implements OnInit {
    */
   private initSetting(info: officeInfo) {
     this.dispInfo.officeId = info.officeId;
-    this.officeArea1.setValue(this.formService.setAreaName(info.officeArea1));
+    this.officeArea1.setValue(info.officeArea1);
+    this.areaSelect = info.officeArea1;
+    console.log(this.areaSelect);
     this.dispInfo.officeArea = info.officeArea;
     this.dispInfo.officeAdress = info.officeAdress;
     this.dispInfo.officePR = info.officePR;

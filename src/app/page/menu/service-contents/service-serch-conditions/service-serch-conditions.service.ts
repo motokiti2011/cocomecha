@@ -16,7 +16,7 @@ export class ServiceSerchConditionsService {
    * @param condition　画面クリック時の座標情報
    * @return 都道府県管理ID
    */
-  public coordinateMap(condition :serchCondition) : number {
+  public coordinateMap(condition :serchCondition) : string {
     condition.mapOffsetX
 
     const detailx = _filter(prefecturesCoordinateData, detail =>
@@ -25,7 +25,7 @@ export class ServiceSerchConditionsService {
       );
 
     if(detailx.length < 0) {
-      return 0;
+      return '0';
     }
     const detaily = _filter(detailx, detail =>
       detail.ytop <= condition.mapOffsetY
@@ -33,9 +33,9 @@ export class ServiceSerchConditionsService {
       );
 
     if(detaily.length < 0) {
-      return 0;
+      return '0';
     } else {
-      return detaily[0].id;
+      return detaily[0].code;
     }
 
   }
