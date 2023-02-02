@@ -16,7 +16,6 @@ import { Observable, of, forkJoin } from 'rxjs';
 import { catchError, distinct, map, switchMap, tap } from "rxjs/operators";
 import { serchCategoryData } from 'src/app/entity/serchCategory';
 import { prefecturesCoordinateData, cityApiDate } from 'src/app/entity/prefectures';
-import { ApiAreaSerchService } from 'src/app/page/service/api-area-serch.service';
 import { serviceContents } from 'src/app/entity/serviceContents';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
@@ -26,7 +25,7 @@ import { ServiceListcomponentService } from '../../service-listcomponent.service
 import { Router } from '@angular/router';
 import { serchSidAmount } from 'src/app/entity/serchSid';
 import { noUndefined } from '@angular/compiler/src/util';
-
+import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
 
 
 @Component({
@@ -87,7 +86,6 @@ export class ServiceListSideMenuComponent implements OnInit {
     private auth: AuthUserService,
     private service: ServiceListcomponentService,
     private router: Router,
-    private areaSerchService: ApiAreaSerchService,
   ) { }
 
   ngOnInit(): void {
@@ -140,16 +138,15 @@ export class ServiceListSideMenuComponent implements OnInit {
    */
   onArea() {
     // console.log(this.areaSelect)
-    // const areaId = _find(this.areaData, data => data.id == this.areaSelect)?.id
     if(this.areaSelect == undefined ) {
       this.chengeArea.emit('0');
     } else {
       this.chengeArea.emit(String(this.areaSelect));
     }
-    // 地域セレクト情報のデータを取得する
-    this.areaSerchService.serchCityData(this.areaSelect).subscribe(res => {
-      console.log(res);
-    })
+    const city = _find(postCodeInfoData, data => data.prefecturesCode == this.areaSelect)
+
+    console.log(city);
+
 
 
   }
