@@ -13,7 +13,6 @@ import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { ServiceListcomponentService } from './service-listcomponent.service';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { userFavorite } from 'src/app/entity/userFavorite';
-import { loginUser } from 'src/app/entity/loginUser';
 import { serchSidAmount } from 'src/app/entity/serchSid';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
@@ -23,6 +22,7 @@ import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { serchServiceCombination } from 'src/app/entity/serchCondition';
 
 @Component({
   selector: 'app-service-list',
@@ -33,7 +33,7 @@ export class ServiceListComponent implements OnInit {
 
 
   // ページング表示開始位置
-  begin= 0;
+  begin = 0;
   // ページング最大件数
   length = 6;
 
@@ -72,7 +72,7 @@ export class ServiceListComponent implements OnInit {
   /** 検索条件：カテゴリー  */
   serchCategory = '0';
   /** 検索情報 */
-  serchInfo:serchInfo = serchParam;
+  serchInfo: serchInfo = serchParam;
   /** アクセスユーザー */
   acseccUser = '';
   /** 認証ユーザー情報有無フラグ */
@@ -128,32 +128,36 @@ export class ServiceListComponent implements OnInit {
       // this.loading.show();
       // 検索条件取得
       this.serchInfo.areaNo1 = params['areaNum'];
+      this.serchInfo.category = params['category'];
       this.searchTargetService = params['targetService'];
 
-      if(this.searchTargetService !== '0') {
+      this.serchArea1 = this.serchInfo.areaNo1;
+      this.serchCategory = this.serchInfo.category;
+
+      if (this.searchTargetService !== '0') {
         this.getServiceContents();
       } else {
         this.getSlip();
       }
       // 認証有無状態を判定する
       const authUser = this.cognito.initAuthenticated();
-        if (authUser === null) {
-          // 認証情報がない場合、お気に入り、閲覧履歴は非表示
-          this.userCertificationDiv = false;
-        } else {
-          // ユーザー情報を基にお気に入り情報を取得
-          this.userCertificationDiv = true;
-          this.authUser = authUser;
-          this.acseccUser = authUser;
-          // ユーザー情報ある場合
-          this.apiGsiService.serchFavorite(authUser).subscribe(data => {
-            this.favoriteList = this.service.favoriteUnuq(data);
-            if (data.length > 0) {
-              this.setFavorite();
-            }
-          });
-        }
-      });
+      if (authUser === null) {
+        // 認証情報がない場合、お気に入り、閲覧履歴は非表示
+        this.userCertificationDiv = false;
+      } else {
+        // ユーザー情報を基にお気に入り情報を取得
+        this.userCertificationDiv = true;
+        this.authUser = authUser;
+        this.acseccUser = authUser;
+        // ユーザー情報ある場合
+        this.apiGsiService.serchFavorite(authUser).subscribe(data => {
+          this.favoriteList = this.service.favoriteUnuq(data);
+          if (data.length > 0) {
+            this.setFavorite();
+          }
+        });
+      }
+    });
   }
 
   /**
@@ -199,13 +203,198 @@ export class ServiceListComponent implements OnInit {
             this.service.convertServiceContents(content));
         }
       } else {
+        // ローディング解除
+        this.overlayRef.detach();
         return;
       }
       count++
+      // ローディング解除
+      this.overlayRef.detach();
     });
     // 初期ページ設定を行う
     this.initPageSetting();
   }
+
+
+
+  /********************* 画面操作イベント ************************/
+
+  /**
+   * 前へボタン押下イベント
+   * @return void
+   */
+  onContentsForward(): void {
+    // 1ページ目の場合何もしない
+    if (this.currentIndex == 1) {
+      return;
+    }
+    this.currentIndex = this.currentIndex - 1;
+    this.setDisplayService();
+  }
+  /**
+   * 次へボタン押下イベント
+   * @return void
+   */
+  onContentsNext(): void {
+    // 最終ページの場合何もしない
+    if (this.currentIndex = this.totalPage) {
+      return;
+    }
+    this.currentIndex = this.currentIndex + 1;
+    this.setDisplayService();
+  }
+
+  /**
+   * Indexボタン押下イベント
+   * @return void
+   */
+  onContentsIndex(index: number): void {
+    console.log(index);
+    this.currentIndex = index;
+    this.setDisplayService();
+  }
+
+  /**
+   * サービス選択時イベント
+   * @param content 選択サービスコンテンツ
+   * @return void
+   */
+  onContentsSelect(content: serviceContents): void {
+    if (this.userCertificationDiv) {
+      // 認証されている場合は閲覧履歴情報に登録
+      this.service.postBrowsingHistory(content, this.authUser).subscribe(d => {
+        console.log(d)
+      });
+    }
+
+    this.router.navigate(["service-detail-component"],
+      { queryParams: { serviceId: content.id, searchTargetService: this.searchTargetService } });
+    console.log(content);
+  }
+
+  /**
+   * お気に入り登録処理
+   * @param contents
+   */
+  onContentFavorite(contents: serviceContents) {
+    console.log('お気に入り：' + contents.id);
+
+    // サービス一覧のお気に入りFlgを制御する
+    this.contentsList = this.service.favoriteSetting(contents.id, this.contentsList);
+    // 画面表示のお気に入りFlgを制御する
+    this.displayContentsList = this.contentsList;
+    // 認証情報取得
+    this.auth.userInfo$.subscribe(user => {
+      if (user) {
+        // お気に入り登録有無を判定し更新する。
+        this.service.postFavorite(this.favoriteList, contents, user.userId);
+      }
+    });
+  }
+
+  /******************* トップイベント **************************/
+
+  /**
+   * 表示順セレクトボックス選択時
+   */
+  onDisplayList() {
+    console.log(this.selected);
+  }
+
+
+  /******************* サイドメニューイベント **************************/
+
+
+  /**
+   * サイドメニューの検索押下イベント
+   * @param event 
+   */
+  onServiceSerch(event: serchServiceCombination) {
+    console.log(event);
+    if (this.searchTargetService !== '0') {
+      this.serchServiceContents(event);
+    } else {
+      this.serchSlip(event);
+    }
+  }
+
+  /**
+   * サイドメニューエリア選択時
+   */
+  onAreaChenge(e: string) {
+    if (_isNil(e)) {
+      this.serchArea1 = '0';
+    } else {
+      this.serchArea1 = e;
+    }
+
+    this.service.getSidSerchSlip(String(this.serchArea1), String(this.serchCategory)).subscribe(slip => {
+      this.seviceListSetting(slip);
+      this.initSetServiceContents(slip);
+      if (this.userCertificationDiv) {
+        this.apiGsiService.serchFavorite(this.authUser).subscribe(data => {
+          this.favoriteList = this.service.favoriteUnuq(data);
+          if (data.length > 0) {
+            this.setFavorite();
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * サイドメニューカテゴリー選択時
+   */
+  onCategoryChenge(e: string) {
+    if (_isNil(e)) {
+      this.serchCategory = '0';
+    } else {
+      this.serchCategory = e;
+    }
+    this.service.getSidSerchSlip(String(this.serchArea1), String(this.serchCategory)).subscribe(slip => {
+      this.seviceListSetting(slip);
+      this.initSetServiceContents(slip);
+      if (this.userCertificationDiv) {
+        this.apiGsiService.serchFavorite(this.authUser).subscribe(data => {
+          this.favoriteList = this.service.favoriteUnuq(data);
+          if (data.length > 0) {
+            this.setFavorite();
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * サイドメニュー金額選択時
+  */
+  onAmountChenge(e: serchSidAmount[]) {
+    // 検索条件なしの場合全件表示
+    if (e.length == 0) {
+      this.setServiceContents(this.standardSlip);
+    } else {
+      // 金額絞り込み
+      this.setServiceContents(this.service.serchAmtContent(this.standardSlip, e))
+    }
+  }
+
+  /**
+   * 絞り込みボタン押下時
+   */
+  onSerch() {
+
+  }
+
+  /**
+   * 戻るボタン押下イベント
+   * @return void
+   */
+  goBack(): void {
+    this.location.back();
+  }
+
+
+  /******************* 以下内部処理 **************************/
 
   /**
    * 初回ページ設定を行う
@@ -239,6 +428,8 @@ export class ServiceListComponent implements OnInit {
   private setFavorite() {
     const dList = this.displayContentsList;
     this.displayContentsList = this.service.setFavorite(dList, this.favoriteList);
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
   /**
@@ -248,12 +439,14 @@ export class ServiceListComponent implements OnInit {
   private seviceListSetting(slipDetail: slipDetailInfo[]): void {
     slipDetail.forEach((content) => {
       if (!(_isNil(content))) {
-        if(content.thumbnailUrl == '') {
+        if (content.thumbnailUrl == '') {
           content.thumbnailUrl = this.noImage;
         }
         this.contentsList.push(
           this.service.convertServiceContents(content));
       }
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
@@ -328,166 +521,36 @@ export class ServiceListComponent implements OnInit {
   }
 
 
-  /********************* 画面操作イベント ************************/
-
   /**
-   * 前へボタン押下イベント
-   * @return void
+   * 検索結果をもとにサービス商品を検索する
+   * @param event 
    */
-  onContentsForward(): void {
-    // 1ページ目の場合何もしない
-    if (this.currentIndex == 1) {
-      return;
-    }
-    this.currentIndex = this.currentIndex - 1;
-    this.setDisplayService();
-  }
-  /**
-   * 次へボタン押下イベント
-   * @return void
-   */
-  onContentsNext(): void {
-    // 最終ページの場合何もしない
-    if (this.currentIndex = this.totalPage) {
-      return;
-    }
-    this.currentIndex = this.currentIndex + 1;
-    this.setDisplayService();
-  }
-
-  /**
-   * Indexボタン押下イベント
-   * @return void
-   */
-  onContentsIndex(index: number): void {
-    console.log(index);
-    this.currentIndex = index;
-    this.setDisplayService();
-  }
-
-  /**
-   * サービス選択時イベント
-   * @param content 選択サービスコンテンツ
-   * @return void
-   */
-  onContentsSelect(content: serviceContents): void {
-    if (this.userCertificationDiv) {
-      // 認証されている場合は閲覧履歴情報に登録
-      this.service.postBrowsingHistory(content, this.authUser).subscribe(d => {
-        console.log(d)
-      });
-    }
-
-    this.router.navigate(["service-detail-component"],
-     { queryParams: { serviceId: content.id, searchTargetService: this.searchTargetService } });
-      console.log(content);
-  }
-
-  /**
-   * お気に入り登録処理
-   * @param contents
-   */
-  onContentFavorite(contents: serviceContents) {
-    console.log('お気に入り：' + contents.id);
-
-    // サービス一覧のお気に入りFlgを制御する
-    this.contentsList = this.service.favoriteSetting(contents.id, this.contentsList);
-    // 画面表示のお気に入りFlgを制御する
-    this.displayContentsList = this.contentsList;
-    // 認証情報取得
-    this.auth.userInfo$.subscribe(user => {
-      if (user) {
-        // お気に入り登録有無を判定し更新する。
-        this.service.postFavorite(this.favoriteList, contents, user.userId);
-      }
-    });
-  }
-
-  /******************* トップイベント **************************/
-
-  /**
-   * 表示順セレクトボックス選択時
-   */
-  onDisplayList() {
-    console.log(this.selected);
-  }
-
-
-  /******************* サイドメニューイベント **************************/
-
-  /**
-   * サイドメニューエリア選択時
-   */
-  onAreaChenge(e: string) {
-    if(_isNil(e)) {
-      this.serchArea1 = '0';
-    } else {
-      this.serchArea1 = e;
-    }
-
-    this.service.getSidSerchSlip(String(this.serchArea1), String(this.serchCategory)).subscribe(slip => {
+  private serchServiceContents(event: serchServiceCombination) {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.apiGsiService.serviceSerchCombination(event).subscribe(slip => {
       this.seviceListSetting(slip);
       this.initSetServiceContents(slip);
-      if (this.userCertificationDiv) {
-        this.apiGsiService.serchFavorite(this.authUser).subscribe(data => {
-          this.favoriteList = this.service.favoriteUnuq(data);
-          if (data.length > 0) {
-            this.setFavorite();
-          }
-        });
-      }
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
   /**
-   * サイドメニューカテゴリー選択時
+   * 検索結果をもとに伝票情報を取得する
+   * @param event 
    */
-  onCategoryChenge(e: string) {
-    if(_isNil(e)) {
-      this.serchCategory = '0';
-    } else {
-      this.serchCategory = e;
-    }
-    this.service.getSidSerchSlip(String(this.serchArea1), String(this.serchCategory)).subscribe(slip => {
+  private serchSlip(event: serchServiceCombination) {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.apiGsiService.slipSerchCombination(event).subscribe(slip => {
       this.seviceListSetting(slip);
       this.initSetServiceContents(slip);
-      if (this.userCertificationDiv) {
-        this.apiGsiService.serchFavorite(this.authUser).subscribe(data => {
-          this.favoriteList = this.service.favoriteUnuq(data);
-          if (data.length > 0) {
-            this.setFavorite();
-          }
-        });
-      }
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
-  /**
-   * サイドメニュー金額選択時
-  */
-  onAmountChenge(e: serchSidAmount[]) {
-    // 検索条件なしの場合全件表示
-    if (e.length == 0) {
-      this.setServiceContents(this.standardSlip);
-    } else {
-      // 金額絞り込み
-      this.setServiceContents(this.service.serchAmtContent(this.standardSlip, e))
-    }
-  }
 
-  /**
-   * 絞り込みボタン押下時
-   */
-  onSerch() {
-
-  }
-
-  /**
-   * 戻るボタン押下イベント
-   * @return void
-   */
-  goBack(): void {
-    this.location.back();
-  }
 
 }

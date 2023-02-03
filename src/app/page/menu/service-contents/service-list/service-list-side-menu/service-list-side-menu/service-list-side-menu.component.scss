@@ -1,3 +1,45 @@
+.container {
+  margin-left: 20px;  
+  .row {
+    margin: 0px 0px 20px 0px;
+
+    #amount {
+      width: 120px;      
+    }
+  }
+}
+
+.title {
+  margin: 0px 0px 5px 0px;
+  font-size: large;  
+}
+
+.area_serch {
+  height: 180px;
+  margin-top: 50px;
+}
+
+.select_box {
+  width: 215px;
+  height: 40px;
+}
+
+.btn_area {
+  margin: 10px 0px 0px 40px;
+}
+
+.amount_check {
+  // font-size: small;
+  font-size: smaller;
+}
+
+.form_amount {
+  display: flex;
+}
+
+
+
+
 .button-item {
   margin-left: 20px;
   margin-top: 40px;

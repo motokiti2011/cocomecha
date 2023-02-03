@@ -19,8 +19,6 @@ export interface serchCategory {
   category:	string;
 }
 
-
-
 export const serchCategoryData: serchCategory[] = [
   {id: 1, category: '洗車'},
   {id: 2, category: 'コーティング　ラッピング'},
@@ -29,3 +27,19 @@ export const serchCategoryData: serchCategory[] = [
   {id: 5, category: '点検・整備'},
   {id: 6, category: '手続き'},
 ];
+
+
+export interface serchServiceCombination {
+  // 地域１
+  area1: string,
+  // 地域２
+  area2: string,
+  // カテゴリー
+  category: string,
+  // 金額1
+  amount1: number,
+  // 金額2
+  amount2: number,
+  // 金額検索区分
+  amountSerchDiv: boolean;
+}

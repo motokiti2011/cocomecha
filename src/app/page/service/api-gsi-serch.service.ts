@@ -4,6 +4,7 @@ import { Observable, of, tap } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
+import { serviceContents } from 'src/app/entity/serviceContents';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { userFavorite } from 'src/app/entity/userFavorite';
@@ -13,6 +14,8 @@ import { userMyList } from 'src/app/entity/userMyList';
 import { userVehicle } from 'src/app/entity/userVehicle';
 import { serviceTransactionRequest } from 'src/app/entity/serviceTransactionRequest';
 import { factoryMechanicFavorite } from 'src/app/entity/factoryMechanicFavorite';
+import { serchServiceCombination } from 'src/app/entity/serchCondition';
+
 
 @Injectable({
   providedIn: 'root'
@@ -359,6 +362,58 @@ export class ApiGsiSerchService {
   }
 
 
+  /**
+   * 検索条件に応じた伝票情報を取得する
+   * @param value
+   * @returns
+   */
+    public slipSerchCombination(value: serchServiceCombination) : Observable<any> {
+      // リクエストボディ生成
+      const body = {
+        "IndexType": 'SERCH-SLIP-INDEX',
+        "Keys": {
+          "area1": value.area1,
+          "area2": value.area2,
+          "category": value.category,
+          "amount1": value.amount1,
+          "amount2": value.amount2,
+          "amountSerchDiv": value.amountSerchDiv
+        }
+      };
+      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/serchServiceContents', body).pipe(
+        // 取得できた場合ユーザー情報を返却
+        map((res: slipDetailInfo) => res),
+        // エラー時HTTPステータスコードを戻す
+        catchError((err: HttpErrorResponse) => of(undefined))
+      );
+    }
+
+
+  /**
+   * 検索条件に応じたサービス商品を取得する
+   * @param value
+   * @returns
+   */
+  public serviceSerchCombination(value: serchServiceCombination) : Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "IndexType": 'SERCH-SERVICE-INDEX',
+      "Keys": {
+        "area1": value.area1,
+        "area2": value.area2,
+        "category": value.category,
+        "amount1": value.amount1,
+        "amount2": value.amount2,
+        "amountSerchDiv": value.amountSerchDiv
+      }
+    };
+    return this.http.post<serviceContents>(this.apiEndPoint + '/serchServiceContents', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: serviceContents) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 }
