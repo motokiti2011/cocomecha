@@ -37,8 +37,8 @@ export class TransactionMenuService {
    * @param areaId
    * @returns
    */
-  public areaDisp(areaId: number): string {
-    const area = _find(prefecturesCoordinateData, detail => detail.id === areaId);
+  public areaDisp(areaId: string): string {
+    const area = _find(prefecturesCoordinateData, detail => detail.code === areaId);
     if (_isNil(area)) {
       return '';
     }

@@ -65,21 +65,23 @@
       <div>
         <label>下限</label>
         <div class="form_amount">
-          <input class="form-control" id="amount" type="text" [formControl]="amount1"  [disabled]="!serchAmount.selected" (change)="onAmount()"/>
+          <input class="form-control" id="amount" type="text" [formControl]="amount1" [disabled]="!serchAmount.selected"
+            (change)="onAmount()" />
           <label>円</label>
         </div>
       </div>
       <div>
         <label>上限</label>
         <div class="form_amount">
-          <input class="form-control" id="amount" type="text" [formControl]="amount2" [disabled]="!serchAmount.selected" (change)="onAmount()"/>
+          <input class="form-control" id="amount" type="text" [formControl]="amount2" [disabled]="!serchAmount.selected"
+            (change)="onAmount()" />
           <label>円</label>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row btn_area">
+  <div class="row">
     <div class="btn_area">
       <button type="button" class="btn btn-outline-primary" (click)="onSerch()">検索する</button>
     </div>
@@ -93,17 +95,32 @@
         {{data.title}}
       </div>
     </div>
+  </div>
+
+  <div class="row">
     <div *ngIf="userCertificationDiv">
       <p class="link" (click)="listMenu()">お気に入り一覧へ</p>
     </div>
   </div>
 
-  <div class="row">
-    <p>閲覧履歴</p>
-    <div class="listarea" *ngFor="let data of displayBrowsing" (click)="onContentsDetail(data.id)">
-      {{data.title}}
-    </div>
 
+  <div class="row">
+    <div>
+      <div>閲覧履歴</div>
+      <div *ngIf="displayBrowsing.length; else noBrowsing">
+        <div class="itemList">
+          <div class="item" *ngFor="let data of displayBrowsing" (click)="onContentsDetail(data.id)">
+            {{data.title}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noBrowsing>
+      履歴はありません。
+    </ng-template>
+  </div>
+
+  <div class="row">
     <div *ngIf="userCertificationDiv">
       <p class="link" (click)="listMenu()">閲覧履歴一覧へ</p>
     </div>

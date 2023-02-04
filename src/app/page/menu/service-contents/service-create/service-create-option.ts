@@ -42,14 +42,14 @@ export const mechanicWorkArea = [
 ]
 
 // 車両
-/** ユーザー作業エリア */
+/** ユーザー車両 */
 export const userTargetVehcle = [
   { id: '1', label: '登録車両' },
   { id: '2', label: '新規登録' },
   { id: '3', label: '車両なし' }
 ]
 
-/** メカニック作業エリア */
+/** メカニック作業車両 */
 export const mechanicTargetVehcle = [
   { id: '31', label: '指定なし' },
   { id: '32', label: 'メーカー指定' },

@@ -1,10 +1,11 @@
 .container {
-  margin-left: 20px;  
+  margin-left: 10px;  
   .row {
     margin: 0px 0px 20px 0px;
 
     #amount {
-      width: 120px;      
+      width: 120px;
+      margin-right: 10px;
     }
   }
 }
@@ -25,19 +26,30 @@
 }
 
 .btn_area {
-  margin: 10px 0px 0px 40px;
+  margin: 10px 0px 20px 40px;
 }
 
 .amount_check {
-  // font-size: small;
-  font-size: smaller;
+  font-size: 11px;
+  margin: 0px 0px 10px 5px;
+  label {
+    margin: 0px 0px 10px 5px;
+  }
+
 }
 
 .form_amount {
   display: flex;
 }
 
-
+.itemList {
+  text-align: center;
+  margin-top: 5px;
+  .item {
+    cursor: pointer;
+    color: blue;
+  }
+}
 
 
 .button-item {

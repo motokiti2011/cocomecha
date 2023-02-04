@@ -10,8 +10,28 @@ aside {
 article {
   width: 100%;
   margin-top: 3vh;
-  // margin-left: 5vh;
-  // background-color: blue;
+
+  .area_select {
+    margin-right: 20px;
+    width: 100px;
+  }
+
+  .city_select {
+    margin-right: 20px;
+    width: 200px;
+  }
+
+
+
+  #title {
+    width: 250px;
+  }
+
+  #price {
+    width: 250px;
+  }
+
+
 }
 
 table {
@@ -21,6 +41,7 @@ table {
 
 .form {
   width: 350px;
+
   .explanation {
     height: 200px;
   }

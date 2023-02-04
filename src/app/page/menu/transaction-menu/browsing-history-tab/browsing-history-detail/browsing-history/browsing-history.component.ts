@@ -141,7 +141,7 @@ export class BrowsingHistoryComponent implements OnInit {
       // 内容
       contents: '',
       // 地域
-      area: this.service.areaDisp(content.area),
+      area: this.service.areaDisp(content.area1),
       // カテゴリー
       category: this.service.priceDisp(content),
       // 価格

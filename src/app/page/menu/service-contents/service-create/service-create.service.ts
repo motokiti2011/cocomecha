@@ -61,9 +61,9 @@ export class ServiceCreateService {
       // タイトル
       title: content.title,
       // サービス地域1
-      areaNo1: String(content.area),
+      areaNo1: String(content.area1),
       // サービス地域2
-      areaNo2: '0',
+      areaNo2: content.area2,
       // 価格
       price: String(content.price),
       // 入札方式
@@ -147,9 +147,9 @@ export class ServiceCreateService {
       // タイトル
       title: content.title,
       // サービス地域1
-      areaNo1: String(content.area),
+      areaNo1: content.area1,
       // サービス地域2
-      areaNo2: '0',
+      areaNo2: content.area2,
       // 価格
       price: String(content.price),
       // 入札方式

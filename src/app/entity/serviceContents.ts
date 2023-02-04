@@ -6,7 +6,7 @@ export interface serviceContents {
   userId: string;
   // ユーザー名
   userName: string;
-  // メンテナンスID
+  // メカニックID
   mechanicId: string |null,
   // オフィスID
   officeId: string |null,
@@ -16,8 +16,10 @@ export interface serviceContents {
   workArea: string;
   // 価格
   price: number;
-  // 地域
-  area:number;
+  // 地域1
+  area1: string;
+  // 地域2
+  area2: string | null;
   // カテゴリー
   category:string;
   // 対象車両
@@ -57,7 +59,8 @@ export const initServiceContent:serviceContents = {
   title: '',
   workArea: '',
   price: 0,
-  area: 0,
+  area1: '',
+  area2: '',
   category: '0',
   bidMethod: '1',
   targetVehcle:'',

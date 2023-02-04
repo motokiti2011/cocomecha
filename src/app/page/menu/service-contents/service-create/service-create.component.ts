@@ -36,9 +36,12 @@ import {
   adminUserSelect,
 } from './service-create-option';
 import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
+import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+
 
 @Component({
   selector: 'app-service-create',
@@ -49,8 +52,23 @@ import { ComponentPortal } from '@angular/cdk/portal';
 
 export class ServiceCreateComponent implements OnInit {
 
-  /** タイトル */
-  title = '';
+  /** 画面タイトル */
+  dispTitle = '';
+
+  // タイトル
+  title = new FormControl('', [
+    Validators.required
+  ]);
+
+  // 価格
+  formPrice = new FormControl('', [
+    Validators.required
+  ]);
+
+  // 説明
+  explanation = new FormControl('', [
+    Validators.required
+  ]);
 
   /** 入力中データ情報 */
   inputData: serviceContents = initServiceContent;
@@ -58,21 +76,21 @@ export class ServiceCreateComponent implements OnInit {
   /** 入札方式選択状態初期値 */
   selected = '1';
 
-  /** 地域情報選択状態初期値 */
-  areaSelect = ''
-
+  
   /** カテゴリー選択状態初期値 */
   categorySelect = '1';
-
+  
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
+  /** 地域情報選択状態初期値 */
+  areaSelect = ''
+  /** 地域２（市町村）データ */
+  areaCityData: area1SelectArea2[] = []
+  /** 地域２（市町村）選択 */
+  citySelect = '';
 
   /** カテゴリー */
   categoryData = serchCategoryData
-
-  /** 価格追跡 */
-  formPrice = '';
-  priceFormDiv = true;
 
   /** 価格プレスホルダー */
   pricePlace = '価格'
@@ -81,9 +99,11 @@ export class ServiceCreateComponent implements OnInit {
   invalid = true;
 
   /**  価格フォーム表示フラグ */
+  priceFormDiv = false;
 
   /** 必須フラグ */
   titleDiv = true;
+  workAreaDiv = true;
   areaDiv = true;
   priceDiv = true;
   explanationDiv = true;
@@ -190,7 +210,7 @@ export class ServiceCreateComponent implements OnInit {
               this.location.back();
               return;
             }
-          } else if( params['serviceType'] == '2') {
+          } else if (params['serviceType'] == '2') {
             if (this.userInfo.officeId !== '' && this.userInfo.officeId !== null) {
               // 工場タイプの出品画面表示する
               this.officeDisp();
@@ -212,118 +232,6 @@ export class ServiceCreateComponent implements OnInit {
     }
   }
 
-  /**
-   * 画面表示を判定し、選択の必要がある場合モーダルを展開する
-   */
-  private serviceSelect() {
-    if (this.userInfo.mechanicId == null || this.userInfo.mechanicId == '') {
-      // ユーザー依頼画面への表示
-      this.userDisp();
-    } else {
-      // ユーザー情報にメカニック情報が存在する場合モーダルを開く
-      const dialogRef = this.modal.open(ServiceCreateModalComponent, {
-        width: '400px',
-        height: '450px',
-        data: {
-          userId: this.userInfo.userId,
-          mechanicId: this.userInfo.mechanicId,
-          officeId: this.userInfo.officeId,
-        }
-      });
-      // モーダルクローズ後
-      dialogRef.afterClosed().subscribe(
-        result => {
-          console.log('クリエイトモーダル:' + result)
-          if (!(_isNil(result)) && result !== '' ) {
-            if (result == '0') {
-              this.userDisp();
-            } else if (result == '1') {
-              this.mechenicDisp();
-            } else {
-              this.officeDisp();
-            }
-            // ローディング解除
-            this.overlayRef.detach();
-          } else {
-            // ローディング解除
-            this.overlayRef.detach();
-            // 戻るボタン押下時の動き
-            this.location.back();
-            return;
-          }
-        }
-      );
-    }
-  }
-
-  /**
-   *　ユーザー用画面設定を行う
-   */
-  private userDisp() {
-    // 画面表示設定
-    this.title = 'サービスを依頼する'
-    this.workAreaData = userWorkArea;
-    this.vehcleData = userTargetVehcle;
-    this.priceSelectData = userPrice;
-    // セレクトボックス初期値設定
-    this.workAreaSelect = this.workAreaData[0].id;
-    this.categorySelect = this.categoryData[0].id;
-    this.vehcleSelect = this.vehcleData[0].id;
-    this.priceSelect = this.priceSelectData[0].id;
-    this.msgLvSelect = this.msgLvData[0].id;
-    // データ設定
-    this.inputData.targetService = '0';
-    this.adminSelectDiv = false;
-    this.adminUserName = this.userInfo.userName;
-    // ローディング解除
-    this.overlayRef.detach();
-  }
-
-  /**
-   * メカニック用画面表示設定を行う
-   */
-  private mechenicDisp() {
-    // 画面表示設定
-    this.title = 'メカニックとしてサービス・商品を出品する'
-    this.workAreaData = mechanicWorkArea;
-    this.vehcleData = mechanicTargetVehcle;
-    this.priceSelectData = mechanicPrice;
-    // セレクトボックス初期値設定
-    this.workAreaSelect = this.workAreaData[0].id;
-    this.categorySelect = this.categoryData[0].id;
-    this.vehcleSelect = this.vehcleData[0].id;
-    this.priceSelect = this.priceSelectData[0].id;
-    this.msgLvSelect = this.msgLvData[0].id;
-    // データ設定
-    this.inputData.mechanicId = this.userInfo.mechanicId;
-    this.inputData.targetService = '2';
-    // ローディング解除
-    this.overlayRef.detach();
-  }
-
-  /**
-   * 工場用画面表示設定を行う
-   */
-  private officeDisp() {
-    // 画面表示設定
-    this.title = '工場としてサービス・商品を出品する'
-    this.workAreaData = mechanicWorkArea;
-    this.vehcleData = mechanicTargetVehcle;
-    this.priceSelectData = mechanicPrice;
-    // セレクトボックス初期値設定
-    this.workAreaSelect = this.workAreaData[0].id;
-    this.categorySelect = this.categoryData[0].id;
-    this.vehcleSelect = this.vehcleData[0].id;
-    this.priceSelect = this.priceSelectData[0].id;
-    this.msgLvSelect = this.msgLvData[0].id;
-    // データ設定
-    this.inputData.mechanicId = this.userInfo.mechanicId;
-    this.inputData.officeId = this.userInfo.officeId;
-    this.inputData.targetService = '1';
-    this.adminSelectDiv = true;
-    // ローディング解除
-    this.overlayRef.detach();
-  }
 
 
   /**
@@ -339,8 +247,8 @@ export class ServiceCreateComponent implements OnInit {
     }
 
     // 地域選択状況変更監視
-    if (_isNil(this.inputData.area)
-      || this.inputData.area === 0) {
+    if (_isNil(this.inputData.area1)
+      || this.inputData.area1 === '') {
       this.areaDiv = true;
     } else {
       this.areaDiv = false;
@@ -351,8 +259,8 @@ export class ServiceCreateComponent implements OnInit {
 
 
     // 説明選択状況変更監視
-    if (_isNil(this.inputData.explanation)
-      || this.inputData.explanation === '') {
+    if (_isNil(this.explanation.value)
+      || this.explanation.value === '') {
       this.explanationDiv = true;
     } else {
       this.explanationDiv = false;
@@ -383,6 +291,15 @@ export class ServiceCreateComponent implements OnInit {
    * 作業場所変更イベント
    */
   inputWorkArea() {
+    // 個別に設定以外はユーザー地域の１，２を設定
+    if (this.workAreaSelect != '3') {
+      
+    } else {
+      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+    }
+
+
+
     console.log('1workArea:' + this.inputData.workArea);
     console.log('2targetVehcle:' + this.inputData.targetVehcle);
     console.log('3msgLv:' + this.inputData.msgLv);
@@ -399,14 +316,14 @@ export class ServiceCreateComponent implements OnInit {
     this.errormessage = '';
 
     // 不要な空白を除去する。
-    const tr = this.formPrice.trim();
+    const tr = this.formPrice.value.trim();
     // 数値変換
     const numCheck = Number(tr);
 
     // 半角数値以外変換できないので以下で判定
     if (isNaN(numCheck)) {
       console.log('価格には「半角数値を入力してください」');
-      this.formPrice = '';
+      this.formPrice.value('');
       this.priceDiv = true;
       this.errorFlg = true;
       this.errormessage = '「半角数値を入力してください」';
@@ -414,7 +331,7 @@ export class ServiceCreateComponent implements OnInit {
       console.log('OK');
       if (tr === '0') {
         this.errormessage = '「1円以上で入力してください」';
-        this.formPrice = '';
+        this.formPrice.value('');
         this.priceDiv = true;
         this.errorFlg = true;
       } else {
@@ -424,7 +341,7 @@ export class ServiceCreateComponent implements OnInit {
           this.priceDiv = false;
         } else {
           this.errormessage = '「整数で入力してください」';
-          this.formPrice = '';
+          this.formPrice.value('');
           this.priceDiv = true;
           this.errorFlg = true;
         }
@@ -476,13 +393,17 @@ export class ServiceCreateComponent implements OnInit {
    * 地域選択イベント
    */
   selectArea() {
-    const selectData = _find(this.areaData, detail => detail.prefectures === this.areaSelect);
-    if (!_isNil(selectData)) {
-      this.inputData.area = selectData.id;
-    } else {
-      this.inputData.area = 0;
-    }
+    this.inputData.area1 = this.areaSelect;
     this.cangeMonitoring();
+    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+  }
+
+  /**
+   * 地域2選択イベント
+   */
+  selectCity() {
+    this.inputData.area2 = this.citySelect;
+    console.log(this.inputData.area2);
   }
 
   /**
@@ -568,7 +489,7 @@ export class ServiceCreateComponent implements OnInit {
    * 確定処理
    */
   getResult() {
-    if(this.fileList.length != 0) {
+    if (this.fileList.length != 0) {
       this.fileUp();
     } else {
       this.postSlip();
@@ -609,6 +530,166 @@ export class ServiceCreateComponent implements OnInit {
         }
       });
     }
+  }
+
+
+
+
+  onDummy2() {
+    this.auth.userInfo$.subscribe(hoge => {
+      console.log(hoge);
+    })
+  }
+
+  /**
+   * 入力内容をリセットする
+   * @returns
+   */
+  private refreshForm() {
+    this.inputData.id = '0';
+    this.inputData.title = '';
+    this.inputData.price = 0;
+    this.inputData.area1 = '0';
+    this.inputData.category = '0';
+    this.inputData.bidMethod = '1';
+    this.inputData.explanation = '';
+    this.inputData.preferredDate = 0;
+    this.inputData.preferredTime = 0;
+
+    this.selected = '1';
+    this.formPrice.setValue('');
+    this.timeSelect = '';
+    this.startDate = 0;
+    /** カテゴリー選択状態初期値 */
+    this.areaSelect = ''
+    this.categorySelect = '';
+    // 確定ボタン非活性
+    this.invalid = true;
+  }
+
+
+  onChangeDragAreaInput(event: any) {
+    // ファイルの情報はevent.target.filesにある
+    let reader = new FileReader();
+    const file = event.target.files[0];
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      this.img.push(reader.result);
+    };
+  }
+
+  dragOver(event: DragEvent) {
+    // ブラウザで画像を開かないようにする
+    event.preventDefault();
+  }
+  drop(event: DragEvent) {
+    // ブラウザで画像を開かないようにする
+    event.preventDefault();
+    if (event.dataTransfer == null) {
+      return;
+    }
+    const file = event.dataTransfer.files;
+    this.fileList.push(file[0])
+    const fileList = Object.entries(file).map(f => f[1]);
+    console.log(fileList);
+
+    fileList.forEach(f => {
+      let reader = new FileReader();
+      reader.readAsDataURL(f);
+      reader.onload = () => {
+        this.img.push(reader.result);
+      };
+    });
+  }
+
+
+  /************************ 以下内部処理 ************************************/
+
+
+
+  /**
+   *　ユーザー用画面設定を行う
+   */
+  private userDisp() {
+    // 画面表示設定
+    this.dispTitle = 'サービスを依頼する'
+    this.workAreaData = userWorkArea;
+    this.vehcleData = userTargetVehcle;
+    this.priceSelectData = userPrice;
+    // セレクトボックス初期値設定
+    this.workAreaSelect = this.workAreaData[0].id;
+    this.categorySelect = this.categoryData[0].id;
+    this.vehcleSelect = this.vehcleData[0].id;
+    this.priceSelect = this.priceSelectData[0].id;
+    this.msgLvSelect = this.msgLvData[0].id;
+    // データ設定
+    this.inputData.targetService = '0';
+    this.adminSelectDiv = false;
+    this.adminUserName = this.userInfo.userName;
+    this.inputData.area1 = this.userInfo.areaNo1;
+    this.areaSelect = this.userInfo.areaNo1;
+    this.inputData.area2 = this.userInfo.areaNo2;
+
+    // ローディング解除
+    this.overlayRef.detach();
+  }
+
+  /**
+   * メカニック用画面表示設定を行う
+   */
+  private mechenicDisp() {
+    // 画面表示設定
+    this.dispTitle = 'メカニックとしてサービス・商品を出品する'
+    this.workAreaData = mechanicWorkArea;
+    this.vehcleData = mechanicTargetVehcle;
+    this.priceSelectData = mechanicPrice;
+    // セレクトボックス初期値設定
+    this.workAreaSelect = this.workAreaData[0].id;
+    this.categorySelect = this.categoryData[0].id;
+    this.vehcleSelect = this.vehcleData[0].id;
+    this.priceSelect = this.priceSelectData[0].id;
+    this.msgLvSelect = this.msgLvData[0].id;
+    // データ設定
+    this.inputData.mechanicId = this.userInfo.mechanicId;
+    this.inputData.targetService = '2';
+    this.inputData.area1 = this.userInfo.areaNo1;
+    this.areaSelect = this.userInfo.areaNo1;
+    this.inputData.area2 = this.userInfo.areaNo2;
+
+
+    // ローディング解除
+    this.overlayRef.detach();
+  }
+
+  /**
+   * 工場用画面表示設定を行う
+   */
+  private officeDisp() {
+    // 画面表示設定
+    this.dispTitle = '工場としてサービス・商品を出品する'
+    this.workAreaData = mechanicWorkArea;
+    this.vehcleData = mechanicTargetVehcle;
+    this.priceSelectData = mechanicPrice;
+    // セレクトボックス初期値設定
+    this.workAreaSelect = this.workAreaData[0].id;
+    this.categorySelect = this.categoryData[0].id;
+    this.vehcleSelect = this.vehcleData[0].id;
+    this.priceSelect = this.priceSelectData[0].id;
+    this.msgLvSelect = this.msgLvData[0].id;
+    // データ設定
+    this.inputData.mechanicId = this.userInfo.mechanicId;
+    this.inputData.officeId = this.userInfo.officeId;
+    this.inputData.targetService = '1';
+    this.adminSelectDiv = true;
+    // this.inputData.area1 = this..areaNo1;
+    // this.areaSelect = this.userInfo.areaNo1;
+    // this.inputData.area2 = this.userInfo.areaNo2;
+
+
+
+
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
 
@@ -736,72 +817,50 @@ export class ServiceCreateComponent implements OnInit {
   }
 
 
-  onDummy2() {
-    this.auth.userInfo$.subscribe(hoge => {
-      console.log(hoge);
-    })
-  }
-
   /**
-   * 入力内容をリセットする
-   * @returns
+   * 画面表示を判定し、選択の必要がある場合モーダルを展開する
    */
-  private refreshForm() {
-    this.inputData.id = '0';
-    this.inputData.title = '';
-    this.inputData.price = 0;
-    this.inputData.area = 0;
-    this.inputData.category = '0';
-    this.inputData.bidMethod = '1';
-    this.inputData.explanation = '';
-    this.inputData.preferredDate = 0;
-    this.inputData.preferredTime = 0;
-
-    this.selected = '1';
-    this.formPrice = '';
-    this.timeSelect = '';
-    this.startDate = 0;
-    /** カテゴリー選択状態初期値 */
-    this.areaSelect = ''
-    this.categorySelect = '';
-    // 確定ボタン非活性
-    this.invalid = true;
-  }
-
-
-  onChangeDragAreaInput(event: any) {
-    // ファイルの情報はevent.target.filesにある
-    let reader = new FileReader();
-    const file = event.target.files[0];
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.img.push(reader.result);
-    };
-  }
-
-  dragOver(event: DragEvent) {
-    // ブラウザで画像を開かないようにする
-    event.preventDefault();
-  }
-  drop(event: DragEvent) {
-    // ブラウザで画像を開かないようにする
-    event.preventDefault();
-    if (event.dataTransfer == null) {
-      return;
+  private serviceSelect() {
+    if (this.userInfo.mechanicId == null || this.userInfo.mechanicId == '') {
+      // ユーザー依頼画面への表示
+      this.userDisp();
+    } else {
+      // ユーザー情報にメカニック情報が存在する場合モーダルを開く
+      const dialogRef = this.modal.open(ServiceCreateModalComponent, {
+        width: '400px',
+        height: '450px',
+        data: {
+          userId: this.userInfo.userId,
+          mechanicId: this.userInfo.mechanicId,
+          officeId: this.userInfo.officeId,
+        }
+      });
+      // モーダルクローズ後
+      dialogRef.afterClosed().subscribe(
+        result => {
+          console.log('クリエイトモーダル:' + result)
+          if (!(_isNil(result)) && result !== '') {
+            if (result == '0') {
+              this.userDisp();
+            } else if (result == '1') {
+              this.mechenicDisp();
+            } else {
+              this.officeDisp();
+            }
+            // ローディング解除
+            this.overlayRef.detach();
+          } else {
+            // ローディング解除
+            this.overlayRef.detach();
+            // 戻るボタン押下時の動き
+            this.location.back();
+            return;
+          }
+        }
+      );
     }
-    const file = event.dataTransfer.files;
-    this.fileList.push(file[0])
-    const fileList = Object.entries(file).map(f => f[1]);
-    console.log(fileList);
-
-    fileList.forEach(f => {
-      let reader = new FileReader();
-      reader.readAsDataURL(f);
-      reader.onload = () => {
-        this.img.push(reader.result);
-      };
-    });
   }
+
 
 
 

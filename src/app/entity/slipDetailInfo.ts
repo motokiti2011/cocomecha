@@ -16,7 +16,7 @@ export interface slipDetailInfo {
   // サービス地域1
   areaNo1: string;
   // サービス地域2
-  areaNo2: string;
+  areaNo2: string | null;
   // 価格
   price: string;
   // 入札方式

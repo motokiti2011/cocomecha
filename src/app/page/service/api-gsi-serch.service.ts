@@ -368,6 +368,11 @@ export class ApiGsiSerchService {
    * @returns
    */
     public slipSerchCombination(value: serchServiceCombination) : Observable<any> {
+
+      if(value.area2 == '' || value.area2 == null) {
+        value.area2 = '0'
+      }
+
       // リクエストボディ生成
       const body = {
         "IndexType": 'SERCH-SLIP-INDEX',
@@ -380,7 +385,7 @@ export class ApiGsiSerchService {
           "amountSerchDiv": value.amountSerchDiv
         }
       };
-      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/serchServiceContents', body).pipe(
+      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/serchslipcontents', body).pipe(
         // 取得できた場合ユーザー情報を返却
         map((res: slipDetailInfo) => res),
         // エラー時HTTPステータスコードを戻す
@@ -395,6 +400,11 @@ export class ApiGsiSerchService {
    * @returns
    */
   public serviceSerchCombination(value: serchServiceCombination) : Observable<any> {
+
+    if(value.area2 == '' || value.area2 == null) {
+      value.area2 = '0'
+    }
+
     // リクエストボディ生成
     const body = {
       "IndexType": 'SERCH-SERVICE-INDEX',
@@ -407,7 +417,7 @@ export class ApiGsiSerchService {
         "amountSerchDiv": value.amountSerchDiv
       }
     };
-    return this.http.post<serviceContents>(this.apiEndPoint + '/serchServiceContents', body).pipe(
+    return this.http.post<serviceContents>(this.apiEndPoint + '/serchservicecontents', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: serviceContents) => res),
       // エラー時HTTPステータスコードを戻す

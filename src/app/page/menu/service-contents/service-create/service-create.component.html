@@ -7,7 +7,7 @@
 
   <article>
 
-    <h1>{{title}}</h1>
+    <h1>{{dispTitle}}</h1>
 
     <div class="container">
       <table >
@@ -25,7 +25,29 @@
             </div>
           </td>
           <td>
-            <input id="text" name="text" class="form" type="text" [(ngModel)]="inputData.title" (change)="inputTitle()" placeholder="タイトル" />
+            <input class="form-control" id="title" type="text" [formControl]="title" (change)="inputTitle()" placeholder="タイトル" />
+          </td>
+        </tr>
+
+        <tr>
+          <!-- 作業場所　-->
+          <td>作業場所</td>
+          <td>
+            <div class="mandatory-area">
+              <div *ngIf="workAreaDiv; else elseContent">
+                <label class="mandatory">必須</label>
+              </div>
+              <ng-template #elseContent>
+                <div class="margin"></div>
+              </ng-template>
+            </div>
+          </td>
+          <td>
+            <select class="category-select" name="category" [(ngModel)]="workAreaSelect" (change)="inputWorkArea()">
+              <option *ngFor="let work of workAreaData"
+              [value]="work.id"
+              [selected]="work.id === workAreaSelect">{{work.label}}</option>
+            </select>
           </td>
         </tr>
 
@@ -43,33 +65,23 @@
             </div>
           </td>
           <td>
-            <select class="area-select" name="area" [(ngModel)]="areaSelect" (change)="selectArea()">
-              <option value="">地域を選択してください。</option>
-              <option *ngFor="let area of areaData" [value]="area.prefectures" [selected]="area.prefectures === areaSelect">
-                {{area.prefectures}}</option>
-            </select>
-          </td>
-        </tr>
-
-        <tr>
-          <!-- 作業場所　-->
-          <td>作業場所</td>
-          <td>
-            <!-- <div class="mandatory-area">
-              <div *ngIf="categoryDiv; else elseContent">
-                <label class="mandatory">必須</label>
+            <div>
+              <div>
+                <select class="area_select" name="area" [(ngModel)]="areaSelect" (change)="selectArea()">
+                  <option value="">地域を選択してください。</option>
+                  <option *ngFor="let area of areaData" [value]="area.code" [selected]="area.code === areaSelect">
+                    {{area.prefectures}}</option>
+                </select>
               </div>
-              <ng-template #elseContent>
-                <div class="margin"></div>
-              </ng-template>
-            </div> -->
-          </td>
-          <td>
-            <select class="category-select" name="category" [(ngModel)]="inputData.workArea" (change)="inputWorkArea()">
-              <option *ngFor="let work of workAreaData"
-              [value]="work.id"
-              [selected]="work.id === workAreaSelect">{{work.label}}</option>
-            </select>
+
+              <div *ngIf="areaCityData.length">
+                <select class="city_select" name="area" [(ngModel)]="citySelect" (change)="selectCity()">
+                  <option value="">地域を選択してください。</option>
+                  <option *ngFor="let city of areaCityData" [value]="city.Municipality" [selected]="city.prefectures === citySelect">
+                    {{city.Municipality}}</option>
+                </select>
+              </div>
+            </div>
           </td>
         </tr>
 
@@ -133,7 +145,7 @@
           </td>
           <td>
             <div *ngIf="priceFormDiv; else elseContent">
-              <input class="form" type="text" [(ngModel)]="formPrice" (change)="inputPrice()" placeholder="{{pricePlace}}" />
+              <input class="form-control" id="price" type="text" [formControl]="formPrice" (change)="inputPrice()" placeholder="{{pricePlace}}" />
             </div>
             <div *ngIf="!priceFormDiv; else elseContent">
               <div>見積もりを依頼します</div>
@@ -169,7 +181,8 @@
             </div>
           </td>
           <td>
-            <input id="explanation" name="text" class="form explanation" type="text" [(ngModel)]="inputData.explanation" (change)="inputExplanation()" placeholder="説明" />
+            <textarea cols="40" rows="6" id="introduction" [formControl]="explanation"(change)="inputExplanation()" placeholder="説明" ></textarea>
+            <!-- <input id="explanation" name="text" class="form explanation" type="text" [(ngModel)]="inputData.explanation" (change)="inputExplanation()" placeholder="説明" /> -->
           </td>
         </tr>
 
