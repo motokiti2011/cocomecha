@@ -9,7 +9,7 @@
 
     <div class="container">
 
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-3">
             <div>ユーザーID</div>
           </div>
@@ -18,8 +18,7 @@
               <div>{{user.userId}}</div>
             </div>
             <div class="col-1"></div>
-        </div>
-
+        </div> -->
 
         <div class="row">
           <div class="col-3">
@@ -33,7 +32,7 @@
             </div>
             <div class="col-1"></div>
         </div>
-  
+
         <div class="row">
           <div class="col-3">
             <div>メールアドレス</div>
@@ -46,7 +45,7 @@
             </div>
             <div class="col-1"></div>
         </div>
-  
+
         <div class="row">
           <div class="col-3">
             <div>電話番号</div>
@@ -65,8 +64,8 @@
             </div>
             <div class="col-1"></div>
         </div>
-  
-  
+
+
         <div class="row">
           <div class="col-3">
             <div>郵便番号</div>
@@ -81,7 +80,7 @@
             </div>
             <div class="col-1"></div>
         </div>
-        
+
         <div class="row">
           <div class="col-3">
             <div>住所<br>（都道府県）</div>
@@ -98,7 +97,7 @@
           </div>
           <div class="col-1"></div>
         </div>
-  
+
         <div class="row">
           <div class="col-3">
             <div>住所（市町村）</div>
@@ -109,7 +108,7 @@
             </div>
             <div class="col-1"></div>
         </div>
-  
+
         <div class="row">
           <div class="col-3">
             <div>住所(その他)</div>
@@ -120,8 +119,8 @@
             </div>
             <div class="col-1"></div>
         </div>
-  
-  
+
+
         <div class="row">
           <div class="col-3">
             <div>紹介文</div>
@@ -134,7 +133,7 @@
             </div>
             <div class="col-1"></div>
         </div>
-  
+
         <div class="row">
           <div class="col-3">
             <div>画像</div>
@@ -143,15 +142,15 @@
             <input type="file" accept="*/*" (change)="onInputChange($event)">
             <div class="col-1"></div>
         </div>
-  
-  
-  
+
+
+
         <div class="row">
           <div class="col-4"></div>
           <div class="col-6">
             <div class="bt_area">
               <button type="submit" class="btn btn-primary"
-              on-click="onResister()">登録する</button>
+              on-click="onResister()" [disabled]="groupForm.invalid">登録する</button>
             </div>
           </div>
         </div>

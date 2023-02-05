@@ -28,7 +28,7 @@ export class UserRegisterComponent implements OnInit {
 
 
   /** フォームコントロール */
-  name = new FormControl('名前',[
+  name = new FormControl('',[
     Validators.required
   ]);
 
@@ -68,7 +68,7 @@ export class UserRegisterComponent implements OnInit {
   /** フォームグループオブジェクト */
   groupForm = this.builder.group({
     name: this.name,
-    mail: this.mail,
+    // mail: this.mail,
     telNo1: this.telNo1,
     telNo2: this.telNo2,
     telNo3: this.telNo3,

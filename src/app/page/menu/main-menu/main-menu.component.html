@@ -3,16 +3,17 @@
     <div class="col-1"></div>
 
     <div class="col-6">
-      <div *ngIf="!authUserDiv; else elseContent">
+      <div *ngIf="!authUserDiv; else sinUpContent">
         <!-- ログイン前 -->
         <div class="user_resister">
           <div class="menu_item item" (click)="onSinup()">新規登録</div>
           <div class="menu_item item" (click)="onLogin()">ログイン</div>
+          <!-- <div class="menu_item item" (click)="onLogout()">ログアウト</div> -->
         </div>
       </div>
-      <ng-template #elseContent>
+      <ng-template #sinUpContent>
         <!-- ログイン後 -->
-        <div *ngIf="temporaryUserDiv; else elseContent">
+        <div *ngIf="temporaryUserDiv; else temporaryContent">
           <div class="user_resister">
             <div>
               <div class="menu_item item" (click)="onUserResister()">ユーザー登録</div>
@@ -21,13 +22,12 @@
             <div class="menu_item item" (click)="onLogout()">ログアウト</div>
           </div>
         </div>
-        <ng-template #elseContent>
+        <ng-template #temporaryContent>
           <div class="user_resister">
             <div class="menu_item item" (click)="onMypage()">マイページ</div>
             <div class="menu_item item" (click)="onLogout()">ログアウト</div>
           </div>
         </ng-template>
-
 
       </ng-template>
 
