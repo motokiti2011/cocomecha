@@ -44,7 +44,8 @@ export class MainMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.authenticated();
-    this.child.ngOnInit();
+    // this.child.ngOnInit();
+    this.onmenu();
   }
 
   /**
@@ -108,6 +109,12 @@ export class MainMenuComponent implements OnInit {
     this.router.navigate(["sign-up-component"]);
   }
 
+  onmenu() {
+    console.log('マイメニュー画面区分値チェック')
+    console.log('authUserDiv:' + this.authUserDiv)
+    console.log('temporaryUserDiv:' + this.temporaryUserDiv)
+  }
+
   /*************** 内部処理  ************************/
 
   /**
@@ -155,6 +162,7 @@ export class MainMenuComponent implements OnInit {
       } else {
         this.loginUser.userName = 'ユーザー情報未設定'
       }
+      // this.onmenu();
     });
   }
 

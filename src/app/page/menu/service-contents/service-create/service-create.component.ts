@@ -70,6 +70,15 @@ export class ServiceCreateComponent implements OnInit {
     Validators.required
   ]);
 
+  /** 必須フォームグループオブジェクト */
+  requiredForm = this.builder.group({
+    title: this.title,
+    formPrice: this.formPrice,
+    explanation: this.explanation,
+  })
+
+
+
   /** 入力中データ情報 */
   inputData: serviceContents = initServiceContent;
 
@@ -172,6 +181,7 @@ export class ServiceCreateComponent implements OnInit {
     private cognito: CognitoService,
     private activeRouter: ActivatedRoute,
     private overlay: Overlay,
+    private builder: FormBuilder,
   ) { }
 
   ngOnInit(): void {

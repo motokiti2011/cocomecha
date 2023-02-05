@@ -3,17 +3,18 @@
     <div class="col-1"></div>
 
     <div class="col-6">
-      <div *ngIf="!authUserDiv; else sinUpContent">
+      <div *ngIf="!authUserDiv else elseContent">
         <!-- ログイン前 -->
         <div class="user_resister">
           <div class="menu_item item" (click)="onSinup()">新規登録</div>
           <div class="menu_item item" (click)="onLogin()">ログイン</div>
-          <!-- <div class="menu_item item" (click)="onLogout()">ログアウト</div> -->
         </div>
       </div>
-      <ng-template #sinUpContent>
+
+      <ng-template #elseContent>
         <!-- ログイン後 -->
-        <div *ngIf="temporaryUserDiv; else temporaryContent">
+        <div *ngIf="temporaryUserDiv else temporaryContent">
+          
           <div class="user_resister">
             <div>
               <div class="menu_item item" (click)="onUserResister()">ユーザー登録</div>
@@ -42,9 +43,10 @@
 
 <hr class="line" noshade="">
 
-<div class="menu_item item" (click)="onFactoryResister()">工場登録テスト</div>
+<!-- <div class="menu_item item" (click)="onFactoryResister()">工場登録テスト</div>
 <button type="button" class="btn btn-outline-primary" (click)="onVehcleRegister()">新規車両</button>
 <button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">車両情報メニュー</button>
+<button type="button" class="btn btn-outline-primary" (click)="onmenu()">メニューの区分チェック</button> -->
 
 <div class="image-area">
   <img src="assets/images/test1rogo.png" alt="image1">
