@@ -10,25 +10,27 @@
 #modal-hedder {
   // display: flex;
   text-align:center;
-  margin-top: 3vh;
-  margin-left: 5vh;
+  margin-top: 10px;
+  margin-left: 50px;
 
   #modal-title {
-    font-size: 5vh;
+    font-size:35px;
   }
-  
+
   #modal-message {
-    font-size: 3vh;
-    margin-top: 4vh;
+    font-size: 20px;
+    margin: 30px 0px 30px 0px;
   }
 }
 
-#mat-dialog-actions {
-  display: flex;
+
+.btn_area {
+  margin: 30px 30px 40px 120px;
 }
 
-.mat-dialog-actions {
-  display: flex;
+
+#btn {
+  width: 300px;
 }
 .btn-solid {
   text-align:center;
@@ -43,7 +45,7 @@
   padding: 2em 0 0 0;
   height: 4em;
   width: 8em;
-  margin: 2.5em 1em 0 0;
+  // margin: 2.5em 1em 0 0;
   white-space: pre-wrap;
 }
 

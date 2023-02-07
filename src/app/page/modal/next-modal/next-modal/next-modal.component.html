@@ -3,12 +3,15 @@
   <div id="modal-message">{{data.message}}</div>
 </div>
 
-<div class="mat-dialog-actions">
+<!-- <div class="mat-dialog-actions"> -->
+<div>
   <div *ngFor="let next of data.nextActionList">
-    <div class="btn btn-solid"
-      (click)="nextAction(next)">{{next.nextAction}}
+    <!-- <div class="btn btn-solid"
+      (click)="nextAction(next)">{{next.nextAction}} -->
+    <div class="btn_area">
+      <button type="button" class="btn btn-outline-primary" (click)="nextAction(next)">{{next.nextAction}}</button>
     </div>
   </div>
-</div>  
+</div>
 
 

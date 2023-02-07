@@ -85,10 +85,10 @@ export class ServiceCreateComponent implements OnInit {
   /** 入札方式選択状態初期値 */
   selected = '1';
 
-  
+
   /** カテゴリー選択状態初期値 */
   categorySelect = '1';
-  
+
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   /** 地域情報選択状態初期値 */
@@ -303,7 +303,7 @@ export class ServiceCreateComponent implements OnInit {
   inputWorkArea() {
     // 個別に設定以外はユーザー地域の１，２を設定
     if (this.workAreaSelect != '3') {
-      
+
     } else {
       this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
     }
@@ -543,6 +543,9 @@ export class ServiceCreateComponent implements OnInit {
   }
 
 
+  onNext() {
+    this.next();
+  }
 
 
   onDummy2() {
@@ -750,8 +753,8 @@ export class ServiceCreateComponent implements OnInit {
     }
 
     const dialogRef = this.modal.open(NextModalComponent, {
-      width: '50vh',
-      height: '50vh',
+      width: '500px',
+      height: '500px',
       data: data
     });
     // 次の操作モーダルを表示
@@ -765,6 +768,8 @@ export class ServiceCreateComponent implements OnInit {
           // モーダル返却値から遷移先へ飛ぶ
           this.router.navigate([linc]);
         }
+      } else {
+        this.location.back();
       }
     });
   }
