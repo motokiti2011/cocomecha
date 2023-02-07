@@ -41,6 +41,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { IoTThingsGraph } from 'aws-sdk';
 
 
 @Component({
@@ -62,7 +63,7 @@ export class ServiceCreateComponent implements OnInit {
 
   // 価格
   formPrice = new FormControl('', [
-    Validators.required
+    Validators.pattern('[0-9 ]*'),
   ]);
 
   // 説明
@@ -76,8 +77,6 @@ export class ServiceCreateComponent implements OnInit {
     formPrice: this.formPrice,
     explanation: this.explanation,
   })
-
-
 
   /** 入力中データ情報 */
   inputData: serviceContents = initServiceContent;
@@ -108,7 +107,7 @@ export class ServiceCreateComponent implements OnInit {
   invalid = true;
 
   /**  価格フォーム表示フラグ */
-  priceFormDiv = false;
+  priceFormDiv = true;
 
   /** 必須フラグ */
   titleDiv = true;
@@ -242,15 +241,13 @@ export class ServiceCreateComponent implements OnInit {
     }
   }
 
-
-
   /**
    *  変更監視
    */
   cangeMonitoring() {
     // タイトル変更監視
-    if (_isNil(this.inputData.title)
-      || this.inputData.title === '') {
+    if (_isNil(this.title.value)
+      || this.title.value === '') {
       this.titleDiv = true;
     } else {
       this.titleDiv = false;
@@ -293,7 +290,7 @@ export class ServiceCreateComponent implements OnInit {
    * タイトル変更イベント
    */
   inputTitle() {
-    console.log(this.inputData.title);
+    console.log(this.title.value);
     this.cangeMonitoring();
   }
 
@@ -510,8 +507,13 @@ export class ServiceCreateComponent implements OnInit {
    * 伝票情報登録を行う
    */
   private postSlip() {
+    // 更新パラメータにセット
+    this.inputData.title = this.title.value;
+    this.inputData.price = this.formPrice.value;
+    this.inputData.explanation = this.explanation.value;
     // console.log('確定反応')
     console.log(this.inputData);
+
     // 工場、メカニックとして依頼する場合
     if (this.inputData.targetService !== '0') {
       // サービス商品として更新を行う
@@ -560,7 +562,7 @@ export class ServiceCreateComponent implements OnInit {
    */
   private refreshForm() {
     this.inputData.id = '0';
-    this.inputData.title = '';
+    this.title.setValue('');
     this.inputData.price = 0;
     this.inputData.area1 = '0';
     this.inputData.category = '0';

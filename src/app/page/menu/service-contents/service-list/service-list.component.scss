@@ -88,24 +88,13 @@ article {
 
 
 
-.contants {
+.item_area {
   // background: #0a0;
   display: grid;
   grid-template-columns: 30vh 30vh 30vh;
   height: 630px;
   width: 80%;
 
-  .item {
-    height: 20vh;
-    width: 20vh;
-    background: #5c73b7;
-    padding: 10px;
-    margin: 10px;
-    margin-top: 30px;
-    margin-left: 30px;
-    cursor: pointer;
-    // background-color: antiquewhite;
-  }
 
   .title {
     cursor: pointer;

@@ -11,24 +11,29 @@ article {
   width: 100%;
   margin-top: 3vh;
 
-  .area_select {
-    margin-right: 20px;
-    width: 100px;
+  .area_select_area {
+    display: flex;
+
+    .area_select {
+      margin-right: 20px;
+      width: 120px;
+    }
+    .city_select {
+      margin-right: 20px;
+      width: 200px;
+    }
   }
 
-  .city_select {
-    margin-right: 20px;
-    width: 200px;
+  .mandatory_area {
+    width: 150px;
   }
-
-
 
   #title {
-    width: 250px;
+    width: 350px;
   }
 
   #price {
-    width: 250px;
+    width: 350px;
   }
 
 
@@ -47,13 +52,13 @@ table {
   }
 }
 
+
+
 .explanation {
   height: 150px;
 }
 
-.mandatory-area {
-  width: 50px;
-}
+
 
 .margin {
   margin-left: 50px;
@@ -75,7 +80,6 @@ table {
   border-radius: 0.5em;
   font-size: 13px;
   margin-left: 20px;
-  width: 20%;
 }
 
 .error-message-day {
@@ -85,7 +89,6 @@ table {
   border-radius: 0.5em;
   font-size: 0.8em;
   margin-right: 40px;
-  width: 20%;
 }
 
 .submit-button {

@@ -1,16 +1,9 @@
 <div class="service-menu wrapper">
 
   <aside>
-    <app-service-list-side-menu
-      [serchArea1]="serchArea1"
-      [serchCategory]="serchCategory"
-      [favoriteList]="favoriteList"
-      [acseccUser]="acseccUser"
-      (chengeArea)="onAreaChenge($event)"
-      (chengeCateogry)="onCategoryChenge($event)"
-      (chengeAmount)="onAmountChenge($event)"
-      (serviceSerchValue)="onServiceSerch($event)"
-    ></app-service-list-side-menu>
+    <app-service-list-side-menu [serchArea1]="serchArea1" [serchCategory]="serchCategory" [favoriteList]="favoriteList"
+      [acseccUser]="acseccUser" (chengeArea)="onAreaChenge($event)" (chengeCateogry)="onCategoryChenge($event)"
+      (chengeAmount)="onAmountChenge($event)" (serviceSerchValue)="onServiceSerch($event)"></app-service-list-side-menu>
   </aside>
 
   <article>
@@ -30,19 +23,12 @@
       </div>
     </div>
 
-    <div class="contants">
-      <!-- <div *ngFor="let contents of displayContentsList">
-        <div class="item" (click)="onContentsSelect(contents)">{{contents.title}}</div>
-        <div class="title" (click)="onContentsSelect(contents)">{{contents.title}}</div>
-        <div *ngIf="userCertificationDiv">
-          <div [ngClass]="contents.favoriteFlg? 'favorite':'anfavorite'" (click)="onContentFavorite(contents)">★</div>
-        </div>
-      </div> -->
-
+    <!-- 商品表示エリア -->
+    <div class="item_area">
 
       <div *ngFor="let contents of displayContentsList | slice: begin: begin+length">
-        <!-- <div class="item" (click)="onContentsSelect(contents)">{{contents.title}}</div> -->
-        <img [src]="contents.thumbnailUrl" alt="サムネイル"  width="100" height="100">
+        
+        <img [src]="contents.thumbnailUrl" alt="サムネイル" width="100" height="100">
         <div class="title" (click)="onContentsSelect(contents)">{{contents.title}}</div>
         <div *ngIf="userCertificationDiv">
           <div [ngClass]="contents.favoriteFlg? 'favorite':'anfavorite'" (click)="onContentFavorite(contents)">★</div>

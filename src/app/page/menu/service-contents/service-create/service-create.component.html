@@ -65,7 +65,7 @@
             </div>
           </td>
           <td>
-            <div>
+            <div class="area_select_area">
               <div>
                 <select class="area_select" name="area" [(ngModel)]="areaSelect" (change)="selectArea()">
                   <option value="">地域を選択してください。</option>
@@ -191,7 +191,7 @@
           <!-- 希望日　-->
           <td>希望日</td>
           <td>
-            <div class="mandatory-area">
+            <div class="mandatory_area">
               <div *ngIf="preferredDateDiv; else elseContent">
                 <label class="mandatory">必須</label>
               </div>
