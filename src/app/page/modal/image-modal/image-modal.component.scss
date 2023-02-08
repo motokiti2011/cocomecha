@@ -1,0 +1,45 @@
+header {
+  height: 10%;
+  align-items: center;
+  #modal-title {
+    font-size: x-large;
+    align-items: center;
+  }
+}
+
+body {
+  height: 80%;
+
+  .container-md {
+    text-align: center;
+
+    .dragarea {
+      border: black;
+      display: flex;
+      align-items: center;
+      background: gray;
+      height: 120px;
+      width: 120px;
+    }
+
+    .mx-auto {
+      background: gray;
+    }
+
+    .img_area {
+      height: 70%;
+      width: 100%;
+      display: flex;
+      img {
+        width: 120px;
+        height: 120px;
+      }
+    }
+  }
+
+
+}
+
+footer {
+  height: 10%;
+}

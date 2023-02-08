@@ -278,33 +278,30 @@
           <td>添付画像</td>
           <td></td>
           <td>
-            <input type="file" accept="*/*" (change)="onInputChange($event)">
+            <button type="button" class="btn btn-outline-primary" (click)="onImageUpload()" >画像を添付する</button>
           </td>
           <td></td>
         </tr>
       </table>
 
-
+<!-- 
       <div class="container-md text-center">
-        <div
-          class="dragarea w-100 border bg-light d-flex align-items-center"
-          (dragover)="dragOver($event)" (drop)="drop($event)"
-        >
+        <div class="dragarea" (dragover)="dragOver($event)" (drop)="drop($event)">
           <span class="mx-auto">ドラッグエリア</span>
         </div>
         <input type="file" id="dragareaInput" style="display:none" (change)="onChangeDragAreaInput($event)">
         <label class="mt-3 btn btn-secondary" for="dragareaInput">参照</label>
-        <div class="row">
+        <div class="img_area">
           <img *ngFor="let i of img" [src]="i" class="col-6">
         </div>
-      </div>
-
+      </div> -->
 
 
 
       <div class="row">
         <div class="submit-button">
-          <input type="submit" class="submit-button" value="確定" (click)="getResult()" [disabled]="requiredForm.invalid" />
+          <!-- <input type="submit" class="submit-button" value="確定" (click)="getResult()" [disabled]="requiredForm.invalid" /> -->
+          <button type="button" class="btn btn-outline-primary" (click)="getResult()" [disabled]="requiredForm.invalid">確定</button>
         </div>
       </div>
 

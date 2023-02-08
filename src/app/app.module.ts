@@ -70,6 +70,7 @@ import { ServiceRelistedComponent } from './page/menu/service-contents/service-r
 import { MechanicMenuComponent } from './page/menu/my-menu/mechanic-menu/mechanic-menu.component';
 import { VehicleMenuComponent } from './page/menu/my-menu/vehicle-menu/vehicle-menu.component';
 import { EditVehicleInfoComponent } from './page/menu/my-menu/edit-vehicle-info/edit-vehicle-info.component';
+import { ImageModalComponent } from './page/modal/image-modal/image-modal.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -147,6 +148,7 @@ const ROUTE_TABLE: Routes = [
     MechanicMenuComponent,
     VehicleMenuComponent,
     EditVehicleInfoComponent,
+    ImageModalComponent,
   ],
   entryComponents: [
     TransactionListComponent,

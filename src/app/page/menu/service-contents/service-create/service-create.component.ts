@@ -20,6 +20,7 @@ import { NextModalComponent } from 'src/app/page/modal/next-modal/next-modal/nex
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
+import { ImageModalComponent } from 'src/app/page/modal/image-modal/image-modal.component';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
@@ -476,20 +477,6 @@ export class ServiceCreateComponent implements OnInit {
     this.cangeMonitoring();
   }
 
-  /**
-   * アップロードファイル選択時イベント
-   * @param event
-   */
-  onInputChange(event: any) {
-    const files = event.target.files[0];
-    console.log('１ファイル');
-    console.log(files);
-    this.fileList.push(files);
-    this.img.push(files);
-    console.log('２リスト');
-    console.log(this.fileList);
-    console.log(this.img);
-  }
 
 
   /**
@@ -557,6 +544,34 @@ export class ServiceCreateComponent implements OnInit {
   }
 
   /**
+   * 画像を添付するボタン押下イベント
+   */
+  onImageUpload() {
+    // 画像添付モーダル展開
+    const dialogRef = this.modal.open(ImageModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: {
+        fileList: this.fileList
+      }
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if(result != undefined && result != null ) {
+          
+        }
+
+
+      }
+    );
+  }
+
+
+
+  /**
    * 入力内容をリセットする
    * @returns
    */
@@ -580,6 +595,22 @@ export class ServiceCreateComponent implements OnInit {
     this.categorySelect = '';
     // 確定ボタン非活性
     this.invalid = true;
+  }
+
+
+  /**
+   * アップロードファイル選択時イベント
+   * @param event
+   */
+  onInputChange(event: any) {
+    const files = event.target.files[0];
+    console.log('１ファイル');
+    console.log(files);
+    this.fileList.push(files);
+    this.img.push(files);
+    console.log('２リスト');
+    console.log(this.fileList);
+    console.log(this.img);
   }
 
 
