@@ -29,7 +29,10 @@ body {
     .img_area {
       height: 350px;
       width: 100%;
-      display: flex;
+      display: grid;
+      grid-template-columns: 120px 120px 120px 120px 120px;
+      gap: 5px;
+      
       img {
         width: 120px;
         height: 120px;

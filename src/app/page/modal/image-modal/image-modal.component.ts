@@ -1,7 +1,16 @@
 import { Component, OnInit, Inject} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Interface } from 'readline';
 import { ModalData, nextAction } from 'src/app/entity/nextActionButtonType';
 
+
+
+export interface imgFile {
+  // ファイルデータ
+  file: File
+  // 画面表示用URL
+  url:any
+}
 
 @Component({
   selector: 'app-image-modal',
@@ -13,11 +22,12 @@ export class ImageModalComponent implements OnInit {
 
   title = '画像登録'
 
-
   /** イメージ */
-  img: any = []
-  /** ファイルリスト */
-  fileList: any[] = []
+  // img: any[] = []
+  img: {file: File, url:any}[] = []
+
+  /** ファイルリスト(一時) */
+  fileList: File[] = []
 
   constructor(
     public _dialogRef: MatDialogRef<ImageModalComponent>,
@@ -38,7 +48,7 @@ export class ImageModalComponent implements OnInit {
    * 決定ボタン押下イベント
    */
   getResult() {
-    this._dialogRef.close(this.fileList);    
+    this._dialogRef.close(this.img);    
   }
 
   // ダイアログを閉じる
@@ -62,28 +72,56 @@ export class ImageModalComponent implements OnInit {
     console.log(this.img);
   }
 
-
+  /**
+   * 
+   * @param event 
+   */
   onChangeDragAreaInput(event: any) {
     // ファイルの情報はevent.target.filesにある
     let reader = new FileReader();
     const file = event.target.files[0];
     reader.readAsDataURL(file);
     reader.onload = () => {
-      this.img.push(reader.result);
+      const imgFileData: imgFile = {file:file, url: reader.result }
+      this.img.push(imgFileData);
     };
+    // TODO
+    this.img.push(file);
   }
+
+
+  /**
+   * 削除する押下イベント
+   * @param i 
+   */
+  onRemove(i: any) {
+    const hoge:any[] = []
+    this.img.forEach(data => {
+      if(data != i) {
+        hoge.push(data);
+      }
+    });
+    this.img = hoge;
+  }
+
 
   dragOver(event: DragEvent) {
     // ブラウザで画像を開かないようにする
     event.preventDefault();
   }
-  drop(event: DragEvent) {
+
+  /**
+   * イメージドロップイベント
+   * @param event 
+   * @returns 
+   */
+  imgDrop(event: DragEvent) {
     // ブラウザで画像を開かないようにする
     event.preventDefault();
     if (event.dataTransfer == null) {
       return;
     }
-    const file = event.dataTransfer.files;
+    const file:FileList = event.dataTransfer.files;
     this.fileList.push(file[0])
     const fileList = Object.entries(file).map(f => f[1]);
     console.log(fileList);
@@ -92,13 +130,10 @@ export class ImageModalComponent implements OnInit {
       let reader = new FileReader();
       reader.readAsDataURL(f);
       reader.onload = () => {
-        this.img.push(reader.result);
+        const imgFileData: imgFile = {file:f, url: reader.result }
+        this.img.push(imgFileData);
       };
     });
   }
-
-
-
-
 
 }

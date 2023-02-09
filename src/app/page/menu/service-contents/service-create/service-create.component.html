@@ -280,7 +280,12 @@
           <td>
             <button type="button" class="btn btn-outline-primary" (click)="onImageUpload()" >画像を添付する</button>
           </td>
-          <td></td>
+          <td>
+            <div *ngIf="img.length > 0 else imgElseContents">画像あり</div>
+            <ng-template #imgElseContents>
+              <div>画像なし</div>
+            </ng-template>
+          </td>
         </tr>
       </table>
 

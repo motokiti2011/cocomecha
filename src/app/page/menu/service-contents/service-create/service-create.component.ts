@@ -22,6 +22,7 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
 import { ImageModalComponent } from 'src/app/page/modal/image-modal/image-modal.component';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { UploadService } from 'src/app/page/service/upload.service';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
 import {
@@ -42,7 +43,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
-import { IoTThingsGraph } from 'aws-sdk';
 
 
 @Component({
@@ -158,7 +158,7 @@ export class ServiceCreateComponent implements OnInit {
   /** 管理ユーザー名 */
   adminUserName = '';
   /** イメージ */
-  img: any = []
+  img: File[] = []
   /** ファイルリスト */
   fileList: any[] = []
   /** locationリスト */
@@ -206,6 +206,8 @@ export class ServiceCreateComponent implements OnInit {
           this.userInfo = user[0];
           this.inputData.userId = this.userInfo.userId;
           this.inputData.userName = this.userInfo.userName;
+          // ローディング解除
+          this.overlayRef.detach();
         }
         this.activeRouter.queryParams.subscribe(params => {
           if (params['serviceType'] == '1') {
@@ -305,8 +307,6 @@ export class ServiceCreateComponent implements OnInit {
     } else {
       this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
     }
-
-
 
     console.log('1workArea:' + this.inputData.workArea);
     console.log('2targetVehcle:' + this.inputData.targetVehcle);
@@ -560,15 +560,15 @@ export class ServiceCreateComponent implements OnInit {
       result => {
         // 返却値　無理に閉じたらundifind
         console.log('画像モーダル結果:' + result)
-        if(result != undefined && result != null ) {
-          
+        if (result != undefined && result != null) {
+          this.img = result;
         }
-
-
       }
     );
   }
 
+
+  /************************ 以下内部処理 ************************************/
 
 
   /**
@@ -596,61 +596,6 @@ export class ServiceCreateComponent implements OnInit {
     // 確定ボタン非活性
     this.invalid = true;
   }
-
-
-  /**
-   * アップロードファイル選択時イベント
-   * @param event
-   */
-  onInputChange(event: any) {
-    const files = event.target.files[0];
-    console.log('１ファイル');
-    console.log(files);
-    this.fileList.push(files);
-    this.img.push(files);
-    console.log('２リスト');
-    console.log(this.fileList);
-    console.log(this.img);
-  }
-
-
-  onChangeDragAreaInput(event: any) {
-    // ファイルの情報はevent.target.filesにある
-    let reader = new FileReader();
-    const file = event.target.files[0];
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.img.push(reader.result);
-    };
-  }
-
-  dragOver(event: DragEvent) {
-    // ブラウザで画像を開かないようにする
-    event.preventDefault();
-  }
-  drop(event: DragEvent) {
-    // ブラウザで画像を開かないようにする
-    event.preventDefault();
-    if (event.dataTransfer == null) {
-      return;
-    }
-    const file = event.dataTransfer.files;
-    this.fileList.push(file[0])
-    const fileList = Object.entries(file).map(f => f[1]);
-    console.log(fileList);
-
-    fileList.forEach(f => {
-      let reader = new FileReader();
-      reader.readAsDataURL(f);
-      reader.onload = () => {
-        this.img.push(reader.result);
-      };
-    });
-  }
-
-
-  /************************ 以下内部処理 ************************************/
-
 
 
   /**
@@ -702,7 +647,6 @@ export class ServiceCreateComponent implements OnInit {
     this.areaSelect = this.userInfo.areaNo1;
     this.inputData.area2 = this.userInfo.areaNo2;
 
-
     // ローディング解除
     this.overlayRef.detach();
   }
@@ -730,8 +674,6 @@ export class ServiceCreateComponent implements OnInit {
     // this.inputData.area1 = this..areaNo1;
     // this.areaSelect = this.userInfo.areaNo1;
     // this.inputData.area2 = this.userInfo.areaNo2;
-
-
 
 
     // ローディング解除
@@ -827,42 +769,11 @@ export class ServiceCreateComponent implements OnInit {
           console.log(err);
         });
       });
-
-
     } else {
       console.log('不動！');
     }
-
-    // const data: ModalData = {
-    //   title: nextActionTitleType.SUCSESSMESSAGE,
-    //   message: nextActionMessageType.NEXTMESSAGE,
-    //   nextActionList: [
-    //     { nextId: nextActionButtonType.TOP, nextAction: nextActionButtonTypeMap[0] },
-    //     { nextId: nextActionButtonType.MYMENU, nextAction: nextActionButtonTypeMap[1] },
-    //     { nextId: nextActionButtonType.SERVICECREATE, nextAction: nextActionButtonTypeMap[2] },
-    //     { nextId: nextActionButtonType.SERVICEDETAEL, nextAction: nextActionButtonTypeMap[3] }
-    //   ],
-    //   resultAction: ''
-    // }
-
-    // const dialogRef = this.modal.open(NextModalComponent, {
-    //   width: '80vh',
-    //   height: '50vh',
-    //   data: data
-    // });
-    // // 次の操作モーダルを表示
-    // dialogRef.afterClosed().subscribe(nextAction => {
-    //   if (nextAction !== undefined) {
-    //     const linc = this.service.nextNav(nextAction.resultAction);
-    //     if (linc == '99') {
-    //       this.refreshForm();
-    //     } else {
-    //       // モーダル返却値から遷移先へ飛ぶ
-    //       this.router.navigate([linc]);
-    //     }
-    //   }
-    // });
   }
+
 
 
   /**
