@@ -27,7 +27,7 @@ body {
     }
 
     .img_area {
-      height: 70%;
+      height: 350px;
       width: 100%;
       display: flex;
       img {
@@ -35,6 +35,11 @@ body {
         height: 120px;
       }
     }
+
+    // .input_btn {
+    //   height: ;
+    // }
+
   }
 
 
@@ -42,4 +47,10 @@ body {
 
 footer {
   height: 10%;
+  align-items: end;
+  display: flex;
+  justify-content: flex-end;
+  #btn {
+    margin-left: 10px;
+  }
 }

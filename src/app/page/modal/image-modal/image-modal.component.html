@@ -12,7 +12,7 @@
       <div class="dragarea" (dragover)="dragOver($event)" (drop)="drop($event)">
         <span class="dorag">ここにドラッグ＆ドロップ</span>
       </div>
-      
+
       <img *ngFor="let i of img" [src]="i">
 
 
@@ -20,7 +20,7 @@
 
 
 
-    <div>
+    <div class="input_btn">
       <input type="file" id="dragareaInput" style="display:none"
        (change)="onChangeDragAreaInput($event)">
       <label class="mt-3 btn btn-secondary" for="dragareaInput">参照</label>
@@ -33,6 +33,6 @@
 
 
 <footer>
-  <button type="button" class="btn btn-outline-primary" (click)="closeModal()">閉じる</button>
-  <button type="button" class="btn btn-outline-primary" (click)="getResult()">決定</button>
+  <button id="btn" type="button" class="btn btn-outline-primary" (click)="closeModal()">閉じる</button>
+  <button id="btn" type="button" class="btn btn-outline-primary" (click)="getResult()">決定</button>
 </footer>
