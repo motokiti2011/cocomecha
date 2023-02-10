@@ -35,27 +35,26 @@ export class ServiceListComponent implements OnInit {
   // ページング表示開始位置
   begin = 0;
   // ページング最大件数
-  length = 6;
+  maxLength = 8;
+  /** 現在のページ*/
+  currentIndex: number = 0;
+  /** 総ページ数*/
+  totalPage: number = 1;
+  /** インデックス*/
+  pageIndex: {page:string , index:number}[] = [];
 
   // NoImageURL
   noImage = "assets/images/noimage.png";
 
   /** タイトル */
   serviceTitle = 'サービス一覧画面'
+
+
   /** コンテンツリスト*/
   contentsList: serviceContents[] = [];
   /** 画面表示コンテンツリスト*/
   displayContentsList: serviceContents[] = [];
-  /** 取得サービス(基準) */
-  standardSlip: slipDetailInfo[] = [];
-  /** 現在のページ*/
-  currentIndex: number = 1;
-  /** 総ページ数*/
-  totalPage: number = 1;
-  /** 表示ページ*/
-  displayPage: number = 1;
-  /** インデックス*/
-  pageIndex: number[] = [];
+
   /** 検索件数 */
   displayCount: number = 1;
   /** 最大件数表示フラグ */
@@ -139,6 +138,7 @@ export class ServiceListComponent implements OnInit {
       } else {
         this.getSlip();
       }
+
       // 認証有無状態を判定する
       const authUser = this.cognito.initAuthenticated();
       if (authUser === null) {
@@ -165,8 +165,11 @@ export class ServiceListComponent implements OnInit {
    */
   private getSlip() {
     this.apiUniqueService.serchSlip(this.serchInfo).subscribe(slip => {
-      this.seviceListSetting(slip);
-      this.initSetServiceContents(slip);
+      // 表示用にデータ加工
+      this.displayContentsList = this.service.convertSlipServiceContents(slip);
+      this.initSetServiceContents();
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
@@ -174,43 +177,28 @@ export class ServiceListComponent implements OnInit {
    * 検索条件を元にサービス商品情報を取得する
    */
   getServiceContents() {
-    this.apiUniqueService.serchServiceContents(this.serchInfo).subscribe(slip => {
-      this.seviceListSetting(slip);
-      this.initSetServiceContents(slip);
+    this.apiUniqueService.serchServiceContents(this.serchInfo).subscribe(salesService => {
+      this.displayContentsList = this.service.convertServiceContents(salesService);
+      this.initSetServiceContents();
+      // ローディング解除
+      this.overlayRef.detach();
+
     });
   }
+
 
   /**
    * 初回表示するサービスを取得し設定する
    * @return void
    */
-  private initSetServiceContents(slipDetail: slipDetailInfo[]): void {
+  private initSetServiceContents(): void {
     // 初回のみ初期化
-    this.displayContentsList = [];
-    // コンテンツ全体から総ページ数を算出する
-    this.totalPage = Math.round(slipDetail.length / 6);
+    this.displayContentsList;
+    // コンテンツ全体から総ページ数を算出する(切上げ)
+    this.totalPage = Math.ceil(this.displayContentsList.length / 8);
     // 現在のページを設定する
-    this.currentIndex = 1;
-    // 大元となる取得コンテンツを設定
-    this.standardSlip = _cloneDeep(slipDetail);
-    // 6個表示のためページ数計算含め行う
-    let count = 0;
-    slipDetail.forEach((content) => {
-      // 6コンテンツ分抽出する
-      if (count < 6) {
-        if (!(_isNil(content))) {
-          this.displayContentsList.push(
-            this.service.convertServiceContents(content));
-        }
-      } else {
-        // ローディング解除
-        this.overlayRef.detach();
-        return;
-      }
-      count++
-      // ローディング解除
-      this.overlayRef.detach();
-    });
+    this.currentIndex = 0;
+
     // 初期ページ設定を行う
     this.initPageSetting();
   }
@@ -225,11 +213,11 @@ export class ServiceListComponent implements OnInit {
    */
   onContentsForward(): void {
     // 1ページ目の場合何もしない
-    if (this.currentIndex == 1) {
+    if (this.currentIndex == 0) {
       return;
     }
-    this.currentIndex = this.currentIndex - 1;
-    this.setDisplayService();
+    const beforIndex = this.currentIndex - 1;
+    this.onContentsIndex(beforIndex)
   }
   /**
    * 次へボタン押下イベント
@@ -237,11 +225,12 @@ export class ServiceListComponent implements OnInit {
    */
   onContentsNext(): void {
     // 最終ページの場合何もしない
-    if (this.currentIndex = this.totalPage) {
+    if (this.currentIndex == this.totalPage -1) {
       return;
     }
-    this.currentIndex = this.currentIndex + 1;
-    this.setDisplayService();
+    const nextIndex = this.currentIndex + 1;
+
+    this.onContentsIndex(nextIndex)
   }
 
   /**
@@ -249,9 +238,8 @@ export class ServiceListComponent implements OnInit {
    * @return void
    */
   onContentsIndex(index: number): void {
-    console.log(index);
     this.currentIndex = index;
-    this.setDisplayService();
+    this.begin = this.maxLength * index;
   }
 
   /**
@@ -318,65 +306,6 @@ export class ServiceListComponent implements OnInit {
     }
   }
 
-  /**
-   * サイドメニューエリア選択時
-   */
-  onAreaChenge(e: string) {
-    if (_isNil(e)) {
-      this.serchArea1 = '0';
-    } else {
-      this.serchArea1 = e;
-    }
-
-    this.service.getSidSerchSlip(String(this.serchArea1), String(this.serchCategory)).subscribe(slip => {
-      this.seviceListSetting(slip);
-      this.initSetServiceContents(slip);
-      if (this.userCertificationDiv) {
-        this.apiGsiService.serchFavorite(this.authUser).subscribe(data => {
-          this.favoriteList = this.service.favoriteUnuq(data);
-          if (data.length > 0) {
-            this.setFavorite();
-          }
-        });
-      }
-    });
-  }
-
-  /**
-   * サイドメニューカテゴリー選択時
-   */
-  onCategoryChenge(e: string) {
-    if (_isNil(e)) {
-      this.serchCategory = '0';
-    } else {
-      this.serchCategory = e;
-    }
-    this.service.getSidSerchSlip(String(this.serchArea1), String(this.serchCategory)).subscribe(slip => {
-      this.seviceListSetting(slip);
-      this.initSetServiceContents(slip);
-      if (this.userCertificationDiv) {
-        this.apiGsiService.serchFavorite(this.authUser).subscribe(data => {
-          this.favoriteList = this.service.favoriteUnuq(data);
-          if (data.length > 0) {
-            this.setFavorite();
-          }
-        });
-      }
-    });
-  }
-
-  /**
-   * サイドメニュー金額選択時
-  */
-  onAmountChenge(e: serchSidAmount[]) {
-    // 検索条件なしの場合全件表示
-    if (e.length == 0) {
-      this.setServiceContents(this.standardSlip);
-    } else {
-      // 金額絞り込み
-      this.setServiceContents(this.service.serchAmtContent(this.standardSlip, e))
-    }
-  }
 
   /**
    * 絞り込みボタン押下時
@@ -407,15 +336,16 @@ export class ServiceListComponent implements OnInit {
     const maxIndex = this.totalPage;
 
     // ページ数は最大6個表示のためそれ以上であれば6個までの表示を行う
-    if (this.totalPage > 6) {
+    if (this.totalPage > 8) {
       this.maxPageDisp = true;
     }
     // ページ数は最大6表示
     for (var i = 0; i < this.totalPage; i++) {
-      if (count > 6) {
-        return;
-      }
-      this.pageIndex.push(count);
+      // if (count > 8) {
+      //   return;
+      // }
+      const pageData = {page:String(count),index: count-1 }
+      this.pageIndex.push(pageData);
       count++;
     }
     // ローディング解除
@@ -432,94 +362,6 @@ export class ServiceListComponent implements OnInit {
     this.overlayRef.detach();
   }
 
-  /**
-   * 取得した伝票からサービス情報を設定する(既存条件から表示ステータスの変更のみ)
-   * @param slipDetail
-   */
-  private seviceListSetting(slipDetail: slipDetailInfo[]): void {
-    slipDetail.forEach((content) => {
-      if (!(_isNil(content))) {
-        if (content.thumbnailUrl == '') {
-          content.thumbnailUrl = this.noImage;
-        }
-        this.contentsList.push(
-          this.service.convertServiceContents(content));
-      }
-      // ローディング解除
-      this.overlayRef.detach();
-    });
-  }
-
-  /**
-   * 表示するサービスを取得し設定する
-   * @return void
-   */
-  private setServiceContents(slipDetail: slipDetailInfo[]): void {
-    this.displayContentsList = [];
-    // コンテンツ全体から総ページ数を算出する
-    this.totalPage = Math.round(slipDetail.length / 6);
-    // 現在のページを設定する
-    this.currentIndex = 1;
-    // 6個表示のためページ数計算含め行う
-    let count = 0;
-    slipDetail.forEach((content) => {
-      // 6コンテンツ分抽出する
-      if (count < 6) {
-        if (!(_isNil(content))) {
-          this.displayContentsList.push(
-            this.service.convertServiceContents(content));
-        }
-      } else {
-        return;
-      }
-      count++
-    });
-    // 初期ページ設定を行う
-    this.initPageSetting();
-  }
-
-
-  /**
-   * 表示するサービス情報を取得する
-   * @return void
-   */
-  private setDisplayService(): void {
-    // 初期化
-    this.displayContentsList = [];
-    // 現在のページから取得する開始インデックスを出す
-    // 開始位置　= 現在のページ数*6　-1
-    const startIndex = (this.currentIndex * 6) - 1;
-
-    let loopCount = 0;
-    let count = 0;
-
-    // 6個表示のためページ数計算含め行う
-    this.contentsList.forEach((content) => {
-      if (startIndex >= loopCount) {
-        // 6コンテンツ分抽出する
-        if (count < 6) {
-          if (!(_isNil(content))) {
-            this.displayContentsList.push(content);
-          }
-        } else {
-          return;
-        }
-        count++
-      }
-      loopCount++
-    });
-    this.pageSetting();
-  }
-
-  /**
-   * ページ数表示設定を行う
-   */
-  private pageSetting() {
-    // 表示ページインデックスを初期化
-    this.pageIndex = [];
-    this.pageIndex = this.service.setPage(this.totalPage, this.currentIndex);
-  }
-
 
   /**
    * 検索結果をもとにサービス商品を検索する
@@ -528,9 +370,9 @@ export class ServiceListComponent implements OnInit {
   private serchServiceContents(event: serchServiceCombination) {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
-    this.apiGsiService.serviceSerchCombination(event).subscribe(slip => {
-      this.seviceListSetting(slip);
-      this.initSetServiceContents(slip);
+    this.apiGsiService.serviceSerchCombination(event).subscribe(salesService => {
+      // this.displayContentsList = this.service.convertServiceContents(salesService);
+      // this.initSetServiceContents();
       // ローディング解除
       this.overlayRef.detach();
     });
@@ -544,13 +386,11 @@ export class ServiceListComponent implements OnInit {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.apiGsiService.slipSerchCombination(event).subscribe(slip => {
-      this.seviceListSetting(slip);
-      this.initSetServiceContents(slip);
+      // this.displayContentsList = this.service.convertSlipServiceContents(slip);
+      // this.initSetServiceContents();
       // ローディング解除
       this.overlayRef.detach();
     });
   }
-
-
 
 }

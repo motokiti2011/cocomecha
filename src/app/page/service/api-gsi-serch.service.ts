@@ -15,7 +15,7 @@ import { userVehicle } from 'src/app/entity/userVehicle';
 import { serviceTransactionRequest } from 'src/app/entity/serviceTransactionRequest';
 import { factoryMechanicFavorite } from 'src/app/entity/factoryMechanicFavorite';
 import { serchServiceCombination } from 'src/app/entity/serchCondition';
-
+import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -417,11 +417,11 @@ export class ApiGsiSerchService {
         "amountSerchDiv": value.amountSerchDiv
       }
     };
-    return this.http.post<serviceContents>(this.apiEndPoint + '/serchservicecontents', body).pipe(
+    return this.http.post<salesServiceInfo>(this.apiEndPoint + '/serchservicecontents', body).pipe(
       // 取得できた場合ユーザー情報を返却
-      map((res: serviceContents) => res),
+      map((res: salesServiceInfo) => res),
       // エラー時HTTPステータスコードを戻す
-      catchError((err: HttpErrorResponse) => of(undefined))
+      catchError((err: salesServiceInfo) => of(undefined))
     );
   }
 

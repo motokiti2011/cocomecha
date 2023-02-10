@@ -22,9 +22,10 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
 import { ImageModalComponent } from 'src/app/page/modal/image-modal/image-modal.component';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
-import { UploadService } from 'src/app/page/service/upload.service';
 import { user, initUserInfo } from 'src/app/entity/user';
+import { imgFile } from 'src/app/entity/imgFile';
 import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
+
 import {
   createServiceSelect,
   timeData,
@@ -158,7 +159,7 @@ export class ServiceCreateComponent implements OnInit {
   /** 管理ユーザー名 */
   adminUserName = '';
   /** イメージ */
-  img: File[] = []
+  img: imgFile[] = []
   /** ファイルリスト */
   fileList: any[] = []
   /** locationリスト */
@@ -483,7 +484,7 @@ export class ServiceCreateComponent implements OnInit {
    * 確定処理
    */
   getResult() {
-    if (this.fileList.length != 0) {
+    if (this.img.length != 0) {
       this.fileUp();
     } else {
       this.postSlip();
@@ -551,9 +552,7 @@ export class ServiceCreateComponent implements OnInit {
     const dialogRef = this.modal.open(ImageModalComponent, {
       width: '750px',
       height: '600px',
-      data: {
-        fileList: this.fileList
-      }
+      data: this.img
     });
     // モーダルクローズ後
     dialogRef.afterClosed().subscribe(
@@ -686,15 +685,15 @@ export class ServiceCreateComponent implements OnInit {
    */
   private fileUp() {
     let count = 0;
-    if (this.fileList.length != 0) {
-      this.fileList.forEach(file => {
-        this.service.protoImgUpload(file).then((data) => {
+    if (this.img.length != 0) {
+      this.img.forEach(file => {
+        this.service.protoImgUpload(file.file).then((data) => {
           count++;
           if (data) {
             this.locationList.push(data.Location);
             console.log(data);
           }
-          if (count == this.fileList.length) {
+          if (count == this.img.length) {
             console.log('処理完了');
             console.log(this.locationList);
             this.inputData.imageUrlList = this.locationList;

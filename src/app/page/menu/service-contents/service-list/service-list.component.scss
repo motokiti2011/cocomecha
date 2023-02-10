@@ -62,95 +62,97 @@ article {
 
 .serch-area {
   display: flex;
-}
-
-.button-serch {
-  margin-left: 20px;
-  margin-top: 15px;
-  margin-bottom: 10px;
-}
-
-
-// .btn-serch {
-//   background-color: #0a0;
-// }
-
-
-.serch-form {
-  width: 400px;
-  height: 20px;
-  // border: 1px solid #0a0;
-  border-radius: 0.67em;
-  padding: 0.5em;
-  margin-top: 10px;
+  .serch-form {
+    width: 400px;
+    height: 35px;
+    // border: 1px solid #0a0;
+    border-radius: 0.67em;
+    padding: 0.5em;
+    margin: 15px 20px 20px 30px;
+  }
+  .button-serch {
+    margin: 15px 10px 10px 10px;
+  }
 }
 
 
 
 
-.item_area {
-  // background: #0a0;
-  display: grid;
-  grid-template-columns: 30vh 30vh 30vh;
-  height: 630px;
-  width: 80%;
 
 
-  .title {
-    cursor: pointer;
-    margin-left: 30px;
+.other_area {
+
+  .item_area {
+    // background: #0a0;
+    display: grid;
+    grid-template-columns: 200px 200px 200px 200px;
+    grid-template-rows: 200px 200px;
+    height: 460px;
+    width: 80%;
+
+    img {
+      margin: 20px 0px 5px 50px;
+    }
+
+    .title {
+      cursor: pointer;
+      margin-left: 30px;
+    }
+
+    .favorite {
+      cursor: pointer;
+      content: "★";
+      margin-left: 30px;
+      color: #FFA500;
+    }
+
+    .anfavorite {
+      cursor: pointer;
+      content: "★";
+      margin-left: 30px;
+      color: #ccc;
+    }
   }
 
-  .favorite {
-    cursor:pointer;
-    content: "★";
-    margin-left: 30px;
-    color: #FFA500;
-  }
 
-  .anfavorite {
-    cursor:pointer;
-    content: "★";
-    margin-left: 30px;
-    color: #ccc;
-  }
-
-}
-
-
-.service-index {
-  height: 10%;
-  margin-left: 20%;
-
-  .buttom-area {
+  .service-index {
+    justify-content: center;
     display: flex;
+    width: 800px;
 
-    div.buttom-base {
-      text-align: center;
-      border: 2px solid #000;
-      border-radius: 2;
-      // background: #fff;
-      width: 3.5em;
-      height: 2.5em;
-      margin-left: 0.5em;
-      padding: 10px 5px 0px 5px;
-    }
+    .buttom-area {
+      display: flex;
 
-    .buttom-base:hover {
-      color: #fff;
-      background: #000;
-    }
+      div.buttom-base {
+        text-align: center;
+        border: 2px solid #000;
+        border-radius: 2;
+        // background: #fff;
+        width: 3.5em;
+        height: 2.5em;
+        margin-left: 0.5em;
+        padding: 10px 5px 0px 5px;
+      }
 
-    div.index {
-      color: #fff;
-      background: #000;
-      text-align: center;
-      border: 2px solid #000;
-      border-radius: 2;
-      width: 3.5em;
-      height: 2.5em;
-      margin-left: 0.5em;
-      padding: 10px 5px 0px 5px;
+      .buttom-base:hover {
+        color: #fff;
+        background: #000;
+      }
+
+      div.index {
+        color: #fff;
+        background: #000;
+        text-align: center;
+        border: 2px solid #000;
+        border-radius: 2;
+        width: 3.5em;
+        height: 2.5em;
+        margin-left: 0.5em;
+        padding: 10px 5px 0px 5px;
+      }
     }
   }
+
+
+
 }

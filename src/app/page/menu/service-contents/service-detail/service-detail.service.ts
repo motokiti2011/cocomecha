@@ -29,11 +29,27 @@ export class ServiceDetailService {
 
   /**
    * 画像に番号を振り、表示用リストに格納する。
+   * @param thumbnailUrl
    * @param imageList
    * @returns
    */
-  public setImages(imageList: string[]): image[] {
+  public setImages(thumbnailUrl:string , imageList: string[]): image[] {
+
     let resultList:image[] = [];
+    // サムネイル画像が存在しない場合画像はなし
+    if(thumbnailUrl == '' || thumbnailUrl == null) {
+      const noImage: image = {
+        imageNo: '', src: 'assets/images/noimage.png'
+      }
+      resultList.push(noImage);
+      return resultList;
+    } else {
+      const item :image = {
+        imageNo: String(0), src:thumbnailUrl
+      }
+      resultList.push(item);
+    }
+
     if(imageList.length == 0) {
       const noImage: image = {
         imageNo: '', src: 'assets/images/noimage.png'

@@ -19,7 +19,7 @@ import { serchSidAmount } from 'src/app/entity/serchSid';
 import { monthMap } from 'src/app/entity/month';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
-
+import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -30,45 +30,98 @@ export class ServiceListcomponentService {
   targetUrl = 'slipdetail'
 
   constructor(
-    private http: HttpClient,
-    private jsonp: HttpClientJsonpModule,
     private apiService: ApiSerchService,
     private apiGsiService: ApiGsiSerchService,
   ) { }
 
 
   /**
-   * 取得した伝票情報を元に表示用に編集する
+   * 伝票情報を画面表示データに変換する
+   * @param slipData 
+   * @returns 
    */
-  convertServiceContents(detail: slipDetailInfo): serviceContents {
-    const result: serviceContents = {
-      id: detail.slipNo,
-      userId: detail.slipAdminUserId,
-      userName: detail.slipAdminUserName,
-      mechanicId: '',
-      officeId: '',
-      title: detail.title,
-      workArea: detail.workAreaInfo,
-      price: Number(detail.price),
-      area1: detail.areaNo1,
-      area2: detail.areaNo2,
-      category: detail.category,
-      targetVehcle: detail.targetVehicleName,
-      bidMethod: detail.bidMethod,
-      explanation: detail.explanation,
-      bidderId: Number(detail.bidderId),
-      favoriteFlg: false,
-      registeredDate: 0,
-      preferredDate: Number(detail.preferredDate),
-      preferredTime: Number(detail.preferredTime),
-      logicalDeleteFlag: 0,
-      msgLv: '1',
-      thumbnailUrl: detail.thumbnailUrl,
-      imageUrlList: null,
-      targetService: '0'
-    }
-    return result;
+  convertSlipServiceContents(slipData: slipDetailInfo[]): serviceContents[] {
+    let resultData: serviceContents[] = [];
+    slipData.forEach(slip => {
+      if (slip.thumbnailUrl == '') {
+        slip.thumbnailUrl = 'assets/images/noimage.png';
+      }
+      const result: serviceContents = {
+        id: slip.slipNo,
+        userId: slip.slipAdminUserId,
+        userName: slip.slipAdminUserName,
+        mechanicId: '',
+        officeId: '',
+        title: slip.title,
+        workArea: slip.workAreaInfo,
+        price: Number(slip.price),
+        area1: slip.areaNo1,
+        area2: slip.areaNo2,
+        category: slip.category,
+        targetVehcle: slip.targetVehicleName,
+        bidMethod: slip.bidMethod,
+        explanation: slip.explanation,
+        bidderId: Number(slip.bidderId),
+        favoriteFlg: false,
+        registeredDate: 0,
+        preferredDate: Number(slip.preferredDate),
+        preferredTime: Number(slip.preferredTime),
+        logicalDeleteFlag: 0,
+        msgLv: '1',
+        thumbnailUrl: slip.thumbnailUrl,
+        imageUrlList: null,
+        targetService: '0'
+      }
+      resultData.push(result);
+    });
+    return resultData;
   }
+
+
+  /**
+   * サービス商品情報を画面表示データに変換する
+   * @param service
+   * @returns 
+   */
+  public convertServiceContents(serviceData: salesServiceInfo[]): serviceContents[] {
+    let resultData: serviceContents[] = [];
+    serviceData.forEach(service => {
+      if (service.thumbnailUrl == '') {
+        service.thumbnailUrl = 'assets/images/noimage.png';
+      }
+      const result: serviceContents = {
+        id: service.slipNo,
+        userId: service.slipAdminUserId,
+        userName: service.slipAdminUserName,
+        mechanicId: '',
+        officeId: '',
+        title: service.title,
+        workArea: service.workAreaInfo,
+        price: Number(service.price),
+        area1: service.areaNo1,
+        area2: service.areaNo2,
+        category: service.category,
+        targetVehcle: service.targetVehicleName,
+        bidMethod: service.bidMethod,
+        explanation: service.explanation,
+        bidderId: Number(service.bidderId),
+        favoriteFlg: false,
+        registeredDate: 0,
+        preferredDate: Number(service.preferredDate),
+        preferredTime: Number(service.preferredTime),
+        logicalDeleteFlag: 0,
+        msgLv: '1',
+        thumbnailUrl: service.thumbnailUrl,
+        imageUrlList: null,
+        targetService: '0'
+      }
+      resultData.push(result)
+    });
+    return resultData;
+  }
+
+
+
 
   /**
    * 画面表示するページ数を算出する。
@@ -256,10 +309,10 @@ export class ServiceListcomponentService {
     return '残り' + result + '日';
   }
 
-/** 残り時間を取得する
- * @param preferredTime
- * @return string
- */
+  /** 残り時間を取得する
+   * @param preferredTime
+   * @return string
+   */
   private getTimeLeft(preferredTime: number): string {
 
     const toDate = new Date();
@@ -374,7 +427,7 @@ export class ServiceListcomponentService {
       if (_find(favoriteList, data => data.slipNo == contents.id)) {
         const id = _find(favoriteList, data => data.slipNo == contents.id)?.id
         // 存在する場合解除が必用なため削除する。
-        if (id !== undefined && id !== null)  {
+        if (id !== undefined && id !== null) {
           this.apiService.deleteFavorite(id).subscribe(st => {
             console.log('削除');
             console.log(st);
@@ -462,7 +515,7 @@ export class ServiceListcomponentService {
    * @param contents
    * @returns
    */
-  public postBrowsingHistory(contents: serviceContents, userId: string) :Observable<any> {
+  public postBrowsingHistory(contents: serviceContents, userId: string): Observable<any> {
     return this.apiService.postHistory(this.createBrowsingHistory(contents, userId));
   }
 

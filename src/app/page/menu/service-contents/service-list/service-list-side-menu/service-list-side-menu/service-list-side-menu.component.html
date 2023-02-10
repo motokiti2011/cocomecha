@@ -48,14 +48,6 @@
   <div class="row">
     <div>
       <div class="title">金額</div>
-      <!-- <div>
-        <ng-container *ngFor="let amount of serchAmount; index as i">
-          <label>
-            <input type="checkbox" name="amount{{i}}" [(ngModel)]="serchAmount[i].selected" [value]="amount.value1"
-              (change)="onAmount()">{{amount.label}}
-          </label><br />
-        </ng-container>
-      </div> -->
 
       <div class="amount_check">
         <input type="checkbox" name="amountcheck" [(ngModel)]="serchAmount.selected" (change)="onAmount()">

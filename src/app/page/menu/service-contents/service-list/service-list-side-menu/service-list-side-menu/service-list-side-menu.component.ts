@@ -91,19 +91,9 @@ export class ServiceListSideMenuComponent implements OnInit {
     Validators.pattern('[0-9 ]*')
   ]);
 
-
   /** 金額チェックボックスデータ */
   serchAmount = { label: '指定なし', selected: false };
-  // serchAmount = [
-  //     { label: '指定なし', selected: false },
-  // { label: '　1円~1,000円', value1: '1', value2: '1000', selected: false },
-  // { label: '　1,000円~3,000円', value1: '1000', value2: '3000', selected: false },
-  // { label: '　3,000円~5,000円', value1: '3000', value2: '5000', selected: false },
-  // { label: '　3,000円~10,000円', value1: '3000', value2: '10000', selected: false },
-  // { label: '　10,000円~30,000円', value1: '10000', value2: '30000', selected: false },
-  // { label: '　30,000円~50,000円', value1: '30000', value2: '50000', selected: false },
-  // { label: '　50,000円以上', value1: '50000', value2: '99999', selected: false },
-  // ];
+
 
   constructor(
     private auth: AuthUserService,
@@ -116,6 +106,7 @@ export class ServiceListSideMenuComponent implements OnInit {
     if (this.serchArea1 != '0') {
       this.areaSelect = this.serchArea1;
       this.serchValue.area1 = this.serchArea1;
+      this.onArea();
     }
 
     // 作業内容のセレクトボックス初期選択処理
@@ -157,15 +148,12 @@ export class ServiceListSideMenuComponent implements OnInit {
    */
   onArea() {
     if (this.areaSelect == undefined) {
-      this.chengeArea.emit('0');
       this.areaCityData = [];
     } else {
       this.serchValue.area1 = this.areaSelect;
-      // this.chengeArea.emit(String(this.areaSelect));
       // 詳細エリア選択のセレクト対象を設定する
       this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect)
     }
-
   }
 
   /**
@@ -182,11 +170,9 @@ export class ServiceListSideMenuComponent implements OnInit {
    * 選択した作業内容をイベント発火させ親へと戻す
    */
   onWorkContents() {
-    if (this.categorySelect === undefined) {
-      // this.chengeArea.emit('0');
-    } else {
-      this.serchValue.category = this.categorySelect;
-    }
+    console.log(this.serchValue.category);
+    this.serchValue.category = this.categorySelect;
+    console.log(this.serchValue.category);
   }
 
   /**
@@ -203,17 +189,7 @@ export class ServiceListSideMenuComponent implements OnInit {
     this.serchValue.amount1 = this.amount1.value;
     this.serchValue.amount2 = this.amount2.value;
     this.serchValue.amountSerchDiv = this.serchAmount.selected;
-    // // チェックボックスの状態をチェックする
-    // this.serchAmount.forEach(amount => {
-    //   if (amount.selected) {
-    //     let serch: serchSidAmount = {
-    //       value1: Number(amount.value1),
-    //       value2: Number(amount.value2)
-    //     }
-    //     checkAmount.push(serch);
-    //   }
-    // })
-    // this.chengeAmount.emit(checkAmount);
+
   }
 
   /**
@@ -236,7 +212,7 @@ export class ServiceListSideMenuComponent implements OnInit {
    */
   onSerch() {
     console.log(this.serchValue);
-    this.serviceSerchValue.emit(this.serchValue)
+    this.serviceSerchValue.emit(this.serchValue);
   }
 
 

@@ -1,16 +1,8 @@
 import { Component, OnInit, Inject} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Interface } from 'readline';
-import { ModalData, nextAction } from 'src/app/entity/nextActionButtonType';
+import { imgFile } from 'src/app/entity/imgFile';
 
 
-
-export interface imgFile {
-  // ファイルデータ
-  file: File
-  // 画面表示用URL
-  url:any
-}
 
 @Component({
   selector: 'app-image-modal',
@@ -32,17 +24,14 @@ export class ImageModalComponent implements OnInit {
   constructor(
     public _dialogRef: MatDialogRef<ImageModalComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: ModalData
+    public data: imgFile[]
     ) { }
 
   ngOnInit(): void {
+    this.img = this.data;
   }
 
 
-  nextAction(selected: nextAction) {
-    this.data.resultAction = selected.nextId;
-    this._dialogRef.close(this.data);
-  }
 
   /**
    * 決定ボタン押下イベント
@@ -63,13 +52,9 @@ export class ImageModalComponent implements OnInit {
    */
   onInputChange(event: any) {
     const files = event.target.files[0];
-    console.log('１ファイル');
-    console.log(files);
+
     this.fileList.push(files);
     this.img.push(files);
-    console.log('２リスト');
-    console.log(this.fileList);
-    console.log(this.img);
   }
 
   /**

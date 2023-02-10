@@ -81,7 +81,7 @@ export class ServiceDetailComponent implements OnInit {
         this.dispPrice = this.dispContents.price;
         this.dispArea = this.dispContents.areaNo1;
         this.dispExplanation = this.dispContents.explanation;
-        this.images = this.service.setImages(this.dispContents.imageUrlList)
+        this.images = this.service.setImages(this.dispContents.thumbnailUrl,this.dispContents.imageUrlList)
         if (this.dispContents.processStatus == '3') {
           this.relistedDiv = true;
         }
