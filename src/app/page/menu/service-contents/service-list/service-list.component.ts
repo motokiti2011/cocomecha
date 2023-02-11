@@ -7,6 +7,8 @@ import {
   isNil as _isNil,
   uniq as _uniq,
   cloneDeep as _cloneDeep,
+  orderBy as _orderBy,
+  includes as _includes
 } from 'lodash';
 import { serviceContents } from 'src/app/entity/serviceContents';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
@@ -42,18 +44,17 @@ export class ServiceListComponent implements OnInit {
   totalPage: number = 1;
   /** インデックス*/
   pageIndex: {page:string , index:number}[] = [];
-
   // NoImageURL
   noImage = "assets/images/noimage.png";
 
   /** タイトル */
   serviceTitle = 'サービス一覧画面'
-
-
   /** コンテンツリスト*/
   contentsList: serviceContents[] = [];
   /** 画面表示コンテンツリスト*/
   displayContentsList: serviceContents[] = [];
+  /** 退避用画面表示コンテンツリスト*/
+  serchSbDisplayContentsList: serviceContents[] = [];
 
   /** 検索件数 */
   displayCount: number = 1;
@@ -81,11 +82,19 @@ export class ServiceListComponent implements OnInit {
   /** ユーザー情報 */
   authUser = '';
 
+  /** 絞り込みボタン表示 */
+  serchBtnValue = '絞り込み'
+  /** 絞り込みボタン表示区分 */
+  serchBtnDiv = false;
+  /** 検索キーワード */
+  serchKeyWord = '';
+
   displayData = [
-    { label: '表示順', value: 'defult', disabled: false },
-    { label: '日付が新しいものから表示', value: 'newData', disabled: false },
-    { label: '日付が古いものから表示', value: 'oldData', disabled: false },
-    { label: '残り日付が短いものから表示', value: 'shortData', disabled: false },
+    { label: '表示順', value: 'defult',  order: 'asc', disabled: false },
+    { label: '日付が新しいものから表示', value: 'registeredDate', order: 'asc' ,disabled: false },
+    { label: '日付が古いものから表示', value: 'registeredDate', order: 'desc', disabled: false },
+    { label: '残り日付が長いものから表示', value: 'preferredDate', order: 'asc', disabled: false },
+    { label: '残り日付が短いものから表示', value: 'preferredDate', order: 'desc', disabled: false },
   ];
   url = '';
 
@@ -192,18 +201,15 @@ export class ServiceListComponent implements OnInit {
    * @return void
    */
   private initSetServiceContents(): void {
-    // 初回のみ初期化
-    this.displayContentsList;
+    // // 初回のみ初期化
+    // this.displayContentsList;
     // コンテンツ全体から総ページ数を算出する(切上げ)
     this.totalPage = Math.ceil(this.displayContentsList.length / 8);
     // 現在のページを設定する
     this.currentIndex = 0;
-
     // 初期ページ設定を行う
     this.initPageSetting();
   }
-
-
 
   /********************* 画面操作イベント ************************/
 
@@ -287,6 +293,23 @@ export class ServiceListComponent implements OnInit {
    */
   onDisplayList() {
     console.log(this.selected);
+    if(this.selected == 'defult') {
+      return;
+    }
+
+    const selectData = _find(this.displayData, disp => disp.value == this.selected)
+    if(selectData == undefined) {
+      this.selected = 'defult';
+      return;
+    }
+    if(selectData.order == 'asc') {
+      const sortData = _orderBy(this.displayContentsList, selectData.value, 'asc')
+      this.displayContentsList = _cloneDeep(sortData);
+    } else {
+      const sortData = _orderBy(this.displayContentsList, selectData.value, 'desc')
+      this.displayContentsList = _cloneDeep(sortData);
+    }
+    this.initSetServiceContents();
   }
 
 
@@ -295,7 +318,7 @@ export class ServiceListComponent implements OnInit {
 
   /**
    * サイドメニューの検索押下イベント
-   * @param event 
+   * @param event
    */
   onServiceSerch(event: serchServiceCombination) {
     console.log(event);
@@ -311,7 +334,26 @@ export class ServiceListComponent implements OnInit {
    * 絞り込みボタン押下時
    */
   onSerch() {
-
+    if(this.serchBtnDiv) {
+      // リセットボタン押下時
+      this.serchBtnDiv = false;
+      this.serchBtnValue = '絞り込む'
+      this.serchKeyWord = '';
+      // 退避用リストを戻す
+      this.displayContentsList = _cloneDeep(this.serchSbDisplayContentsList);
+      this.serchSbDisplayContentsList = [];
+      this.initSetServiceContents();
+    } else {
+      if(_isNil(this.serchKeyWord)) {
+        return;
+      }
+      // 絞り込みボタン押下時
+      this.serchBtnDiv = true;
+      this.serchBtnValue = 'リセット'
+      // 表示用リストを退避
+      this.serchSbDisplayContentsList = _cloneDeep(this.displayContentsList);
+      this.serchKeyWordInc();
+    }
   }
 
   /**
@@ -365,7 +407,7 @@ export class ServiceListComponent implements OnInit {
 
   /**
    * 検索結果をもとにサービス商品を検索する
-   * @param event 
+   * @param event
    */
   private serchServiceContents(event: serchServiceCombination) {
     // ローディング開始
@@ -380,7 +422,7 @@ export class ServiceListComponent implements OnInit {
 
   /**
    * 検索結果をもとに伝票情報を取得する
-   * @param event 
+   * @param event
    */
   private serchSlip(event: serchServiceCombination) {
     // ローディング開始
@@ -391,6 +433,22 @@ export class ServiceListComponent implements OnInit {
       // ローディング解除
       this.overlayRef.detach();
     });
+  }
+
+  /**
+   * 検索キーワードに応じた表示リストを抽出する。
+   */
+  private serchKeyWordInc() {
+    const serchResult :serviceContents[] = [];
+    this.displayContentsList.forEach(listData => {
+      // 部分一致or完全一致の場合
+      if(_includes(listData.title,this.serchKeyWord)
+        || _includes([listData.title], this.serchKeyWord)) {
+        serchResult.push(listData);
+      }
+    });
+    this.displayContentsList = _cloneDeep(serchResult);
+    this.initSetServiceContents();
   }
 
 }

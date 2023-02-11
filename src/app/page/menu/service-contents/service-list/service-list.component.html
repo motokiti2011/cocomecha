@@ -1,19 +1,19 @@
 <div class="service-menu wrapper">
 
   <aside>
-    <app-service-list-side-menu 
-      [serchArea1]="serchArea1" 
-      [serchCategory]="serchCategory" 
+    <app-service-list-side-menu
+      [serchArea1]="serchArea1"
+      [serchCategory]="serchCategory"
       [favoriteList]="favoriteList"
-      [acseccUser]="acseccUser" 
+      [acseccUser]="acseccUser"
       (serviceSerchValue)="onServiceSerch($event)">
     </app-service-list-side-menu>
   </aside>
 
   <article>
     <div class="head-disp">
-      <p>{{displayCount}}件がヒット</p>
-      <p class="margin">{{displayCount}}～{{displayCount}}件を表示</p>
+      <p>{{displayContentsList.length}}件がヒット</p>
+      <p class="margin">{{begin+1}}～{{begin+maxLength}}件を表示</p>
       <select class="displayList" [(ngModel)]="selected" (change)="onDisplayList()">
         <option *ngFor="let item of displayData" [value]="item.value" [disabled]="item.disabled"
           [selected]="item.value === selected">{{item.label}}</option>
@@ -21,9 +21,9 @@
     </div>
 
     <div class="serch-area">
-      <input id="serch" name="serch" class="serch-form" type="serch" placeholder="キーワードを入力してください。" />
+      <input id="serch" name="serch" class="serch-form" type="serch" [(ngModel)]="serchKeyWord" placeholder="キーワードを入力してください。" />
       <div class="button-serch">
-        <input type="button" class="btn-serch" on-click="onSerch()" value="絞り込み">
+        <input type="button" class="btn-serch" on-click="onSerch()" value={{serchBtnValue}} >
       </div>
     </div>
 
@@ -32,36 +32,35 @@
     <div class="other_area">
       <!-- 商品表示エリア -->
       <div class="item_area">
-  
+
         <div *ngFor="let contents of displayContentsList | slice: begin: begin+maxLength">
-          
-          <img [src]="contents.thumbnailUrl" alt="サムネイル" width="100" height="100">
+
+          <img [src]="contents.thumbnailUrl" alt="サムネイル" (click)="onContentsSelect(contents)" >
           <div class="title" (click)="onContentsSelect(contents)">{{contents.title}}</div>
           <div *ngIf="userCertificationDiv">
-            <div [ngClass]="contents.favoriteFlg? 'favorite':'anfavorite'" (click)="onContentFavorite(contents)">★</div>
+            <div [ngClass]="contents.favoriteFlg? 'favorite':'anfavorite'" (click)="onContentFavorite(contents)"><p class="favori">お気に入りはこちら</p>　★</div>
           </div>
         </div>
-  
+
       </div>
 
       <div class="service-index">
         <div class="buttom-area">
           <div class="buttom-base" (click)="onContentsForward()">前へ</div>
-  
+
           <ng-container *ngFor="let page of pageIndex">
-            <div 
-              [class.buttom-base]="page.index!=currentIndex" 
+            <div
+              [class.buttom-base]="page.index!=currentIndex"
               [class.index]="page.index==currentIndex"
               (click)="onContentsIndex(page.index)">{{page.page}}</div>
           </ng-container>
-  
+
           <div class="buttom-base" (click)="onContentsNext()">次へ</div>
         </div>
       </div>
 
     </div>
 
-    <button (click)="goBack()">戻る</button>
   </article>
 
 </div><!-- /.service-menu-->

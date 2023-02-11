@@ -87,30 +87,44 @@ article {
     display: grid;
     grid-template-columns: 200px 200px 200px 200px;
     grid-template-rows: 200px 200px;
+    gap: 15px;
     height: 460px;
     width: 80%;
 
     img {
-      margin: 20px 0px 5px 50px;
+      margin: 40px 0px 10px 50px;
+      width: 130px;
+      height: 130px;
+      cursor: pointer;
     }
 
     .title {
       cursor: pointer;
       margin-left: 30px;
+      font-size: small;
+      text-align: center;
     }
 
     .favorite {
       cursor: pointer;
       content: "★";
       margin-left: 30px;
+      margin-top: 5px;
       color: #FFA500;
+      display: flex;
     }
 
     .anfavorite {
       cursor: pointer;
       content: "★";
       margin-left: 30px;
+      margin-top: 5px;
       color: #ccc;
+      display: flex;
+    }
+    .favori {
+      font-size: small;
+      color: #000;
     }
   }
 
@@ -119,6 +133,7 @@ article {
     justify-content: center;
     display: flex;
     width: 800px;
+    margin-top: 50px;
 
     .buttom-area {
       display: flex;
