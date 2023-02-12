@@ -63,11 +63,11 @@ export class ServiceListcomponentService {
         explanation: slip.explanation,
         bidderId: Number(slip.bidderId),
         favoriteFlg: false,
-        registeredDate: 0,
+        registeredDate: Number(slip.created),
         preferredDate: Number(slip.preferredDate),
         preferredTime: Number(slip.preferredTime),
         logicalDeleteFlag: 0,
-        msgLv: '1',
+        msgLv: slip.messageOpenLebel,
         thumbnailUrl: slip.thumbnailUrl,
         imageUrlList: null,
         targetService: '0'
@@ -93,8 +93,8 @@ export class ServiceListcomponentService {
         id: service.slipNo,
         userId: service.slipAdminUserId,
         userName: service.slipAdminUserName,
-        mechanicId: '',
-        officeId: '',
+        mechanicId: service.slipAdminMechanicId,
+        officeId: service.slipAdminOfficeId,
         title: service.title,
         workArea: service.workAreaInfo,
         price: Number(service.price),
@@ -106,14 +106,14 @@ export class ServiceListcomponentService {
         explanation: service.explanation,
         bidderId: Number(service.bidderId),
         favoriteFlg: false,
-        registeredDate: 0,
+        registeredDate: Number(service.created),
         preferredDate: Number(service.preferredDate),
         preferredTime: Number(service.preferredTime),
         logicalDeleteFlag: 0,
-        msgLv: '1',
+        msgLv: service.messageOpenLebel,
         thumbnailUrl: service.thumbnailUrl,
         imageUrlList: null,
-        targetService: '0'
+        targetService: service.targetService
       }
       resultData.push(result)
     });

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FormControl, FormBuilder, Validators } from '@angular/forms';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { FormService } from 'src/app/page/service/form.service';
@@ -14,7 +15,9 @@ import {
   cloneDeep as _cloneDeep,
 } from 'lodash'
 import { UploadService } from 'src/app/page/service/upload.service';
-import { postCodeInfo, postCodeInfoData } from 'src/app/entity/postCodeInfo';
+import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
+import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
+import { imgFile } from 'src/app/entity/imgFile';
 
 @Component({
   selector: 'app-edit-user-info',
@@ -83,11 +86,11 @@ export class EditUserInfoComponent implements OnInit {
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
-
   /** ユーザー情報 */
   user: user = initUserInfo;
 
-  imageFile: any = null;
+  /** イメージ */
+  imageFile: imgFile[] = []
 
   constructor(
     private location: Location,
@@ -97,6 +100,7 @@ export class EditUserInfoComponent implements OnInit {
     private s3: UploadService,
     private builder: FormBuilder,
     private form: FormService,
+    public modal: MatDialog,
   ) { }
 
 
@@ -138,9 +142,9 @@ export class EditUserInfoComponent implements OnInit {
     const post2 = this.postCode2.value.replace(/\s+/g, '');
     const post = post1 + post2;
     // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
-    if(post1 != '' && post2 != '' ) {
+    if (post1 != '' && post2 != '') {
       const postCodeConectData = _find(postCodeInfoData, data => data.postCode == post)
-      if(postCodeConectData) {
+      if (postCodeConectData) {
         // 地域1(都道府県名)
         this.areaSelect = postCodeConectData.prefecturesCode;
         this.inputData.areaNo1 = postCodeConectData.prefecturesCode;
@@ -170,7 +174,7 @@ export class EditUserInfoComponent implements OnInit {
   onResister() {
     this.inputCheck();
     console.log(this.user);
-    if (this.imageFile != null) {
+    if (this.imageFile.length != 0) {
       this.setImageUrl();
     } else {
       this.userResister();
@@ -192,6 +196,32 @@ export class EditUserInfoComponent implements OnInit {
   }
 
 
+
+  /**
+   * 画像を添付するボタン押下イベント
+   */
+  onImageUpload() {
+    // 画像添付モーダル展開
+    const dialogRef = this.modal.open(SingleImageModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: this.imageFile
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          if(result.length != 0) {
+            this.imageFile = result;
+          }
+        }
+      }
+    );
+  }
+
+
   /************  以下内部処理 ****************/
 
   /**
@@ -210,8 +240,6 @@ export class EditUserInfoComponent implements OnInit {
         if (this.user.postCode) {
           postCode = this.form.splitPostCode(this.user.postCode);
         }
-
-
         this.name.setValue(this.user.userName);
         this.mail.setValue(this.user.mailAdress);
         this.telNo1.setValue(telNo.tel1);
@@ -222,6 +250,7 @@ export class EditUserInfoComponent implements OnInit {
         this.inputData.adress = this.isSerParm(this.user.adress, 'adress');
         this.postCode1.setValue(postCode.post1);
         this.postCode2.setValue(postCode.post2);
+        this.imageFile[0].url = this.user.profileImageUrl;
       } else {
         alert('データが取得できませんでした。再度アクセスしてください')
         this.location.back();
@@ -233,7 +262,7 @@ export class EditUserInfoComponent implements OnInit {
    * イメージを設定する
    */
   private setImageUrl() {
-    this.s3.onManagedUpload(this.imageFile).then((data) => {
+    this.s3.onManagedUpload(this.imageFile[0].file).then((data) => {
       if (data) {
         console.log(data);
         this.user.profileImageUrl = data.Location;
@@ -264,14 +293,12 @@ export class EditUserInfoComponent implements OnInit {
       this.user.profileImageUrl = ''; // 仮
       this.user.postCode = this.form.setPostCode(this.postCode1.value, this.postCode2.value);
       this.user.introduction = this.inputData.introduction;
-
       this.apiService.postUser(this.user).subscribe(result => {
         if (result == undefined) {
           // TODO
           alert('失敗');
         }
         alert('変更しました。');
-        // this.router.navigate(["/main_menu"])
       });
     }
   }

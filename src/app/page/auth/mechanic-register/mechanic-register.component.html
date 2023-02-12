@@ -129,8 +129,13 @@
       <div class="row row_item">
         <div class="col-3 item">プロフィール画像</div>
         <div class="col-1"></div>
-        <div class="col-5">
-          <input type="file" accept="*/*" (change)="onInputChange($event)">
+        <div class="col-5 image_disp">
+          <button type="button" class="btn btn-outline-primary" (click)="onImageUpload()" >画像を添付する</button>
+          <div class="col-3"></div>
+          <div *ngIf="imageFile.length > 0 else imgElseContents" class="img_status">画像あり</div>
+          <ng-template #imgElseContents>
+            <div class="img_status">画像なし</div>
+          </ng-template>
         </div>
       </div>
 

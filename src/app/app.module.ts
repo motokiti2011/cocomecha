@@ -71,6 +71,7 @@ import { MechanicMenuComponent } from './page/menu/my-menu/mechanic-menu/mechani
 import { VehicleMenuComponent } from './page/menu/my-menu/vehicle-menu/vehicle-menu.component';
 import { EditVehicleInfoComponent } from './page/menu/my-menu/edit-vehicle-info/edit-vehicle-info.component';
 import { ImageModalComponent } from './page/modal/image-modal/image-modal.component';
+import { SingleImageModalComponent } from './page/modal/single-image-modal/single-image-modal.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -149,6 +150,7 @@ const ROUTE_TABLE: Routes = [
     VehicleMenuComponent,
     EditVehicleInfoComponent,
     ImageModalComponent,
+    SingleImageModalComponent,
   ],
   entryComponents: [
     TransactionListComponent,

@@ -24,8 +24,6 @@ import { ImageModalComponent } from 'src/app/page/modal/image-modal/image-modal.
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { imgFile } from 'src/app/entity/imgFile';
-import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
-
 import {
   createServiceSelect,
   timeData,
@@ -38,8 +36,8 @@ import {
   messageLevel,
   adminUserSelect,
 } from './service-create-option';
-import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
-import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
+
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -502,34 +500,34 @@ export class ServiceCreateComponent implements OnInit {
     // console.log('確定反応')
     console.log(this.inputData);
 
-    // 工場、メカニックとして依頼する場合
-    if (this.inputData.targetService !== '0') {
-      // サービス商品として更新を行う
-      this.service.postSalesService(this.inputData).subscribe(result => {
-        // 登録結果からメッセージを表示する
-        if (result === 200) {
-          alert('POST:OK')
-          console.log('POST:OK')
-          this.next();
-        } else {
-          console.log('POST:NG')
-          alert('POST:NG')
-        }
-      });
-    } else {
-      // 伝票情報の更新を行う
-      this.service.postSlip(this.inputData).subscribe(result => {
-        // 登録結果からメッセージを表示する
-        if (result === 200) {
-          alert('POST:OK')
-          console.log('POST:OK')
-          this.next();
-        } else {
-          console.log('POST:NG')
-          alert('POST:NG')
-        }
-      });
-    }
+    // // 工場、メカニックとして依頼する場合
+    // if (this.inputData.targetService !== '0') {
+    //   // サービス商品として更新を行う
+    //   this.service.postSalesService(this.inputData).subscribe(result => {
+    //     // 登録結果からメッセージを表示する
+    //     if (result === 200) {
+    //       alert('POST:OK')
+    //       console.log('POST:OK')
+    //       this.next();
+    //     } else {
+    //       console.log('POST:NG')
+    //       alert('POST:NG')
+    //     }
+    //   });
+    // } else {
+    //   // 伝票情報の更新を行う
+    //   this.service.postSlip(this.inputData).subscribe(result => {
+    //     // 登録結果からメッセージを表示する
+    //     if (result === 200) {
+    //       alert('POST:OK')
+    //       console.log('POST:OK')
+    //       this.next();
+    //     } else {
+    //       console.log('POST:NG')
+    //       alert('POST:NG')
+    //     }
+    //   });
+    // }
   }
 
 
@@ -609,6 +607,7 @@ export class ServiceCreateComponent implements OnInit {
     // セレクトボックス初期値設定
     this.workAreaSelect = this.workAreaData[0].id;
     this.categorySelect = this.categoryData[0].id;
+    this.inputData.category = this.categorySelect;
     this.vehcleSelect = this.vehcleData[0].id;
     this.priceSelect = this.priceSelectData[0].id;
     this.msgLvSelect = this.msgLvData[0].id;
@@ -636,6 +635,7 @@ export class ServiceCreateComponent implements OnInit {
     // セレクトボックス初期値設定
     this.workAreaSelect = this.workAreaData[0].id;
     this.categorySelect = this.categoryData[0].id;
+    this.inputData.category = this.categorySelect;
     this.vehcleSelect = this.vehcleData[0].id;
     this.priceSelect = this.priceSelectData[0].id;
     this.msgLvSelect = this.msgLvData[0].id;

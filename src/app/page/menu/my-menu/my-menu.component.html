@@ -6,49 +6,48 @@
     ></app-side-menu>
   </div>
 
-
-
+<div class="main_area">
   <div class="container">
-    <p>マイメニュー</p>
-    <div class="row">
-      <div class="col-2"></div>
-        <p>ご登録情報</p>
-    </div>
+    <p class="title">マイメニュー</p>
 
     <div class="row">
-      <div class="left-menu">お名前：{{dispInfo.name}}</div>
+        <p class="discript">現在のご登録情報</p>
+    </div>
+  
+    <div class="row">
+      <div class="left_menu">お名前：{{dispInfo.name}}</div>
       <div class="col-1"></div>
       <div>メールアドレス：{{dispInfo.mailadress}}</div>
     </div>
-
+  
     <div class="row">
-      <div class="left-menu">
-        <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide" width="200" height="200">
+      <div class="left_menu">
+        <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide">
       </div>
-
+  
       <div class="col-1"></div>
-
+  
       <div>
-        <div>〒:{{dispInfo.postNo}}</div>
-        <div>住所:{{dispInfo.adress}}</div>
-        <div>TEL:{{dispInfo.tel1}}</div>
-        <div>TEL2:{{dispInfo.tel2}}</div>
+        <div class="right_menu">〒：{{dispInfo.postNo}}</div>
+        <div class="right_menu">住所：{{dispInfo.adress}}</div>
+        <div class="right_menu">TEL：{{dispInfo.tel1}}</div>
+        <!-- <div class="right_menu">TEL2:{{dispInfo.tel2}}</div> -->
       </div>
     </div>
-
+  
     <div class="row">
-      <div class="left-menu">
+      <div class="left_menu introduction">
         紹介文:{{dispInfo.introduction}}
       </div>
-
+  
       <div class="col-1"></div>
-
+  
       <div>
         <div>
-          <button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">ご登録の車両情報はこちら</button>
+          <button type="button" class="btn btn-outline-primary" (click)="onEditUserInfo()">登録情報変更はこちら</button>
         </div>
         <div>
-          <button type="button" class="btn btn-outline-primary" (click)="onEditUserInfo()">登録情報変更はこちら</button>
+          <button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">ご登録の車両情報はこちら</button>
         </div>
         <div>
           <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引情報はこちら</button>
@@ -59,11 +58,11 @@
         <div>
           <button type="button" class="btn btn-outline-primary" (click)="onFcMcFavoriteMenu()">工場・メカニックお気に入り情報</button>
         </div>
-
-
-
       </div>
     </div>
   </div>
+
+</div>
+
 
 </div>

@@ -2,33 +2,34 @@ import { Component, OnInit, Inject} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { imgFile } from 'src/app/entity/imgFile';
 
-
-/** 画像登録モーダル（10枚用） */
+/** 画像登録モーダル（1枚用） */
 @Component({
-  selector: 'app-image-modal',
-  templateUrl: './image-modal.component.html',
-  styleUrls: ['./image-modal.component.scss']
+  selector: 'app-single-image-modal',
+  templateUrl: './single-image-modal.component.html',
+  styleUrls: ['./single-image-modal.component.scss']
 })
-export class ImageModalComponent implements OnInit {
+export class SingleImageModalComponent implements OnInit {
 
 
   title = '画像登録'
 
   /** イメージ */
-  // img: any[] = []
   img: {file: File, url:any}[] = []
 
   /** ファイルリスト(一時) */
   fileList: File[] = []
 
   constructor(
-    public _dialogRef: MatDialogRef<ImageModalComponent>,
+    public _dialogRef: MatDialogRef<SingleImageModalComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: imgFile[]
     ) { }
 
   ngOnInit(): void {
-    this.img = this.data;
+    if(this.data.length != 0) {
+      this.img = this.data;
+    }
+
   }
 
 
@@ -41,7 +42,8 @@ export class ImageModalComponent implements OnInit {
 
   // ダイアログを閉じる
   closeModal() {
-    this._dialogRef.close();
+    this.img = [];
+    this._dialogRef.close(this.img);
   }
 
 
@@ -57,7 +59,7 @@ export class ImageModalComponent implements OnInit {
   }
 
   /**
-   * 
+   * ドラッグインプット
    * @param event 
    */
   onChangeDragAreaInput(event: any) {

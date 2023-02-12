@@ -1,22 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { mechanicInfo, initMechanicInfo } from 'src/app/entity/mechanicInfo';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
+import { imgFile } from 'src/app/entity/imgFile';
 import {
   find as _find,
   filter as _filter,
   isNil as _isNil,
   cloneDeep as _cloneDeep,
 } from 'lodash';
-
 import { ApiSerchService } from '../../service/api-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
-
 import { UploadService } from '../../service/upload.service';
+import { SingleImageModalComponent } from '../../modal/single-image-modal/single-image-modal.component';
+
 
 @Component({
   selector: 'app-mechanic-register',
@@ -54,7 +56,7 @@ export class MechanicRegisterComponent implements OnInit {
   // 管理メールアドレス
   mailAdress = new FormControl('', [
     Validators.required,
-    Validators.email
+    // Validators.email // 要検討
   ]);
 
   /** 必須フォームグループオブジェクト */
@@ -93,7 +95,7 @@ export class MechanicRegisterComponent implements OnInit {
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
   /** 画像情報 */
-  imageFile: any = null;
+  imageFile: imgFile[] = []
 
   public form!: FormGroup;  // テンプレートで使用するフォームを宣言
 
@@ -105,6 +107,7 @@ export class MechanicRegisterComponent implements OnInit {
     private builder: FormBuilder,
     private cognito: CognitoService,
     private s3: UploadService,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -130,15 +133,15 @@ export class MechanicRegisterComponent implements OnInit {
     this.location.back();
   }
 
-  /**
-   * アップロードファイル選択時イベント
-   * @param event
-   */
-  onInputChange(event: any) {
-    const file = event.target.files[0];
-    console.log(file);
-    this.imageFile = file;
-  }
+  // /**
+  //  * アップロードファイル選択時イベント
+  //  * @param event
+  //  */
+  // onInputChange(event: any) {
+  //   const file = event.target.files[0];
+  //   console.log(file);
+  //   this.imageFile = file;
+  // }
 
   /**
    * 登録するボタン押下イベント
@@ -215,6 +218,32 @@ export class MechanicRegisterComponent implements OnInit {
     this.setQualification();
   }
 
+  /**
+   * 画像を添付するボタン押下イベント
+   */
+  onImageUpload() {
+    // 画像添付モーダル展開
+    const dialogRef = this.modal.open(SingleImageModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: this.imageFile
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          if(result.length != 0) {
+            this.imageFile = result;
+          }
+        }
+      }
+    );
+  }
+
+
+
 
 
   /************  以下内部処理 ****************/
@@ -223,7 +252,7 @@ export class MechanicRegisterComponent implements OnInit {
    * イメージを設定する
    */
   private setImageUrl() {
-    this.s3.onManagedUpload(this.imageFile).then((data) => {
+    this.s3.onManagedUpload(this.imageFile[0].file).then((data) => {
       if (data) {
         console.log(data);
         this.inputData.profileImageUrl = data.Location;
