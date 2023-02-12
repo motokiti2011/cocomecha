@@ -16,7 +16,6 @@ import { MechanicMenuComponent } from '../mechanic-menu/mechanic-menu.component'
 import { FactoryMenuComponent } from '../factory-menu/factory-menu.component';
 import { FactoryMechanicImpletionComponent } from '../factory-mechanic-impletion/factory-mechanic-impletion.component';
 import { FactoryMechanicContentsManagementComponent } from '../factory-mechanic-contents-management/factory-mechanic-contents-management.component';
-
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -54,9 +53,9 @@ export class FactoryMechanicMenuComponent implements OnInit {
   mechanicInfo: mechanicInfo = initMechanicInfo;
   // 工場情報
   officeInfo: officeInfo = initOfficeInfo;
-
   /** 工場登録有無区分 */
   factoryResistDiv = false;
+
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
