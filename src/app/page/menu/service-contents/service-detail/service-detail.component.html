@@ -1,71 +1,75 @@
+<div class="main-content">
 
-<div class="content">
-  <div class="button-area">
-    
-    <div class="button-item">
-      <input type="button" class="btn-border" on-click="onTransaction()" value="取引する">
-    </div>
-    <!-- <div class="button-item">
+  <div class="sid_menu">
+    <app-side-menu></app-side-menu>
+  </div>
+
+  <div class="main">
+
+    <div class="button-area">
+      <div class="button-item">
+        <input type="button" class="btn-border" on-click="onTransaction()" value="取引する">
+      </div>
+      <!-- <div class="button-item">
       <input type="button" class="btn-border" on-click="onMyList()" value="マイリストに追加">
     </div> -->
-    <div class="button-item">
-      <input type="button" class="btn-border" on-click="onTransactionStatus()" value="現在の取引状況を確認する">
-    </div>
-
-    <div *ngIf="relistedDiv">
       <div class="button-item">
-        <input type="button" class="btn-border" on-click="onRelisted()" value="再出品">
+        <input type="button" class="btn-border" on-click="onTransactionStatus()" value="現在の取引状況を確認する">
       </div>
-    </div>
 
-
-  </div>
-
-  <div class="contents-area">
-    <div class="title">{{serviceTitle}}</div>
-
-
-    <div class="container-fluid">
-
-      <ngb-carousel>
-        <ng-template ngbSlide *ngFor="let image of images">
-          <div class="wrapper">
-            <img class="img" [src]="image.src" alt="Random first slide">
-          </div>
-          <div class="carousel-caption">
-            <!-- <h3>{{ image.title }}</h3> -->
-            <p>{{ image.imageNo }}</p>
-          </div>
-        </ng-template>
-      </ngb-carousel>
-
+      <div *ngIf="relistedDiv">
+        <div class="button-item">
+          <input type="button" class="btn-border" on-click="onRelisted()" value="再出品">
+        </div>
       </div>
 
 
+    </div>
 
-    <div class="explanation">{{dispExplanation}}</div>
+    <div class="contents-area">
+      <div class="title">{{serviceTitle}}</div>
+
+
+      <div class="container-fluid">
+
+        <ngb-carousel>
+          <ng-template ngbSlide *ngFor="let image of images">
+            <div class="wrapper">
+              <img class="img" [src]="image.src" alt="Random first slide">
+            </div>
+            <div class="carousel-caption">
+              <!-- <h3>{{ image.title }}</h3> -->
+              <p>{{ image.imageNo }}</p>
+            </div>
+          </ng-template>
+        </ngb-carousel>
+
+      </div>
+
+      <div class="explanation">{{dispExplanation}}</div>
+    </div>
+
+    <div class="detail-area">
+      <div>
+        <input type="button" class="btn-border" on-click="goBack()" value="一覧に戻る">
+      </div>
+
+      <div class="ymd">
+        <p>日付</p>
+        {{dispYMD}}
+      </div>
+
+      <div class="price">
+        <p>価格</p>
+        {{dispPrice}}
+      </div>
+
+      <div class="area">
+        <p>場所</p>
+        {{dispArea}}
+      </div>
+
+    </div>
   </div>
 
-  <div class="detail-area">
-    <div>
-      <input type="button" class="btn-border" on-click="goBack()" value="一覧に戻る">
-    </div>
-
-    <div class="ymd">
-      <p>日付</p>
-      {{dispYMD}}
-    </div>
-
-    <div class="price">
-      <p>価格</p>
-      {{dispPrice}}
-    </div>
-
-    <div class="area">
-      <p>場所</p>
-      {{dispArea}}
-    </div>
-
-  </div>
 </div>
-

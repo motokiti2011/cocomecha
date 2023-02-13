@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { mechanicInfo, initMechanicInfo } from 'src/app/entity/mechanicInfo';
 import { officeInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
@@ -20,6 +21,9 @@ import { UploadService } from 'src/app/page/service/upload.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { imgFile } from 'src/app/entity/imgFile';
+import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
+
 
 @Component({
   selector: 'app-mechanic-menu',
@@ -84,7 +88,8 @@ export class MechanicMenuComponent implements OnInit {
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
 
-  imageFile: any = null;
+  /** イメージ */
+  imageFile: imgFile[] = []
 
   // /** 工場登録有無区分 */
   // factoryResistDiv = false;
@@ -107,6 +112,7 @@ export class MechanicMenuComponent implements OnInit {
     private cognito: CognitoService,
     private s3: UploadService,
     private overlay: Overlay,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -255,6 +261,32 @@ export class MechanicMenuComponent implements OnInit {
   }
 
 
+  /**
+   * 画像を添付するボタン押下イベント
+   */
+  onImageUpload() {
+    // 画像添付モーダル展開
+    const dialogRef = this.modal.open(SingleImageModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: this.imageFile
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          if(result.length != 0) {
+            this.imageFile = result;
+          }
+        }
+      }
+    );
+  }
+
+
+
 
 
   /************  以下内部処理 ****************/
@@ -263,7 +295,7 @@ export class MechanicMenuComponent implements OnInit {
    * イメージを設定する
    */
   private setImageUrl() {
-    this.s3.onManagedUpload(this.imageFile).then((data) => {
+    this.s3.onManagedUpload(this.imageFile[0].file).then((data) => {
       if (data) {
         console.log(data);
         this.mechanicInfo.profileImageUrl = data.Location;

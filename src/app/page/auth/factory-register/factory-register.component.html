@@ -94,10 +94,10 @@
           <div class="mandatory">必須</div>
         </div>
         <div class="col-4">
-          <select id="area-select" name="area" [formControl]="officeArea1"  (change)="selectArea()">
+          <select id="area-select" name="area" [(ngModel)]="officeArea1"  (change)="selectArea()">
             <option value="">地域を選択してください。</option>
-            <option *ngFor="let area of areaData" [value]="area.prefectures"
-              [selected]="area.prefectures === areaSelect">
+            <option *ngFor="let area of areaData" [value]="area.code"
+              [selected]="area.code === officeArea1">
               {{area.prefectures}}</option>
           </select>
         </div>
@@ -237,6 +237,4 @@
     </div>
   </div>
 
-  <!-- <button (click)="test1()">test</button>
-  <button (click)="goBack()">戻る</button> -->
 </div>

@@ -3,6 +3,7 @@ import { officeInfo, initOfficeInfo } from 'src/app/entity/officeInfo';
 import { UploadService } from 'src/app/page/service/upload.service';
 import { Router } from '@angular/router';
 import { user } from 'src/app/entity/user';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
@@ -12,9 +13,11 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import { filter as _filter} from 'lodash'
-import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 import { find as _find } from 'lodash'
 import { postCodeInfo, postCodeInfoData } from 'src/app/entity/postCodeInfo';
+import { imgFile } from 'src/app/entity/imgFile';
+import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
+
 
 @Component({
   selector: 'app-factory-menu',
@@ -23,8 +26,8 @@ import { postCodeInfo, postCodeInfoData } from 'src/app/entity/postCodeInfo';
 })
 export class FactoryMenuComponent implements OnInit {
 
-  /** ファイル情報 */
-  imageFile: any = null;
+  /** イメージ */
+  imageFile: imgFile[] = []
   /** ユーザー情報 */
   user?: user
   //編集モード区分
@@ -161,6 +164,7 @@ export class FactoryMenuComponent implements OnInit {
     private builder: FormBuilder,
     private apiService: ApiSerchService,
     private formService: FormService,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -305,7 +309,35 @@ export class FactoryMenuComponent implements OnInit {
 
 
 
+  /**
+   * 画像を添付するボタン押下イベント
+   */
+  onImageUpload() {
+    // 画像添付モーダル展開
+    const dialogRef = this.modal.open(SingleImageModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: this.imageFile
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          if(result.length != 0) {
+            this.imageFile = result;
+          }
+        }
+      }
+    );
+  }
 
+
+  /**
+   * 下部ボタン操作イベント
+   * @param e 
+   */
   onSomeUserInfo(e: string) {
 
   }
@@ -405,7 +437,7 @@ export class FactoryMenuComponent implements OnInit {
    * イメージを設定する
    */
   private setImageUrl() {
-    this.s3.onManagedUpload(this.imageFile).then((data) => {
+    this.s3.onManagedUpload(this.imageFile[0].file).then((data) => {
       if (data) {
         console.log(data);
         this.officeResister();

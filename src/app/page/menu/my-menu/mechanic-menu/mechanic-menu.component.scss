@@ -40,6 +40,11 @@
     text-align: center;
   }
 
+  .img_area {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
 
   .mandatory {
     width: 50px;

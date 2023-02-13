@@ -52,7 +52,7 @@ export class FactoryRegisterComponent implements OnInit {
   // 事業所メールアドレス
   officeMailAdress = new FormControl('', [
     Validators.required,
-    Validators.email
+    // Validators.email // TODO
   ]);
 
 
@@ -91,9 +91,7 @@ export class FactoryRegisterComponent implements OnInit {
 
   
   // 事業所所在地(地域)
-  officeArea1 = new FormControl('', [
-    Validators.required
-  ]);
+  officeArea1 = '';
 
   // 事業所所在地（市町村）
   officeArea = new FormControl('', [
@@ -110,7 +108,7 @@ export class FactoryRegisterComponent implements OnInit {
   groupForm = this.builder.group({
     officeName: this.officeName,
     officeMailAdress: this.officeMailAdress,
-    officeArea1: this.officeArea1,
+    // officeArea1: this.officeArea1,
     officeArea: this.officeArea,
     officeAdress: this.officeAdress,
     postCode1: this.postCode1,
@@ -238,7 +236,7 @@ export class FactoryRegisterComponent implements OnInit {
       this.officeMailAdress.setValue(this.user.mailAdress);
     } else if (e === '4') {
       // 所在地情報を設定
-      this.officeArea1.setValue(this.user.areaNo1);
+      this.officeArea1 = this.user.areaNo1;
       if (this.user.areaNo2) {
         this.officeArea.setValue(this.user.areaNo2);
       }
@@ -305,7 +303,7 @@ export class FactoryRegisterComponent implements OnInit {
     this.officeInfo.officeName = this.officeName.value;
     this.officeInfo.officeTel = this.inputData.officeTel;
     this.officeInfo.officeMailAdress = this.officeMailAdress.value;
-    this.officeInfo.officeArea1 = this.formService.setAreaId(this.officeArea1.value);
+    this.officeInfo.officeArea1 = this.officeArea1;
     this.officeInfo.officeArea = this.officeArea.value;
     this.officeInfo.officeAdress = this.officeAdress.value;
     this.officeInfo.officePostCode = this.formService.setPostCode(this.postCode1.value, this.postCode2.value);

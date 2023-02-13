@@ -1,7 +1,20 @@
-.content {
+.main-content {
   display: flex;
-  // justify-content: space-between;
 }
+
+.sid_menu {
+  width: 250px;
+  margin: 50px 0px 0px 0px;
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  width: 850px;
+  margin: 5px 0px 0px 40px;
+  display: flex;
+}
+
 
 .button-area {
   width: 230px;
@@ -20,22 +33,22 @@
   }
 }
 
-.title {
-  margin-top: 80px;
-}
-
-.img {
-  margin-top: 60px;
-  width: 500px;
-  height: 350px;
-}
-
-.explanation {
-  margin-top: 60px;
-}
-
 .contents-area {
   width: 600px;
+  .title {
+    margin-top: 80px;
+  }
+
+  .img {
+    margin-top: 60px;
+    width: 500px;
+    height: 350px;
+  }
+
+  .explanation {
+    margin-top: 60px;
+  }
+
 }
 
 .detail-area {
@@ -53,7 +66,5 @@
   .area {
     margin-top: 20px;
   }
-
-
 
 }
