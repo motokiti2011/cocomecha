@@ -120,10 +120,10 @@ export class ServiceDetailComponent implements OnInit {
       });
   }
 
-  // /**
-  //  * マイリストに追加ボタン押下時の処理
-  //  */
-  // onMyList() {
+  /**
+   * マイリストに追加ボタン押下時の処理
+   */
+  onMyList() {
   //   this.service.addMyList(this.dispContents).subscribe(result => {
   //     let modalData:messageDialogData = {
   //       massage: '',
@@ -142,7 +142,7 @@ export class ServiceDetailComponent implements OnInit {
   //       data: modalData
   //     })
   //   });
-  // }
+  }
 
   /**
    * 取引状況確認ボタン押下時の処理
