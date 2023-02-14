@@ -26,7 +26,7 @@ export interface salesServiceInfo {
   // サービス地域2
   areaNo2:  string| null;
   // 価格
-  price: string;
+  price: number;
   // 入札方式
   bidMethod: string;
   // 入札者ID
@@ -103,7 +103,7 @@ export const defaulsalesService: salesServiceInfo = {
   // サービス地域2
   areaNo2: '',
   // 価格
-  price: '',
+  price: 0,
   // 入札方式
   bidMethod: '',
   // 入札者ID

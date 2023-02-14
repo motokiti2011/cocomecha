@@ -151,7 +151,7 @@ export class ServiceCreateService {
       // サービス地域2
       areaNo2: content.area2,
       // 価格
-      price: String(content.price),
+      price: content.price,
       // 入札方式
       bidMethod: String(content.bidMethod),
       // 入札者ID

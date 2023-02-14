@@ -3,23 +3,34 @@
   <div class="sid_menu">
     <div class="container">
 
-      <div class="row button_item">
-        <div class="menu_item item" (click)="onTransaction()">取引する</div>
+      
+      <div *ngIf="user">
+        <div class="row button_item">
+          <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引する</button>
+        </div>
+        
+        <div class="row button_item">
+          <button type="button" class="btn btn-outline-primary" (click)="onFavorite()">お気に入りに追加</button>
+        </div>
+      </div>
+      
+      <div row button_item>
+        <button type="button" class="btn btn-outline-primary" (click)="goBack()">一覧に戻る</button>
+        <!-- <input type="button" class="btn-border" on-click="goBack()" value="一覧に戻る"> -->
       </div>
 
       <div class="row button_item">
-        <input type="button" class="btn_border" on-click="onMyList()" value="マイリストに追加">
-      </div>
-
-      <div class="row button_item">
-        <input type="button" class="btn_border" on-click="onTransactionStatus()" value="現在の取引状況を確認する">
+        <button type="button" class="btn btn-outline-primary" (click)="onTransactionStatus()">取引状況を確認する</button>
+        <!-- <input type="button" class="btn_border" on-click="onTransactionStatus()" value="現在の取引状況を確認する"> -->
       </div>
 
       <div *ngIf="relistedDiv">
         <div class="row button_item">
-          <input type="button" class="btn_border" on-click="onRelisted()" value="再出品">
+          <button type="button" class="btn btn-outline-primary" (click)="onRelisted()">再出品</button>
+          <!-- <input type="button" class="btn_border" on-click="onRelisted()" value="再出品"> -->
         </div>
       </div>
+
     </div>
   </div>
 
@@ -35,31 +46,38 @@
               <img class="img" [src]="image.src" alt="Random first slide">
             </div>
             <div class="carousel-caption">
-
-              <!-- <h3>{{ image.title }}</h3> -->
               <p>{{ image.imageNo }}</p>
             </div>
           </ng-template>
         </ngb-carousel>
-
       </div>
 
-      <div class="explanation">{{dispExplanation}}</div>
+      <div class="explanation">
+        サービス説明
+        <div>{{dispExplanation}}</div>
+      </div>
+
     </div>
 
     <div class="detail-area">
-      <div>
-        <input type="button" class="btn-border" on-click="goBack()" value="一覧に戻る">
-      </div>
+
 
       <div class="ymd">
         <p>日付</p>
-        {{dispYMD}}
+        {{dispYMD | date: 'y mm dd (EEE) ': 'ja-JP' }}
       </div>
 
       <div class="price">
         <p>価格</p>
-        {{dispPrice}}
+
+        <div *ngIf="dispPrice != 0 else noPrice">
+          {{dispPrice | currency: 'JPY': true }}
+        </div>
+        <ng-template #noPrice>
+          <div>見積中</div>
+        </ng-template>
+
+
       </div>
 
       <div class="area">

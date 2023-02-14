@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, LOCALE_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ServiceDetailService } from './service-detail.service';
-import { slipDetailInfo, defaultSlip } from 'src/app/entity/slipDetailInfo';
+import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { image } from 'src/app/entity/image';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { user } from 'src/app/entity/user';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
 
 @Component({
   selector: 'app-service-detail',
@@ -22,26 +23,28 @@ import { ComponentPortal } from '@angular/cdk/portal';
 export class ServiceDetailComponent implements OnInit {
 
 
-
+  /** 画像 */
   images: image[] = [];
+  /** ユーザー情報 */
+  user: string = '';
   /** サービスタイプ */
   serviceType = '';
-
   /** サービスID */
   serviceId: string = '';
   /** タイトル */
   serviceTitle: string = '';
   /** 日付 */
-  dispYMD: string = '';
+  dispYMD:Date = new Date();
   /** 価格 */
-  dispPrice: string = '';
+  dispPrice: number = 0;
   /** 場所 */
   dispArea: string = '';
   /** 説明 */
   dispExplanation: string = ''
   /** 表示伝票情報 */
-  dispContents: slipDetailInfo = defaultSlip;
-
+  dispContents: salesServiceInfo = defaulsalesService;
+  /** 入札方式 */
+  bidMethod: string = '';
   /** 再出品区分 */
   relistedDiv = false;
 
@@ -59,6 +62,7 @@ export class ServiceDetailComponent implements OnInit {
     private router: Router,
     private config: NgbCarouselConfig,
     private overlay: Overlay,
+    private cognito: CognitoService,
   ) {
     config.interval = 0;
     config.keyboard = true;
@@ -77,11 +81,12 @@ export class ServiceDetailComponent implements OnInit {
         this.dispContents = data[0];
         // 表示内容に取得した伝票情報を設定
         this.serviceTitle = this.dispContents.title;
-        this.dispYMD = this.dispContents.bidEndDate;
+        // this.dispYMD = String(this.dispContents.preferredDate);
+        this.bidMethod = this.dispContents.bidMethod;
         this.dispPrice = this.dispContents.price;
         this.dispArea = this.dispContents.areaNo1;
         this.dispExplanation = this.dispContents.explanation;
-        this.images = this.service.setImages(this.dispContents.thumbnailUrl,this.dispContents.imageUrlList)
+        this.images = this.service.setImages(this.dispContents.thumbnailUrl, this.dispContents.imageUrlList)
         if (this.dispContents.processStatus == '3') {
           this.relistedDiv = true;
         }
@@ -89,20 +94,20 @@ export class ServiceDetailComponent implements OnInit {
         this.overlayRef.detach();
       })
     });
-    this.getUserInfo();
+    this.getLoginUser();
   }
 
 
   /**
    *
    */
-  private getUserInfo() {
-
+  private getLoginUser() {
+    // ログイン状態確認
+    const authUser = this.cognito.initAuthenticated();
+    if (authUser != null) {
+      this.user = authUser;
+    }
   }
-
-
-
-
 
 
   /**
@@ -121,27 +126,27 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   /**
-   * マイリストに追加ボタン押下時の処理
+   * お気に入りに追加ボタン押下時の処理
    */
-  onMyList() {
-  //   this.service.addMyList(this.dispContents).subscribe(result => {
-  //     let modalData:messageDialogData = {
-  //       massage: '',
-  //       closeFlg:true,
-  //       closeTime:400,
-  //       btnDispDiv: false
-  //     };
-  //     if(result === 200) {
-  //       modalData.massage = 'マイリストに追加しました'
-  //     } else {
-  //       modalData.massage = '追加に失敗しました。'
-  //     }
-  //     const dialogRef = this.dialog.open(MessageDialogComponent, {
-  //       width: '300px',
-  //       height: '100px',
-  //       data: modalData
-  //     })
-  //   });
+  onFavorite() {
+    this.service.addFavorite(this.dispContents, this.user).subscribe(result => {
+      let modalData: messageDialogData = {
+        massage: '',
+        closeFlg: true,
+        closeTime: 400,
+        btnDispDiv: false
+      };
+      if (result === 200) {
+        modalData.massage = 'マイリストに追加しました'
+      } else {
+        modalData.massage = '追加に失敗しました。'
+      }
+      const dialogRef = this.dialog.open(MessageDialogComponent, {
+        width: '300px',
+        height: '100px',
+        data: modalData
+      })
+    });
   }
 
   /**
@@ -169,7 +174,6 @@ export class ServiceDetailComponent implements OnInit {
           serviceType: this.serviceType
         }
       });
-
   }
 
 

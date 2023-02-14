@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
@@ -184,6 +185,7 @@ const ROUTE_TABLE: Routes = [
     // サービス依頼画面日付のMatarial部品日本語化
     {provide: MAT_DATE_LOCALE, useValue: 'ja-JP'},
     POST_PROVIDER,
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

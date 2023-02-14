@@ -9,7 +9,7 @@ export interface userFavorite {
   // タイトル
   title: string;
   // 価格
-  price: string;
+  price: number;
   // 期間
   whet: string;
   // サービスタイプ

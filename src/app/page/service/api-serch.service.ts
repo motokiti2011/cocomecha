@@ -15,6 +15,7 @@ import { officeInfo } from 'src/app/entity/officeInfo';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { userVehicle } from 'src/app/entity/userVehicle';
+import { userMyList } from 'src/app/entity/userMyList';
 
 @Injectable({
   providedIn: 'root'
@@ -400,7 +401,7 @@ export class ApiSerchService {
     const body = {
       "OperationType": "PUT",
       "Keys": {
-        "officeId":  data.officeId,
+        "officeId": data.officeId,
         "officeName": data.officeName,
         "officeTel": data.officeTel,
         "officeMailAdress": data.officeMailAdress,
@@ -408,7 +409,7 @@ export class ApiSerchService {
         "officeArea": data.officeArea,
         "officeAdress": data.officeAdress,
         "officePostCode": data.officePostCode,
-        'workContentList' : data.workContentList,
+        'workContentList': data.workContentList,
         "businessHours": data.businessHours,
         "adminBaseId": data.adminBaseId,
         "baseInfoList": data.baseInfoList,

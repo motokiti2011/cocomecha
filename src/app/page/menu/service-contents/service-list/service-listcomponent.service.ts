@@ -455,7 +455,7 @@ export class ServiceListcomponentService {
       userId: userid,
       slipNo: contents.id,
       title: contents.title,
-      price: String(contents.price),
+      price: contents.price,
       whet: this.getWhet(contents),
       endDate: String(contents.preferredDate),
       imageUrl: contents.thumbnailUrl,
