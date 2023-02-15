@@ -1,8 +1,4 @@
 <div class="maincontent">
-  <div class="sidmanu">
-    <app-side-menu></app-side-menu>
-  </div>
-
 
   <div class="btn-area">
     <input type="button" class="btn_item" on-click="onReturn()" value="詳細に戻る">
@@ -10,7 +6,7 @@
     <input type="button" class="btn_item" on-click="onQuestion()" value="質問">
 
     <input type="button" class="btn_item" on-click="onOpenLevelSet()" value="メッセージ公開レベル設定">
-    <input type="button" class="btn_item" on-click="onMsgPrmReq()" value="メッセージ許可申請">
+    <!-- <input type="button" class="btn_item" on-click="onMsgPrmReq()" value="メッセージ許可申請"> -->
     <p class="private-message">このサービスのメッセージは<br>非公開です。</p>
 
     <div *ngIf="adminUserDiv">
@@ -21,16 +17,15 @@
       <input type="button" class="btn_item" on-click="onMsgPrmReq()" value="メッセージ許可申請">
     </div>
 
-
     <input type="button" class="btn_item" on-click="onTransactionRequest()" value="取引を依頼する">
 
     <input type="button" class="btn_item" on-click="onTransactionApproval()" value="取引依頼を承認する">
-
 
     <div *ngIf="privateDiv">
       <p class="private-message">このサービスのメッセージは<br>非公開です。</p>
     </div>
   </div>
+
 
   <div class="main-area">
     <div class="messages">
@@ -41,6 +36,7 @@
       ></app-transaction-message>
     </div>
   </div>
+
 
   <div class="sb-area">
     <div class="sb-disp">

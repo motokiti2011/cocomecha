@@ -50,8 +50,8 @@
       </div>
 
       <div class="explanation">
-        サービス説明
-        <div>{{dispExplanation}}</div>
+        <p>サービス説明</p>
+        <div class="ex_value">{{dispExplanation}}</div>
       </div>
 
     </div>
@@ -61,34 +61,32 @@
 
       <div class="ymd">
         <p>ご希望日時</p>
-        <!-- {{dispYMD | date: 'yy MM dd  ': dlocale }} -->
-        <!-- {{dispYMD | date: 'longDate': dlocale }} -->
-        {{dispYMD}}　{{dispTime}}時
+        <div>　{{dispYMD}}　{{dispTime}}時</div>
       </div>
 
       <div class="price">
         <p>価格</p>
         <div *ngIf="dispPrice != 0 else noPrice">
-          {{dispPrice | currency: 'JPY': true }}
+          <div>　{{dispPrice | currency: 'JPY': true }}</div>
         </div>
         <ng-template #noPrice>
-          <div>見積中</div>
+          <div>　見積中</div>
         </ng-template>
       </div>
 
-      <div class="area">
+      <div class="service_info">
         <p>場所</p>
-        {{dispArea}}
+        <div>　{{dispArea}}</div>
       </div>
 
-      <div class="area">
+      <div class="service_info">
         <p>作業場所</p>
-        {{dispWorkArea}}
+        <div>　{{dispWorkArea}}</div>
       </div>
 
-      <div class="area">
+      <div class="service_info">
         <p>対象車両</p>
-        {{dispTargetVehicle}}
+        <div>　{{dispTargetVehicle}}</div>
       </div>
 
     </div>
