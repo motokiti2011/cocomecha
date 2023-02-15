@@ -1,8 +1,9 @@
 
 .maincontent {
-  margin-top: 70px;
+  // margin-top: 70px;
   display: flex;
-  justify-content: center;
+  // justify-content: center;
+  margin: 70px 0px 0px 30px;
 }
 
 .sidmanu {
@@ -12,9 +13,9 @@
 }
 
 .btn-area {
-  width: 200px;
-  display: flex;
-  flex-direction: column;
+  width: 250px;
+  // display: flex;
+  // flex-direction: column;
 }
 
 .btn_item {
@@ -43,8 +44,8 @@
 }
 
 .sb-area {
-  width: 200px;
-  margin-left: 30px;
+  width: 250px;
+  margin: 0px 0px 0px 30px;
 
   .sb-disp {
     margin-top: 30px;

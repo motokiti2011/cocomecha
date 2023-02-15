@@ -14,7 +14,7 @@
       <ng-template #elseContent>
         <!-- ログイン後 -->
         <div *ngIf="temporaryUserDiv else temporaryContent">
-          
+
           <div class="user_resister">
             <div>
               <div class="menu_item item" (click)="onUserResister()">ユーザー登録</div>
@@ -29,9 +29,7 @@
             <div class="menu_item item" (click)="onLogout()">ログアウト</div>
           </div>
         </ng-template>
-
       </ng-template>
-
     </div>
 
     <div class="menu_item item" (click)="serviceSerchConditions()">サービス・依頼を探す</div>
@@ -51,3 +49,4 @@
 <div class="image-area">
   <img src="assets/images/test1rogo.png" alt="image1">
 </div>
+
