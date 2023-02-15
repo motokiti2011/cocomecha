@@ -5,6 +5,10 @@ import { userFavorite } from 'src/app/entity/userFavorite';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { image } from 'src/app/entity/image';
+import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
+import {
+  find as _find,
+} from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -73,9 +77,9 @@ export class ServiceDetailService {
 
   /**
    * お気に入り情報を追加する
-   * @param service 
-   * @param userId 
-   * @returns 
+   * @param service
+   * @param userId
+   * @returns
    */
   public addFavorite(service: salesServiceInfo, userId: string): Observable<any> {
     const favorite: userFavorite = {
@@ -93,6 +97,65 @@ export class ServiceDetailService {
     }
     return this.apiService.postFavorite(favorite);
   }
+
+  /**
+   * サービス情報の日付データから画面表示用に加工する。
+   * @param ymd
+   */
+  public setDispYMD(ymd:string):Date {
+    // 年月日を取得
+    console.log(ymd);
+    const ymdst = String(ymd);
+    const year = ymdst.slice(0,4)
+    const month = ymdst.slice(5,6)
+    const day = ymdst.slice(7,9)
+    console.log('year:'+year)
+    console.log('month:'+month)
+    console.log('day:'+day)
+    return new Date(Number(year), Number(month) - 1, Number(day), 0, 0, 0, 0); // 2022年5月5日6時35分20.333秒を設定
+
+
+    return new Date(2022, 5 - 1, 5, 6, 35, 20, 333); // 2022年5月5日6時35分20.333秒を設定
+  }
+
+  /**
+   * サービス情報の日付データから画面表示用に加工する。
+   * @param ymd
+   */
+  public setDispYMDSt(ymd: string): string {
+    // 年月日を取得
+    console.log(ymd);
+    const ymdst = String(ymd);
+    const stYear = ymdst.slice(0,4)
+    const stMonth = ymdst.slice(5,6)
+    const stDay = ymdst.slice(6,9)
+    console.log('year:'+stYear)
+    console.log('month:'+stMonth)
+    console.log('day:'+stDay)
+    // 月、日付は先頭0の場合があるので一旦数値型に戻す
+    const month = Number(stMonth);
+    const day = Number(stDay);
+
+    return stYear + '年' + String(month) + '月' + String(day) + '日'
+
+
+    // return new Date(2022, 5 - 1, 5, 6, 35, 20, 333); // 2022年5月5日6時35分20.333秒を設定
+  }
+
+  /**
+   * 表示用地域情報を設定する
+   * @param areaNo1
+   * @param areaNo2
+   */
+  public setDispArea(areaNo1:string, areaNo2: string | null): string {
+    const area1Data = _find(prefecturesCoordinateData, data => data.code == areaNo1);
+    if(area1Data) {
+
+      return area1Data.prefectures + ' ' + areaNo2;
+    }
+    return '';
+  }
+
 
 
 

@@ -1,4 +1,5 @@
-import { Component, OnInit, LOCALE_ID } from '@angular/core';
+import { Component, OnInit, LOCALE_ID, Inject } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
@@ -34,11 +35,18 @@ export class ServiceDetailComponent implements OnInit {
   /** タイトル */
   serviceTitle: string = '';
   /** 日付 */
-  dispYMD:Date = new Date();
+  dispYMD:string = '';
+  // dispYMD:Date = new Date();
+  /** 希望時間 */
+  dispTime: string = '';
   /** 価格 */
   dispPrice: number = 0;
   /** 場所 */
   dispArea: string = '';
+  /** 作業場所 */
+  dispWorkArea: string = '';
+  /** 対象車両 */
+  dispTargetVehicle: string = '';
   /** 説明 */
   dispExplanation: string = ''
   /** 表示伝票情報 */
@@ -54,6 +62,8 @@ export class ServiceDetailComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  dlocale = this.locale;
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -63,6 +73,7 @@ export class ServiceDetailComponent implements OnInit {
     private config: NgbCarouselConfig,
     private overlay: Overlay,
     private cognito: CognitoService,
+    @Inject(LOCALE_ID) private locale: string
   ) {
     config.interval = 0;
     config.keyboard = true;
@@ -81,20 +92,37 @@ export class ServiceDetailComponent implements OnInit {
         this.dispContents = data[0];
         // 表示内容に取得した伝票情報を設定
         this.serviceTitle = this.dispContents.title;
-        // this.dispYMD = String(this.dispContents.preferredDate);
+        // 希望日を設定
+        if(this.dispContents.preferredDate != undefined) {
+          this.dispYMD = this.service.setDispYMDSt(this.dispContents.preferredDate);
+          // console.log('日付フォーマット:'+formatDate(date, "yy/MM/dd", this.locale));
+          // this.dispYMD = formatDate(date, "yy/MM/dd", this.locale)
+          // this.dispYMD = date;
+        }
+        // 希望時間
+        this.dispTime = this.dispContents.preferredTime;
+        // 入札方式
         this.bidMethod = this.dispContents.bidMethod;
+        // 表示価格
         this.dispPrice = this.dispContents.price;
-        this.dispArea = this.dispContents.areaNo1;
+        // 地域
+        this.dispArea = this.service.setDispArea(this.dispContents.areaNo1, this.dispContents.areaNo2);
+        // 作業場所
+        this.dispWorkArea = this.dispContents.workAreaInfo;
+        // 対象車両
+        this.dispTargetVehicle = this.dispContents.targetVehicleName;
+        // 説明
         this.dispExplanation = this.dispContents.explanation;
+        // 画像
         this.images = this.service.setImages(this.dispContents.thumbnailUrl, this.dispContents.imageUrlList)
         if (this.dispContents.processStatus == '3') {
           this.relistedDiv = true;
         }
+        this.getLoginUser();
         // ローディング解除
         this.overlayRef.detach();
       })
     });
-    this.getLoginUser();
   }
 
 
@@ -107,6 +135,8 @@ export class ServiceDetailComponent implements OnInit {
     if (authUser != null) {
       this.user = authUser;
     }
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
 

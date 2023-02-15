@@ -3,31 +3,28 @@
   <div class="sid_menu">
     <div class="container">
 
-      
+
       <div *ngIf="user">
         <div class="row button_item">
           <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引する</button>
         </div>
-        
+
         <div class="row button_item">
           <button type="button" class="btn btn-outline-primary" (click)="onFavorite()">お気に入りに追加</button>
         </div>
       </div>
-      
-      <div row button_item>
+
+      <div class="row button_item">
         <button type="button" class="btn btn-outline-primary" (click)="goBack()">一覧に戻る</button>
-        <!-- <input type="button" class="btn-border" on-click="goBack()" value="一覧に戻る"> -->
       </div>
 
       <div class="row button_item">
         <button type="button" class="btn btn-outline-primary" (click)="onTransactionStatus()">取引状況を確認する</button>
-        <!-- <input type="button" class="btn_border" on-click="onTransactionStatus()" value="現在の取引状況を確認する"> -->
       </div>
 
       <div *ngIf="relistedDiv">
         <div class="row button_item">
           <button type="button" class="btn btn-outline-primary" (click)="onRelisted()">再出品</button>
-          <!-- <input type="button" class="btn_border" on-click="onRelisted()" value="再出品"> -->
         </div>
       </div>
 
@@ -63,26 +60,35 @@
 
 
       <div class="ymd">
-        <p>日付</p>
-        {{dispYMD | date: 'y mm dd (EEE) ': 'ja-JP' }}
+        <p>ご希望日時</p>
+        <!-- {{dispYMD | date: 'yy MM dd  ': dlocale }} -->
+        <!-- {{dispYMD | date: 'longDate': dlocale }} -->
+        {{dispYMD}}　{{dispTime}}時
       </div>
 
       <div class="price">
         <p>価格</p>
-
         <div *ngIf="dispPrice != 0 else noPrice">
           {{dispPrice | currency: 'JPY': true }}
         </div>
         <ng-template #noPrice>
           <div>見積中</div>
         </ng-template>
-
-
       </div>
 
       <div class="area">
         <p>場所</p>
         {{dispArea}}
+      </div>
+
+      <div class="area">
+        <p>作業場所</p>
+        {{dispWorkArea}}
+      </div>
+
+      <div class="area">
+        <p>対象車両</p>
+        {{dispTargetVehicle}}
       </div>
 
     </div>
