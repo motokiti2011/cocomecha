@@ -17,4 +17,14 @@ export class AppComponent implements OnInit{
     this.router.navigate(["/main_menu"])
   }
 
+  onActivate(e:any) {
+    console.log('appmenuEvent:'+e);
+    console.log(e);
+    // console.log(e.activeRouter);
+    // console.log(e.activeRouter.component);
+    console.log(String(e.activeRouter.component));
+  
+
+  }
+
 }
