@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,24 +7,31 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  title = 'coco-mecha';
+  title = 'haco-mecha';
+
+  footerDiv = false;
 
   constructor(
     private router:Router,
+    private activatedRoute: ActivatedRoute
   ){};
 
   ngOnInit() {
     this.router.navigate(["/main_menu"])
   }
 
-  onActivate(e:any) {
-    console.log('appmenuEvent:'+e);
-    console.log(e);
-    // console.log(e.activeRouter);
-    // console.log(e.activeRouter.component);
-    console.log(String(e.activeRouter.component));
-  
-
+  /**
+   * 遷移先
+   */
+  onActivate() {
+    const route = this.activatedRoute;
+    const routeAny:any = route.snapshot;
+    console.log(routeAny._routerState.url);
+    if(routeAny._routerState.url == '/main_menu') {
+      this.footerDiv = true;
+    } else {
+      this.footerDiv = false;
+    }
   }
 
 }

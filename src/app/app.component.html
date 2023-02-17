@@ -4,9 +4,11 @@
 
 <body>
   <div class="fullheight">
-    <router-outlet (activate)="onActivate($event)"></router-outlet>
+    <router-outlet (activate)="onActivate()"></router-outlet>
   </div>
 </body>
-<!-- <footer>
-  <app-footer-menu></app-footer-menu>
-</footer> -->
+<footer>
+  <div *ngIf="footerDiv">
+    <app-footer-menu></app-footer-menu>
+  </div>
+</footer>
