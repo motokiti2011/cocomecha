@@ -7,8 +7,7 @@
     <router-outlet (activate)="onActivate()"></router-outlet>
   </div>
 </body>
+<!-- <footer *ngIf="footerDiv"> -->
 <footer>
-  <div *ngIf="footerDiv">
-    <app-footer-menu></app-footer-menu>
-  </div>
+  <app-footer-menu></app-footer-menu>
 </footer>

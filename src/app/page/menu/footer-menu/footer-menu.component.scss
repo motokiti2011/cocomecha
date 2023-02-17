@@ -1,4 +1,30 @@
 .main_footer {
   background-color: gray;
   height: 100%;
+
+  .footer_title {
+    font-size: large;
+    color: #ffffff;
+    display: flex;
+    justify-content: left;
+
+    p {
+      margin: 20px 20px 20px 20px;
+    }
+  }
+
+  .link_area {
+    font-size: medium;
+    color: #ffffff;
+    // text-align: center;
+    display: flex;
+    justify-content: center;
+
+    p {
+      margin: 20px 20px 20px 20px;
+      cursor: pointer;
+    }
+  }
+
+
 }
