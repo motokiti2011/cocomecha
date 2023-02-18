@@ -327,6 +327,7 @@ export class ServiceRelistedComponent implements OnInit {
       processStatus: this.relistedService.processStatus, // 工程ステータス
       targetService: this.relistedService.targetService, // 対象サービス内容
       targetVehicleId: this.relistedService.targetVehicleId, // 対象車両ID
+      targetVehicleDiv: this.relistedService.targetVehicleDiv,
       targetVehicleName: this.relistedService.targetVehicleName, // 対象車両名
       targetVehicleInfo: this.relistedService.targetVehicleInfo, // 対象車両情報
       workAreaInfo: this.relistedService.workAreaInfo, // 作業場所情報

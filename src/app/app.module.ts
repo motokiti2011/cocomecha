@@ -75,6 +75,7 @@ import { ImageModalComponent } from './page/modal/image-modal/image-modal.compon
 import { SingleImageModalComponent } from './page/modal/single-image-modal/single-image-modal.component';
 import { AdvertisementSidMenuComponent } from './page/menu/advertisement-sid-menu/advertisement-sid-menu.component';
 import { FooterMenuComponent } from './page/menu/footer-menu/footer-menu.component';
+import { VehicleModalComponent } from './page/modal/vehicle-modal/vehicle-modal.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -156,6 +157,7 @@ const ROUTE_TABLE: Routes = [
     SingleImageModalComponent,
     AdvertisementSidMenuComponent,
     FooterMenuComponent,
+    VehicleModalComponent,
   ],
   entryComponents: [
     TransactionListComponent,

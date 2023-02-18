@@ -1,3 +1,5 @@
+import { slipVehicle } from "./slipVehicle";
+
 export interface salesServiceInfo {
   // 伝票番号
   slipNo: string;
@@ -45,8 +47,10 @@ export interface salesServiceInfo {
   targetVehicleId: string;
   // 対象車両名
   targetVehicleName: string;
+  // 車両区分
+  targetVehicleDiv: string;  
   // 対象車両情報
-  targetVehicleInfo: string;
+  targetVehicleInfo?: slipVehicle;
   // 作業場所情報
   workAreaInfo: string;
   // 希望日
@@ -122,8 +126,10 @@ export const defaulsalesService: salesServiceInfo = {
   targetVehicleId: '',
   // 対象車両名
   targetVehicleName: '',
-  // 対象車両情報
-  targetVehicleInfo: '',
+  // 車両区分
+  targetVehicleDiv: '',  
+  // // 対象車両情報
+  // targetVehicleInfo: '',
   // 作業場所情報
   workAreaInfo: '',
   // 希望日

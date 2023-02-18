@@ -84,8 +84,10 @@ export class ServiceCreateService {
       targetVehicleId: content.targetVehcle,
       // 対象車両名
       targetVehicleName: '',
-      // 対象車両情報
-      targetVehicleInfo: '0',
+      // 対象車両区分
+      targetVehicleDiv: '',
+      // // 対象車両情報
+      // targetVehicleInfo: content.targetVehcle,
       // 作業場所情報
       workAreaInfo: content.workArea,
       // 希望日
@@ -170,8 +172,10 @@ export class ServiceCreateService {
       targetVehicleId: content.targetVehcle,
       // 対象車両名
       targetVehicleName: '',
-      // 対象車両情報
-      targetVehicleInfo: '0',
+      // 対象車両区分      
+      targetVehicleDiv: content.vehicleDiv,
+      // // 対象車両情報
+      // targetVehicleInfo: '0',
       // 作業場所情報
       workAreaInfo: content.workArea,
       // 希望日

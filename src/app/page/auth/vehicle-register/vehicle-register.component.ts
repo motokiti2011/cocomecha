@@ -231,6 +231,8 @@ export class VehicleRegisterComponent implements OnInit {
       vehicleId: '',
       userId: this.user.userId,
       vehicleName: this.inputData.vehicleName,
+      // TODO
+      vehicleDiv: '',
       vehicleNo: this.setVehicleNo(),
       vehicleNoAreaName: this.vehicleNoAreaName.value,
       vehicleNoClassificationNum: this.vehicleNoClassificationNum.value,

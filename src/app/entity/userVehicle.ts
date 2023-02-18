@@ -5,7 +5,9 @@ export interface userVehicle {
   userId: string;
   // 車両名
   vehicleName: string;
-  // // 車両番号(ナンバー)
+  // 車両区分
+  vehicleDiv: string;
+  // 車両番号(ナンバー)
   vehicleNo: string;
   // 車両番号(ナンバー)地域名
   vehicleNoAreaName: string;

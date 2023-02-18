@@ -22,6 +22,8 @@ export interface serviceContents {
   area2: string | null;
   // カテゴリー
   category:string;
+  // 車両区分
+  vehicleDiv: string;  
   // 対象車両
   targetVehcle:string;
   // 入札方式
@@ -64,6 +66,7 @@ export const initServiceContent:serviceContents = {
   category: '0',
   bidMethod: '1',
   targetVehcle:'',
+  vehicleDiv: '',  
   explanation: '',
   bidderId: 0,
   favoriteFlg:false,

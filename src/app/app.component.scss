@@ -7,12 +7,17 @@
 .head {
   border-bottom:1px solid #000000;
   height: 10%;
+  height: 100px;
 }
 
-.fullheight {
-  height: 70%;
-  margin: 0%;
+body {
+      height: 85%;
+  .fullheight {
+    // height: 70%;
+    margin: 0%;
+  }
 }
+
 footer {
   height: 20%;
 }
