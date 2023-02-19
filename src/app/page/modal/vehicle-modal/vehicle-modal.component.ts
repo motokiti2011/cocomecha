@@ -2,6 +2,14 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { userVehicle } from 'src/app/entity/userVehicle';
 import { slipVehicle, initSlipVehicle } from 'src/app/entity/slipVehicle';
+import {
+  makerInfo,
+  domesticVehicleMakerData,
+  abroadBikeMakerData,
+  domesticBikeMakerData,
+  abroadVehicleMakerData
+} from 'src/app/entity/vehicleDataInfo';
+
 
 @Component({
   selector: 'app-vehicle-modal',
@@ -27,11 +35,23 @@ export class VehicleModalComponent implements OnInit {
   /** 車両名 */
   dispVehicleName: string = '';
   /** 車両区分 */
-  dispVehicleDiv: string = '';
+  dispVehicleDiv: string = '0';
+  /** 車両区分データ */
+  vehicleDivData = [
+    { vehicleDiv: '0', value: '車' },
+    { vehicleDiv: '1', value: 'バイク' },
+    { vehicleDiv: '2', value: 'その他車両' },
+    { vehicleDiv: '99', value: 'その他' }
+  ];
   /** メーカー */
   dispVehicleMaker: string = '';
+  /** メーカーデータ */
+  // makerData: string[] = [];
+  makerData: any;
   /** 車両形状 */
   dispVehicleForm: string = '';
+  /** メーカーデータ */
+  formData: string[] = [];
   /** 指定なし区分 */
   unspecifiedDiv = false;
 
@@ -47,11 +67,22 @@ export class VehicleModalComponent implements OnInit {
     // ユーザー依頼の場合
     if (this.data.targetService !== '0') {
       this.acsessId = this.data.acsessId;
+      this.makerDataSetting();
       if (this.data.targetVehicle.length != 0) {
         // 初期表示に登録車両情報を表示
         this.registerVehicle = this.data.targetVehicle;
       }
     }
+  }
+
+
+  /**
+   * 車両区分選択イベント
+   * @param i 
+   */
+  onSelectVehicleDiv(i: number) {
+    console.log(this.vehicleDivData[i]);
+    console.log(this.dispVehicleDiv);
   }
 
   /**
@@ -69,8 +100,6 @@ export class VehicleModalComponent implements OnInit {
     }
   }
 
-
-
   /**
    * 決定ボタン押下イベント
    */
@@ -84,9 +113,43 @@ export class VehicleModalComponent implements OnInit {
     this._dialogRef.close(data);
   }
 
+  /**
+   * 指定なしチェック押下時
+   */
+  onUnspecified() {
+    console.log(this.unspecifiedDiv);
+  }
+
+
+
   // ダイアログを閉じる
   closeModal() {
     this._dialogRef.close();
+  }
+
+  /**
+   * メーカーセレクト操作時
+   */
+  onSelectMaker() {
+
+  }
+
+  /**
+   * 車両形状操作時
+   */
+  onSelectForm() {
+
+  }
+
+  /**
+   * 車両選択イベント
+   */
+  onVehicleSelect(id: string) {
+    console.log(id);
+  }
+
+  keys(obj: Object) {
+    return Object.keys(obj);
   }
 
 
@@ -114,6 +177,30 @@ export class VehicleModalComponent implements OnInit {
     this.resultData.vehicleDiv = this.dispVehicleDiv;
     this.resultData.vehicleMaker = this.dispVehicleMaker;
     this.resultData.vehicleForm = this.dispVehicleForm;
+  }
+
+  /**
+   * メーカーセレクトデータの設定
+   */
+  private makerDataSetting() {
+    if (this.dispVehicleDiv == '0') {
+      this.makerData = {
+        '国内メーカー': domesticVehicleMakerData,
+        '外国メーカー': abroadVehicleMakerData
+      }
+    } else if (this.dispVehicleDiv == '1') {
+      this.makerData = {
+        '国内メーカー': 
+          domesticBikeMakerData
+        ,
+        '外国メーカー': [
+          abroadBikeMakerData
+        ]
+      }
+    } else {
+      this.makerData = [];
+    }
+
   }
 
 

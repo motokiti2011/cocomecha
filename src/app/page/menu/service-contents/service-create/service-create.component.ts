@@ -21,6 +21,8 @@ import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
 import { ImageModalComponent } from 'src/app/page/modal/image-modal/image-modal.component';
+import { VehicleModalComponent, vehicleModalInput } from 'src/app/page/modal/vehicle-modal/vehicle-modal.component';
+
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { imgFile } from 'src/app/entity/imgFile';
@@ -42,6 +44,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { userVehicle } from 'src/app/entity/userVehicle';
 
 
 @Component({
@@ -80,14 +83,10 @@ export class ServiceCreateComponent implements OnInit {
 
   /** 入力中データ情報 */
   inputData: serviceContents = initServiceContent;
-
   /** 入札方式選択状態初期値 */
   selected = '1';
-
-
   /** カテゴリー選択状態初期値 */
   categorySelect = '1';
-
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   /** 地域情報選択状態初期値 */
@@ -96,19 +95,14 @@ export class ServiceCreateComponent implements OnInit {
   areaCityData: area1SelectArea2[] = []
   /** 地域２（市町村）選択 */
   citySelect = '';
-
   /** カテゴリー */
   categoryData = serchCategoryData
-
   /** 価格プレスホルダー */
   pricePlace = '価格'
-
   // submitボタン活性制御
   invalid = true;
-
   /**  価格フォーム表示フラグ */
   priceFormDiv = true;
-
   /** 必須フラグ */
   titleDiv = true;
   workAreaDiv = true;
@@ -162,6 +156,8 @@ export class ServiceCreateComponent implements OnInit {
   fileList: any[] = []
   /** locationリスト */
   locationList: string[] = [];
+  /** ユーザー登録車両情報 */
+  userVehicle:userVehicle[] = [];
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -565,6 +561,45 @@ export class ServiceCreateComponent implements OnInit {
   }
 
 
+  /**
+   * 画像を添付するボタン押下イベント
+   */
+    onVehicleSelect() {
+      let acsessId = '';
+      if(this.inputData.targetService == '0') {
+        acsessId = this.inputData.userId;
+      } else if(this.inputData.targetService == '1') {
+        acsessId = this.inputData.mechanicId as string;
+      } else {
+        acsessId = this.inputData.officeId as string;
+      }
+
+      const modalData: vehicleModalInput = {
+        targetVehicle: this.userVehicle,
+        targetService: this.inputData.targetService,
+        acsessId: acsessId
+      }
+
+      // 画像添付モーダル展開
+      const dialogRef = this.modal.open(VehicleModalComponent, {
+        width: '750px',
+        height: '600px',
+        data: modalData
+      });
+      // モーダルクローズ後
+      dialogRef.afterClosed().subscribe(
+        result => {
+          // 返却値　無理に閉じたらundifind
+          console.log('画像モーダル結果:' + result)
+          if (result != undefined && result != null) {
+            console.log(result);
+          }
+        }
+      );
+    }
+
+
+
   /************************ 以下内部処理 ************************************/
 
 
@@ -618,7 +653,12 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.area1 = this.userInfo.areaNo1;
     this.areaSelect = this.userInfo.areaNo1;
     this.inputData.area2 = this.userInfo.areaNo2;
-
+    // 車両情報取得
+    this.service.getVehicleList(this.userInfo.userId).subscribe(data => {
+      if(data) {
+        this.userVehicle = data;
+      }
+    })
     // ローディング解除
     this.overlayRef.detach();
   }

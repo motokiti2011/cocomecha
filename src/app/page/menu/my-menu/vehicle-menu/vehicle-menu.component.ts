@@ -59,13 +59,27 @@ export class VehicleMenuComponent implements OnInit {
     // 選択されたIDをキーに車両詳細画面に遷移する
     this.router.navigate(["edit-vehicle"],
       {
-        queryParams: {vehicleId: id}
+        queryParams: { vehicleId: id }
       });
-
-
-
   }
 
+
+  /**
+   * 履歴ボタン押下イベント
+   * @param id
+   */
+  onHistory(id: string) {
+    // 車両履歴モーダルを展開
+  }
+
+  /**
+   * 削除ボタン押下イベント
+   * @param id
+   */
+  onDeleteVehicle(id: string) {
+    // 削除前にダイアログ表示
+    alert('削除しますか？');
+  }
 
 
   /**
@@ -106,24 +120,6 @@ export class VehicleMenuComponent implements OnInit {
     return result;
   }
 
-  /**
-   * 履歴ボタン押下イベント
-   * @param id
-   */
-  onHistory(id: string) {
-    // 車両履歴モーダルを展開
-  }
-
-  /**
-   * 削除ボタン押下イベント
-   * @param id
-   */
-  onDeleteVehicle(id: string) {
-    // 削除前にダイアログ表示
-    alert('削除しますか？');
-
-
-  }
 
 
 

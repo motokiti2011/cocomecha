@@ -122,11 +122,18 @@
             </div> -->
           </td>
           <td>
-            <select class="category-select" name="category" [(ngModel)]="inputData.targetVehcle" (change)="inputWorkArea()">
+            <button type="button" class="btn btn-outline-primary" (click)="onVehicleSelect()" >車両を選択する</button>
+            <!-- <select class="category-select" name="category" [(ngModel)]="inputData.targetVehcle" (change)="inputWorkArea()">
               <option *ngFor="let vehcle of vehcleData"
               [value]="vehcle.id"
               [selected]="vehcle.id === vehcleSelect">{{vehcle.label}}</option>
-            </select>
+            </select> -->
+          </td>
+          <td>
+            <div *ngIf="img.length > 0 else imgElseContents">車両あり</div>
+            <ng-template #imgElseContents>
+              <div>車両なし</div>
+            </ng-template>
           </td>
         </tr>
 

@@ -5,7 +5,10 @@ import { map, catchError } from 'rxjs/operators';
 import { nextActionButtonType } from 'src/app/entity/nextActionButtonType';
 import { serviceContents } from 'src/app/entity/serviceContents';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
+import { userVehicle } from 'src/app/entity/userVehicle';
 import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
+
+import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { UploadService } from 'src/app/page/service/upload.service';
 
@@ -17,6 +20,7 @@ export class ServiceCreateService {
   constructor(
     private apiUniqueService: ApiUniqueService,
     private s3: UploadService,
+    private apiGsiService: ApiGsiSerchService,
   ) { }
 
   // 伝票情報を更新する
@@ -24,6 +28,13 @@ export class ServiceCreateService {
 
     const data = this.converSlipDetail(contents)
     return this.apiUniqueService.initPostSlip(data);
+  }
+
+  /**
+   * 車両情報を取得する
+   */
+  public getVehicleList(id: string) {
+    return this.apiGsiService.serchVehicle(id, '0');
   }
 
   /**
