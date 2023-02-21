@@ -65,3 +65,36 @@ export const abroadBikeMakerData: makerInfo[] = [
   { id: '999', name: 'その他' },
 ];
 
+/** 車両形状 */
+export const vehicleFormData = [
+  {name:'セダン'},
+  {name:'ワゴン'},
+  {name:'ミニバン'},
+  {name:'SUV'},
+  {name:'スポーツ'},
+  {name:'軽ワゴン'},
+  {name:'軽トラック'},
+  {name:'トラック'},
+  {name:'その他'},
+  {name:'該当なし'},
+];
+
+/** バイク形状 */
+export const bikeFormData = [
+  {name:'ネイキッド'},
+  {name:'アメリカン'},
+  {name:'スポーツ'},
+  {name:'ストリート'},
+  {name:'ツアラー'},
+  {name:'モタード'},
+  {name:'オフロード'},
+  {name:'アドベンチャー'},
+  {name:'オフロード'},
+  {name:'トラッカー'},
+  {name:'ビッグスクーター'},
+  {name:'原付'},
+  {name:'原付スクーター'},
+  {name:'業務用'},
+  {name:'その他'},
+  {name:'該当なし'},
+];

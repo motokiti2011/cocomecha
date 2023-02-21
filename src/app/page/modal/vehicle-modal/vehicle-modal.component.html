@@ -66,7 +66,7 @@
       </form>
     </div>
 
-
+    <div *ngIf="dispVehicleDiv == '0' && '1'">
     <div class="row">
       <div class="col-1"></div>
       <label>メーカー</label>
@@ -76,13 +76,17 @@
       <div class="col-1"></div>
       <select class="maker_select" name="maker" [(ngModel)]="dispVehicleMaker" (change)="onSelectMaker()">
         <option value="">メーカーを選択してください</option>
-        <optgroup *ngFor="let group of keys(makerData)" label={{group}}>
-          <option *ngFor="let maker of makerData[group]" 
-          [value]="maker" [selected]="maker === dispVehicleMaker">
-            {{maker}}
+        <optgroup *ngFor="let group of makerDataGroupData" label={{group.key}}>
+          <option *ngFor="let maker of group.items"
+          [value]="maker.name"
+          [selected]="maker.name === dispVehicleMaker"
+          >
+            {{maker.name}}
           </option>
         </optgroup>
       </select>
+
+      <pre>{{ dispVehicleMaker | json }}</pre>
     </div>
 
     <div class="row">
@@ -93,9 +97,13 @@
     <div class="row">
       <div class="col-1"></div>
       <select class="category-select" name="category" [(ngModel)]="formData" (change)="onSelectForm()">
-        <option *ngFor="let form of formData" [value]="form" [selected]="form === dispVehicleForm">{{form}}</option>
+        <option *ngFor="let form of formData"
+        [value]="form.name"
+        [selected]="form.name === dispVehicleForm"
+        >{{form.name}}</option>
       </select>
     </div>
+  </div>
 
     <div class="row">
       <div class="col-1"></div>
@@ -111,7 +119,7 @@
       <label>指定しない</label>
     </div>
 
-    
+
     <div class="row">
       <div class="col-1"></div>
       <label>車名</label>
@@ -121,6 +129,9 @@
       <div class="col-1"></div>
       <input type="text" class="form-control" id="name" name="name" [(ngModel)]="dispVehicleName" />
     </div>
+
+    <div *ngIf="dispVehicleDiv == '0' && '1'">
+
 
     <div class="row">
       <div class="col-1"></div>
@@ -133,7 +144,6 @@
         <option *ngFor="let maker of makerData" [value]="maker" [selected]="maker === dispVehicleMaker">{{maker}}
         </option>
       </select>
-      <!-- <input type="password" class="form-control" id="passwd" name="passwd" [(ngModel)]="data.passwd" /> -->
     </div>
 
     <div class="row">
@@ -144,9 +154,10 @@
     <div class="row">
       <div class="col-1"></div>
       <select class="category-select" name="category" [(ngModel)]="formData" (change)="onSelectForm()">
-        <option *ngFor="let form of formData" [value]="form" [selected]="form === dispVehicleForm">{{form}}</option>
+        <option *ngFor="let form of formData" [value]="form" [selected]="form.name === dispVehicleForm">{{form.name}}</option>
       </select>
     </div>
+  </div>
 
     <div class="row">
       <div class="col-1"></div>

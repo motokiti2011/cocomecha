@@ -7,7 +7,8 @@ import {
   domesticVehicleMakerData,
   abroadBikeMakerData,
   domesticBikeMakerData,
-  abroadVehicleMakerData
+  abroadVehicleMakerData,
+  vehicleFormData, bikeFormData
 } from 'src/app/entity/vehicleDataInfo';
 
 
@@ -46,12 +47,13 @@ export class VehicleModalComponent implements OnInit {
   /** メーカー */
   dispVehicleMaker: string = '';
   /** メーカーデータ */
-  // makerData: string[] = [];
-  makerData: any;
+  makerData: string[] = [];
+  makerDataGroupData: {key: string, items:makerInfo[]}[] = [];
+
   /** 車両形状 */
   dispVehicleForm: string = '';
   /** メーカーデータ */
-  formData: string[] = [];
+  formData: { name: string; }[] = [];
   /** 指定なし区分 */
   unspecifiedDiv = false;
 
@@ -64,25 +66,30 @@ export class VehicleModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.targetService = this.data.targetService;
+    console.log(this.data);
+
     // ユーザー依頼の場合
-    if (this.data.targetService !== '0') {
+    if (this.data.targetService == '0') {
       this.acsessId = this.data.acsessId;
-      this.makerDataSetting();
       if (this.data.targetVehicle.length != 0) {
         // 初期表示に登録車両情報を表示
         this.registerVehicle = this.data.targetVehicle;
       }
     }
+    this.makerDataSetting();
+    this.formDataSetting();
   }
 
 
   /**
    * 車両区分選択イベント
-   * @param i 
+   * @param i
    */
   onSelectVehicleDiv(i: number) {
     console.log(this.vehicleDivData[i]);
     console.log(this.dispVehicleDiv);
+    this.makerDataSetting();
+    this.formDataSetting();
   }
 
   /**
@@ -131,6 +138,7 @@ export class VehicleModalComponent implements OnInit {
    * メーカーセレクト操作時
    */
   onSelectMaker() {
+    console.log(this.dispVehicleMaker)
 
   }
 
@@ -183,22 +191,30 @@ export class VehicleModalComponent implements OnInit {
    * メーカーセレクトデータの設定
    */
   private makerDataSetting() {
+    // 初期化
+    this.makerDataGroupData = [];
     if (this.dispVehicleDiv == '0') {
-      this.makerData = {
-        '国内メーカー': domesticVehicleMakerData,
-        '外国メーカー': abroadVehicleMakerData
-      }
+      this.makerDataGroupData.push({key:'国内メーカー', items: domesticVehicleMakerData})
+      this.makerDataGroupData.push({key:'外国メーカー', items: abroadVehicleMakerData})
+      console.log(this.makerDataGroupData);
     } else if (this.dispVehicleDiv == '1') {
-      this.makerData = {
-        '国内メーカー': 
-          domesticBikeMakerData
-        ,
-        '外国メーカー': [
-          abroadBikeMakerData
-        ]
-      }
+      this.makerDataGroupData.push({key:'国内メーカー', items: domesticBikeMakerData});
+      this.makerDataGroupData.push({key:'外国メーカー', items: abroadBikeMakerData});
     } else {
       this.makerData = [];
+    }
+  }
+
+  /**
+   * 車両形状セレクトデータの設定
+   */
+  private formDataSetting() {
+    // 初期化
+    this.formData = [];
+    if(this.dispVehicleDiv == '0') {
+      this.formData = vehicleFormData;
+    } else if(this.dispVehicleDiv == '1') {
+      this.formData = bikeFormData;
     }
 
   }
