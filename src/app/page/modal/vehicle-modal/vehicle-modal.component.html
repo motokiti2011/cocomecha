@@ -1,9 +1,12 @@
 <div class="container">
 
   <div class="row">
-    <div id="modal_title">{{title}}</div>
-    <div class="col-1"></div>
-    <button id="close" mat-button (click)="closeModal()">✖</button>
+    <div class="title">
+      <div id="modal_title">{{title}}</div>
+    </div>
+    <div class="close">
+      <button id="close" mat-button (click)="closeModal()">✖</button>
+    </div>
   </div>
 
   <div *ngIf="targetService == '0' else serviceRequest">
@@ -36,7 +39,6 @@
     </ng-template>
 
     <div class="row">
-      <div class="col-1"></div>
       <label>この伝票に車両を登録</label>
     </div>
 
@@ -46,13 +48,13 @@
     </div>
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <input type="text" class="form-control" id="name" [(ngModel)]="dispVehicleName" />
     </div>
 
     <!-- 車両区分ラジオボタン -->
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <form class="vehicle_div">
         <ng-container *ngFor="let data of vehicleDivData; index as i">
           <label>
@@ -73,30 +75,29 @@
     </div>
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <select class="maker_select" name="maker" [(ngModel)]="dispVehicleMaker" (change)="onSelectMaker()">
         <option value="">メーカーを選択してください</option>
         <optgroup *ngFor="let group of makerDataGroupData" label={{group.key}}>
           <option *ngFor="let maker of group.items"
           [value]="maker.name"
-          [selected]="maker.name === dispVehicleMaker"
-          >
+          [selected]="maker.name === dispVehicleMaker">
             {{maker.name}}
           </option>
         </optgroup>
       </select>
 
-      <pre>{{ dispVehicleMaker | json }}</pre>
     </div>
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <label>車両形状</label>
     </div>
 
     <div class="row">
-      <div class="col-1"></div>
-      <select class="category-select" name="category" [(ngModel)]="formData" (change)="onSelectForm()">
+      <!-- <div class="col-1"></div> -->
+      <select class="form_select" [(ngModel)]="dispVehicleForm" (change)="onSelectForm()">
+        <option value="">車両形状を選択してください</option>
         <option *ngFor="let form of formData"
         [value]="form.name"
         [selected]="form.name === dispVehicleForm"
@@ -106,7 +107,7 @@
   </div>
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <button type="submit" class="btn btn-primary" on-click="getResult()">決定</button>
     </div>
   </div>
@@ -114,53 +115,80 @@
   <ng-template #serviceRequest>
     <!-- メカニック、工場依頼表示 -->
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <input type="checkbox" name="unspecified_check" [(ngModel)]="unspecifiedDiv" (change)="onUnspecified()">
-      <label>指定しない</label>
+      <label>　指定しない</label>
     </div>
 
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <label>車名</label>
     </div>
-
+    
     <div class="row">
-      <div class="col-1"></div>
-      <input type="text" class="form-control" id="name" name="name" [(ngModel)]="dispVehicleName" />
+      <!-- <div class="col-1"></div> -->
+      <input type="text" class="form-control" id="name" name="name" [(ngModel)]="dispVehicleName" disabled="unspecifiedDiv" />
     </div>
 
-    <div *ngIf="dispVehicleDiv == '0' && '1'">
+    <!-- 車両区分ラジオボタン -->
+    <div class="row">
+      <!-- <div class="col-1"></div> -->
+      <form class="vehicle_div">
+        <ng-container *ngFor="let data of vehicleDivData; index as i" >
+          <label>
+            <input type="radio" name="vehicle_div"
+              id="book{{i}}"
+              [(ngModel)]="dispVehicleDiv"
+              [value]="data.vehicleDiv" [checked]="dispVehicleDiv == data.vehicleDiv"
+              (change)="onSelectVehicleDiv(i)">{{data.value}}
+          </label><br />
+        </ng-container>
+      </form>
+    </div>
+
+
+    <div *ngIf="dispVehicleDiv == '0' && '1' && !unspecifiedDiv">
 
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <label>メーカー</label>
     </div>
 
     <div class="row">
-      <div class="col-1"></div>
-      <select class="category-select" name="category" [(ngModel)]="dispVehicleMaker" (change)="onSelectMaker()">
-        <option *ngFor="let maker of makerData" [value]="maker" [selected]="maker === dispVehicleMaker">{{maker}}
-        </option>
+      <!-- <div class="col-1"></div> -->
+      <select class="maker_select" name="maker" [(ngModel)]="dispVehicleMaker" (change)="onSelectMaker()" >
+        <option value="">メーカーを選択してください</option>
+        <optgroup *ngFor="let group of makerDataGroupData" label={{group.key}}>
+          <option *ngFor="let maker of group.items"
+          [value]="maker.name"
+          [selected]="maker.name === dispVehicleMaker">
+            {{maker.name}}
+          </option>
+        </optgroup>
       </select>
     </div>
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <label>車両形状</label>
     </div>
 
     <div class="row">
-      <div class="col-1"></div>
-      <select class="category-select" name="category" [(ngModel)]="formData" (change)="onSelectForm()">
-        <option *ngFor="let form of formData" [value]="form" [selected]="form.name === dispVehicleForm">{{form.name}}</option>
+      <!-- <div class="col-1"></div> -->
+      <select class="form_select" [(ngModel)]="dispVehicleForm" (change)="onSelectForm()">
+        <option value="">車両形状を選択してください</option>
+        <option *ngFor="let form of formData"
+        [value]="form.name"
+        [selected]="form.name === dispVehicleForm"
+        >{{form.name}}</option>
       </select>
     </div>
   </div>
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <button type="submit" class="btn btn-primary" on-click="getResult()">決定</button>
     </div>
 

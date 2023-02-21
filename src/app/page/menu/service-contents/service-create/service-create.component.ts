@@ -562,7 +562,7 @@ export class ServiceCreateComponent implements OnInit {
 
 
   /**
-   * 画像を添付するボタン押下イベント
+   * 車両を選択するボタン押下イベント
    */
     onVehicleSelect() {
       let acsessId = '';
@@ -582,7 +582,7 @@ export class ServiceCreateComponent implements OnInit {
 
       // 画像添付モーダル展開
       const dialogRef = this.modal.open(VehicleModalComponent, {
-        width: '750px',
+        width: '500px',
         height: '600px',
         data: modalData
       });

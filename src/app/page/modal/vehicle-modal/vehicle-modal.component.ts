@@ -48,12 +48,14 @@ export class VehicleModalComponent implements OnInit {
   dispVehicleMaker: string = '';
   /** メーカーデータ */
   makerData: string[] = [];
-  makerDataGroupData: {key: string, items:makerInfo[]}[] = [];
+  makerDataGroupData: { key: string, items: makerInfo[] }[] = [];
 
+  /** 車両形状データ */
+  formData: { name: string; }[] = [];
   /** 車両形状 */
   dispVehicleForm: string = '';
-  /** メーカーデータ */
-  formData: { name: string; }[] = [];
+
+
   /** 指定なし区分 */
   unspecifiedDiv = false;
 
@@ -112,6 +114,10 @@ export class VehicleModalComponent implements OnInit {
    */
   getResult() {
     this.inputVehicleInfo();
+
+
+
+
     const data = {
       resultData: this.resultData,
       targetService: this.targetService,
@@ -125,6 +131,11 @@ export class VehicleModalComponent implements OnInit {
    */
   onUnspecified() {
     console.log(this.unspecifiedDiv);
+    const hoge = this.unspecifiedDiv;
+
+
+
+
   }
 
 
@@ -146,7 +157,7 @@ export class VehicleModalComponent implements OnInit {
    * 車両形状操作時
    */
   onSelectForm() {
-
+    console.log(this.dispVehicleForm)
   }
 
   /**
@@ -193,13 +204,31 @@ export class VehicleModalComponent implements OnInit {
   private makerDataSetting() {
     // 初期化
     this.makerDataGroupData = [];
+    let domesticData: makerInfo[] = [];
+    let abroadData: makerInfo[] = [];
     if (this.dispVehicleDiv == '0') {
-      this.makerDataGroupData.push({key:'国内メーカー', items: domesticVehicleMakerData})
-      this.makerDataGroupData.push({key:'外国メーカー', items: abroadVehicleMakerData})
+      // 自動車の場合
+      domesticData = domesticVehicleMakerData;
+      abroadData = abroadVehicleMakerData;
+      // 工場、メカニック依頼時
+      if (this.data.targetService != '0') {
+        domesticData.push({ id: '000', name: '指定なし' });
+        abroadData.push({ id: '000', name: '指定なし' });
+      }
+      this.makerDataGroupData.push({ key: '国内メーカー', items: domesticData })
+      this.makerDataGroupData.push({ key: '外国メーカー', items: abroadData })
       console.log(this.makerDataGroupData);
     } else if (this.dispVehicleDiv == '1') {
-      this.makerDataGroupData.push({key:'国内メーカー', items: domesticBikeMakerData});
-      this.makerDataGroupData.push({key:'外国メーカー', items: abroadBikeMakerData});
+      // バイク指定の場合
+      domesticData = domesticBikeMakerData;
+      abroadData = abroadBikeMakerData;
+      // 工場、メカニック依頼時
+      if (this.data.targetService != '0') {
+        domesticData.push({ id: '000', name: '指定なし' });
+        abroadData.push({ id: '000', name: '指定なし' });
+      }
+      this.makerDataGroupData.push({ key: '国内メーカー', items: domesticData });
+      this.makerDataGroupData.push({ key: '外国メーカー', items: abroadData });
     } else {
       this.makerData = [];
     }
@@ -211,9 +240,9 @@ export class VehicleModalComponent implements OnInit {
   private formDataSetting() {
     // 初期化
     this.formData = [];
-    if(this.dispVehicleDiv == '0') {
+    if (this.dispVehicleDiv == '0') {
       this.formData = vehicleFormData;
-    } else if(this.dispVehicleDiv == '1') {
+    } else if (this.dispVehicleDiv == '1') {
       this.formData = bikeFormData;
     }
 
