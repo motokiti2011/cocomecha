@@ -1,3 +1,5 @@
+import { userVehicle } from "./userVehicle";
+
 // サービス内容
 export interface serviceContents {
   // ID
@@ -23,9 +25,9 @@ export interface serviceContents {
   // カテゴリー
   category:string;
   // 車両区分
-  vehicleDiv: string;  
+  vehicleDiv: string;
   // 対象車両
-  targetVehcle:string;
+  targetVehcle:userVehicle | null;
   // 入札方式
   bidMethod: string;
   // 説明
@@ -65,8 +67,8 @@ export const initServiceContent:serviceContents = {
   area2: '',
   category: '0',
   bidMethod: '1',
-  targetVehcle:'',
-  vehicleDiv: '',  
+  targetVehcle:null,
+  vehicleDiv: '',
   explanation: '',
   bidderId: 0,
   favoriteFlg:false,

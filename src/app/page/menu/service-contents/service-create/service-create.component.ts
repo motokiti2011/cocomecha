@@ -573,11 +573,16 @@ export class ServiceCreateComponent implements OnInit {
       } else {
         acsessId = this.inputData.officeId as string;
       }
+      let settingVehicle = null;
+      if(this.inputData.targetVehcle) {
+        settingVehicle = this.inputData.targetVehcle;
+      }
 
       const modalData: vehicleModalInput = {
         targetVehicle: this.userVehicle,
         targetService: this.inputData.targetService,
-        acsessId: acsessId
+        acsessId: acsessId,
+        settingVehicleInfo: settingVehicle
       }
 
       // 画像添付モーダル展開
@@ -593,6 +598,11 @@ export class ServiceCreateComponent implements OnInit {
           console.log('画像モーダル結果:' + result)
           if (result != undefined && result != null) {
             console.log(result);
+            if(!result.unspecifiedDiv) {
+              this.inputData.vehicleDiv = result.resultData.vehicleDiv;
+              this.inputData.targetVehcle = result.resultData;
+              console.log(this.inputData);
+            }
           }
         }
       );

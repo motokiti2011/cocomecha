@@ -80,6 +80,10 @@ export class VehicleModalComponent implements OnInit {
     }
     this.makerDataSetting();
     this.formDataSetting();
+    if(this.data.settingVehicleInfo != null) {
+      this.setFormData
+    }
+
   }
 
 
@@ -131,11 +135,6 @@ export class VehicleModalComponent implements OnInit {
    */
   onUnspecified() {
     console.log(this.unspecifiedDiv);
-    const hoge = this.unspecifiedDiv;
-
-
-
-
   }
 
 
@@ -248,8 +247,12 @@ export class VehicleModalComponent implements OnInit {
 
   }
 
+  /**
+   * 画面表示に現在設定されているデータを設定する
+   */
+  private setFormData() {
 
-
+  }
 
 }
 
@@ -260,7 +263,8 @@ export class VehicleModalComponent implements OnInit {
 export interface vehicleModalInput {
   targetVehicle: userVehicle[],
   targetService: string,
-  acsessId: string | null
+  acsessId: string | null,
+  settingVehicleInfo: userVehicle | null
 }
 
 

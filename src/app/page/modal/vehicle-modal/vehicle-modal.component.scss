@@ -29,14 +29,57 @@
   margin: 10px 0px 10px 0px;
 }
 
+.vehicle_list_area {
+  table {
+    border-collapse: collapse;
+    font-size: 1px;
+
+    th {
+      border: 2px black solid;
+      font-size: medium;
+      text-align: center;
+      margin-bottom: 10px;
+      #name {
+        width: 250px;
+      }
+      #fleam_number {
+        width: 100px;
+      }
+      #mileage {
+        width: 100px;
+      }
+
+    }
+
+    td {
+      border: 2px black solid;
+      text-align: center;
+      font-size: medium;
+      margin: 5px 5px 5px 5px;
+    }
+  }
+}
+
+.vehicle_msg {
+  margin-left: 70px;
+}
+
 .vehicle_div {
   display: flex;
-
+  margin: 10px 0px 10px 0px;
+  label {
+    margin-left: 10px;
+  }
 }
 
-.btn {
-  width: 250px;
-  margin-top: 30px;
+.btn_area {
+  display: flex;
+  justify-content: center;
+  .btn {
+    width: 250px;
+    margin-top: 30px;
+  }
 }
+
 
 

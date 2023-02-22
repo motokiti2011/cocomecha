@@ -4,6 +4,7 @@
     <div class="title">
       <div id="modal_title">{{title}}</div>
     </div>
+    <div class="col-2"></div>
     <div class="close">
       <button id="close" mat-button (click)="closeModal()">✖</button>
     </div>
@@ -12,18 +13,16 @@
   <div *ngIf="targetService == '0' else serviceRequest">
     <!-- ユーザー依頼表示 -->
 
-    <div *ngIf="registerVehicle.length > 0 else ElseContents">
+    <div class="vehicle_list_area" *ngIf="registerVehicle.length > 0 else ElseContents">
       <table>
         <thead>
           <tr>
-            <th id="no">No</th>
             <th id="name">車名</th>
-            <th id="fleam_number">ナンバー（登録番号）</th>
+            <th id="fleam_number">ナンバー</th>
             <th id="mileage">走行距離</th>
         </thead>
         <tbody>
           <tr *ngFor="let vehicle of registerVehicle">
-            <td>{{registerVehicle.length}}</td>
             <td>
               <div class="select_point" (click)="onVehicleSelect(vehicle.vehicleId)">
                 {{vehicle.vehicleName}}</div>
@@ -35,26 +34,27 @@
       </table>
     </div>
     <ng-template #ElseContents>
-      <div>登録中の車両はありません</div>
+      <div class="vehicle_msg">登録中の車両はありません</div>
     </ng-template>
 
     <div class="row">
+      <div class="col-3"></div>
       <label>この伝票に車両を登録</label>
     </div>
 
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <label>車名</label>
     </div>
 
     <div class="row">
-      <!-- <div class="col-1"></div> -->
+      <div class="col-1"></div>
       <input type="text" class="form-control" id="name" [(ngModel)]="dispVehicleName" />
     </div>
 
     <!-- 車両区分ラジオボタン -->
     <div class="row">
-      <!-- <div class="col-1"></div> -->
+      <div class="col-1"></div>
       <form class="vehicle_div">
         <ng-container *ngFor="let data of vehicleDivData; index as i">
           <label>
@@ -70,12 +70,12 @@
 
     <div *ngIf="dispVehicleDiv == '0' && '1'">
     <div class="row">
-      <div class="col-1"></div>
+      <!-- <div class="col-1"></div> -->
       <label>メーカー</label>
     </div>
 
     <div class="row">
-      <!-- <div class="col-1"></div> -->
+      <div class="col-1"></div>
       <select class="maker_select" name="maker" [(ngModel)]="dispVehicleMaker" (change)="onSelectMaker()">
         <option value="">メーカーを選択してください</option>
         <optgroup *ngFor="let group of makerDataGroupData" label={{group.key}}>
@@ -95,7 +95,7 @@
     </div>
 
     <div class="row">
-      <!-- <div class="col-1"></div> -->
+      <div class="col-1"></div>
       <select class="form_select" [(ngModel)]="dispVehicleForm" (change)="onSelectForm()">
         <option value="">車両形状を選択してください</option>
         <option *ngFor="let form of formData"
@@ -125,15 +125,15 @@
       <!-- <div class="col-1"></div> -->
       <label>車名</label>
     </div>
-    
+
     <div class="row">
-      <!-- <div class="col-1"></div> -->
+      <div class="col-1"></div>
       <input type="text" class="form-control" id="name" name="name" [(ngModel)]="dispVehicleName" disabled="unspecifiedDiv" />
     </div>
 
     <!-- 車両区分ラジオボタン -->
     <div class="row">
-      <!-- <div class="col-1"></div> -->
+      <div class="col-1"></div>
       <form class="vehicle_div">
         <ng-container *ngFor="let data of vehicleDivData; index as i" >
           <label>
@@ -157,7 +157,7 @@
     </div>
 
     <div class="row">
-      <!-- <div class="col-1"></div> -->
+      <div class="col-1"></div>
       <select class="maker_select" name="maker" [(ngModel)]="dispVehicleMaker" (change)="onSelectMaker()" >
         <option value="">メーカーを選択してください</option>
         <optgroup *ngFor="let group of makerDataGroupData" label={{group.key}}>
@@ -176,7 +176,7 @@
     </div>
 
     <div class="row">
-      <!-- <div class="col-1"></div> -->
+      <div class="col-1"></div>
       <select class="form_select" [(ngModel)]="dispVehicleForm" (change)="onSelectForm()">
         <option value="">車両形状を選択してください</option>
         <option *ngFor="let form of formData"
@@ -187,8 +187,7 @@
     </div>
   </div>
 
-    <div class="row">
-      <!-- <div class="col-1"></div> -->
+    <div class="row btn_area">
       <button type="submit" class="btn btn-primary" on-click="getResult()">決定</button>
     </div>
 
