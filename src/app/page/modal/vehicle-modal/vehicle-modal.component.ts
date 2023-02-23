@@ -49,7 +49,6 @@ export class VehicleModalComponent implements OnInit {
   /** メーカーデータ */
   makerData: string[] = [];
   makerDataGroupData: { key: string, items: makerInfo[] }[] = [];
-
   /** 車両形状データ */
   formData: { name: string; }[] = [];
   /** 車両形状 */
@@ -76,6 +75,12 @@ export class VehicleModalComponent implements OnInit {
       if (this.data.targetVehicle.length != 0) {
         // 初期表示に登録車両情報を表示
         this.registerVehicle = this.data.targetVehicle;
+      }
+    } else {
+      // ユーザー車両設定の場合
+      this.unspecifiedDiv = this.data.unspecifiedDiv; 
+      if(this.unspecifiedDiv) {
+        this.dispVehicleDiv = '99';
       }
     }
     this.makerDataSetting();
@@ -137,11 +142,13 @@ export class VehicleModalComponent implements OnInit {
     console.log(this.unspecifiedDiv);
     if(this.unspecifiedDiv) {
       this.dispVehicleName = '指定なし';
+      this.dispVehicleDiv = '99';
     } else {
+      // 指定なし解除時
       this.dispVehicleName = '';
+      // とりあえず初期表示状態に戻す
+      this.dispVehicleDiv = '0';
     }
-
-
   }
 
 
@@ -169,12 +176,17 @@ export class VehicleModalComponent implements OnInit {
   /**
    * 車両選択イベント
    */
-  onVehicleSelect(id: string) {
-    console.log(id);
-  }
-
-  keys(obj: Object) {
-    return Object.keys(obj);
+  onSelectVehicle(vehicle: userVehicle) {
+    this.dispVehicleName = vehicle.vehicleName;
+    if(vehicle.vehicleDiv != null && vehicle.vehicleDiv != undefined && vehicle.vehicleDiv != '') {
+      this.dispVehicleDiv = vehicle.vehicleDiv;
+    }
+    if(vehicle.maker != null) {
+      this.dispVehicleMaker = vehicle.maker;
+    }
+    if(vehicle.form != null) {
+      this.dispVehicleForm = vehicle.form;
+    }
   }
 
 

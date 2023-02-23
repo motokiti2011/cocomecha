@@ -397,8 +397,9 @@ export class ServiceCreateComponent implements OnInit {
   /**
    * 地域選択イベント
    */
-  selectArea() {
+  onSelectArea() {
     this.inputData.area1 = this.areaSelect;
+    console.log(this.areaSelect)
     this.cangeMonitoring();
     this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
   }
@@ -406,7 +407,7 @@ export class ServiceCreateComponent implements OnInit {
   /**
    * 地域2選択イベント
    */
-  selectCity() {
+  onSelectCity() {
     this.inputData.area2 = this.citySelect;
     console.log(this.inputData.area2);
   }
@@ -498,34 +499,34 @@ export class ServiceCreateComponent implements OnInit {
     // console.log('確定反応')
     console.log(this.inputData);
 
-    // // 工場、メカニックとして依頼する場合
-    // if (this.inputData.targetService !== '0') {
-    //   // サービス商品として更新を行う
-    //   this.service.postSalesService(this.inputData).subscribe(result => {
-    //     // 登録結果からメッセージを表示する
-    //     if (result === 200) {
-    //       alert('POST:OK')
-    //       console.log('POST:OK')
-    //       this.next();
-    //     } else {
-    //       console.log('POST:NG')
-    //       alert('POST:NG')
-    //     }
-    //   });
-    // } else {
-    //   // 伝票情報の更新を行う
-    //   this.service.postSlip(this.inputData).subscribe(result => {
-    //     // 登録結果からメッセージを表示する
-    //     if (result === 200) {
-    //       alert('POST:OK')
-    //       console.log('POST:OK')
-    //       this.next();
-    //     } else {
-    //       console.log('POST:NG')
-    //       alert('POST:NG')
-    //     }
-    //   });
-    // }
+    // 工場、メカニックとして依頼する場合
+    if (this.inputData.targetService !== '0') {
+      // サービス商品として更新を行う
+      this.service.postSalesService(this.inputData).subscribe(result => {
+        // 登録結果からメッセージを表示する
+        if (result === 200) {
+          alert('POST:OK')
+          console.log('POST:OK')
+          this.next();
+        } else {
+          console.log('POST:NG')
+          alert('POST:NG')
+        }
+      });
+    } else {
+      // 伝票情報の更新を行う
+      this.service.postSlip(this.inputData).subscribe(result => {
+        // 登録結果からメッセージを表示する
+        if (result === 200) {
+          alert('POST:OK')
+          console.log('POST:OK')
+          this.next();
+        } else {
+          console.log('POST:NG')
+          alert('POST:NG')
+        }
+      });
+    }
   }
 
 

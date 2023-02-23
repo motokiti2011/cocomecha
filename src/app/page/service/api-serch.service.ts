@@ -356,6 +356,29 @@ export class ApiSerchService {
 
 
   /**
+   * ユーザー車両情報を取得
+   * @param mechanicId
+   * @returns
+   */
+  public getUserVehicle(vehicleId: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "QUERY",
+      "Keys": {
+        "vehicleId": vehicleId
+      }
+    };
+    return this.http.post<userVehicle>(this.apiEndPoint + '/uservehicleinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: userVehicle) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+
+  /**
    * ユーザー車両情報を登録する
    * @param mechanicId
    * @returns
@@ -368,6 +391,7 @@ export class ApiSerchService {
         "vehicleId": '',
         "userId": data.userId,
         "vehicleName": data.vehicleName,
+        "vehicleDiv": data.vehicleDiv,
         "vehicleNo": data.vehicleNo,
         "vehicleNoAreaName": data.vehicleNoAreaName,
         "vehicleNoClassificationNum": data.vehicleNoClassificationNum,
@@ -376,6 +400,8 @@ export class ApiSerchService {
         "chassisNo": data.chassisNo,
         "designatedClassification": data.designatedClassification,
         "coler": data.coler,
+        "maker": data.maker,
+        "form": data.form,
         "colerNo": data.colerNo,
         "mileage": data.mileage,
         "firstRegistrationDate": data.firstRegistrationDate,
@@ -392,7 +418,7 @@ export class ApiSerchService {
   }
 
   /**
-   * ユーザー車両情報を登録する
+   * 工場情報を登録する
    * @param mechanicId
    * @returns
    */
@@ -428,29 +454,5 @@ export class ApiSerchService {
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
-
-
-  /**
-   * ユーザー車両情報を取得
-   * @param mechanicId
-   * @returns
-   */
-  public getUserVehicle(vehicleId: string): Observable<any> {
-    // リクエストボディ生成
-    const body = {
-      "OperationType": "QUERY",
-      "Keys": {
-        "vehicleId": vehicleId
-      }
-    };
-    return this.http.post<userVehicle>(this.apiEndPoint + '/uservehicleinfo', body).pipe(
-      // 取得できた場合ユーザー情報を返却
-      map((res: userVehicle) => res),
-      // エラー時HTTPステータスコードを戻す
-      catchError((err: HttpErrorResponse) => of(undefined))
-    );
-  }
-
-
 
 }

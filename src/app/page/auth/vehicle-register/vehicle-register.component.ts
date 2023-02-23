@@ -9,7 +9,14 @@ import { user, initUserInfo } from 'src/app/entity/user';
 import { UploadService } from '../../service/upload.service';
 import { userVehicle, vehicleNumberPlate, selectEraName, selectColoer } from 'src/app/entity/userVehicle';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
-
+import {
+  makerInfo,
+  domesticVehicleMakerData,
+  abroadBikeMakerData,
+  domesticBikeMakerData,
+  abroadVehicleMakerData,
+  vehicleFormData, bikeFormData
+} from 'src/app/entity/vehicleDataInfo';
 
 @Component({
   selector: 'app-vehicle-register',
@@ -158,10 +165,18 @@ export class VehicleRegisterComponent implements OnInit {
   /** 元号セレクト */
   eraData = selectEraName
   eraSelect = '';
-
   /** カラーセレクト */
   coloerData = selectColoer
   coloerSelect = '';
+  /** メーカー */
+  dispVehicleMaker: string = '';
+  /** メーカーデータ */
+  makerData: string[] = [];
+  makerDataGroupData: { key: string, items: makerInfo[] }[] = [];
+  /** 車両形状データ */
+  formData: { name: string; }[] = [];
+  /** 車両形状 */
+  dispVehicleForm: string = '';
 
 
   constructor(
@@ -240,6 +255,8 @@ export class VehicleRegisterComponent implements OnInit {
       vehicleNoSerialNum: this.vehicleNoSerialNum.value,
       chassisNo: this.serChassisNo(),
       designatedClassification: this.designatedClassification(),
+      maker: this.dispVehicleMaker,
+      form: this.dispVehicleForm,
       coler: this.coloerSelect,
       colerNo: this.inputData.colerNo,
       mileage: Number(this.mileage.value),

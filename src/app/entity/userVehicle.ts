@@ -21,6 +21,10 @@ export interface userVehicle {
   chassisNo: string[];
   // 指定類別
   designatedClassification: string;
+  // メーカー
+  maker: string| null;
+  // 車両形状
+  form: string| null;
   // カラー
   coler: string;
   // カラーNo.

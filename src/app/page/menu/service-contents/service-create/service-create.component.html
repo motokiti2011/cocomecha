@@ -67,7 +67,7 @@
           <td>
             <div class="area_select_area">
               <div>
-                <select class="area_select" name="area" [(ngModel)]="areaSelect" (change)="selectArea()">
+                <select class="area_select" name="area" [(ngModel)]="areaSelect" (change)="onSelectArea()">
                   <option value="">地域を選択してください。</option>
                   <option *ngFor="let area of areaData" [value]="area.code" [selected]="area.code === areaSelect">
                     {{area.prefectures}}</option>
@@ -75,7 +75,7 @@
               </div>
 
               <div *ngIf="areaCityData.length">
-                <select class="city_select" name="area" [(ngModel)]="citySelect" (change)="selectCity()">
+                <select class="city_select" name="area" [(ngModel)]="citySelect" (change)="onSelectCity()">
                   <option value="">地域を選択してください。</option>
                   <option *ngFor="let city of areaCityData" [value]="city.Municipality" [selected]="city.prefectures === citySelect">
                     {{city.Municipality}}</option>
@@ -310,7 +310,7 @@
 
 
 
-      <div class="row">
+      <div class="row submit-button">
         <div class="submit-button">
           <!-- <input type="submit" class="submit-button" value="確定" (click)="getResult()" [disabled]="requiredForm.invalid" /> -->
           <button type="button" class="btn btn-outline-primary" (click)="getResult()" [disabled]="requiredForm.invalid">確定</button>
