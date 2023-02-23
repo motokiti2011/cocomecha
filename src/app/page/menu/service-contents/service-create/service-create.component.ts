@@ -157,7 +157,9 @@ export class ServiceCreateComponent implements OnInit {
   /** locationリスト */
   locationList: string[] = [];
   /** ユーザー登録車両情報 */
-  userVehicle:userVehicle[] = [];
+  userVehicle: userVehicle[] = [];
+  /** 指定なし区分 */
+  unspecifiedDiv = false;
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -564,49 +566,52 @@ export class ServiceCreateComponent implements OnInit {
   /**
    * 車両を選択するボタン押下イベント
    */
-    onVehicleSelect() {
-      let acsessId = '';
-      if(this.inputData.targetService == '0') {
-        acsessId = this.inputData.userId;
-      } else if(this.inputData.targetService == '1') {
-        acsessId = this.inputData.mechanicId as string;
-      } else {
-        acsessId = this.inputData.officeId as string;
-      }
-      let settingVehicle = null;
-      if(this.inputData.targetVehcle) {
-        settingVehicle = this.inputData.targetVehcle;
-      }
+  onVehicleSelect() {
+    let acsessId = '';
+    if (this.inputData.targetService == '0') {
+      acsessId = this.inputData.userId;
+    } else if (this.inputData.targetService == '1') {
+      acsessId = this.inputData.mechanicId as string;
+    } else {
+      acsessId = this.inputData.officeId as string;
+    }
+    let settingVehicle = null;
+    if (this.inputData.targetVehcle) {
+      // 一度設定された場合はここで格納しモーダルに飛ばす
+      settingVehicle = this.inputData.targetVehcle;
+    }
+    
+    const modalData: vehicleModalInput = {
+      targetVehicle: this.userVehicle,
+      targetService: this.inputData.targetService,
+      acsessId: acsessId,
+      settingVehicleInfo: settingVehicle,
+      unspecifiedDiv: this.unspecifiedDiv
+    }
 
-      const modalData: vehicleModalInput = {
-        targetVehicle: this.userVehicle,
-        targetService: this.inputData.targetService,
-        acsessId: acsessId,
-        settingVehicleInfo: settingVehicle
-      }
-
-      // 画像添付モーダル展開
-      const dialogRef = this.modal.open(VehicleModalComponent, {
-        width: '500px',
-        height: '600px',
-        data: modalData
-      });
-      // モーダルクローズ後
-      dialogRef.afterClosed().subscribe(
-        result => {
-          // 返却値　無理に閉じたらundifind
-          console.log('画像モーダル結果:' + result)
-          if (result != undefined && result != null) {
-            console.log(result);
-            if(!result.unspecifiedDiv) {
-              this.inputData.vehicleDiv = result.resultData.vehicleDiv;
-              this.inputData.targetVehcle = result.resultData;
-              console.log(this.inputData);
-            }
+    // 画像添付モーダル展開
+    const dialogRef = this.modal.open(VehicleModalComponent, {
+      width: '500px',
+      height: '600px',
+      data: modalData
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          console.log(result);
+          this.unspecifiedDiv = result.unspecifiedDiv
+          if (!result.unspecifiedDiv) {
+            this.inputData.vehicleDiv = result.resultData.vehicleDiv;
+            this.inputData.targetVehcle = result.resultData;
+            console.log(this.inputData);
           }
         }
-      );
-    }
+      }
+    );
+  }
 
 
 
@@ -665,7 +670,7 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.area2 = this.userInfo.areaNo2;
     // 車両情報取得
     this.service.getVehicleList(this.userInfo.userId).subscribe(data => {
-      if(data) {
+      if (data) {
         this.userVehicle = data;
       }
     })

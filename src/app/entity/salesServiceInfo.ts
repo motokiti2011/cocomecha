@@ -50,7 +50,7 @@ export interface salesServiceInfo {
   // 車両区分
   targetVehicleDiv: string;  
   // 対象車両情報
-  targetVehicleInfo?: slipVehicle;
+  targetVehicleInfo?: slipVehicle | null;
   // 作業場所情報
   workAreaInfo: string;
   // 希望日

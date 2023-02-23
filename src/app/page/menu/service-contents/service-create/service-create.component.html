@@ -130,8 +130,8 @@
             </select> -->
           </td>
           <td>
-            <div *ngIf="img.length > 0 else imgElseContents">車両あり</div>
-            <ng-template #imgElseContents>
+            <div *ngIf="inputData.targetVehcle != null else VehicleElseContents">車両あり</div>
+            <ng-template #VehicleElseContents>
               <div>車両なし</div>
             </ng-template>
           </td>

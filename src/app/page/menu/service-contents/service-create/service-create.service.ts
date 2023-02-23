@@ -56,6 +56,15 @@ export class ServiceCreateService {
 
     const imageData = this.imageSetting(content.imageUrlList);
 
+    let vehicleName = ''; 
+    let vehicleDiv = '';
+    let vehicleInfo = null;
+    if(content.targetVehcle) {
+      vehicleName = content.targetVehcle.vehicleName
+      vehicleDiv = content.targetVehcle.vehicleDiv;
+      vehicleInfo = content.targetVehcle;
+    }
+
     const result: slipDetailInfo = {
       // 伝票番号
       slipNo: '0',
@@ -92,13 +101,13 @@ export class ServiceCreateService {
       // 対象サービス内容
       targetService: content.targetService,
       // 対象車両ID
-      targetVehicleId: content.targetVehcle,
+      targetVehicleId: '',
       // 対象車両名
-      targetVehicleName: '',
+      targetVehicleName: vehicleName ,
       // 対象車両区分
-      targetVehicleDiv: '',
-      // // 対象車両情報
-      // targetVehicleInfo: content.targetVehcle,
+      targetVehicleDiv: vehicleDiv,
+      // 対象車両情報
+      targetVehicleInfo: vehicleInfo,
       // 作業場所情報
       workAreaInfo: content.workArea,
       // 希望日
@@ -135,6 +144,15 @@ export class ServiceCreateService {
   public converSalesService(content: serviceContents): salesServiceInfo {
 
     const imageData = this.imageSetting(content.imageUrlList);
+
+    let vehicleName = ''; 
+    let vehicleDiv = '';
+    let vehicleInfo = null;
+    if(content.targetVehcle) {
+      vehicleName = content.targetVehcle.vehicleName
+      vehicleDiv = content.targetVehcle.vehicleDiv;
+      vehicleInfo = content.targetVehcle;
+    }
 
     const result: salesServiceInfo = {
       // 伝票番号
@@ -180,13 +198,13 @@ export class ServiceCreateService {
       // 対象サービス内容
       targetService: content.targetService,
       // 対象車両ID
-      targetVehicleId: content.targetVehcle,
+      targetVehicleId: '',
       // 対象車両名
-      targetVehicleName: '',
+      targetVehicleName: vehicleName,
       // 対象車両区分      
-      targetVehicleDiv: content.vehicleDiv,
-      // // 対象車両情報
-      // targetVehicleInfo: '0',
+      targetVehicleDiv: vehicleDiv,
+      // 対象車両情報
+      targetVehicleInfo: vehicleInfo,
       // 作業場所情報
       workAreaInfo: content.workArea,
       // 希望日

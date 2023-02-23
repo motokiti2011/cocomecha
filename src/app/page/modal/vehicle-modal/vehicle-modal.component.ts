@@ -80,8 +80,8 @@ export class VehicleModalComponent implements OnInit {
     }
     this.makerDataSetting();
     this.formDataSetting();
-    if(this.data.settingVehicleInfo != null) {
-      this.setFormData
+    if (this.data.settingVehicleInfo != null) {
+      this.setFormData(this.data.settingVehicleInfo)
     }
 
   }
@@ -249,9 +249,24 @@ export class VehicleModalComponent implements OnInit {
 
   /**
    * 画面表示に現在設定されているデータを設定する
+   * @param settingVehicleInfo 
    */
-  private setFormData() {
-
+  private setFormData(settingVehicleInfo: slipVehicle) {
+    this.unspecifiedDiv = this.data.unspecifiedDiv;
+    const name = settingVehicleInfo.vehicleName;
+    const vehicleDiv = settingVehicleInfo.vehicleDiv;
+    const form = settingVehicleInfo.vehicleForm;
+    const maker = settingVehicleInfo.vehicleMaker;
+    this.dispVehicleName = name;
+    if(vehicleDiv != null && vehicleDiv != undefined && vehicleDiv != '') {
+      this.dispVehicleDiv = vehicleDiv;
+    }
+    if(maker != null) {
+      this.dispVehicleMaker = maker;
+    }
+    if(form != null) {
+      this.dispVehicleForm = form;
+    }
   }
 
 }
@@ -264,7 +279,8 @@ export interface vehicleModalInput {
   targetVehicle: userVehicle[],
   targetService: string,
   acsessId: string | null,
-  settingVehicleInfo: userVehicle | null
+  settingVehicleInfo: slipVehicle | null,
+  unspecifiedDiv: boolean
 }
 
 

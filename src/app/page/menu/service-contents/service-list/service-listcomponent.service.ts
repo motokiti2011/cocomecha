@@ -46,6 +46,10 @@ export class ServiceListcomponentService {
       if (slip.thumbnailUrl == '') {
         slip.thumbnailUrl = 'assets/images/noimage.png';
       }
+      let vehicleInfo = null;
+      if(slip.targetVehicleInfo) {
+        vehicleInfo = slip.targetVehicleInfo;
+      }
       const result: serviceContents = {
         id: slip.slipNo,
         userId: slip.slipAdminUserId,
@@ -58,7 +62,7 @@ export class ServiceListcomponentService {
         area1: slip.areaNo1,
         area2: slip.areaNo2,
         category: slip.category,
-        targetVehcle: slip.targetVehicleName,
+        targetVehcle: vehicleInfo,
         vehicleDiv: slip.targetVehicleDiv,
         bidMethod: slip.bidMethod,
         explanation: slip.explanation,
@@ -90,6 +94,11 @@ export class ServiceListcomponentService {
       if (service.thumbnailUrl == '') {
         service.thumbnailUrl = 'assets/images/noimage.png';
       }
+      let vehicleInfo = null;
+      if(service.targetVehicleInfo) {
+        vehicleInfo = service.targetVehicleInfo;
+      }
+
       const result: serviceContents = {
         id: service.slipNo,
         userId: service.slipAdminUserId,
@@ -102,7 +111,7 @@ export class ServiceListcomponentService {
         area1: service.areaNo1,
         area2: service.areaNo2,
         category: service.category,
-        targetVehcle: service.targetVehicleName,
+        targetVehcle: vehicleInfo,
         vehicleDiv: service.targetVehicleDiv,
         bidMethod: service.bidMethod,
         explanation: service.explanation,
