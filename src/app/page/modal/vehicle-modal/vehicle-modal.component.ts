@@ -135,6 +135,13 @@ export class VehicleModalComponent implements OnInit {
    */
   onUnspecified() {
     console.log(this.unspecifiedDiv);
+    if(this.unspecifiedDiv) {
+      this.dispVehicleName = '指定なし';
+    } else {
+      this.dispVehicleName = '';
+    }
+
+
   }
 
 
@@ -268,6 +275,8 @@ export class VehicleModalComponent implements OnInit {
       this.dispVehicleForm = form;
     }
   }
+
+
 
 }
 
