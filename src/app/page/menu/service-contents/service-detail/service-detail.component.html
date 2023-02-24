@@ -58,6 +58,10 @@
 
     <div class="detail-area">
 
+      <div class="service_info">
+        <p>この{{serviceTypeName}}の管理者</p>
+        <div class="service_admin" (click)="onServiceAdmin(serviceAdminInfo.id)">　{{serviceAdminInfo.name}}</div>
+      </div>
 
       <div class="ymd">
         <p>ご希望日時</p>

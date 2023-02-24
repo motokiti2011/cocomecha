@@ -35,7 +35,7 @@ export class ServiceDetailComponent implements OnInit {
   /** タイトル */
   serviceTitle: string = '';
   /** 日付 */
-  dispYMD:string = '';
+  dispYMD: string = '';
   // dispYMD:Date = new Date();
   /** 希望時間 */
   dispTime: string = '';
@@ -55,6 +55,10 @@ export class ServiceDetailComponent implements OnInit {
   bidMethod: string = '';
   /** 再出品区分 */
   relistedDiv = false;
+  /** サービスタイプ */
+  serviceTypeName: string = '';
+  /** サービス管理者情報 */
+  serviceAdminInfo: { id: string, name: string } = { id: '', name: '' }
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -87,13 +91,16 @@ export class ServiceDetailComponent implements OnInit {
       console.log(params['serviceId']);
       const serviceId: string = params['serviceId'];
       this.serviceType = params['searchTargetService'];
+      this.setServiceTypeName();
       // サービスIDから伝票情報を取得し表示する
       this.service.getService(serviceId, this.serviceType).subscribe(data => {
         this.dispContents = data[0];
         // 表示内容に取得した伝票情報を設定
         this.serviceTitle = this.dispContents.title;
+        // 表示サービスの管理者設定
+        this.serviceAdminUserSetting();
         // 希望日を設定
-        if(this.dispContents.preferredDate != undefined) {
+        if (this.dispContents.preferredDate != undefined) {
           this.dispYMD = this.service.setDispYMDSt(this.dispContents.preferredDate);
           // console.log('日付フォーマット:'+formatDate(date, "yy/MM/dd", this.locale));
           // this.dispYMD = formatDate(date, "yy/MM/dd", this.locale)
@@ -127,7 +134,7 @@ export class ServiceDetailComponent implements OnInit {
 
 
   /**
-   *
+   * 認証状況確認
    */
   private getLoginUser() {
     // ログイン状態確認
@@ -204,6 +211,58 @@ export class ServiceDetailComponent implements OnInit {
           serviceType: this.serviceType
         }
       });
+  }
+
+  /**
+   * 管理者情報ページに遷移する
+   * @param id 
+   */
+  onServiceAdmin(id: string) {
+    console.log(id);
+    // this.router.navigate(["service-admin-reference"],
+    //   {
+    //     queryParams: {
+    //       id: id,
+    //       serviceType: this.serviceType
+    //     }
+    //   });
+  }
+
+
+  /**
+   * サービス管理者情報を設定する
+   */
+  private serviceAdminUserSetting() {
+    if (this.serviceType == '0') {
+      this.serviceAdminInfo.id = this.dispContents.slipAdminUserId;
+      this.serviceAdminInfo.name = this.dispContents.slipAdminUserName;
+      console.log(this.serviceAdminInfo);
+    } else if (this.serviceType == '1' && this.dispContents.slipAdminMechanicId) {
+      this.serviceAdminInfo.id = this.dispContents.slipAdminMechanicId;
+      this.serviceAdminInfo.name = this.dispContents.slipAdminMechanicName;
+      console.log(this.serviceAdminInfo);
+    } else if (this.serviceType == '2' && this.dispContents.slipAdminOfficeId) {
+      this.serviceAdminInfo.id = this.dispContents.slipAdminOfficeId;
+      this.serviceAdminInfo.name = this.dispContents.slipAdminOfficeName;
+      console.log(this.serviceAdminInfo);
+    } else {
+      // これはあり得ないが…
+      this.serviceAdminInfo.id = '';
+      this.serviceAdminInfo.name = '';
+      console.log(this.serviceAdminInfo);
+    }
+  }
+
+
+  /**
+   * サービスタイプ表示を設定
+   */
+  private setServiceTypeName() {
+    if (this.serviceType == '0') {
+      this.serviceTypeName = '依頼';
+    } else {
+      this.serviceTypeName = 'サービス';
+    }
   }
 
 

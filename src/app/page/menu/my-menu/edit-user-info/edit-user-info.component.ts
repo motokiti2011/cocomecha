@@ -18,6 +18,8 @@ import { UploadService } from 'src/app/page/service/upload.service';
 import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
 import { imgFile } from 'src/app/entity/imgFile';
+import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+
 
 @Component({
   selector: 'app-edit-user-info',
@@ -86,11 +88,15 @@ export class EditUserInfoComponent implements OnInit {
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
+  /** 地域２（市町村）データ */
+  areaCityData: area1SelectArea2[] = []
+  /** 地域２（市町村）選択 */
+  citySelect = '';
   /** ユーザー情報 */
   user: user = initUserInfo;
-
   /** イメージ */
   imageFile: imgFile[] = []
+
 
   constructor(
     private location: Location,
@@ -131,7 +137,8 @@ export class EditUserInfoComponent implements OnInit {
    * 地域選択イベント
    */
   selectArea() {
-
+    this.areaSelect = this.inputData.areaNo1;
+    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.inputData.areaNo1);
   }
 
   /**
@@ -150,6 +157,9 @@ export class EditUserInfoComponent implements OnInit {
         this.inputData.areaNo1 = postCodeConectData.prefecturesCode;
         // 地域2(市町村)
         this.inputData.areaNo2 = postCodeConectData.municipality;
+        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.inputData.areaNo1);
+
+        this.citySelect =  postCodeConectData.municipality;
         // 地域3(その他)
         this.inputData.adress = postCodeConectData.townArea;
       }
@@ -213,12 +223,17 @@ export class EditUserInfoComponent implements OnInit {
         // 返却値　無理に閉じたらundifind
         console.log('画像モーダル結果:' + result)
         if (result != undefined && result != null) {
-          if(result.length != 0) {
+          if (result.length != 0) {
             this.imageFile = result;
           }
         }
       }
     );
+  }
+
+  onSelectCity() {
+    this.inputData.areaNo2 = this.citySelect;
+    // console.log(this.inputData.area2);
   }
 
 

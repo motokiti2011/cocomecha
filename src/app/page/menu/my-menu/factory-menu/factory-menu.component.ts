@@ -17,7 +17,7 @@ import { find as _find } from 'lodash'
 import { postCodeInfo, postCodeInfoData } from 'src/app/entity/postCodeInfo';
 import { imgFile } from 'src/app/entity/imgFile';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
-
+import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
 
 @Component({
   selector: 'app-factory-menu',
@@ -39,7 +39,10 @@ export class FactoryMenuComponent implements OnInit {
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
-
+  /** 地域２（市町村）データ */
+  areaCityData: area1SelectArea2[] = []
+  /** 地域２（市町村）選択 */
+  citySelect = '';
 
   // 工場名
   officeName = new FormControl('', [
@@ -300,7 +303,9 @@ export class FactoryMenuComponent implements OnInit {
         this.areaSelect = postCodeConectData.prefecturesCode;
         this.officeArea1.setValue(postCodeConectData.prefecturesCode);
         // 地域2(市町村)
+        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
         this.dispInfo.officeArea = postCodeConectData.municipality;
+        this.citySelect =  postCodeConectData.municipality;
         // 地域3(その他)
         this.dispInfo.officeAdress = postCodeConectData.townArea;
       }
@@ -332,6 +337,25 @@ export class FactoryMenuComponent implements OnInit {
       }
     );
   }
+
+
+  /**
+   * 都道府県選択イベント
+   */
+  onSelectArea1() {
+    this.areaSelect = this.dispInfo.officeArea1;
+    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+  }
+
+
+  /**
+   * 市町村選択イベント
+   */
+  onSelectCity() {
+    this.dispInfo.officeArea = this.citySelect;
+    // console.log(this.inputData.area2);
+  }
+
 
 
   /**
