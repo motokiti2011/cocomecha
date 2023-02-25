@@ -14,6 +14,7 @@ import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { mcfcItem } from 'src/app/entity/mcfcItem';
+import { serviceAdminInfo } from 'src/app/entity/serviceAdminInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -167,7 +168,7 @@ export class ApiUniqueService {
         "processStatus": data.processStatus,
         "targetService": data.targetService,
         "targetVehicleId": data.targetVehicleId,
-        "targetVehicleDiv":  data.targetVehicleDiv,
+        "targetVehicleDiv": data.targetVehicleDiv,
         "targetVehicleName": data.targetVehicleName,
         "targetVehicleInfo": data.targetVehicleInfo,
         "workAreaInfo": data.workAreaInfo,
@@ -222,7 +223,7 @@ export class ApiUniqueService {
         "processStatus": data.processStatus,
         "targetService": data.targetService,
         "targetVehicleId": data.targetVehicleId,
-        "targetVehicleDiv":  data.targetVehicleDiv,
+        "targetVehicleDiv": data.targetVehicleDiv,
         "targetVehicleName": data.targetVehicleName,
         "targetVehicleInfo": data.targetVehicleInfo,
         "workAreaInfo": data.workAreaInfo,
@@ -465,13 +466,13 @@ export class ApiUniqueService {
   }
 
 
-  
-/**
- * メカニックファクトリー商品リスト取得
- * @param id
- * @param serviceType
- * @returns
- */
+
+  /**
+   * メカニックファクトリー商品リスト取得
+   * @param id
+   * @param serviceType
+   * @returns
+   */
   public getMcFcItemList(id: string, serviceType: string): Observable<any> {
     // リクエストボディ生成
     const body = {
@@ -488,6 +489,51 @@ export class ApiUniqueService {
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
+
+  /**
+   * サービス管理者情報取得
+   * @param id
+   * @param serviceType
+   * @returns
+   */
+  public getSalesAdminInfo(id: string, serviceType: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "IndexType": "SALESADMININFO",
+      "Keys": {
+        "id": id,
+        "serviceType": serviceType
+      }
+    };
+    return this.http.post<serviceAdminInfo>(this.apiEndPoint + '/salesadmininfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: serviceAdminInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+  /**
+   * 伝票管理者情報取得
+   * @param id
+   * @returns
+   */
+  public getSlipAdminInfo(id: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "IndexType": "SLIPADMININFO",
+      "Keys": {
+        "id": id
+      }
+    };
+    return this.http.post<serviceAdminInfo>(this.apiEndPoint + '/slipadmininfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: serviceAdminInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
 
 
 }

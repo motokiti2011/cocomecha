@@ -94,7 +94,7 @@ export class ServiceDetailComponent implements OnInit {
       this.setServiceTypeName();
       // サービスIDから伝票情報を取得し表示する
       this.service.getService(serviceId, this.serviceType).subscribe(data => {
-        this.dispContents = data[0];
+        this.dispContents = data;
         // 表示内容に取得した伝票情報を設定
         this.serviceTitle = this.dispContents.title;
         // 表示サービスの管理者設定
@@ -219,13 +219,14 @@ export class ServiceDetailComponent implements OnInit {
    */
   onServiceAdmin(id: string) {
     console.log(id);
-    // this.router.navigate(["service-admin-reference"],
-    //   {
-    //     queryParams: {
-    //       id: id,
-    //       serviceType: this.serviceType
-    //     }
-    //   });
+    this.router.navigate(["service-admin-reference"],
+      {
+        queryParams: {
+          id: id,
+          serviceType: this.serviceType,
+          serviceId: this.dispContents.slipNo
+        }
+      });
   }
 
 
@@ -251,6 +252,8 @@ export class ServiceDetailComponent implements OnInit {
       this.serviceAdminInfo.name = '';
       console.log(this.serviceAdminInfo);
     }
+    // // ローディング解除
+    // this.overlayRef.detach();
   }
 
 
@@ -263,6 +266,8 @@ export class ServiceDetailComponent implements OnInit {
     } else {
       this.serviceTypeName = 'サービス';
     }
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
 
