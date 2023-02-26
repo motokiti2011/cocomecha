@@ -1,3 +1,5 @@
+import { publicInfo, initPublicInfo } from "./publicInfo";
+
 export interface user {
   // ユーザーID
   userId: string;
@@ -35,6 +37,8 @@ export interface user {
   introduction: string | null;
   // 更新ユーザーID
   updateUserId: string;
+  // 公開設定情報
+  publicInfo: publicInfo;
   // 登録日
   created: string | null;
   // 更新日
@@ -77,6 +81,8 @@ export const initUserInfo : user = {
       profileImageUrl: null,
       // 紹介文
       introduction: '',
+      // 公開情報
+      publicInfo: initPublicInfo,
       // 更新ユーザーID
       updateUserId: '',
       // 登録日

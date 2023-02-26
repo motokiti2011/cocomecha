@@ -1,3 +1,5 @@
+import { publicInfo, initPublicInfo } from "./publicInfo";
+
 export interface officeInfo {
   // 事業所ID
   officeId: string;
@@ -33,6 +35,8 @@ export interface officeInfo {
   officePRimageURL: string;
   // 事業所形態リスト
   officeFormList: Array<officeForm> | null;
+  // 公開設定情報
+  publicInfo: publicInfo;
   // 作成日
   created: string;
 }
@@ -107,6 +111,8 @@ export const initOfficeInfo = {
   officePRimageURL: '',
   // 業務形態区分リスト
   officeFormList: null,
+  // 公開情報
+  publicInfo: initPublicInfo,
   // 作成日
   created: ''
 }

@@ -1,3 +1,5 @@
+import { publicInfo, initPublicInfo } from "./publicInfo";
+
 export interface mechanicInfo {
   // メカニックID
   mechanicId: string;
@@ -16,7 +18,7 @@ export interface mechanicInfo {
   // 事業所紐づき区分
   officeConnectionDiv: string;
   // 事業所ID
-  officeId: string| null;
+  officeId: string | null;
   // 関連事業所情報リスト
   associationOfficeList: Array<associationOffice> | null;
   // 保有資格情報
@@ -29,6 +31,8 @@ export interface mechanicInfo {
   introduction: string | null;
   // 評価情報IDリスト
   evaluationInfoIdList: string[] | null;
+  // 公開設定情報
+  publicInfo: publicInfo;
   // 更新ユーザーID
   updateUserId: string;
   // 登録日
@@ -48,7 +52,7 @@ export interface associationOffice {
 }
 
 
-export const initMechanicInfo : mechanicInfo = {
+export const initMechanicInfo: mechanicInfo = {
   // メカニックID
   mechanicId: '',
   // 有効・無効区分
@@ -79,6 +83,8 @@ export const initMechanicInfo : mechanicInfo = {
   introduction: null,
   // 評価IDリスト
   evaluationInfoIdList: null,
+  // 公開情報
+  publicInfo: initPublicInfo,
   // 更新ユーザーID
   updateUserId: '',
   // 登録日

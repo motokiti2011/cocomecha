@@ -14,6 +14,14 @@ import { AuthUserService } from '../authUser.service';
 import { ApiSerchService } from '../../service/api-serch.service';
 import { UploadService } from '../../service/upload.service';
 import { FormService } from '../../service/form.service';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
+import { imgFile } from 'src/app/entity/imgFile';
 
 
 @Component({
@@ -28,39 +36,39 @@ export class UserRegisterComponent implements OnInit {
 
 
   /** フォームコントロール */
-  name = new FormControl('',[
+  name = new FormControl('', [
     Validators.required
   ]);
 
-  mail = new FormControl('',[
+  mail = new FormControl('', [
     Validators.required,
     Validators.email
   ]);
 
-  telNo1 = new FormControl('',[
+  telNo1 = new FormControl('', [
     Validators.required,
     Validators.pattern('[0-9 ]*'),
     Validators.maxLength(4)
   ]);
 
-  telNo2 = new FormControl('',[
+  telNo2 = new FormControl('', [
     Validators.required,
     Validators.pattern('[0-9 ]*'),
     Validators.maxLength(4)
   ]);
 
-  telNo3 = new FormControl('',[
+  telNo3 = new FormControl('', [
     Validators.required,
     Validators.pattern('[0-9 ]*'),
     Validators.maxLength(4)
   ]);
 
-  postCode1 = new FormControl('',[
+  postCode1 = new FormControl('', [
     Validators.pattern('[0-9 ]*'),
     Validators.maxLength(3)
   ]);
 
-  postCode2 = new FormControl('',[
+  postCode2 = new FormControl('', [
     Validators.pattern('[0-9 ]*'),
     Validators.maxLength(4)
   ]);
@@ -86,28 +94,52 @@ export class UserRegisterComponent implements OnInit {
 
   /** 地域情報 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
-  areaSelect = 0;
+  areaSelect = '';
 
-  imageFile: any = null;
+  /** 地域２（市町村）データ */
+  areaCityData: area1SelectArea2[] = []
+  /** 地域２（市町村）選択 */
+  citySelect = '';
+  /** イメージ */
+  imageFile: imgFile[] = []
+
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
 
   constructor(
     private location: Location,
-    private auth: AuthUserService,
     private apiService: ApiSerchService,
     private router: Router,
     private s3: UploadService,
     private builder: FormBuilder,
     private form: FormService,
+    private cognito: CognitoService,
+    private overlay: Overlay,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
-    this.auth.userInfo$.subscribe(user => {
-      if(user == null) {
-        alert("ログインが必要です")
-        this.location.back();
-        return;
-      }
-      this.user.userId = user.userId;
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    const user = this.cognito.initAuthenticated();
+    if (user == null) {
+      alert("ログインが必要です")
+      this.location.back();
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    }
+    console.log(user);
+    this.apiService.getUser(user).subscribe(data => {
+      this.user.userId = data[0].userId;
+      // 初回はメールアドレスしかないので格納する
+      this.mail.setValue(data[0].mailAdress);
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
@@ -123,24 +155,29 @@ export class UserRegisterComponent implements OnInit {
     console.log(1);
   }
 
-
+  /**
+   * 地域選択イベント
+   */
   selectArea() {
     console.log('県名選択：' + this.inputData.areaNo1);
-    const selectData = _find(this.areaData, detail => detail.prefectures === this.inputData.areaNo1);
-    if (!_isNil(selectData)) {
-      // this.inputData.areaNo1 = String(selectData.id);
-      this.user.areaNo1 = String(selectData.id);
-    } else {
-      // this.inputData.areaNo1 = '0';
-    }
-    console.log('実態値：' + this.user.areaNo1);
+    this.inputData.areaNo1 = this.areaSelect;
+    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+
+  }
+
+  /**
+ * 市町村選択イベント
+ */
+  onSelectCity() {
+    this.inputData.areaNo2 = this.citySelect;
+    // console.log(this.inputData.area2);
   }
 
 
-/**
- * アップロードファイル選択時イベント
- * @param event
- */
+  /**
+   * アップロードファイル選択時イベント
+   * @param event
+   */
   onInputChange(event: any) {
     const file = event.target.files[0];
     console.log(file);
@@ -148,10 +185,34 @@ export class UserRegisterComponent implements OnInit {
   }
 
   /**
+ * 画像を添付するボタン押下イベント
+ */
+  onImageUpload() {
+    // 画像添付モーダル展開
+    const dialogRef = this.modal.open(SingleImageModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: this.imageFile
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          if (result.length != 0) {
+            this.imageFile = result;
+          }
+        }
+      }
+    );
+  }
+
+  /**
    * 登録ボタン押下時イベント
    */
   onResister() {
-    if(this.imageFile != null) {
+    if (this.imageFile != null) {
       this.setImageUrl();
     } else {
       this.userResister();
@@ -165,7 +226,7 @@ export class UserRegisterComponent implements OnInit {
    * イメージを設定する
    */
   private setImageUrl() {
-    this.s3.onManagedUpload(this.imageFile).then((data) => {
+    this.s3.onManagedUpload(this.imageFile[0].file).then((data) => {
       if (data) {
         console.log(data);
         this.user.profileImageUrl = data.Location;
@@ -181,7 +242,7 @@ export class UserRegisterComponent implements OnInit {
    */
   private userResister() {
     console.log(this.inputData);
-    if(_isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == '') {
+    if (_isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == '') {
       alert('必須項目です。');
     } else {
       this.user.userId = this.user.userId;
@@ -189,8 +250,8 @@ export class UserRegisterComponent implements OnInit {
       this.user.corporationDiv = '0';
       this.user.userName = this.name.value;
       this.user.mailAdress = this.mail.value;
-      this.user.TelNo1 = this.form.setTelNo(this.telNo1.value, this.telNo2.value, this.telNo3.value );
-      this.user.areaNo1 = String(this.areaSelect);
+      this.user.TelNo1 = this.form.setTelNo(this.telNo1.value, this.telNo2.value, this.telNo3.value);
+      this.user.areaNo1 = this.areaSelect;
       this.user.areaNo2 = this.inputData.areaNo2;
       this.user.adress = this.inputData.adress;
       this.user.profileImageUrl = ''; // 仮
@@ -198,7 +259,7 @@ export class UserRegisterComponent implements OnInit {
       this.user.introduction = this.inputData.introduction;
 
       this.apiService.postUser(this.user).subscribe(result => {
-        if(result == undefined) {
+        if (result == undefined) {
           // TODO
           alert('失敗');
         }

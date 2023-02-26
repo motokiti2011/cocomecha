@@ -7,6 +7,9 @@ import { CognitoService } from '../../auth/cognito.service';
 import { ApiSerchService } from '../../service/api-serch.service';
 import { LoginComponent } from '../../modal/login/login.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-main-menu',
@@ -21,6 +24,7 @@ export class MainMenuComponent implements OnInit {
     private authUserService: AuthUserService,
     private apiService: ApiSerchService,
     public loginModal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   /** 子コンポーネントを読み込む */
@@ -41,10 +45,15 @@ export class MainMenuComponent implements OnInit {
     newResister: false
   }
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
 
   ngOnInit(): void {
     this.authenticated();
-    // this.child.ngOnInit();
     this.onmenu();
   }
 
@@ -122,7 +131,6 @@ export class MainMenuComponent implements OnInit {
    */
   private authenticated() {
     const authUser = this.cognito.initAuthenticated();
-
     if (authUser !== null) {
       this.authUserDiv = true;
       // ログイン状態の場合
@@ -141,12 +149,12 @@ export class MainMenuComponent implements OnInit {
    * @param authUser
    */
   private setAuthUser(userid: string) {
-
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     // 認証済の場合表示するユーザー情報を取得
     this.apiService.getUser(userid).subscribe(data => {
       console.log(data[0]);
       if (data[0]) {
-
         this.loginUser.userId = data[0].userId;
         this.loginUser.userName = data[0].userName;
 
@@ -156,12 +164,13 @@ export class MainMenuComponent implements OnInit {
           // 仮登録ユーザーのためユーザー登録メッセージを表示
           this.temporaryUserDiv = true;
         } else {
-          // this.loginUser.userName = data.userName;
           this.temporaryUserDiv = false;
         }
       } else {
         this.loginUser.userName = 'ユーザー情報未設定'
       }
+      // ローディング解除
+      this.overlayRef.detach();
       // this.onmenu();
     });
   }
@@ -198,7 +207,7 @@ export class MainMenuComponent implements OnInit {
             this.router.navigate(["sign-up-component"])
             return;
           }
-          if(this.login.userName) {
+          if (this.login.userName) {
             // ユーザー情報を取得
             // ログイン状態を保持する。
             this.authenticated();
@@ -230,18 +239,18 @@ export class MainMenuComponent implements OnInit {
     this.router.navigate(["/factory-register"]);
   }
 
-/**
- * ご登録の車両情報はこちらボタン押下イベント
- */
+  /**
+   * ご登録の車両情報はこちらボタン押下イベント
+   */
   onVehcleInfo() {
     this.router.navigate(["/vehicle-menu"]);
     console.log('vehicle-menu')
   }
-  
+
   onVehcleRegister() {
     this.router.navigate(["/vehicle-register"]);
     console.log('vehicle-register')
   }
-  
+
 
 }

@@ -87,7 +87,49 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
    * @param data 
    */
   private setDispData(data: serviceAdminInfo) {
+    /** 管理者名称 */
+    this.adminName = data.adminName;
 
+    let mail = '公開されていません';
+    let telNo = '公開されていません';
+    let postNo = '公開されていません';
+    let adress = '公開されていません';
+    let introduction = '公開されていません';
+    // let evaluation = '公開されていません';
+    if(data.mail) {
+      mail = data.mail;
+    }
+    if(data.telNo) {
+      telNo = data.telNo;
+    }
+    if(data.post) {
+      postNo = data.post;
+    }
+    if(data.adless) {
+      adress = data.adless;
+    }
+    if(data.introduction) {
+      introduction = data.introduction;
+    }
+    // if(data.evaluationInfo) {
+    //   evaluation = data.evaluationInfo;
+    // }
+
+
+    /** メールアドレス */
+    this.mailAdless = mail;
+    /** 電話番号 */
+    this.telNo = telNo;
+    /** 郵便番号 */
+    this.postNo = postNo
+    /** 住所 */
+    this.adress = adress
+    /** 画像URL */
+    this.imageUrl = this.isSetImage(data.profileImageUrl)
+    /** 説明 */
+    this.introduction = introduction;
+    /** 評価 */
+    this.evaluation = '';
   }
 
   /***************** *********************************/
@@ -96,10 +138,10 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
    * 伝票管理者情報を取得する
    */
   private getAdminService(): Observable<serviceAdminInfo> {
-    if(this.serviceType == '0') {
-      return this.uniqueService.getSalesAdminInfo(this.id, this.serviceType);
-    } 
+    if (this.serviceType == '0') {
       return this.uniqueService.getSlipAdminInfo(this.id);
+    }
+    return this.uniqueService.getSalesAdminInfo(this.id, this.serviceType);
   }
 
 

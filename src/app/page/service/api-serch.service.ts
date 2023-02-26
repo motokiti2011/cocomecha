@@ -79,7 +79,8 @@ export class ApiSerchService {
         "baseId": user.baseId,
         "officeRole": user.officeRole,
         "profileImageUrl": user.profileImageUrl,
-        "Introduction": user.introduction,
+        "introduction": user.introduction,
+        "publicInfo": user.publicInfo,
         "updateUserId": user.updateUserId,
         "created": user.created,
         "updated": user.updated
@@ -444,6 +445,7 @@ export class ApiSerchService {
         "officePR": data.officePR,
         "officePRimageURL": data.officePRimageURL,
         "officeFormList": data.officeFormList,
+        "publicInfo": data.publicInfo,
         "created": data.created,
       }
     };

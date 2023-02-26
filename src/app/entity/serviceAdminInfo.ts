@@ -9,15 +9,15 @@ export interface serviceAdminInfo {
   // 電話番号
   telNo: string| null;
   // 郵便番号
-  post: string;
+  post: string| null;
   // 住所
-  adless: string;
+  adless: string| null;
   // 紹介文
   introduction: string | null;
   // 所属事業所ID
-  affiliationOfficeId: string;
+  affiliationOfficeId: string| null;
   // 所属事業所名称
-  affiliationOfficeName: string;
+  affiliationOfficeName: string| null;
   // 保有資格情報
   qualification: string[] | null;
   // 得意作業
@@ -31,6 +31,6 @@ export interface serviceAdminInfo {
   /** 評価情報 */
   evaluationInfo: evaluationInfo| null;
   // プロフィール画像URL
-  profileImageUrl: string;
+  profileImageUrl: string| null;
 }
 
