@@ -2,6 +2,8 @@ import { baseInfo } from "./officeInfo";
 import { evaluationInfo } from "./evaluationInfo";
 
 export interface serviceAdminInfo {
+  // 管理者ID
+  adminId: string;  
   // 管理者名称
   adminName: string;
   // メールアドレス

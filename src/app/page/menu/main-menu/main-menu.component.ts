@@ -149,8 +149,8 @@ export class MainMenuComponent implements OnInit {
    * @param authUser
    */
   private setAuthUser(userid: string) {
-    // ローディング開始
-    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    // // ローディング開始
+    // this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     // 認証済の場合表示するユーザー情報を取得
     this.apiService.getUser(userid).subscribe(data => {
       console.log(data[0]);
@@ -169,8 +169,8 @@ export class MainMenuComponent implements OnInit {
       } else {
         this.loginUser.userName = 'ユーザー情報未設定'
       }
-      // ローディング解除
-      this.overlayRef.detach();
+      // // ローディング解除
+      // this.overlayRef.detach();
       // this.onmenu();
     });
   }

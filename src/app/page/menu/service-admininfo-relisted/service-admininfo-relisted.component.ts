@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { user } from 'src/app/entity/user';
 import { Observable } from 'rxjs';
 import { serviceAdminInfo } from 'src/app/entity/serviceAdminInfo';
 import { ApiUniqueService } from '../../service/api-unique.service';
+import { FormService } from '../../service/form.service';
 
 @Component({
   selector: 'app-service-admininfo-relisted',
@@ -19,8 +20,10 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
+    private router: Router,
     private overlay: Overlay,
     private uniqueService: ApiUniqueService,
+    private formService: FormService,
   ) { }
 
   /** ID */
@@ -31,6 +34,8 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
   serviceType = '0';
   /** サービスタイプ名称 */
   serviceTypeName = '';
+  /** 管理者ID */
+  adminId = '';
   /** 管理者名称 */
   adminName = '';
   /** メールアドレス */
@@ -49,6 +54,7 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
   evaluation = '';
   // ユーザー
   user?: user;
+
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -74,12 +80,7 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
     });
   }
 
-  /**
-   * 過去の取引押下イベント
-   */
-  onPastTransaction() {
 
-  }
 
 
   /**
@@ -89,33 +90,35 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
   private setDispData(data: serviceAdminInfo) {
     /** 管理者名称 */
     this.adminName = data.adminName;
-
+    this.adminId = data.adminId;
     let mail = '公開されていません';
     let telNo = '公開されていません';
     let postNo = '公開されていません';
     let adress = '公開されていません';
     let introduction = '公開されていません';
     // let evaluation = '公開されていません';
-    if(data.mail) {
+    if (data.mail) {
       mail = data.mail;
     }
-    if(data.telNo) {
+    if (data.telNo) {
       telNo = data.telNo;
     }
-    if(data.post) {
+    if (data.post) {
       postNo = data.post;
     }
-    if(data.adless) {
-      adress = data.adless;
+    if (data.adless) {
+      if (this.serviceType == '0') {
+        adress = this.formService.setAreaName(data.adless);
+      } else {
+        adress = data.adless;
+      }
     }
-    if(data.introduction) {
+    if (data.introduction) {
       introduction = data.introduction;
     }
     // if(data.evaluationInfo) {
     //   evaluation = data.evaluationInfo;
     // }
-
-
     /** メールアドレス */
     this.mailAdless = mail;
     /** 電話番号 */
@@ -132,6 +135,22 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
     this.evaluation = '';
   }
 
+  /**
+   * 過去の取引押下イベント
+   */
+  onPastTransaction() {
+    this.router.navigate(["past-transactions"],
+      {
+        queryParams: {
+          adminId: this.adminId,
+          serviceType: this.serviceType,
+        }
+      });
+
+    
+  }
+
+
   /***************** *********************************/
 
   /**
@@ -143,12 +162,6 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
     }
     return this.uniqueService.getSalesAdminInfo(this.id, this.serviceType);
   }
-
-
-
-
-
-
 
 
   /**

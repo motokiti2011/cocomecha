@@ -1,4 +1,6 @@
-// サービス内容
+/**
+ * 取引完了伝票
+ */
 export interface completionSlip {
   // 伝票番号
   slipNo: string;

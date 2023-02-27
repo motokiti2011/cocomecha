@@ -23,7 +23,7 @@ export class ApiCheckService {
   private apiEndPoint: string = environment.EndPoint.apiEmdPointCheck + environment.EndPoint.apiCheckVersion + '/check';
 
   /**
-   * ユーザーIDからユーザー情報を取得する。
+   * 伝票管理者かどうかをチェックする
    * @param userId
    * @returns
    */
@@ -44,28 +44,55 @@ export class ApiCheckService {
     );
   }
 
-    /**
-   * ユーザーIDからユーザー情報を取得する。
-   * @param userId
+  /**
+   * 伝票IDと管理者IDから対象伝票を取得する
+   * @param slipNo
+   * @param adminId
+   * @param serviceType
    * @returns
    */
-    public checkAdminUserSlip(slipNo: string, adminId: string, serviceType: string): Observable<any> {
-      // リクエストボディ生成
-      const body = {
-        "OperationType": "ADMINIDCHECHK",
-        "Keys": {
-          "slipNo": slipNo,
-          "adminId": adminId,
-          "serviceType": serviceType
-        }
-      };
-      return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipadminusercheck', body).pipe(
-        // 取得できた場合ユーザー情報を返却
-        map((res: slipDetailInfo) => res),
-        // エラー時HTTPステータスコードを戻す
-        catchError((err: HttpErrorResponse) => of(undefined))
-      );
-    }
+  public checkAdminUserSlip(slipNo: string, adminId: string, serviceType: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "ADMINIDCHECHK",
+      "Keys": {
+        "slipNo": slipNo,
+        "adminId": adminId,
+        "serviceType": serviceType
+      }
+    };
+    return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipadminusercheck', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: slipDetailInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+  /**
+   * アクセス者の管理対象判定を行う
+   * @param adminId
+   * @param serviceType
+   * @param accessUser
+   * @returns
+   */
+  public checkAdminPastTransaction(adminId: string, serviceType: string, accessUser: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "CHECKADMINPASTTRANSACTION",
+      "Keys": {
+        "adminId": adminId,
+        "serviceType": serviceType,
+        "accessUser": accessUser
+      }
+    };
+    return this.http.post<boolean>(this.apiEndPoint + '/checkadminpasttransaction', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: boolean) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 }

@@ -1,4 +1,4 @@
-<div class="head">
+<!-- <div class="head">
   <app-header-menu></app-header-menu>
 </div>
 
@@ -7,7 +7,23 @@
     <router-outlet (activate)="onActivate()"></router-outlet>
   </div>
 </body>
-<!-- <footer *ngIf="footerDiv"> -->
-<footer class="footer">
+<footer *ngIf="footerDiv"> -->
+<!-- <footer>
   <app-footer-menu></app-footer-menu>
-</footer>
+</footer> -->
+
+
+
+<body>
+  <div class="content">
+    <header>
+      <app-header-menu></app-header-menu>
+    </header>
+    <main>
+      <router-outlet (activate)="onActivate()"></router-outlet>
+    </main>
+  </div>
+  <footer>
+    <app-footer-menu></app-footer-menu>
+  </footer>
+</body>

@@ -89,14 +89,7 @@
           <!-- カテゴリー　-->
           <td>カテゴリー</td>
           <td>
-            <!-- <div class="mandatory-area">
-              <div *ngIf="categoryDiv; else elseContent">
-                <label class="mandatory">必須</label>
-              </div>
-              <ng-template #elseContent>
-                <div class="margin"></div>
-              </ng-template>
-            </div> -->
+
           </td>
           <td>
             <select class="category-select" name="category" [(ngModel)]="inputData.category" (change)="selectCategory()">
@@ -112,22 +105,10 @@
           <!-- 対象車両　-->
           <td>対象車両</td>
           <td>
-            <!-- <div class="mandatory-area">
-              <div *ngIf="categoryDiv; else elseContent">
-                <label class="mandatory">必須</label>
-              </div>
-              <ng-template #elseContent>
-                <div class="margin"></div>
-              </ng-template>
-            </div> -->
+
           </td>
           <td>
             <button type="button" class="btn btn-outline-primary" (click)="onVehicleSelect()" >車両を選択する</button>
-            <!-- <select class="category-select" name="category" [(ngModel)]="inputData.targetVehcle" (change)="inputWorkArea()">
-              <option *ngFor="let vehcle of vehcleData"
-              [value]="vehcle.id"
-              [selected]="vehcle.id === vehcleSelect">{{vehcle.label}}</option>
-            </select> -->
           </td>
           <td>
             <div *ngIf="inputData.targetVehcle != null else VehicleElseContents">車両あり</div>
@@ -189,7 +170,6 @@
           </td>
           <td>
             <textarea cols="40" rows="6" id="introduction" [formControl]="explanation"(change)="inputExplanation()" placeholder="説明" ></textarea>
-            <!-- <input id="explanation" name="text" class="form explanation" type="text" [(ngModel)]="inputData.explanation" (change)="inputExplanation()" placeholder="説明" /> -->
           </td>
         </tr>
 
@@ -296,43 +276,12 @@
         </tr>
       </table>
 
-<!-- 
-      <div class="container-md text-center">
-        <div class="dragarea" (dragover)="dragOver($event)" (drop)="drop($event)">
-          <span class="mx-auto">ドラッグエリア</span>
-        </div>
-        <input type="file" id="dragareaInput" style="display:none" (change)="onChangeDragAreaInput($event)">
-        <label class="mt-3 btn btn-secondary" for="dragareaInput">参照</label>
-        <div class="img_area">
-          <img *ngFor="let i of img" [src]="i" class="col-6">
-        </div>
-      </div> -->
-
-
-
-      <div class="row submit-button">
-        <div class="submit-button">
-          <!-- <input type="submit" class="submit-button" value="確定" (click)="getResult()" [disabled]="requiredForm.invalid" /> -->
+      <div class="submit_button">
           <button type="button" class="btn btn-outline-primary" (click)="getResult()" [disabled]="requiredForm.invalid">確定</button>
-        </div>
       </div>
 
 
     </div>
-
-
-<!-- 
-    <div class="submit-button">
-      <input type="button" class="submit-button" value="画像テスト用" (click)="onDummy()" />
-    </div>
-
-    <div class="submit-button">
-      <input type="button" class="submit-button" value="モーダルテスト用" (click)="onNext()" />
-    </div>
-
-    <div class="submit-button">
-      <input type="button" class="submit-button" value="ダミー2" (click)="onDummy2()" />
-    </div> -->
 
   </article>
 

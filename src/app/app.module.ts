@@ -77,6 +77,7 @@ import { AdvertisementSidMenuComponent } from './page/menu/advertisement-sid-men
 import { FooterMenuComponent } from './page/menu/footer-menu/footer-menu.component';
 import { VehicleModalComponent } from './page/modal/vehicle-modal/vehicle-modal.component';
 import { ServiceAdmininfoRelistedComponent } from './page/menu/service-admininfo-relisted/service-admininfo-relisted.component';
+import { PastTransactionsComponent } from './page/menu/past-transactions/past-transactions.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -104,7 +105,8 @@ const ROUTE_TABLE: Routes = [
   { path: 'service-relisted', component: ServiceRelistedComponent, canActivate: [RoutingGuard] },
   { path: 'vehicle-menu', component: VehicleMenuComponent, canActivate: [RoutingGuard] },
   { path: 'edit-vehicle', component: EditVehicleInfoComponent, canActivate: [RoutingGuard] },
-  { path: 'service-admin-reference', component: ServiceAdmininfoRelistedComponent}
+  { path: 'service-admin-reference', component: ServiceAdmininfoRelistedComponent},
+  { path: 'past-transactions', component: PastTransactionsComponent}
 ]
 
 @NgModule({
@@ -161,6 +163,7 @@ const ROUTE_TABLE: Routes = [
     FooterMenuComponent,
     VehicleModalComponent,
     ServiceAdmininfoRelistedComponent,
+    PastTransactionsComponent,
   ],
   entryComponents: [
     TransactionListComponent,
