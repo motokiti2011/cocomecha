@@ -8,7 +8,7 @@ import { AuthUserService } from '../../auth/authUser.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { FormService } from '../../service/form.service';
 
 @Component({
   selector: 'app-my-menu',
@@ -23,6 +23,7 @@ export class MyMenuComponent implements OnInit {
     private router: Router,
     private auth: AuthUserService,
     private overlay: Overlay,
+    private formService: FormService,
   ) { }
 
   /** 表示情報 */
@@ -89,15 +90,33 @@ export class MyMenuComponent implements OnInit {
    * @param user
    */
   private setDispInfo(user: user) {
+
+    let post = '';
+    let adless = '';
+    let tel = '';
+    let introduction = '';
+    if(user.postCode) {
+      post = user.postCode;
+    }
+    if(user.areaNo1) {
+      adless = this.formService.setAreaName(user.areaNo1)
+      + user.areaNo2 + user.adress;
+    }
+    if(user.TelNo1) {
+      tel = user.TelNo1;
+    }
+    if(user.introduction) {
+      introduction = user.introduction;
+    }
     this.dispInfo = {
       name: user.userName,
       mailadress: user.mailAdress,
       imageUrl: this.isSetImage(user.profileImageUrl),
-      postNo: this.isSerParm(user.postCode, 'post'),
-      adress: this.isSerParm(user.adress, 'adress'),
-      tel1: this.isSerParm(user.TelNo1, 'tel'),
+      postNo: post,
+      adress: adless,
+      tel1: tel,
       tel2: this.isSerParm(user.TelNo2, 'tel'),
-      introduction: this.isSerParm(user.introduction, 'intro'),
+      introduction: introduction,
     }
   }
 

@@ -261,10 +261,14 @@ export class EditUserInfoComponent implements OnInit {
         this.telNo2.setValue(telNo.tel2);
         this.telNo3.setValue(telNo.tel3);
         this.inputData.areaNo1 = this.isSerParm(this.user.areaNo1, 'area1');
+        this.areaSelect = this.inputData.areaNo1;
+        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.inputData.areaNo1)
         this.inputData.areaNo2 = this.isSerParm(this.user.areaNo2, 'area2');
+        this.citySelect = this.inputData.areaNo2;
         this.inputData.adress = this.isSerParm(this.user.adress, 'adress');
         this.postCode1.setValue(postCode.post1);
         this.postCode2.setValue(postCode.post2);
+        this.inputData.introduction = this.isSerParm(this.user.introduction, 'introduction');
         this.imageFile[0].url = this.user.profileImageUrl;
       } else {
         alert('データが取得できませんでした。再度アクセスしてください')
