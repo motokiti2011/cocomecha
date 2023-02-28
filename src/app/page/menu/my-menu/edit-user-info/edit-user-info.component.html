@@ -103,7 +103,7 @@
         <div class="col-2"></div>
         <div class="col-6">
           <!-- <input class="form-control" id="name" type="text" [(ngModel)]="inputData.areaNo2" /> -->
-          <select id="area_select" name="area" [(ngModel)]="citySelect" (change)="onSelectCity()" 
+          <select id="area_select" name="area" [(ngModel)]="citySelect" (change)="onSelectCity()"
           [disabled]="areaSelect == ''">
             <option value="">地域を選択してください。</option>
             <option *ngFor="let city of areaCityData" [value]="city.Municipality"
@@ -112,7 +112,7 @@
           </select>
         </div>
         <div class="col-1"></div>
-        
+
 
 
       </div>
@@ -166,9 +166,11 @@
           </div>
         </div>
       </div>
-
-
     </div>
+  </div>
+
+  <div>
+    <app-advertisement-sid-menu></app-advertisement-sid-menu>
   </div>
 
 </div>

@@ -166,8 +166,8 @@ export class UserRegisterComponent implements OnInit {
   }
 
   /**
- * 市町村選択イベント
- */
+   * 市町村選択イベント
+   */
   onSelectCity() {
     this.inputData.areaNo2 = this.citySelect;
     // console.log(this.inputData.area2);

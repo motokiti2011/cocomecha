@@ -78,6 +78,11 @@ import { FooterMenuComponent } from './page/menu/footer-menu/footer-menu.compone
 import { VehicleModalComponent } from './page/modal/vehicle-modal/vehicle-modal.component';
 import { ServiceAdmininfoRelistedComponent } from './page/menu/service-admininfo-relisted/service-admininfo-relisted.component';
 import { PastTransactionsComponent } from './page/menu/past-transactions/past-transactions.component';
+import { UseTermsComponent } from './page/menu/footer-menu/use-terms/use-terms.component';
+import { PersonalInformationHandlingComponent } from './page/menu/footer-menu/personal-information-handling/personal-information-handling.component';
+import { InquiryComponent } from './page/menu/footer-menu/inquiry/inquiry.component';
+import { SiteMapComponent } from './page/menu/footer-menu/site-map/site-map.component';
+import { HelpComponent } from './page/menu/footer-menu/help/help.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -164,6 +169,11 @@ const ROUTE_TABLE: Routes = [
     VehicleModalComponent,
     ServiceAdmininfoRelistedComponent,
     PastTransactionsComponent,
+    UseTermsComponent,
+    PersonalInformationHandlingComponent,
+    InquiryComponent,
+    SiteMapComponent,
+    HelpComponent,
   ],
   entryComponents: [
     TransactionListComponent,

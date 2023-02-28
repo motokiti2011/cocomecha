@@ -44,8 +44,8 @@ export class HeaderMenuComponent implements OnInit {
     this.authenticated();
   }
 
-  cocomecha() {
-    console.log('cocomecha')
+  hakomecha() {
+    console.log('hakomecha')
     this.router.navigate(["/main_menu"])
   }
 

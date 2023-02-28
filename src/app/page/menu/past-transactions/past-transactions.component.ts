@@ -10,7 +10,7 @@ import { completionSlip } from 'src/app/entity/completionSlip';
 import { ApiCheckService } from '../../service/api-check.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../../auth/cognito.service';
-import { result } from 'lodash';
+import { user } from 'src/app/entity/user';
 
 
 /**
@@ -22,7 +22,7 @@ import { result } from 'lodash';
   styleUrls: ['./past-transactions.component.scss']
 })
 export class PastTransactionsComponent implements OnInit {
-  
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -38,6 +38,12 @@ export class PastTransactionsComponent implements OnInit {
   adminId: string = '';
   /** サービスタイプ */
   serviceType: string = '';
+  /** 管理者区分 */
+  authDiv = false;
+  /** アクセス者情報 */
+  userInfo?:user;
+  /** 参照モード取引非表示メッセージ */
+  emptyMessage = '過去の取引はありません。';
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -64,18 +70,33 @@ export class PastTransactionsComponent implements OnInit {
         this.checkService.checkAdminPastTransaction(this.adminId,this.serviceType, this.adminId)
       ).subscribe(resultList => {
         console.log(resultList);
+        const list = resultList[0];
+        this.setDispList(list);
+        if(resultList[1]) {
+          this.authDiv = resultList[1];
+        }
       });
       // ローディング解除
       this.overlayRef.detach();
     });
 
+  }
 
-
-
-
-
-
+  /**
+   * 取得データを表示用に格納する。
+   * @param list
+   * @returns
+   */
+  private setDispList(list: completionSlip[]) {
+    if(list.length == 0) {
+      return;
+    }
+    this.dispInfo = list;
 
   }
+
+
+
+
 
 }

@@ -112,7 +112,14 @@
           <div class="mandatory">必須</div>
         </div>
         <div class="col-4">
-          <input class="form-control" id="name" type="text" [formControl]="officeArea" />
+          <!-- <input class="form-control" id="name" type="text" [formControl]="officeArea" /> -->
+          <select id="area_select" name="area" [(ngModel)]="citySelect" (change)="onSelectCity()"
+          [disabled]="officeArea1 == ''">
+          <option value="">地域を選択してください。</option>
+          <option *ngFor="let city of areaCityData" [value]="city.Municipality"
+            [selected]="city.prefectures === citySelect">
+            {{city.Municipality}}</option>
+        </select>
         </div>
         <!-- <div class="col-1"></div>
         <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
@@ -226,7 +233,7 @@
         <div class="col-2"></div>
         <div class="col-6">
           <div class="bt_area">
-            <button type="submit" class="btn btn-primary" 
+            <button type="submit" class="btn btn-primary"
             on-click="onRegister()"  [disabled]="groupForm.invalid">登録</button>
           </div>
         </div>

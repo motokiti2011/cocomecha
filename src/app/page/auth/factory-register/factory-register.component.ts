@@ -10,6 +10,7 @@ import { officeInfo, employee, baseInfo, initOfficeInfo } from 'src/app/entity/o
 import { user, initUserInfo } from 'src/app/entity/user';
 import { UploadService } from '../../service/upload.service';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
+import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
 import {
   find as _find,
   filter as _filter,
@@ -89,14 +90,12 @@ export class FactoryRegisterComponent implements OnInit {
     Validators.maxLength(4)
   ]);
 
-  
+
   // 事業所所在地(地域)
   officeArea1 = '';
 
   // 事業所所在地（市町村）
-  officeArea = new FormControl('', [
-    Validators.required
-  ]);
+  officeArea = '';
 
   // 事業所所在地（住所その他）
   officeAdress = new FormControl('', [
@@ -109,7 +108,7 @@ export class FactoryRegisterComponent implements OnInit {
     officeName: this.officeName,
     officeMailAdress: this.officeMailAdress,
     // officeArea1: this.officeArea1,
-    officeArea: this.officeArea,
+    // officeArea: this.officeArea,
     officeAdress: this.officeAdress,
     postCode1: this.postCode1,
     postCode2: this.postCode2,
@@ -142,6 +141,10 @@ export class FactoryRegisterComponent implements OnInit {
   imageFile: any = null;
   // テンプレートで使用するフォームを宣言
   public form!: FormGroup;
+  /** 地域２（市町村）データ */
+  areaCityData: area1SelectArea2[] = []
+  /** 地域２（市町村）選択 */
+  citySelect = '';
 
   constructor(
     private builder: FormBuilder,
@@ -237,8 +240,11 @@ export class FactoryRegisterComponent implements OnInit {
     } else if (e === '4') {
       // 所在地情報を設定
       this.officeArea1 = this.user.areaNo1;
+      this.areaSelect = this.officeArea1;
+      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
       if (this.user.areaNo2) {
-        this.officeArea.setValue(this.user.areaNo2);
+        this.officeArea = this.user.areaNo2;
+        this.citySelect = this.officeArea;
       }
       if (this.user.adress) {
         this.officeAdress.setValue(this.user.adress);
@@ -269,6 +275,15 @@ export class FactoryRegisterComponent implements OnInit {
   selectArea() {
     console.log('地域')
     console.log(this.areaSelect)
+    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+  }
+
+  /**
+   * 市町村選択イベント
+   */
+  onSelectCity() {
+    this.officeArea = this.citySelect;
+    // console.log(this.inputData.area2);
   }
 
   goBack() {
@@ -304,7 +319,7 @@ export class FactoryRegisterComponent implements OnInit {
     this.officeInfo.officeTel = this.inputData.officeTel;
     this.officeInfo.officeMailAdress = this.officeMailAdress.value;
     this.officeInfo.officeArea1 = this.officeArea1;
-    this.officeInfo.officeArea = this.officeArea.value;
+    this.officeInfo.officeArea = this.officeArea;
     this.officeInfo.officeAdress = this.officeAdress.value;
     this.officeInfo.officePostCode = this.formService.setPostCode(this.postCode1.value, this.postCode2.value);
     this.officeInfo.workContentList = this.businessContentList;

@@ -147,7 +147,9 @@ export class MechanicRegisterComponent implements OnInit {
    * 登録するボタン押下イベント
    */
   onResister() {
-    if (this.imageFile != null) {
+    if (this.imageFile != undefined
+      && this.imageFile != null
+      && this.imageFile.length > 0) {
       this.setImageUrl();
     } else {
       this.mechanicResister();

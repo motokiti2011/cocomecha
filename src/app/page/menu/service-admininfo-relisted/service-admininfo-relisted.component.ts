@@ -85,7 +85,7 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
 
   /**
    * 表示データを設定する
-   * @param data 
+   * @param data
    */
   private setDispData(data: serviceAdminInfo) {
     /** 管理者名称 */
@@ -147,7 +147,7 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
         }
       });
 
-    
+
   }
 
 
