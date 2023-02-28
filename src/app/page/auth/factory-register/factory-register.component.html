@@ -77,9 +77,9 @@
         <div class="col-1"></div>
         <div class="col-4">
           <div class="post_forms">
-            <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" />
+            <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" (change)="onPostCodeSerch()"/>
             <p class="mainus">-</p>
-            <input class="form-control" id="postCode" type="tel" [formControl]="postCode2" />
+            <input class="form-control" id="postCode" type="tel" [formControl]="postCode2" (change)="onPostCodeSerch()"/>
           </div>
           <!-- <input class="form-control" id="name" type="text" [(ngModel)]="inputData.officePostCode" /> -->
         </div>
@@ -134,100 +134,7 @@
         <div class="col-4">
           <input class="form-control" id="name" type="text" [formControl]="officeAdress" />
         </div>
-        <!-- <div class="col-1"></div>
-        <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">公開する</button> -->
       </div>
-
-
-
-      <!-- <div class="row mt-2">
-        <div class="col-2">営業時間</div>
-        <div class="col-1"></div>
-        <div class="col-2">
-          <input class="form-control" id="hours" type="text" [(ngModel)]="businessHoursStart" />
-        </div>
-        <div class="col-1 intermediate">~</div>
-        <div class="col-2">
-          <input class="form-control" id="hours" type="text" [(ngModel)]="businessHoursEnd" />
-        </div>
-      </div>
-
-      <div class="row mt-2">
-        <div class="col-2">休憩時間</div>
-        <div class="col-1"></div>
-        <div class="col-2">
-          <input class="form-control" id="hours" type="text" [(ngModel)]="restHoursStart" />
-        </div>
-        <div class="col-1 intermediate">~</div>
-        <div class="col-2">
-          <input class="form-control" id="hours" type="text" [(ngModel)]="restHoursEnd" />
-        </div>
-      </div>
-
-      <div class="row mt-2">
-        <div class="col-2 work_contents">
-          <div>業務内容</div>
-          <div class="btn_area">
-            <button class="btn btn-outline-primary" (click)="addOptionForm()">追加</button>
-          </div>
-        </div>
-        <div class="col-1"></div>
-
-        <div class="col-5">
-          <input class="form-control" id="workcontents" type="text" [(ngModel)]="workContentsOne" />
-
-          <form [formGroup]="form">
-            <div class="add_form">
-              <div formArrayName="options">
-                <div *ngFor="let option of options.controls; let i = index">
-                  <div class="add_work_contents">
-                    <div [formGroupName]="i">
-                      <input class="form-control" id="workcontents" type="text" formControlName="name" />
-                    </div>
-                    <button class="del_btn btn-outline-primary" (click)="removeOptionForm(i)">削除</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-
-        </div>
-      </div>
-
-      <div class="row mt-2">
-        <div class="col-2">工場PR文</div>
-        <div class="col-1"></div>
-        <textarea cols="40" rows="6" id="introduction" [(ngModel)]="inputData.officePR"></textarea>
-      </div>
-
-      <div class="row mt-2">
-        <div class="col-2">工場紹介画像</div>
-        <div class="col-1"></div>
-        <input type="file" accept="*/*" (change)="onInputChange($event)">
-      </div> -->
-
-      <!-- <div class="row m-5">
-      <div class="col-6">以下は公開されない工場情報の設定となります。</div>
-    </div> -->
-
-      <!-- <div class="row mt-2">
-      <div class="col-2">関連工場</div>
-      <div class="col-1"></div>
-      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">一覧はこちら</button>
-    </div>
-
-    <div class="row mt-2">
-      <div class="col-2">従業員情報</div>
-      <div class="col-1"></div>
-      <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">一覧はこちら</button>
-    </div>
-
-    <div class="row mt-2">
-      <div class="col-2">管理者設定</div>
-      <div class="col-1"></div>
-      <input class="col-4 high-form" type="text" [(ngModel)]="adminSettingUser" />
-    </div> -->
-
 
       <div class="row">
         <div class="col-2"></div>
@@ -238,10 +145,12 @@
           </div>
         </div>
       </div>
-
-
-
     </div>
   </div>
+
+  <div class="advertisement_area">
+    <app-advertisement-sid-menu></app-advertisement-sid-menu>
+  </div>
+
 
 </div>

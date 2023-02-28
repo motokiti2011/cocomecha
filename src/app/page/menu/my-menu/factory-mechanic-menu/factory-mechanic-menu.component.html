@@ -24,13 +24,20 @@
             </ng-container>
           </ul>
           <!-- ngComponentOutlet で動的にコンポーネントを読み込む -->
-          <ng-container *ngComponentOutlet="currentTab"></ng-container>
+          <div class="hoge">
+            <ng-container *ngComponentOutlet="currentTab"></ng-container>
+          </div>
         </div>
       </div>
 
     </div>
 
   </div>
+
+  <div class="advertisement_area">
+    <app-advertisement-sid-menu></app-advertisement-sid-menu>
+  </div>
+
 </div>
 
 <!-- <button (click)="goBack()">戻る</button> -->

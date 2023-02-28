@@ -13,6 +13,7 @@
 .main {
   width: 850px;
   margin: 5px 0px 0px 40px;
+  height: 100%;
 
   .row_item {
     margin: 20px 0px 0px 0px;
@@ -22,6 +23,10 @@
     font-size: x-large;
     text-align: center;
     margin: 10px 0px 20px 0px;
+  }
+
+  .hoge {
+    height: 80%;
   }
 
   #name {

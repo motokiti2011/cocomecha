@@ -3,29 +3,32 @@
 <div class="transaction-menu">
   <aside>
 
-    <app-side-menu
-    [acceseUser]="acceseUser">
-  </app-side-menu>
-  
-</aside>
+    <app-side-menu [acceseUser]="acceseUser">
+    </app-side-menu>
+
+  </aside>
 
   <article>
 
     <div class="transaction-menu">
- 
+
       <div class="tab-area-base">
 
         <ul class="tab-menu-base">
           <ng-container *ngFor="let tab of tabs">
-            <li [class.current]="tab.current"
-            (click)="onClick($event)">{{tab.name}}</li>
+            <li [class.current]="tab.current" (click)="onClick($event)">{{tab.name}}</li>
           </ng-container>
         </ul>
-        
+
         <!-- ngComponentOutlet で動的にコンポーネントを読み込む -->
         <ng-container *ngComponentOutlet="currentTab"></ng-container>
       </div>
     </div>
 
   </article>
+
+  <div class="advertisement_area">
+    <app-advertisement-sid-menu></app-advertisement-sid-menu>
+  </div>
+
 </div>

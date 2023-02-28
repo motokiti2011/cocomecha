@@ -11,6 +11,7 @@ import { user, initUserInfo } from 'src/app/entity/user';
 import { UploadService } from '../../service/upload.service';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
 import {
   find as _find,
   filter as _filter,
@@ -284,6 +285,32 @@ export class FactoryRegisterComponent implements OnInit {
   onSelectCity() {
     this.officeArea = this.citySelect;
     // console.log(this.inputData.area2);
+  }
+
+  
+  /**
+   * 郵便番号入力時イベント
+   */
+  onPostCodeSerch() {
+    const post1 = this.postCode1.value.replace(/\s+/g, '');
+    const post2 = this.postCode2.value.replace(/\s+/g, '');
+    const post = post1 + post2;
+    // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
+    if (post1 != '' && post2 != '') {
+      const postCodeConectData = _find(postCodeInfoData, data => data.postCode == post)
+      if (postCodeConectData) {
+        // 地域1(都道府県名)
+        this.areaSelect = postCodeConectData.prefecturesCode;
+        this.officeArea1 = postCodeConectData.prefecturesCode;
+        // 地域2(市町村)
+        this.officeArea = postCodeConectData.municipality;
+        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.officeArea1);
+
+        this.citySelect =  postCodeConectData.municipality;
+        // 地域3(その他)
+        this.officeAdress.setValue(postCodeConectData.townArea);
+      }
+    }
   }
 
   goBack() {

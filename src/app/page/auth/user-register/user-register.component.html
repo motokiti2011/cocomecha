@@ -73,9 +73,9 @@
         <div class="col-2"></div>
         <div class="col-6">
           <div class="post_forms">
-            <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" />
+            <input class="form-control" id="postCode" type="tel" [formControl]="postCode1" (change)="onPostCodeSerch()"/>
             <p class="mainus">-</p>
-            <input class="form-control" id="postCode" type="tel" [formControl]="postCode2" />
+            <input class="form-control" id="postCode" type="tel" [formControl]="postCode2" (change)="onPostCodeSerch()"/>
           </div>
         </div>
         <div class="col-1"></div>
@@ -166,7 +166,10 @@
       </div>
 
     </div>
-
-
   </div>
+  
+  <div class="advertisement_area">
+    <app-advertisement-sid-menu></app-advertisement-sid-menu>
+  </div>
+
 </div>

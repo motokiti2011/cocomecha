@@ -19,6 +19,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
 import { imgFile } from 'src/app/entity/imgFile';
@@ -171,6 +172,32 @@ export class UserRegisterComponent implements OnInit {
   onSelectCity() {
     this.inputData.areaNo2 = this.citySelect;
     // console.log(this.inputData.area2);
+  }
+
+  
+  /**
+   * 郵便番号入力時イベント
+   */
+  onPostCodeSerch() {
+    const post1 = this.postCode1.value.replace(/\s+/g, '');
+    const post2 = this.postCode2.value.replace(/\s+/g, '');
+    const post = post1 + post2;
+    // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
+    if (post1 != '' && post2 != '') {
+      const postCodeConectData = _find(postCodeInfoData, data => data.postCode == post)
+      if (postCodeConectData) {
+        // 地域1(都道府県名)
+        this.areaSelect = postCodeConectData.prefecturesCode;
+        this.inputData.areaNo1 = postCodeConectData.prefecturesCode;
+        // 地域2(市町村)
+        this.inputData.areaNo2 = postCodeConectData.municipality;
+        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.inputData.areaNo1);
+
+        this.citySelect =  postCodeConectData.municipality;
+        // 地域3(その他)
+        this.inputData.adress = postCodeConectData.townArea;
+      }
+    }
   }
 
 

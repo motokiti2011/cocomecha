@@ -1,17 +1,19 @@
-<!-- <div class="head">
-  <app-header-menu></app-header-menu>
-</div>
 
-<body>
-  <div class="fullheight">
-    <router-outlet (activate)="onActivate()"></router-outlet>
+<!-- <body>
+  <div class="wrapper">/*フッター以外のすべての要素をdiv要素で囲む*/
+    <header>
+      <app-header-menu></app-header-menu>
+    </header>
+    <main>
+      <router-outlet (activate)="onActivate()"></router-outlet>
+    </main>
+     <div class="push"></div>
+     <footer>
+      <app-footer-menu></app-footer-menu>
+     </footer>
+ 
   </div>
-</body>
-<footer *ngIf="footerDiv"> -->
-<!-- <footer>
-  <app-footer-menu></app-footer-menu>
-</footer> -->
-
+ </body> -->
 
 
 <body>
@@ -23,7 +25,7 @@
       <router-outlet (activate)="onActivate()"></router-outlet>
     </main>
   </div>
-  <footer>
+  <footer *ngIf="footerDiv">
     <app-footer-menu></app-footer-menu>
   </footer>
 </body>
