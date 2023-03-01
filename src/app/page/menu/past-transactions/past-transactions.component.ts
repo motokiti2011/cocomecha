@@ -67,7 +67,7 @@ export class PastTransactionsComponent implements OnInit {
       // 非同期で表示データ取得とアクセス者の管理対象判定を行う
       forkJoin(
         this.uniqueService.getPastTransaction(this.adminId,this.serviceType, accessUser),
-        this.checkService.checkAdminPastTransaction(this.adminId,this.serviceType, this.adminId)
+        this.checkService.checkAcceseAdmin(this.adminId,this.serviceType, accessUser)
       ).subscribe(resultList => {
         console.log(resultList);
         const list = resultList[0];

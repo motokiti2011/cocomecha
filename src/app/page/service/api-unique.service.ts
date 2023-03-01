@@ -552,7 +552,7 @@ export class ApiUniqueService {
         "accessUser": accessUser
       }
     };
-    return this.http.post<completionSlip>(this.apiEndPoint + '/getpasttransaction', body).pipe(
+    return this.http.post<completionSlip>(this.apiEndPoint + '/pasttransaction', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: completionSlip) => res),
       // エラー時HTTPステータスコードを戻す

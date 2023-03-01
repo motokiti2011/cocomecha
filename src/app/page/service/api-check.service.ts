@@ -76,17 +76,17 @@ export class ApiCheckService {
    * @param accessUser
    * @returns
    */
-  public checkAdminPastTransaction(adminId: string, serviceType: string, accessUser: string): Observable<any> {
+  public checkAcceseAdmin(adminId: string, serviceType: string, accessUser: string): Observable<any> {
     // リクエストボディ生成
     const body = {
-      "OperationType": "CHECKADMINPASTTRANSACTION",
+      "OperationType": "CHECKACCESEADMIN",
       "Keys": {
         "adminId": adminId,
         "serviceType": serviceType,
         "accessUser": accessUser
       }
     };
-    return this.http.post<boolean>(this.apiEndPoint + '/checkadminpasttransaction', body).pipe(
+    return this.http.post<boolean>(this.apiEndPoint + '/checkacceseadmin', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: boolean) => res),
       // エラー時HTTPステータスコードを戻す
