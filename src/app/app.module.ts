@@ -83,6 +83,9 @@ import { PersonalInformationHandlingComponent } from './page/menu/footer-menu/pe
 import { InquiryComponent } from './page/menu/footer-menu/inquiry/inquiry.component';
 import { SiteMapComponent } from './page/menu/footer-menu/site-map/site-map.component';
 import { HelpComponent } from './page/menu/footer-menu/help/help.component';
+import { ConnectionFactoryModalComponent } from './page/modal/connection-factory-modal/connection-factory-modal.component';
+import { ConnectionMechanicModalComponent } from './page/modal/connection-mechanic-modal/connection-mechanic-modal.component';
+import { FactoryAdminSettingModalComponent } from './page/modal/factory-admin-setting-modal/factory-admin-setting-modal.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -111,7 +114,13 @@ const ROUTE_TABLE: Routes = [
   { path: 'vehicle-menu', component: VehicleMenuComponent, canActivate: [RoutingGuard] },
   { path: 'edit-vehicle', component: EditVehicleInfoComponent, canActivate: [RoutingGuard] },
   { path: 'service-admin-reference', component: ServiceAdmininfoRelistedComponent},
-  { path: 'past-transactions', component: PastTransactionsComponent}
+  { path: 'past-transactions', component: PastTransactionsComponent},
+
+  { path: 'use-terms', component: UseTermsComponent },
+  { path: 'personal-information-handling', component: PersonalInformationHandlingComponent },
+  { path: 'inquiry', component: InquiryComponent },
+  { path: 'sit-map', component: SiteMapComponent },
+  { path: 'help', component: HelpComponent }
 ]
 
 @NgModule({
@@ -174,6 +183,9 @@ const ROUTE_TABLE: Routes = [
     InquiryComponent,
     SiteMapComponent,
     HelpComponent,
+    ConnectionFactoryModalComponent,
+    ConnectionMechanicModalComponent,
+    FactoryAdminSettingModalComponent,
   ],
   entryComponents: [
     TransactionListComponent,

@@ -90,7 +90,7 @@
         <div class="col-3 item">市町村</div>
         <div class="col-5">
           <!-- <input class="form-control" id="id" type="text" [(ngModel)]="dispInfo.officeArea" /> -->
-          <select id="area_select" name="area" [(ngModel)]="citySelect" (change)="onSelectCity()" 
+          <select id="area_select" name="area" [(ngModel)]="citySelect" (change)="onSelectCity()"
           [disabled]="areaSelect == ''">
             <option value="">地域を選択してください。</option>
             <option *ngFor="let city of areaCityData" [value]="city.Municipality"
@@ -124,7 +124,7 @@
           <div class="intermediate2">:</div>
           <input class="form-control" id="hours" type="text" [formControl]="businessHoursEnd2" />
         </div>
-        
+
       </div>
 
       <div class="row row_item">
@@ -206,27 +206,27 @@
 
 
       <div class="row row_item">
-        <div class="col-3 item">関連工場</div>
+        <div class="col-3 item">関連工場設定</div>
         <div class="col-5">
-          <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">一覧はこちら</button>
+          <button type="button" class="btn btn-outline-primary" (click)="onButtonAction('0')">一覧はこちら</button>
         </div>
         <div class="col-3"></div>
       </div>
 
-      
+
       <div class="row row_item">
-        <div class="col-3 item">従業員情報</div>
+        <div class="col-3 item">関連メカニック設定</div>
         <div class="col-5">
-          <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">一覧はこちら</button>
+          <button type="button" class="btn btn-outline-primary" (click)="onButtonAction('1')">一覧はこちら</button>
         </div>
         <div class="col-3"></div>
       </div>
 
-      
+
       <div class="row row_item">
         <div class="col-3 item">管理者設定</div>
         <div class="col-5">
-          <button type="button" class="btn btn-outline-primary" (click)="onSomeUserInfo('4')">一覧はこちら</button>
+          <button type="button" class="btn btn-outline-primary" (click)="onButtonAction('2')">一覧はこちら</button>
         </div>
         <div class="col-3"></div>
       </div>
@@ -235,7 +235,7 @@
         <div class="col-2"></div>
         <div class="col-6">
           <div class="bt_area">
-            <button type="submit" class="btn btn-primary" 
+            <button type="submit" class="btn btn-primary"
             on-click="onRegister()"  [disabled]="groupForm.invalid" >変更する</button>
           </div>
         </div>

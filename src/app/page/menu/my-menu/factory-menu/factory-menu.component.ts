@@ -18,6 +18,9 @@ import { postCodeInfo, postCodeInfoData } from 'src/app/entity/postCodeInfo';
 import { imgFile } from 'src/app/entity/imgFile';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { ConnectionFactoryModalComponent } from 'src/app/page/modal/connection-factory-modal/connection-factory-modal.component';
+import { ConnectionMechanicModalComponent } from 'src/app/page/modal/connection-mechanic-modal/connection-mechanic-modal.component';
+import { FactoryAdminSettingModalComponent } from 'src/app/page/modal/factory-admin-setting-modal/factory-admin-setting-modal.component';
 
 @Component({
   selector: 'app-factory-menu',
@@ -360,9 +363,19 @@ export class FactoryMenuComponent implements OnInit {
 
   /**
    * 下部ボタン操作イベント
-   * @param e 
+   * @param e
    */
-  onSomeUserInfo(e: string) {
+  onButtonAction(e: string) {
+    if(e == '0') {
+      // 関連工場設定
+      this.factoryConnect();
+    } else if(e == '1') {
+      // 関連メカニック設定
+      this.mechanicConnect();
+    } else if(e == '2') {
+      // 工場管理設定
+      this.factoryAdmiSetting();
+    }
 
   }
 
@@ -398,7 +411,7 @@ export class FactoryMenuComponent implements OnInit {
 
   /**
    * 工場情報の初期表示設定を行う
-   * @param info 
+   * @param info
    */
   private initSetting(info: officeInfo) {
     this.dispInfo.officeId = info.officeId;
@@ -439,7 +452,7 @@ export class FactoryMenuComponent implements OnInit {
 
   /**
    * 作業内容を設定する
-   * @param workContents 
+   * @param workContents
    */
   private setWorkContents(workContents: string[]) {
     let count = 0;
@@ -512,6 +525,90 @@ export class FactoryMenuComponent implements OnInit {
     hourList.push(this.breakTimeEnd2.value)
     this.dispInfo.businessHours = hourList;
   }
+
+  /**
+   * 関連工場設定モーダルを開く
+   */
+  private factoryConnect() {
+    const data = '';
+
+    // 関連工場モーダル展開
+    const dialogRef = this.modal.open(ConnectionFactoryModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: data
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          if(result.length != 0) {
+            console.log(result);
+            // this.imageFile = result;
+          }
+        }
+      }
+    );
+  }
+
+  /**
+   * 関連メカニック設定モーダルを開く
+   */
+  private mechanicConnect() {
+    const data = '';
+    // 関連メカニックモーダル展開
+    const dialogRef = this.modal.open(ConnectionMechanicModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: data
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          if(result.length != 0) {
+            console.log(result);
+            // this.imageFile = result;
+          }
+        }
+      }
+    );
+
+  }
+
+
+  /**
+   * 工場管理者設定モーダルを開く
+   */
+  private factoryAdmiSetting() {
+    const data = '';
+    // 工場管理者設定モーダル展開
+    const dialogRef = this.modal.open(FactoryAdminSettingModalComponent, {
+      width: '750px',
+      height: '600px',
+      data: data
+    });
+    // モーダルクローズ後
+    dialogRef.afterClosed().subscribe(
+      result => {
+        // 返却値　無理に閉じたらundifind
+        console.log('画像モーダル結果:' + result)
+        if (result != undefined && result != null) {
+          if(result.length != 0) {
+            console.log(result);
+            // this.imageFile = result;
+          }
+        }
+      }
+    );
+  }
+
+
+
 
 
 }
