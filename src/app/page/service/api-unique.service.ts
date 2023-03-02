@@ -16,6 +16,7 @@ import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { mcfcItem } from 'src/app/entity/mcfcItem';
 import { serviceAdminInfo } from 'src/app/entity/serviceAdminInfo';
 import { completionSlip } from 'src/app/entity/completionSlip';
+import { connectionOfficeInfo } from 'src/app/entity/officeInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -539,10 +540,10 @@ export class ApiUniqueService {
 
   /**
    * 過去取引情報取得
-   * @param adminId 
-   * @param serviceType 
-   * @param accessUser 
-   * @returns 
+   * @param adminId
+   * @param serviceType
+   * @param accessUser
+   * @returns
    */
   public getPastTransaction(adminId: string, serviceType: string, accessUser: string ): Observable<any> {
     // リクエストボディ生成
@@ -560,6 +561,29 @@ export class ApiUniqueService {
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
+  }
+
+  /**
+   * 過去取引情報取得
+   * @param adminId
+   * @param serviceType
+   * @param accessUser
+   * @returns
+   */
+  public editConnectionOfficeStatus(connectionOffice:connectionOfficeInfo): Observable<any> {
+        // リクエストボディ生成
+        const body = {
+          "IndexType": "CONNECTIONOFFICESTATUS",
+          "Keys": {
+            "connectionOffice": connectionOffice
+          }
+        };
+        return this.http.post<connectionOfficeInfo>(this.apiEndPoint + '/connectionofficestatus', body).pipe(
+          // 取得できた場合ユーザー情報を返却
+          map((res: connectionOfficeInfo) => res),
+          // エラー時HTTPステータスコードを戻す
+          catchError((err: HttpErrorResponse) => of(undefined))
+        );
   }
 
 
