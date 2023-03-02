@@ -21,14 +21,20 @@ export interface officeInfo {
   workContentList: string[];
   // 営業時間
   businessHours: string[];
-  // 管理拠点ID
-  adminBaseId: string;
-  // 拠点情報リスト
-  baseInfoList: Array<baseInfo>| null;
-  // 管理者IDリスト
-  adminIdList: string[];
-  // 従業員リスト
-  employeeList: Array<employee>| null;
+  // // 管理拠点ID
+  // adminBaseId: string;
+  // // 拠点情報リスト
+  // baseInfoList: Array<baseInfo>| null;
+  // // 管理者IDリスト
+  // adminIdList: string[];
+  // // 従業員リスト
+  // employeeList: Array<employee>| null;
+  // 関連工場情報
+  connectionOfficeInfo?: Array<connectionOfficeInfo>;
+  // 関連メカニック情報
+  connectionMechanicInfo?: Array<connectionMechanicInfo>;
+  // 管理者設定情報
+  adminSettingInfo: Array<adminSettingInfo>;
   // 事業所PR
   officePR: string;
   // 事業所PR画像URL
@@ -40,6 +46,53 @@ export interface officeInfo {
   // 作成日
   created: string;
 }
+
+// 関連工場情報
+export interface connectionOfficeInfo {
+  // 事業所ID
+  officeId: string;
+  // 事業所名
+  officeName: string;
+  // 事業所関係性区分
+  officeAssociationDiv: string | null;
+  // 事業所関係性
+  officeAssociation: string | null;
+}
+
+
+// 関連メカニック情報
+export interface connectionMechanicInfo {
+  // メカニックID
+  mechanicId: string;
+  // メカニック名
+  mechanicName: string;
+  // 所属区分
+  belongsDiv: string | null;
+  // 所属
+  belongs: string | null;
+}
+
+// 管理者設定情報
+export interface adminSettingInfo {
+  // メカニックID
+  mechanicId: string;
+  // メカニック名
+  mechanicName: string;
+  // 所属区分
+  belongsDiv: string | null;
+  // 所属
+  belongs: string | null;
+  // 役割
+  role: string;
+  // 役割区分
+  roleDiv: string;
+}
+
+
+
+
+
+
 
 /**
  * 拠点情報
@@ -97,14 +150,20 @@ export const initOfficeInfo = {
   workContentList: [],
   // 営業時間
   businessHours: [],
-  // 管理拠点ID
-  adminBaseId: '',
-  // 拠点情報リスト
-  baseInfoList: [],
-  // 管理者IDリスト
-  adminIdList: [],
-  // 従業員リスト
-  employeeList: [],
+  // 関連工場情報
+  connectionOfficeInfo: [],
+  // 関連メカニック情報
+  connectionMechanicInfo: [],
+  // 管理者設定情報
+  adminSettingInfo: [],
+  // // 管理拠点ID
+  // adminBaseId: '',
+  // // 拠点情報リスト
+  // baseInfoList: [],
+  // // 管理者IDリスト
+  // adminIdList: [],
+  // // 従業員リスト
+  // employeeList: [],
   // 事業所PR
   officePR: '',
   // 事業所PR画像URL

@@ -354,8 +354,8 @@ export class FactoryRegisterComponent implements OnInit {
 
     // TODO
     this.officeInfo.businessHours = [];
-    this.officeInfo.baseInfoList = [];
-    this.officeInfo.employeeList = [];
+    this.officeInfo.connectionOfficeInfo = [];
+    this.officeInfo.connectionMechanicInfo = [];
     this.officeInfo.officePR = this.inputData.officePR;
     this.officeInfo.officePRimageURL = this.inputData.officePRimageURL;
 

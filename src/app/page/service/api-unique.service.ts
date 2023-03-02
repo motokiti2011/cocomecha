@@ -122,8 +122,10 @@ export class ApiUniqueService {
         'officePostCode': officeInfo.officePostCode,
         'workContentList': officeInfo.workContentList,
         'businessHours': officeInfo.businessHours,
-        'adminBaseId': officeInfo.adminBaseId,
-        'baseInfoList': officeInfo.baseInfoList,
+        'connectionOfficeInfo': officeInfo.connectionOfficeInfo,
+        'connectionMechanicInfo': officeInfo.connectionMechanicInfo,
+        'adminSettingInfo': officeInfo.adminSettingInfo,
+        // この下2つはいらない？？
         'adminIdList': userId,
         'employeeList': mechanicId,
         'officePR': officeInfo.officePR,

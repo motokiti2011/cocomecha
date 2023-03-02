@@ -410,7 +410,7 @@ export class MechanicMenuComponent implements OnInit {
       if (result[0] != undefined || result[0] != null) {
         this.officeInfo = result[0];
         // 管理ユーザー情報が空白の場合
-        if (this.officeInfo.adminIdList.length = 0) {
+        if (this.officeInfo.adminSettingInfo.length = 0) {
           this.officeEditMode = false;
         } else {
           this.officeEditMode = true;
