@@ -78,6 +78,9 @@ export class ApiUniqueService {
         'adminAddressDiv': mechanic.adminAddressDiv,
         'telList': mechanic.telList,
         'mailAdress': mechanic.mailAdress,
+        'areaNo1': mechanic.areaNo1,
+        'areaNo2': mechanic.areaNo2,
+        'adress': mechanic.adress,
         'officeConnectionDiv': mechanic.officeConnectionDiv,
         'associationOfficeList': mechanic.associationOfficeList,
         'officeId': mechanic.officeId,
@@ -569,10 +572,11 @@ export class ApiUniqueService {
    * @param serchData
    * @returns
    */
-  public serchFcMcInfo(serchData: fcmcSerchData): Observable<any> {
+  public serchFcMcInfo(serchData: fcmcSerchData, serviceType: string): Observable<any> {
     // リクエストボディ生成
     const body = {
       "IndexType": "SERCHFCMCINFO",
+      "ServiceType": serviceType,
       "Keys": {
         "area1": serchData.area1,
         "area2": serchData.area2,

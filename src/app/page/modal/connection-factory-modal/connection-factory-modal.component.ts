@@ -177,7 +177,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
    */
   private serchFcMcInfo(): Observable<fcmcSerchResult[]> {
     this.serchInfo.telNo = this.telNo.value;
-    return this.uniqueService.serchFcMcInfo(this.serchInfo);
+    return this.uniqueService.serchFcMcInfo(this.serchInfo, '2');
   }
 
 

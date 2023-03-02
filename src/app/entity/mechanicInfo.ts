@@ -15,6 +15,12 @@ export interface mechanicInfo {
   telList: string[] | null;
   // 管理メールアドレス
   mailAdress: string | null;
+  // 地域1
+  areaNo1: string;
+  // 地域2
+  areaNo2: string | null;
+  // 住所
+  adress: string | null;
   // 事業所紐づき区分
   officeConnectionDiv: string;
   // 事業所ID
@@ -67,6 +73,12 @@ export const initMechanicInfo: mechanicInfo = {
   telList: null,
   // 管理メールアドレス
   mailAdress: null,
+  // 地域1
+  areaNo1: '',
+  // 地域2
+  areaNo2: '',
+  // 住所
+  adress: '',
   // 事業所紐づき区分
   officeConnectionDiv: '0',
   // 事業所ID
