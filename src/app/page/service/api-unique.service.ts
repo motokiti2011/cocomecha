@@ -17,6 +17,7 @@ import { mcfcItem } from 'src/app/entity/mcfcItem';
 import { serviceAdminInfo } from 'src/app/entity/serviceAdminInfo';
 import { completionSlip } from 'src/app/entity/completionSlip';
 import { connectionOfficeInfo } from 'src/app/entity/officeInfo';
+import { fcmcSerchResult, fcmcSerchData } from 'src/app/entity/fcmcSerchResult';
 
 @Injectable({
   providedIn: 'root'
@@ -545,7 +546,7 @@ export class ApiUniqueService {
    * @param accessUser
    * @returns
    */
-  public getPastTransaction(adminId: string, serviceType: string, accessUser: string ): Observable<any> {
+  public getPastTransaction(adminId: string, serviceType: string, accessUser: string): Observable<any> {
     // リクエストボディ生成
     const body = {
       "IndexType": "PASTTRANSACTION",
@@ -564,27 +565,51 @@ export class ApiUniqueService {
   }
 
   /**
-   * 過去取引情報取得
-   * @param adminId
-   * @param serviceType
-   * @param accessUser
+   * 工場・メカニック情報検索
+   * @param serchData
    * @returns
    */
-  public editConnectionOfficeStatus(connectionOffice:connectionOfficeInfo): Observable<any> {
-        // リクエストボディ生成
-        const body = {
-          "IndexType": "CONNECTIONOFFICESTATUS",
-          "Keys": {
-            "connectionOffice": connectionOffice
-          }
-        };
-        return this.http.post<connectionOfficeInfo>(this.apiEndPoint + '/connectionofficestatus', body).pipe(
-          // 取得できた場合ユーザー情報を返却
-          map((res: connectionOfficeInfo) => res),
-          // エラー時HTTPステータスコードを戻す
-          catchError((err: HttpErrorResponse) => of(undefined))
-        );
+  public serchFcMcInfo(serchData: fcmcSerchData): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "IndexType": "SERCHFCMCINFO",
+      "Keys": {
+        "area1": serchData.area1,
+        "area2": serchData.area2,
+        "name": serchData.name,
+        "telNo": serchData.telNo
+      }
+    };
+    return this.http.post<fcmcSerchResult>(this.apiEndPoint + '/serchfcmcdata', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: fcmcSerchResult) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
   }
+
+
+  /**
+   * 関連工場ステータス変更
+   * @param connectionOffice
+   * @returns
+   */
+  public editConnectionOfficeStatus(connectionOffice: connectionOfficeInfo): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "IndexType": "CONNECTIONOFFICESTATUS",
+      "Keys": {
+        "connectionOffice": connectionOffice
+      }
+    };
+    return this.http.post<connectionOfficeInfo>(this.apiEndPoint + '/connectionofficestatus', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: connectionOfficeInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
 
 
 
