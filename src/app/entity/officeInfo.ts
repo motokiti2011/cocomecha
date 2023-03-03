@@ -89,11 +89,6 @@ export interface adminSettingInfo {
 }
 
 
-
-
-
-
-
 /**
  * 拠点情報
  */

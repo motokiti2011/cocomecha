@@ -1,2 +1,89 @@
 <!-- 工場管理者設定モーダル -->
-<p>factory-admin-setting-modal works!</p>
+<!-- <p>factory-admin-setting-modal works!</p> -->
+
+<div class="container">
+
+  <div class="row">
+    <div class="title">
+      <div id="modal_title">{{title}}</div>
+    </div>
+    <div class="col-6"></div>
+    <div class="close">
+      <button id="close" mat-button (click)="closeModal()">✖</button>
+    </div>
+  </div>
+
+  <!-- 所属メカニック検索・追加エリア -->
+  <div class="row">
+    <!-- <div class="col-1"></div> -->
+  </div>
+
+  <div *ngIf="listDispSwitchDiv; else serchResultContents">
+
+    <div class="row">
+      <div class="col-1"></div>
+      <button type="button" class="btn btn-primary" on-click="onSerch()"
+        >所属メカニック</button>
+    </div>
+
+  </div>
+  <ng-template #serchResultContents>
+    <div>
+      <label>検索結果</label>
+      <table>
+        <thead>
+          <tr>
+            <th id="name">メカニック名</th>
+            <th id="association">ステータス</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of serchResult">
+            <td (click)="onSerchMechanic(data)">
+              <div class="select_point" (click)="onSerchMechanic(data)">
+                {{data.name}}</div>
+            </td>
+            <td>
+              <button type="submit" class="btn btn-primary" on-click="onSerch()">{{data.name}}</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div class="col-1"></div>
+      <button class="btn btn-primary" on-click="onSerch()" [(ngModel)]="listDispSwitchDiv">決定する</button>
+    </div>
+  </ng-template>
+
+</div>
+
+<!-- 管理者表示エリア -->
+<div class="list_area" *ngIf="dispData.length > 0 else ElseContents">
+  <label>現在の管理者設定</label>
+  <table>
+    <thead>
+      <tr>
+        <th id="name">管理者名</th>
+        <th id="association">役割</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let adminUser of dispData">
+        <td (click)="onSelectAdminUser(adminUser)">
+          <div class="select_point" (click)="onSelectAdminUser(adminUser)">
+            {{adminUser.mechanicName}}</div>
+        </td>
+        <td>
+          <button type="submit" class="btn btn-primary" on-click="onSerch()">{{adminUser.mechanicName}}</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ng-template #ElseContents>
+  <div class="vehicle_msg">関連する工場はありません</div>
+</ng-template>
+
+
+<div class="row btn_area">
+  <button type="submit" class="btn btn-primary" on-click="closeModal()">閉じる</button>
+</div>
