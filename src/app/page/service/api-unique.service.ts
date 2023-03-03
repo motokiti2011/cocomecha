@@ -598,11 +598,12 @@ export class ApiUniqueService {
    * @param connectionOffice
    * @returns
    */
-  public editConnectionOfficeStatus(connectionOffice: connectionOfficeInfo): Observable<any> {
+  public editConnectionOfficeStatus(officeId: string,connectionOffice: connectionOfficeInfo): Observable<any> {
     // リクエストボディ生成
     const body = {
       "IndexType": "CONNECTIONOFFICESTATUS",
       "Keys": {
+        "adminOfficeId": officeId,
         "connectionOffice": connectionOffice
       }
     };

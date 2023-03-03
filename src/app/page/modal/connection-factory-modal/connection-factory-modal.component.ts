@@ -11,6 +11,7 @@ import {
   filter as _filter,
 } from 'lodash';
 import { officeInfo, connectionOfficeInfo } from 'src/app/entity/officeInfo';
+import { ApiGsiSerchService } from '../../service/api-gsi-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 
 /**
@@ -28,6 +29,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: officeInfo,
     private builder: FormBuilder,
+    private gsiService: ApiGsiSerchService,
     private uniqueService: ApiUniqueService,
   ) { }
 
@@ -185,7 +187,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
    * 関連工場ステータス編集を行う
    */
   private statusEditConnection(connectionOffice: connectionOfficeInfo): Observable<connectionOfficeInfo> {
-    return this.uniqueService.editConnectionOfficeStatus(connectionOffice);
+    return this.uniqueService.editConnectionOfficeStatus(this.data.officeId,connectionOffice);
   }
 
 

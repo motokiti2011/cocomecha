@@ -6,7 +6,7 @@ export interface userMyList {
   // メカニックID
   mechanicId: string;
   // 工場ID
-  officeId: string; 
+  officeId: string;
   // サービスタイプ
   serviceType: string;
   // 伝票番号
@@ -25,12 +25,26 @@ export interface userMyList {
   messageOrQuastionId: string;
   // 入札者ID
   bidderId: string;
+  // リクエスト情報
+  requestInfo: requestInfo | null;
   // 削除区分
   deleteDiv: string;
   // 作成日時
   created: string;
   // 更新日時
   updated: string;
+}
+
+/** リクエスト情報 */
+export interface requestInfo {
+  // リクエストID
+  requestId: string,
+  // リクエストタイプ
+  requestType: string,
+  // リクエスト対象ID
+  requestTargetId: string,
+  // リクエスト対象名
+  requestTargetName: string
 }
 
 /** 表示用マイリスト情報 */
@@ -40,7 +54,7 @@ export interface dispUserMyList {
   // メカニックID
   mechanicId: string;
   // 工場ID
-  officeId: string; 
+  officeId: string;
   // サービスタイプ
   serviceType: string;
   // 伝票番号
