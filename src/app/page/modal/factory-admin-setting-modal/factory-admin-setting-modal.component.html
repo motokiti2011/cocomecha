@@ -13,23 +13,67 @@
     </div>
   </div>
 
+
+
+  <!-- 管理者表示エリア -->
+  <div class="list_area">
+    <label>現在の管理者設定</label>
+    <table>
+      <thead>
+        <tr>
+          <th id="name">管理者名</th>
+          <th id="association">所属</th>
+          <th id="association">役割</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let adminUser of dispAdminData">
+          <td>
+              {{adminUser.mechanicName}}
+          </td>
+          <td>
+            <select class="select"  [(ngModel)]="adminUser.belongsDiv" (change)="selectBelongs()">
+              <option value="">所属を選択してください。</option>
+              <option *ngFor="let belongs of belongsSelectData"
+              [value]="belongs.belongsDiv"
+              [selected]="belongs.belongsDiv === adminUser.belongsDiv">{{adminUser.belongs}}</option>
+            </select>
+          </td>
+          <td>
+            <select class="select"  [(ngModel)]="adminUser.roleDiv" (change)="selectRole()">
+              <option value="">役割を選択してください。</option>
+              <option *ngFor="let role of roleSelectData"
+              [value]="role.roleDiv"
+              [selected]="role.roleDiv === adminUser.roleDiv">{{adminUser.role}}</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row">
+      <div class="col-1"></div>
+      <button class="btn btn-primary" on-click="onResult()" [disabled]="resultDiv">決定する</button>
+    </div>
+
+  </div>
+
+
+
+
+
   <!-- 所属メカニック検索・追加エリア -->
   <div class="row">
     <!-- <div class="col-1"></div> -->
   </div>
 
-  <div *ngIf="listDispSwitchDiv; else serchResultContents">
-
-    <div class="row">
-      <div class="col-1"></div>
-      <button type="button" class="btn btn-primary" on-click="onSerch()"
-        >所属メカニック</button>
-    </div>
-
+  <div class="row">
+    <div class="col-1"></div>
+    <button type="button" class="btn btn-primary" [(ngModel)]="listDispSwitchDiv" on-click="onSwitchListDiv()">所属メカニックを管理者に追加する</button>
   </div>
-  <ng-template #serchResultContents>
+
+  <div *ngIf="listDispSwitchDiv;">
     <div>
-      <label>検索結果</label>
+      <label>所属メカニック情報</label>
       <table>
         <thead>
           <tr>
@@ -37,13 +81,13 @@
             <th id="association">ステータス</th>
         </thead>
         <tbody>
-          <tr *ngFor="let data of serchResult">
-            <td (click)="onSerchMechanic(data)">
-              <div class="select_point" (click)="onSerchMechanic(data)">
-                {{data.name}}</div>
+          <tr *ngFor="let data of connectionMechanic">
+            <td (click)="onSelectMechanic(data)">
+              <div class="select_point" (click)="onSelectMechanic(data)">
+                {{data.mechanicName}}</div>
             </td>
             <td>
-              <button type="submit" class="btn btn-primary" on-click="onSerch()">{{data.name}}</button>
+              <button type="submit" class="btn btn-primary" on-click="onAddMechanic()">選択を追加する</button>
             </td>
           </tr>
         </tbody>
@@ -51,39 +95,15 @@
     </div>
     <div class="row">
       <div class="col-1"></div>
-      <button class="btn btn-primary" on-click="onSerch()" [(ngModel)]="listDispSwitchDiv">決定する</button>
+      <button class="btn btn-primary" on-click="onAddMechanic()" [(ngModel)]="listDispSwitchDiv">追加する</button>
     </div>
-  </ng-template>
-
-</div>
-
-<!-- 管理者表示エリア -->
-<div class="list_area" *ngIf="dispData.length > 0 else ElseContents">
-  <label>現在の管理者設定</label>
-  <table>
-    <thead>
-      <tr>
-        <th id="name">管理者名</th>
-        <th id="association">役割</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let adminUser of dispData">
-        <td (click)="onSelectAdminUser(adminUser)">
-          <div class="select_point" (click)="onSelectAdminUser(adminUser)">
-            {{adminUser.mechanicName}}</div>
-        </td>
-        <td>
-          <button type="submit" class="btn btn-primary" on-click="onSerch()">{{adminUser.mechanicName}}</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<ng-template #ElseContents>
-  <div class="vehicle_msg">関連する工場はありません</div>
-</ng-template>
+  </div>
 
 
-<div class="row btn_area">
-  <button type="submit" class="btn btn-primary" on-click="closeModal()">閉じる</button>
+
+  <div class="row btn_area">
+    <button type="submit" class="btn btn-primary" on-click="closeModal()">閉じる</button>
+  </div>
+
+
 </div>

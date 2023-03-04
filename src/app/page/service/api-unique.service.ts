@@ -18,6 +18,9 @@ import { serviceAdminInfo } from 'src/app/entity/serviceAdminInfo';
 import { completionSlip } from 'src/app/entity/completionSlip';
 import { connectionOfficeInfo } from 'src/app/entity/officeInfo';
 import { fcmcSerchResult, fcmcSerchData } from 'src/app/entity/fcmcSerchResult';
+import { requestInfo } from 'src/app/entity/userMyList';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -615,6 +618,26 @@ export class ApiUniqueService {
     );
   }
 
+  /**
+   * 申し込み中のメカニック情報を取得する
+   * @param officeId 
+   * @returns 
+   */
+  public getRequestMechanicInfo(officeId: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "IndexType": "GETREQUESTMECHANICINFO",
+      "Keys": {
+        "adminOfficeId": officeId
+      }
+    };
+    return this.http.post<requestInfo>(this.apiEndPoint + '/getrequestmechanicinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: requestInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
 
 

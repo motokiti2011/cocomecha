@@ -1,15 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
-import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
 import { fcmcSerchResult, fcmcSerchData, initSerchData } from 'src/app/entity/fcmcSerchResult';
-
 import {
   filter as _filter,
+  find as _find,
+  union as _union,
+  pull as _pull
 } from 'lodash';
-import { officeInfo, connectionOfficeInfo, adminSettingInfo } from 'src/app/entity/officeInfo';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { officeInfo, connectionOfficeInfo, connectionMechanicInfo, adminSettingInfo } from 'src/app/entity/officeInfo';
+import { roleData, role } from 'src/app/entity/role';
+import { belongsData, belongs } from 'src/app/entity/belongs';
+import { ApiSerchService } from '../../service/api-serch.service';
 
 /**
  * 工場管理者設定モーダル
@@ -25,53 +27,115 @@ export class FactoryAdminSettingModalComponent implements OnInit {
     public _dialogRef: MatDialogRef<FactoryAdminSettingModalComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: officeInfo,
+    private apiService: ApiSerchService,
   ) { }
 
   /** タイトル */
   title = '工場管理者設定';
-  /** 検索条件 */
-  serchInfo: fcmcSerchData = initSerchData;
-  /** 地域情報 */
-  areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
-  /** 地域情報選択状態初期値 */
-  areaSelect = ''
-  /** 地域２（市町村）データ */
-  areaCityData: area1SelectArea2[] = []
-  /** 地域２（市町村）選択 */
-  citySelect = '';
   /** 表示データ */
-  dispData: adminSettingInfo[] = [];
-  /** 検索結果 */
-  serchResult? : fcmcSerchResult[];
+  dispAdminData: adminSettingInfo[] = [];
+  /** 所属メカニック情報 */
+  connectionMechanic: connectionMechanicInfo[] = [];
   /** 一覧表示切替区分 */
   listDispSwitchDiv = false;
+  /** 追加メカニック情報 */
+  addMechanicInfo: connectionMechanicInfo[] = [];
+  /** 決定区分 */
+  resultDiv = true;
+  /** 役割セレクトデータ */
+  roleSelectData = roleData;
+  /** 所属セレクトデータ */
+  belongsSelectData = belongsData;
 
   ngOnInit(): void {
-    // 表示情報に管理者情報を設定
-    this.dispData = this.data.adminSettingInfo;
-
+    // 管理者表示情報に管理者情報を設定
+    this.dispAdminData = this.data.adminSettingInfo;
+    // 所属メカニック情報から管理者登録情報を除いたものを設定
+    const connectionMc = this.data.connectionMechanicInfo
+    if (!connectionMc) {
+      return;
+    }
+    connectionMc.forEach(mc => {
+      if (_find(this.dispAdminData, data => data.mechanicId != mc.mechanicId)) {
+        this.connectionMechanic.push(mc);
+      }
+    });
   }
 
 
-  onSerch() {
+  /**
+   * メカニック表示非表示を切り替える
+   */
+  onSwitchListDiv() {
+    console.log(this.listDispSwitchDiv);
+  }
+
+
+  /**
+   * 決定する押下イベント
+   */
+  onResult() {
+    if (this.adminDataCheck()) {
+      alert('すべての所属、役割を設定してください。');
+      return;
+    }
+    let updateData = this.data;
+    updateData.adminSettingInfo = this.dispAdminData;
+    this.apiService.postOffice(updateData).subscribe(result => {
+      if(result) {
+        console.log(result);
+      }
+    });
 
   }
 
   /**
-   * メカニック検索
+   * メカニック選択
    * @param serchData
    */
-  onSerchMechanic(serchData:fcmcSerchResult ) {
+  onSelectMechanic(data: connectionMechanicInfo) {
+    // とりあえず追加する
+    this.addMechanicInfo.push(data)
+  }
 
+
+  /**
+   * メカニック追加イベント
+   */
+  onAddMechanic() {
+    const addData = _union(this.addMechanicInfo)
+    addData.forEach(ad => {
+      const addData: adminSettingInfo = {
+        mechanicId: ad.mechanicId,
+        mechanicName: ad.mechanicName,
+        belongsDiv: '',
+        belongs: '',
+        role: '',
+        roleDiv: ''
+      }
+      // 管理者データに追加
+      this.dispAdminData.push(addData);
+      // 所属メカニック情報から追加したデータを削除
+      _pull(this.connectionMechanic, ad);
+    });
+    // 追加後選択データをクリア
+    this.addMechanicInfo = [];
   }
 
   /**
-   * 管理者選択イベント
-   * @param user
+   * ロール選択イベント
    */
-  onSelectAdminUser(user: adminSettingInfo) {
-
+  selectRole() {
+    this.resultDiv = this.adminDataCheck();
   }
+
+  /**
+   * 所属選択イベント
+   */
+  selectBelongs() {
+    this.resultDiv = this.adminDataCheck();
+  }
+
 
   /**
    * 閉じる押下時イベント
@@ -79,6 +143,26 @@ export class FactoryAdminSettingModalComponent implements OnInit {
   closeModal() {
     this._dialogRef.close();
   }
+
+
+  /************ 以下内部処理 *****************************/
+
+  /**
+   * 管理者データチェック
+   */
+  private adminDataCheck(): boolean {
+    let checkDiv = false;
+    this.dispAdminData.forEach(data => {
+      if (data.belongsDiv == '' || data.roleDiv == '') {
+        checkDiv = true;
+      }
+    });
+    if (checkDiv) {
+      return checkDiv;
+    }
+    return false;
+  }
+
 
 
 }

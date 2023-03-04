@@ -38,13 +38,13 @@ export interface userMyList {
 /** リクエスト情報 */
 export interface requestInfo {
   // リクエストID
-  requestId: string,
+  requestId: string;
   // リクエストタイプ
-  requestType: string,
+  requestType: string;
   // リクエスト対象ID
-  requestTargetId: string,
+  requestTargetId: string;
   // リクエスト対象名
-  requestTargetName: string
+  requestTargetName: string;
 }
 
 /** 表示用マイリスト情報 */

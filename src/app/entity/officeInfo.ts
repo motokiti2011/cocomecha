@@ -59,7 +59,6 @@ export interface connectionOfficeInfo {
   officeAssociation: string | null;
 }
 
-
 // 関連メカニック情報
 export interface connectionMechanicInfo {
   // メカニックID
