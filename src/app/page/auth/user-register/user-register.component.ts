@@ -174,7 +174,7 @@ export class UserRegisterComponent implements OnInit {
     // console.log(this.inputData.area2);
   }
 
-  
+
   /**
    * 郵便番号入力時イベント
    */
@@ -239,7 +239,7 @@ export class UserRegisterComponent implements OnInit {
    * 登録ボタン押下時イベント
    */
   onResister() {
-    if (this.imageFile != null) {
+    if (this.imageFile != null && this.imageFile.length > 0)  {
       this.setImageUrl();
     } else {
       this.userResister();
