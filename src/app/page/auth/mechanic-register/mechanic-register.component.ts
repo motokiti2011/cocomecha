@@ -133,15 +133,7 @@ export class MechanicRegisterComponent implements OnInit {
     this.location.back();
   }
 
-  // /**
-  //  * アップロードファイル選択時イベント
-  //  * @param event
-  //  */
-  // onInputChange(event: any) {
-  //   const file = event.target.files[0];
-  //   console.log(file);
-  //   this.imageFile = file;
-  // }
+
 
   /**
    * 登録するボタン押下イベント
@@ -317,12 +309,18 @@ export class MechanicRegisterComponent implements OnInit {
     if (this.inputData.introduction == '' || this.inputData.introduction == null) {
       message.push('紹介文')
     }
+    if(!this.user) {
+      alert('ユーザー情報なし')
+    }
+
     this.mechanicInfo.mechanicId = '0'
     this.mechanicInfo.validDiv = '0'
     this.mechanicInfo.mechanicName = this.mechanicName.value;
     this.mechanicInfo.adminUserId = this.inputData.adminUserId;
     this.mechanicInfo.adminAddressDiv = this.adminAdress;
     this.mechanicInfo.mailAdress = this.mailAdress.value;
+    this.mechanicInfo.areaNo1 = this.user.areaNo1;
+    this.mechanicInfo.areaNo2 = this.user.areaNo2;
     this.mechanicInfo.officeConnectionDiv = this.officeConnectionDiv
     this.mechanicInfo.officeId = this.inputData.officeId;
     this.mechanicInfo.qualification = this.inputData.qualification;

@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
 import { fcmcSerchResult, fcmcSerchData, initSerchData } from 'src/app/entity/fcmcSerchResult';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { officeAssociation, officeAssociationData } from 'src/app/entity/officeAssociation';
 
 import {
   filter as _filter,
@@ -45,23 +46,24 @@ export class ConnectionFactoryModalComponent implements OnInit {
   areaCityData: area1SelectArea2[] = []
   /** 地域２（市町村）選択 */
   citySelect = '';
-
   /** 表示情報リスト */
   dispData: connectionOfficeInfo[] = [];
-
   /** 検索結果 */
   serchResult: fcmcSerchResult[] = [];
   /** 検索結果選択中データ */
   selectData?: fcmcSerchResult;
-
   /** 検索切替フラグ */
   serchAreaSwitchDiv = true;
-
+  /** 事業所関係性セレクトデータ */
+  officeAssociationData :officeAssociation[] = officeAssociationData;
+  /** 事業所関係性セレクト */
+  officeAssociationSelect = '';
+  /** 更新区分 */
+  updateDiv = false;
   // 地域１
   formArea1 = new FormControl('', [
     Validators.required,
   ]);
-
   // 地域２
   formArea2 = new FormControl('', [
     Validators.required,
@@ -118,6 +120,12 @@ export class ConnectionFactoryModalComponent implements OnInit {
     // console.log(this.serchInfo);
   }
 
+  /**
+   * 工場関係性編集イベント
+   */
+  selectAssociation() {
+
+  }
 
   /**
    * 決定する
@@ -158,10 +166,26 @@ export class ConnectionFactoryModalComponent implements OnInit {
    * @param connectionOffice
    */
   onStatusEdit(connectionOffice: connectionOfficeInfo) {
-    this.statusEditConnection(connectionOffice).subscribe(data => {
-
-    })
+    // this.statusEditConnection(connectionOffice).subscribe(data => {
+    //   this.updateDiv = true;
+    //   // 更新結果を最新化したデータとして返却データにセット
+    //   this.data.connectionMechanicInfo = 
+    // })
   }
+
+
+  /** 
+   * 決定ボタン押下イベント
+   */
+  onResister() {
+    // this.statusEditConnection(connectionOffice).subscribe(data => {
+    //   this.updateDiv = true;
+    //   // 更新結果を最新化したデータとして返却データにセット
+    //   this.data.connectionMechanicInfo = 
+    // })
+  }
+
+
 
   /**
    * 閉じる押下時イベント
@@ -186,7 +210,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
   /**
    * 関連工場ステータス編集を行う
    */
-  private statusEditConnection(connectionOffice: connectionOfficeInfo): Observable<connectionOfficeInfo> {
+  private statusEditConnection(connectionOffice: connectionOfficeInfo[]): Observable<connectionOfficeInfo> {
     return this.uniqueService.editConnectionOfficeStatus(this.data.officeId,connectionOffice);
   }
 

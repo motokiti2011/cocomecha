@@ -668,6 +668,12 @@ export class ServiceCreateComponent implements OnInit {
     this.adminUserName = this.userInfo.userName;
     this.inputData.area1 = this.userInfo.areaNo1;
     this.areaSelect = this.userInfo.areaNo1;
+    if(this.areaSelect != '' ) {
+      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+    }
+    if(this.userInfo.areaNo2) [
+      this.citySelect = this.userInfo.areaNo2
+    ]
     this.inputData.area2 = this.userInfo.areaNo2;
     // 車両情報取得
     this.service.getVehicleList(this.userInfo.userId).subscribe(data => {
@@ -700,6 +706,12 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.targetService = '2';
     this.inputData.area1 = this.userInfo.areaNo1;
     this.areaSelect = this.userInfo.areaNo1;
+    if(this.areaSelect != '' ) {
+      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+    }
+    if(this.userInfo.areaNo2) [
+      this.citySelect = this.userInfo.areaNo2
+    ]
     this.inputData.area2 = this.userInfo.areaNo2;
 
     // ローディング解除

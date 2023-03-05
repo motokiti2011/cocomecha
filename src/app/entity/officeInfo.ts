@@ -21,16 +21,8 @@ export interface officeInfo {
   workContentList: string[];
   // 営業時間
   businessHours: string[];
-  // // 管理拠点ID
-  // adminBaseId: string;
-  // // 拠点情報リスト
-  // baseInfoList: Array<baseInfo>| null;
-  // // 管理者IDリスト
-  // adminIdList: string[];
-  // // 従業員リスト
-  // employeeList: Array<employee>| null;
   // 関連工場情報
-  connectionOfficeInfo?: Array<connectionOfficeInfo>;
+  connectionOfficeInfo?: Array<connectionOfficeInfo> | null;
   // 関連メカニック情報
   connectionMechanicInfo?: Array<connectionMechanicInfo>;
   // 管理者設定情報

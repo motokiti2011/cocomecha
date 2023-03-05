@@ -35,6 +35,8 @@ export class FactoryMenuComponent implements OnInit {
   user?: user
   //編集モード区分
   editModeDiv = false;
+  // 会社情報のデータ
+  officeInfo?: officeInfo;
   // 表示情報
   dispInfo: officeInfo = initOfficeInfo;
   // 工場情報登録区分
@@ -414,6 +416,7 @@ export class FactoryMenuComponent implements OnInit {
    * @param info
    */
   private initSetting(info: officeInfo) {
+    this.officeInfo = info;
     this.dispInfo.officeId = info.officeId;
     this.officeArea1.setValue(info.officeArea1);
     this.areaSelect = info.officeArea1;
@@ -530,7 +533,7 @@ export class FactoryMenuComponent implements OnInit {
    * 関連工場設定モーダルを開く
    */
   private factoryConnect() {
-    const data = '';
+    const data = this.officeInfo;
 
     // 関連工場モーダル展開
     const dialogRef = this.modal.open(ConnectionFactoryModalComponent, {
@@ -544,10 +547,7 @@ export class FactoryMenuComponent implements OnInit {
         // 返却値　無理に閉じたらundifind
         console.log('画像モーダル結果:' + result)
         if (result != undefined && result != null) {
-          if(result.length != 0) {
-            console.log(result);
-            // this.imageFile = result;
-          }
+          this.officeInfo = result;
         }
       }
     );
@@ -557,7 +557,7 @@ export class FactoryMenuComponent implements OnInit {
    * 関連メカニック設定モーダルを開く
    */
   private mechanicConnect() {
-    const data = '';
+    const data = this.officeInfo;
     // 関連メカニックモーダル展開
     const dialogRef = this.modal.open(ConnectionMechanicModalComponent, {
       width: '750px',
@@ -570,10 +570,7 @@ export class FactoryMenuComponent implements OnInit {
         // 返却値　無理に閉じたらundifind
         console.log('画像モーダル結果:' + result)
         if (result != undefined && result != null) {
-          if(result.length != 0) {
-            console.log(result);
-            // this.imageFile = result;
-          }
+          this.officeInfo = result;
         }
       }
     );
@@ -585,7 +582,7 @@ export class FactoryMenuComponent implements OnInit {
    * 工場管理者設定モーダルを開く
    */
   private factoryAdmiSetting() {
-    const data = '';
+    const data = this.officeInfo;
     // 工場管理者設定モーダル展開
     const dialogRef = this.modal.open(FactoryAdminSettingModalComponent, {
       width: '750px',
@@ -598,10 +595,7 @@ export class FactoryMenuComponent implements OnInit {
         // 返却値　無理に閉じたらundifind
         console.log('画像モーダル結果:' + result)
         if (result != undefined && result != null) {
-          if(result.length != 0) {
-            console.log(result);
-            // this.imageFile = result;
-          }
+          this.officeInfo = result;
         }
       }
     );

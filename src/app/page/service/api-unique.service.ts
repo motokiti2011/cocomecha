@@ -19,6 +19,7 @@ import { completionSlip } from 'src/app/entity/completionSlip';
 import { connectionOfficeInfo } from 'src/app/entity/officeInfo';
 import { fcmcSerchResult, fcmcSerchData } from 'src/app/entity/fcmcSerchResult';
 import { requestInfo } from 'src/app/entity/userMyList';
+import { initPublicInfo } from 'src/app/entity/publicInfo';
 
 
 
@@ -114,7 +115,7 @@ export class ApiUniqueService {
    * @param mechanicId
    * @returns
    */
-  public postFactory(officeInfo: officeInfo, userId: string, mechanicId: string | null): Observable<any> {
+  public postFactory(officeInfo: officeInfo, userId: string, mechanicId: string): Observable<any> {
 
     // リクエストボディ生成
     const body = {
@@ -130,14 +131,15 @@ export class ApiUniqueService {
         'officePostCode': officeInfo.officePostCode,
         'workContentList': officeInfo.workContentList,
         'businessHours': officeInfo.businessHours,
-        'connectionOfficeInfo': officeInfo.connectionOfficeInfo,
-        'connectionMechanicInfo': officeInfo.connectionMechanicInfo,
-        'adminSettingInfo': officeInfo.adminSettingInfo,
-        // この下2つはいらない？？
-        'adminIdList': userId,
-        'employeeList': mechanicId,
+        'connectionOfficeInfo': null,
+        'connectionMechanicInfo': null,
+        'adminSettingInfo': null,
+        'officeFormList': null,
         'officePR': officeInfo.officePR,
         'officePRimageURL': officeInfo.officePRimageURL,
+        'userId': userId,
+        'mechanicId': mechanicId,
+        'publicInfo': initPublicInfo,
         'created': new Date(),
         'updated': new Date()
       }
@@ -601,7 +603,7 @@ export class ApiUniqueService {
    * @param connectionOffice
    * @returns
    */
-  public editConnectionOfficeStatus(officeId: string,connectionOffice: connectionOfficeInfo): Observable<any> {
+  public editConnectionOfficeStatus(officeId: string,connectionOffice: connectionOfficeInfo[]): Observable<any> {
     // リクエストボディ生成
     const body = {
       "IndexType": "CONNECTIONOFFICESTATUS",

@@ -98,7 +98,7 @@
     <thead>
       <tr>
         <th id="name">工場名</th>
-        <th id="association">ステータス</th>
+        <th id="association">関係性</th>
     </thead>
     <tbody>
       <tr *ngFor="let office of dispData">
@@ -107,7 +107,11 @@
             {{office.officeName}}</div>
         </td>
         <td>
-          <button type="submit" class="btn btn-primary" on-click="onSerch()">{{office.officeAssociation}}</button>
+          <select class="select" [(ngModel)]="office.officeAssociation" (change)="selectAssociation()">
+            <option value="">所属を選択してください。</option>
+            <option *ngFor="let association of officeAssociationData" [value]="office.officeAssociation"
+              [selected]="office.officeAssociation === officeAssociationSelect">{{office.officeName}}</option>
+          </select>
         </td>
       </tr>
     </tbody>

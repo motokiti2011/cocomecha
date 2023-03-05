@@ -276,6 +276,7 @@ export class FactoryRegisterComponent implements OnInit {
   selectArea() {
     console.log('地域')
     console.log(this.areaSelect)
+    this.officeArea1 = this.areaSelect;
     this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
   }
 
@@ -358,8 +359,12 @@ export class FactoryRegisterComponent implements OnInit {
     this.officeInfo.connectionMechanicInfo = [];
     this.officeInfo.officePR = this.inputData.officePR;
     this.officeInfo.officePRimageURL = this.inputData.officePRimageURL;
+    let mechanicId = '';
+    if(this.user.mechanicId) {
+      mechanicId = this.user.mechanicId;
+    }
 
-    this.apiUniqueService.postFactory(this.officeInfo, this.user.userId, this.user.mechanicId).subscribe(result => {
+    this.apiUniqueService.postFactory(this.officeInfo, this.user.userId, mechanicId).subscribe(result => {
       console.log(result);
       if(result == 200) {
         alert('登録完了')
