@@ -5,14 +5,11 @@
     <div class="title">
       <div id="modal_title">{{title}}</div>
     </div>
-    <div class="col-6"></div>
+    <div class="col-4"></div>
     <div class="close">
       <button id="close" mat-button (click)="closeModal()">✖</button>
     </div>
   </div>
-
-
-
 
   <!-- 関連メカニック表示エリア -->
   <div class="list_area" *ngIf="dispMechanicList.length > 0 else ElseContents">
@@ -26,25 +23,42 @@
       </thead>
       <tbody>
         <tr *ngFor="let mechanic of dispMechanicList">
+          <td>{{mechanic.mechanicName}}</td>
           <td>
-            <select class="select" [(ngModel)]="mechanic.belongsDiv" (change)="selectBelongs()">
-              <option value="">所属を選択してください。</option>
-              <option *ngFor="let belongs of belongsSelectData" [value]="belongs.belongsDiv"
-                [selected]="belongs.belongsDiv === mechanic.belongsDiv">{{mechanic.belongs}}</option>
-            </select>
+            <div *ngIf="mechanic.belongsDiv == '0' else AdminDisp">
+              <div>管理者</div>
+            </div>
+            <ng-template #AdminDisp>
+              <select class="belongs_select" [(ngModel)]="mechanic.belongsDiv" (change)="selectBelongs()">
+                <option value="">所属を選択してください。</option>
+                <option *ngFor="let belongs of belongsSelectData" [value]="belongs.belongsDiv"
+                  [selected]="belongs.belongsDiv === mechanic.belongsDiv">{{belongs.belongs}}  
+                </option>
+              </select>
+            </ng-template>
           </td>
           <td>
-            <button type="submit" class="btn btn-primary" on-click="onResult()">紐づけを解除する</button>
+            <div *ngIf="mechanic.belongsDiv == '0' else AdminDispConnection">
+              <div>管理者の操作はできません</div>
+            </div>
+            <ng-template #AdminDispConnection>
+              <button type="submit" class="btn btn-primary" on-click="onResult()">紐づけを解除する</button>
+            </ng-template>
           </td>
         </tr>
       </tbody>
     </table>
-    <button type="submit" class="btn btn-primary" on-click="onResult()">決定する</button>
+
+    <div class="row btn_area">
+      <button type="submit" class="btn btn-primary" on-click="onResult()">決定する</button>
+    </div>
 
 
   </div>
   <ng-template #ElseContents>
-    <div class="vehicle_msg">関連するメカニック情報はありません</div>
+    <div class="none_msg">
+      関連するメカニック情報はありません
+    </div>
   </ng-template>
 
 
@@ -64,20 +78,19 @@
         </thead>
         <tbody>
           <tr *ngFor="let info of unauthorizedMechanicList">
-            <td>
-              {{info.requestTargetName}}
-            </td>
+            <td>{{info.requestTargetName}}</td>
             <td>
               <button type="submit" class="btn btn-primary" on-click="onAddConnection(info)">追加する</button>
             </td>
           </tr>
         </tbody>
       </table>
-
     </div>
   </div>
   <ng-template #NotDataContents>
-    <div>現在申請中のメカニック情報はありません。</div>
+    <div class="none_msg">
+      <div>現在申請中のメカニック情報はありません。</div>
+    </div>
   </ng-template>
 
   <div class="row btn_area">
