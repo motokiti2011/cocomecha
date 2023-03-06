@@ -42,18 +42,18 @@
     </div>
 
     <div class="row">
-      <label>工場名検索</label>
+      <label class="form_label">工場名検索</label>
       <div class="col-1"></div>
-      <input type="text" class="form-control" id="vehicle_name" [(ngModel)]="serchInfo.name" />
+      <input type="text" class="form-control" id="serch_form_title" [(ngModel)]="serchInfo.name" />
     </div>
 
     <div class="row">
-      <label>電話番号(-なし)</label>
+      <label class="form_label">電話番号(-なし)</label>
       <div class="col-1"></div>
-      <input type="text" class="form-control" id="vehicle_name" [formControl]="telNo" />
+      <input type="text" class="form-control" id="serch_form_title" [formControl]="telNo" />
     </div>
     <div class="row">
-      <div class="col-1"></div>
+      <div class="btn_area"></div>
       <button type="button" class="btn btn-primary" on-click="onSerch()"
         [disabled]="requiredForm.invalid">検索する</button>
     </div>
@@ -118,7 +118,9 @@
   </table>
 </div>
 <ng-template #ElseContents>
-  <div class="vehicle_msg">関連する工場はありません</div>
+  <div class="none_msg">
+    <div>関連する工場はありません</div>
+  </div>
 </ng-template>
 
 

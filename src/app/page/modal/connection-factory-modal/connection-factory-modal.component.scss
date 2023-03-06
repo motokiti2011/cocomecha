@@ -17,6 +17,26 @@
   }
 }
 
+.row {
+  margin : 10px 10px 10px 10px;
+}
+
+.form_label {
+  width: 100px;
+}
+
+.none_msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 .list_area {
   table {
@@ -57,16 +77,18 @@
 
 
 .area_select {
-  margin-right: 20px;
-  width: 120px;
+  margin-right: 30px;
+  height: 40px;
+  width: 150px;
 }
 
 .city_select {
-  margin-right: 20px;
+  margin-right: 30px;
+  height: 40px;
   width: 200px;
 }
 
 
-#vehicle_name {
+#serch_form_title {
   width: 300px;
 }
