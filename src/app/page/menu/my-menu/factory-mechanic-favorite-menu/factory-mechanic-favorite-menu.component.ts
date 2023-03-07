@@ -68,6 +68,15 @@ export class FactoryMechanicFavoriteMenuComponent implements OnInit {
 
 
   /**
+   * お気に入り解除ボタン押下イベント
+   * @param favoriteId
+   */
+  onLiftFavorite(favoriteId: string) {
+    console.log(favoriteId);
+  }
+
+
+  /**
    * 選択した工場・メカニックの商品一覧を表示する
    * @param e
    */

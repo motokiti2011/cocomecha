@@ -38,7 +38,7 @@ export class ServiceTransactionComponent implements OnInit {
   /** 伝票日付 */
   dispYmd = '';
   /** 伝票価格 */
-  dispPrice = '';
+  dispPrice = 0;
   /** 伝票地域 */
   dispArea = '';
   /** 伝票説明 */
@@ -92,8 +92,11 @@ export class ServiceTransactionComponent implements OnInit {
         this.slip = data;
         this.dispTitle = this.slip.title;
         this.dispYmd = String(this.slip.completionDate);
-        this.dispPrice = this.slip.price;
-        this.dispArea = this.service.areaNameSetting(this.slip.areaNo1);
+        if(this.slip.bidMethod == '1' || this.slip.bidMethod == '41' ) {
+          
+          this.dispPrice = Number(this.slip.price);
+        }
+        this.dispArea = this.service.areaNameSetting(this.slip.areaNo1) + this.slip.areaNo2;
         this.dispExplanation = this.slip.explanation;
         this.serviceType = this.slip.targetService;
         this.initChatArea(this.slip);

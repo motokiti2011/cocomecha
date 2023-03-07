@@ -146,9 +146,15 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
           serviceType: this.serviceType,
         }
       });
+  }
 
+  /**
+   * お気に入りに追加ボタン押下イベント
+   */
+  onAddFavorite() {
 
   }
+
 
 
   /***************** *********************************/

@@ -1,20 +1,38 @@
-<p>工場・メカニックお気に入り一覧</p>
+<div class="main-content">
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>工場・メカニック名</th>
-      <th>商品一覧へ</th>
-      <th>３ヘッド</th>
-      <th>４ヘッド</th>
+  <div class="side_menu">
+    <app-side-menu [acceseUser]="user"></app-side-menu>
+  </div>
 
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of favoriteList">
-      <td>{{item.id}}</td>
-      <td><div class="item-title" (click)="itemList(item)" >商品一覧へ</div></td>
-      <td>{{item.favoriteId}}</td>
-      <td>{{item.serviceType}}</td>
-    </tr>
-  </tbody>
-</table>
+  <div class="main_area">
+    <p>工場・メカニックお気に入り一覧</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>工場・メカニック名</th>
+          <th>商品一覧へ</th>
+          <th>種別</th>
+          <th>登録解除はこちら</th>
+
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of favoriteList">
+          <td>{{item.id}}</td>
+          <td>
+            <div class="item-title" (click)="itemList(item)">商品一覧へ</div>
+          </td>
+          <td>{{item.serviceType}}</td>
+          <td>
+            <button type="submit" class="btn btn-primary" on-click="onLiftFavorite(item.favoriteId)">紐づけを解除する</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="advertisement_area">
+    <app-advertisement-sid-menu></app-advertisement-sid-menu>
+  </div>
+
+</div>

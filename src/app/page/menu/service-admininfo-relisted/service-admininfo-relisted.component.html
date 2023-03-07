@@ -43,10 +43,15 @@
       <div class="col-1"></div>
 
       <div>
+        <div *ngIf="user">
+          <button type="button" class="btn btn-outline-primary" (click)="onAddFavorite()">お気に入りに追加する</button>
+        </div>
         <div>
           <button type="button" class="btn btn-outline-primary" (click)="onPastTransaction()">過去の取引</button>
         </div>
       </div>
+
+
     </div>
   </div>
 </div>

@@ -30,7 +30,8 @@ export class AppComponent implements OnInit {
     const hoge: string = routeAny._routerState.url;
     const hoge2: string[] = hoge.split('?')
     if (hoge2[0] != '/transaction_menu'
-      && hoge2[0] != '/factory-mechanic-menu') {
+      && hoge2[0] != '/factory-mechanic-menu'
+      && hoge2[0] != '/service-transaction') {
       this.footerDiv = true;
     } else {
       this.footerDiv = false;

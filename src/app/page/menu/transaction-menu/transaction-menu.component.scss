@@ -4,11 +4,15 @@
 }
 
 aside {
-  width: 10%;
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  margin: 40px 0px 0px 0px;
 }
 
 article {
-  width: 90%;
+  width: 70%;
+  margin: 40px 20px 0px 0px;
 }
 
 .bid-method {

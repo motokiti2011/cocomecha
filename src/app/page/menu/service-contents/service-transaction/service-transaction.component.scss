@@ -12,24 +12,25 @@
   margin-left: 30px;
 }
 
-.btn-area {
-  width: 270px;
+.btn_area {
+  width: 250px;
   // display: flex;
   // flex-direction: column;
+  .btn_item {
+    width: 230px;
+    height: 40px;
+    margin-top: 20px;
+  }
+  
+  .private_message {
+    margin-top: 60px;
+  }
 }
 
-.btn_item {
-  width: 180px;
-  height: 40px;
-  margin-top: 20px;
-}
-
-.private-message {
-  margin-top: 60px;
-}
 
 .main_area {
-  width: 50%;
+  width: 45%;
+  max-width: 50%;
   height: 600px;
   display: flex;
   justify-content: center;
