@@ -7,8 +7,12 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { user } from 'src/app/entity/user';
 import { Observable } from 'rxjs';
 import { serviceAdminInfo } from 'src/app/entity/serviceAdminInfo';
+import { ApiSerchService } from '../../service/api-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { FormService } from '../../service/form.service';
+import { CognitoService } from '../../auth/cognito.service';
+import { factoryMechanicFavorite } from 'src/app/entity/factoryMechanicFavorite';
+import { result } from 'lodash';
 
 @Component({
   selector: 'app-service-admininfo-relisted',
@@ -22,6 +26,8 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private overlay: Overlay,
+    private cognito: CognitoService,
+    private apiservice: ApiSerchService,
     private uniqueService: ApiUniqueService,
     private formService: FormService,
   ) { }
@@ -64,6 +70,18 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
 
 
   ngOnInit(): void {
+    const authUser = this.cognito.initAuthenticated();
+    // 認証済みユーザーの場合
+    if (authUser !== null) {
+      // ローディング開始
+      this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+      this.apiservice.getUser(authUser).subscribe(user => {
+        console.log(user);
+        this.user = user;
+        // ローディング解除
+        this.overlayRef.detach();
+      });
+    }
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.route.queryParams.subscribe(params => {
@@ -152,7 +170,22 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
    * お気に入りに追加ボタン押下イベント
    */
   onAddFavorite() {
-
+    if(!this.user) {
+      return;
+    }
+    const addFavorite: factoryMechanicFavorite = {
+        id: '',
+        userId: this.user?.userId,
+        serviceType: this.serviceType,
+        favoriteId: this.adminId,
+        favoriteName: this.adminName,
+        created: '',
+        updated: ''
+    }
+    this.apiservice.postFcMcFavorite(addFavorite).subscribe(result => {
+      console.log(result);
+      alert(result)
+    })
   }
 
 
@@ -182,6 +215,4 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
     }
     return imageUrl;
   }
-
-
 }

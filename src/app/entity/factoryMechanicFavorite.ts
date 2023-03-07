@@ -7,6 +7,8 @@ export interface factoryMechanicFavorite {
   serviceType: string;
   // お気に入り対象ID
   favoriteId: string;
+  // お気に入り対象名
+  favoriteName: string;
   // 作成日時
   created: string;
   // 更新日時

@@ -16,6 +16,7 @@ import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { userVehicle } from 'src/app/entity/userVehicle';
 import { userMyList } from 'src/app/entity/userMyList';
+import { factoryMechanicFavorite } from 'src/app/entity/factoryMechanicFavorite';
 
 @Injectable({
   providedIn: 'root'
@@ -452,6 +453,34 @@ export class ApiSerchService {
     return this.http.post<officeInfo>(this.apiEndPoint + '/officeinfo', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: officeInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+  /**
+   * 工場・メカニックお気に入り登録を行う
+   * @param data
+   * @returns
+   */
+  public postFcMcFavorite(data: factoryMechanicFavorite): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "POST",
+      "Keys": {
+        "id": data.id,
+        "userId": data.userId,
+        "serviceType": data.serviceType,
+        "favoriteId": data.favoriteId,
+        "favoriteName": data.favoriteName,
+        "created": data.created,
+        "updated": data.updated
+      }
+    };
+    return this.http.post<factoryMechanicFavorite>(this.apiEndPoint + '/factorymechanicfavorite', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: factoryMechanicFavorite) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );
