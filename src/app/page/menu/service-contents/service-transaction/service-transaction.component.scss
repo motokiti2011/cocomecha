@@ -13,7 +13,7 @@
 }
 
 .btn-area {
-  width: 250px;
+  width: 270px;
   // display: flex;
   // flex-direction: column;
 }
@@ -28,18 +28,25 @@
   margin-top: 60px;
 }
 
-.main-area {
-  width: 550px;
+.main_area {
+  width: 50%;
   height: 600px;
-  border:2px solid;
-  border-color: black;
-  border-radius: 10px 10px 10px 10px;
+  display: flex;
+  justify-content: center;
+  // border:2px solid;
+  // border-color: black;
+  // border-radius: 10px 10px 10px 10px;
 
   .messages {
+    border:2px solid;
+    border-color: black;
+    border-radius: 10px 10px 10px 10px;
     margin-top: 20px;
     margin-left: 20px;
-    width: 500px;
-    height: 460px;
+    width: 550px;
+    // width: 500px;
+    // height: 460px;
+    height: 500px;
   }
 }
 

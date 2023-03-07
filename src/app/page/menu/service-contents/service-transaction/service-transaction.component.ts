@@ -89,7 +89,7 @@ export class ServiceTransactionComponent implements OnInit {
       this.serviceType = params['serviceType'];
       console.log('serviceTypeX:' + this.serviceType);
       this.service.getService(this.dispSlipId, this.serviceType).subscribe(data => {
-        this.slip = data[0];
+        this.slip = data;
         this.dispTitle = this.slip.title;
         this.dispYmd = String(this.slip.completionDate);
         this.dispPrice = this.slip.price;
