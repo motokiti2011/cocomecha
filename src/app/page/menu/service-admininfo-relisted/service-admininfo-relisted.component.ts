@@ -70,18 +70,6 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
 
 
   ngOnInit(): void {
-    const authUser = this.cognito.initAuthenticated();
-    // 認証済みユーザーの場合
-    if (authUser !== null) {
-      // ローディング開始
-      this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
-      this.apiservice.getUser(authUser).subscribe(user => {
-        console.log(user);
-        this.user = user;
-        // ローディング解除
-        this.overlayRef.detach();
-      });
-    }
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.route.queryParams.subscribe(params => {
@@ -93,6 +81,16 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
       this.getAdminService().subscribe(data => {
         this.setDispData(data);
       });
+      const authUser = this.cognito.initAuthenticated();
+      // 認証済みユーザーの場合
+      if (authUser !== null) {
+        this.apiservice.getUser(authUser).subscribe(user => {
+          console.log(user);
+          this.user = user;
+          // ローディング解除
+          this.overlayRef.detach();
+        });
+      }
       // ローディング解除
       this.overlayRef.detach();
     });

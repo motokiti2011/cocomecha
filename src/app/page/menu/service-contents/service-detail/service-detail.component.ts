@@ -238,13 +238,13 @@ export class ServiceDetailComponent implements OnInit {
       this.serviceAdminInfo.id = this.dispContents.slipAdminUserId;
       this.serviceAdminInfo.name = this.dispContents.slipAdminUserName;
       console.log(this.serviceAdminInfo);
-    } else if (this.serviceType == '1' && this.dispContents.slipAdminMechanicId) {
-      this.serviceAdminInfo.id = this.dispContents.slipAdminMechanicId;
-      this.serviceAdminInfo.name = this.dispContents.slipAdminMechanicName;
-      console.log(this.serviceAdminInfo);
-    } else if (this.serviceType == '2' && this.dispContents.slipAdminOfficeId) {
+    } else if (this.serviceType == '1' && this.dispContents.slipAdminOfficeId) {
       this.serviceAdminInfo.id = this.dispContents.slipAdminOfficeId;
       this.serviceAdminInfo.name = this.dispContents.slipAdminOfficeName;
+      console.log(this.serviceAdminInfo);
+    } else if (this.serviceType == '2' && this.dispContents.slipAdminMechanicId) {
+      this.serviceAdminInfo.id = this.dispContents.slipAdminMechanicId;
+      this.serviceAdminInfo.name = this.dispContents.slipAdminMechanicName;
       console.log(this.serviceAdminInfo);
     } else {
       // これはあり得ないが…
