@@ -37,8 +37,8 @@ export class ServiceListcomponentService {
 
   /**
    * 伝票情報を画面表示データに変換する
-   * @param slipData 
-   * @returns 
+   * @param slipData
+   * @returns
    */
   convertSlipServiceContents(slipData: slipDetailInfo[]): serviceContents[] {
     let resultData: serviceContents[] = [];
@@ -55,7 +55,9 @@ export class ServiceListcomponentService {
         userId: slip.slipAdminUserId,
         userName: slip.slipAdminUserName,
         mechanicId: '',
+        mechanicName: '',
         officeId: '',
+        officeName: '',
         title: slip.title,
         workArea: slip.workAreaInfo,
         price: Number(slip.price),
@@ -86,7 +88,7 @@ export class ServiceListcomponentService {
   /**
    * サービス商品情報を画面表示データに変換する
    * @param service
-   * @returns 
+   * @returns
    */
   public convertServiceContents(serviceData: salesServiceInfo[]): serviceContents[] {
     let resultData: serviceContents[] = [];
@@ -104,7 +106,9 @@ export class ServiceListcomponentService {
         userId: service.slipAdminUserId,
         userName: service.slipAdminUserName,
         mechanicId: service.slipAdminMechanicId,
+        mechanicName: service.slipAdminMechanicName,
         officeId: service.slipAdminOfficeId,
+        officeName: service.slipAdminOfficeName,
         title: service.title,
         workArea: service.workAreaInfo,
         price: Number(service.price),

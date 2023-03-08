@@ -122,9 +122,10 @@ export class ServiceDetailService {
    * サービス情報の日付データから画面表示用に加工する。
    * @param ymd
    */
-  public setDispYMDSt(ymd: string): string {
+  public setDispYMDSt(ymd: number): string {
     // 年月日を取得
     console.log(ymd);
+
     const ymdst = String(ymd);
     const stYear = ymdst.slice(0,4)
     const stMonth = ymdst.slice(5,6)

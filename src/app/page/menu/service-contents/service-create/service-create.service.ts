@@ -56,7 +56,7 @@ export class ServiceCreateService {
 
     const imageData = this.imageSetting(content.imageUrlList);
 
-    let vehicleName = ''; 
+    let vehicleName = '';
     let vehicleDiv = '';
     let vehicleInfo = null;
     if(content.targetVehcle) {
@@ -145,7 +145,7 @@ export class ServiceCreateService {
 
     const imageData = this.imageSetting(content.imageUrlList);
 
-    let vehicleName = ''; 
+    let vehicleName = '';
     let vehicleDiv = '';
     let vehicleInfo = null;
     if(content.targetVehcle) {
@@ -164,15 +164,15 @@ export class ServiceCreateService {
       // 伝票管理者ユーザーID
       slipAdminUserId: content.userId,
       // 伝票管理者ユーザー名
-      slipAdminUserName: '',
+      slipAdminUserName: content.userName,
       // メカニックID
       slipAdminMechanicId: content.mechanicId,
       // メカニック名
-      slipAdminMechanicName: '',
+      slipAdminMechanicName:  '',
       // 工場ID
       slipAdminOfficeId: content.officeId,
       // 工場名
-      slipAdminOfficeName: '',
+      slipAdminOfficeName:  '',
       // 管理者区分
       adminDiv: content.targetService,
       // タイトル
@@ -201,14 +201,14 @@ export class ServiceCreateService {
       targetVehicleId: '',
       // 対象車両名
       targetVehicleName: vehicleName,
-      // 対象車両区分      
+      // 対象車両区分
       targetVehicleDiv: vehicleDiv,
       // 対象車両情報
       targetVehicleInfo: vehicleInfo,
       // 作業場所情報
       workAreaInfo: content.workArea,
       // 希望日
-      preferredDate: String(content.preferredDate),
+      preferredDate: content.preferredDate,
       // 希望時間
       preferredTime: String(content.preferredTime),
       // 完了日
@@ -233,11 +233,11 @@ export class ServiceCreateService {
 
   /**
    * 画像アップロードを行う
-   * @param imgList 
+   * @param imgList
    */
   public imgUpload(imgList: any) {
     let uploadUrl = '';
-    let uploadResult = '';  
+    let uploadResult = '';
     if (imgList) {
       this.s3.onManagedUpload(imgList).then((data) => {
         if (data) {
@@ -254,8 +254,8 @@ export class ServiceCreateService {
 
   /**
    * 画像情報を設定する
-   * @param imageList 
-   * @returns 
+   * @param imageList
+   * @returns
    */
   private imageSetting(imageList: string[]| null): {samneil:string, urlList:string[]} {
     // 画像情報を設定する
@@ -283,7 +283,7 @@ export class ServiceCreateService {
 
   /**
    * 画像アップロードを行う
-   * @param imgList 
+   * @param imgList
    */
   public protoImgUpload(imgList: any): Promise<AWS.S3.ManagedUpload.SendData> {
     return this.s3.onManagedUpload(imgList);

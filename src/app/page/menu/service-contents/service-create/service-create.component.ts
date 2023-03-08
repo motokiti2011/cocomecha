@@ -581,7 +581,7 @@ export class ServiceCreateComponent implements OnInit {
       // 一度設定された場合はここで格納しモーダルに飛ばす
       settingVehicle = this.inputData.targetVehcle;
     }
-    
+
     const modalData: vehicleModalInput = {
       targetVehicle: this.userVehicle,
       targetService: this.inputData.targetService,

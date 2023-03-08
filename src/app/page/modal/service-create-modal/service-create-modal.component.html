@@ -22,6 +22,13 @@
 
   <div class="row">
     <div class="col text-center">
+      <button type="button" class="btn btn-outline-primary" (click)="onClick('2')">工場としてサービス、商品を出品する</button>
+    </div>
+  </div>
+
+
+  <div *ngIf="officeBtnDiv" class="row">
+    <div class="col text-center">
       <button type="button" class="btn btn-outline-primary" (click)="onReturn()">戻る</button>
     </div>
   </div>

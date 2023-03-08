@@ -43,7 +43,7 @@
       <div class="col-1"></div>
 
       <div>
-        <div *ngIf="user">
+        <div *ngIf="user && serviceType!='0'">
           <button type="button" class="btn btn-outline-primary" (click)="onAddFavorite()">お気に入りに追加する</button>
         </div>
         <div>

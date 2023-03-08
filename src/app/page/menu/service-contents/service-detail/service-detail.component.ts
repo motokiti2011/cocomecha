@@ -58,7 +58,7 @@ export class ServiceDetailComponent implements OnInit {
   /** サービスタイプ */
   serviceTypeName: string = '';
   /** サービス管理者情報 */
-  serviceAdminInfo: { id: string, name: string } = { id: '', name: '' }
+  serviceAdminInfo: { id: string, name: string| null } = { id: '', name: '' }
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -215,7 +215,7 @@ export class ServiceDetailComponent implements OnInit {
 
   /**
    * 管理者情報ページに遷移する
-   * @param id 
+   * @param id
    */
   onServiceAdmin(id: string) {
     console.log(id);

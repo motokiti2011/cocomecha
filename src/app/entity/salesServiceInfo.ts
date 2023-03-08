@@ -14,11 +14,11 @@ export interface salesServiceInfo {
   // 工場ID
   slipAdminOfficeId: string| null;
   // 工場名
-  slipAdminOfficeName: string;
+  slipAdminOfficeName: string| null;
   // メカニックID
   slipAdminMechanicId: string| null;
   // メカニック名
-  slipAdminMechanicName: string;
+  slipAdminMechanicName: string| null;
   // 管理者区分（どの管理者IDを利用するかどうか）
   adminDiv: string;
   // タイトル
@@ -48,13 +48,13 @@ export interface salesServiceInfo {
   // 対象車両名
   targetVehicleName: string;
   // 車両区分
-  targetVehicleDiv: string;  
+  targetVehicleDiv: string;
   // 対象車両情報
   targetVehicleInfo?: slipVehicle | null;
   // 作業場所情報
   workAreaInfo: string;
   // 希望日
-  preferredDate: string;
+  preferredDate: number;
   // 希望時間
   preferredTime: string;
   // 完了日
@@ -127,13 +127,13 @@ export const defaulsalesService: salesServiceInfo = {
   // 対象車両名
   targetVehicleName: '',
   // 車両区分
-  targetVehicleDiv: '',  
+  targetVehicleDiv: '',
   // // 対象車両情報
   // targetVehicleInfo: '',
   // 作業場所情報
   workAreaInfo: '',
   // 希望日
-  preferredDate: '',
+  preferredDate: 0,
   // 希望時間
   preferredTime: '',
   // 完了日

@@ -10,8 +10,12 @@ export interface serviceContents {
   userName: string;
   // メカニックID
   mechanicId: string |null,
+  // メカニック名
+  mechanicName: string |null,
   // オフィスID
   officeId: string |null,
+  // オフィス名
+  officeName: string |null,
   // タイトル
   title: string;
   // 作業場所
@@ -59,7 +63,9 @@ export const initServiceContent:serviceContents = {
   userId: '0',
   userName: '',
   mechanicId: null,
+  mechanicName: null,
   officeId: null,
+  officeName: null,
   title: '',
   workArea: '',
   price: 0,
