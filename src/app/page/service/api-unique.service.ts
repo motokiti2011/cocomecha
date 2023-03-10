@@ -491,11 +491,11 @@ export class ApiUniqueService {
     const body = {
       "IndexType": "FCMCITEM",
       "Keys": {
-        "id": id,
+        "acceseMechanicId": id,
         "serviceType": serviceType
       }
     };
-    return this.http.post<mcfcItem>(this.apiEndPoint + '/multiplebrosing', body).pipe(
+    return this.http.post<mcfcItem>(this.apiEndPoint + '/serchfcmcitem', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: mcfcItem) => res),
       // エラー時HTTPステータスコードを戻す
@@ -622,8 +622,8 @@ export class ApiUniqueService {
 
   /**
    * 申し込み中のメカニック情報を取得する
-   * @param officeId 
-   * @returns 
+   * @param officeId
+   * @returns
    */
   public getRequestMechanicInfo(officeId: string): Observable<any> {
     // リクエストボディ生成

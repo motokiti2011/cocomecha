@@ -90,11 +90,12 @@ export class ServiceDetailComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       console.log(params['serviceId']);
       const serviceId: string = params['serviceId'];
-      this.serviceType = params['searchTargetService'];
+      const serviceType = params['searchTargetService'];
       this.setServiceTypeName();
       // サービスIDから伝票情報を取得し表示する
-      this.service.getService(serviceId, this.serviceType).subscribe(data => {
+      this.service.getService(serviceId, serviceType).subscribe(data => {
         this.dispContents = data;
+        this.serviceType = data.targetService;
         // 表示内容に取得した伝票情報を設定
         this.serviceTitle = this.dispContents.title;
         // 表示サービスの管理者設定
