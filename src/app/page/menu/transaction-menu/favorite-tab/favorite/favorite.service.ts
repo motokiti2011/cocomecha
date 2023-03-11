@@ -34,10 +34,14 @@ export class FavoriteService {
    * @param list
    */
   public deleteMyFavorite(list: userFavorite[]): Observable<number> {
-    let idList: string[] = [];
+    let idList: {id:string, serviceType: string}[] = [];
     // idを抽出
     list.forEach(li => {
-      idList.push(li.id);
+      const addData = {
+        id: li.id,
+        serviceType: li.serviceType
+      }
+      idList.push(addData);
     });
     return this.apiUniqueService.multipleDeleteFavorite(idList);
 

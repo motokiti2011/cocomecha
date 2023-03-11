@@ -148,7 +148,7 @@ export class ApiSerchService {
 
 
   /**
-   * CognitoユーザーIDをPKに履歴情報をDynamoDBに登録する
+   * 履歴情報を登録する
    * @param user
    * @returns
    */
@@ -180,7 +180,7 @@ export class ApiSerchService {
   }
 
   /**
-   * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
+   * お気に入り情報を登録する
    * @param user
    * @returns
    */
@@ -211,7 +211,7 @@ export class ApiSerchService {
   }
 
   /**
-   * CognitoユーザーIDをPKにお気に入り情報をDynamoDBに登録する
+   * お気に入り情報を削除する
    * @param user
    * @returns
    */

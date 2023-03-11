@@ -441,7 +441,7 @@ export class ApiUniqueService {
    * @param idList
    * @returns
    */
-  public multipleDeleteFavorite(idList: string[]): Observable<any> {
+  public multipleDeleteFavorite(idList: {id:string, serviceType: string}[]): Observable<any> {
     // リクエストボディ生成
     const body = {
       "IndexType": "MULTIPLEDELETEFAVORITE",
