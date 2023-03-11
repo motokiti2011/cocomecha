@@ -465,6 +465,7 @@ export class ApiSerchService {
    * @returns
    */
   public postFcMcFavorite(data: factoryMechanicFavorite): Observable<any> {
+
     // リクエストボディ生成
     const body = {
       "OperationType": "POST",

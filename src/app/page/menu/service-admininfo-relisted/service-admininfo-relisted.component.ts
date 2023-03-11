@@ -86,7 +86,7 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
       if (authUser !== null) {
         this.apiservice.getUser(authUser).subscribe(user => {
           console.log(user);
-          this.user = user;
+          this.user = user[0];
           // ローディング解除
           this.overlayRef.detach();
         });
@@ -173,16 +173,17 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
     }
     const addFavorite: factoryMechanicFavorite = {
         id: '',
-        userId: this.user?.userId,
+        userId: this.user.userId,
         serviceType: this.serviceType,
         favoriteId: this.adminId,
         favoriteName: this.adminName,
         created: '',
         updated: ''
     }
+    console.log(addFavorite)
     this.apiservice.postFcMcFavorite(addFavorite).subscribe(result => {
       console.log(result);
-      alert(result)
+      // alert(result)
     })
   }
 
