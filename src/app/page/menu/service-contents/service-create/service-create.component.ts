@@ -22,6 +22,8 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
 import { ImageModalComponent } from 'src/app/page/modal/image-modal/image-modal.component';
 import { VehicleModalComponent, vehicleModalInput } from 'src/app/page/modal/vehicle-modal/vehicle-modal.component';
+import { userVehicle } from 'src/app/entity/userVehicle';
+import { officeInfo } from 'src/app/entity/officeInfo';
 
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { user, initUserInfo } from 'src/app/entity/user';
@@ -44,7 +46,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
-import { userVehicle } from 'src/app/entity/userVehicle';
 
 
 @Component({
@@ -160,7 +161,12 @@ export class ServiceCreateComponent implements OnInit {
   userVehicle: userVehicle[] = [];
   /** 指定なし区分 */
   unspecifiedDiv = false;
+  /** サービスタイプ */
+  serviceType = '';
+  /** 工場情報 */
+  office?: officeInfo
 
+  /** ローディングオーバーレイ */
   overlayRef = this.overlay.create({
     hasBackdrop: true,
     positionStrategy: this.overlay
@@ -207,6 +213,7 @@ export class ServiceCreateComponent implements OnInit {
           this.overlayRef.detach();
         }
         this.activeRouter.queryParams.subscribe(params => {
+          this.serviceType = params['serviceType'];
           if (params['serviceType'] == '1') {
             if (this.userInfo.mechanicId !== '' && this.userInfo.mechanicId !== null) {
               // メカニックタイプの出品画面表示する
@@ -328,7 +335,7 @@ export class ServiceCreateComponent implements OnInit {
     // 半角数値以外変換できないので以下で判定
     if (isNaN(numCheck)) {
       console.log('価格には「半角数値を入力してください」');
-      this.formPrice.value('');
+      // this.formPrice.value('');
       this.priceDiv = true;
       this.errorFlg = true;
       this.errormessage = '「半角数値を入力してください」';
@@ -336,7 +343,7 @@ export class ServiceCreateComponent implements OnInit {
       console.log('OK');
       if (tr === '0') {
         this.errormessage = '「1円以上で入力してください」';
-        this.formPrice.value('');
+        // this.formPrice.value('');
         this.priceDiv = true;
         this.errorFlg = true;
       } else {
@@ -346,7 +353,7 @@ export class ServiceCreateComponent implements OnInit {
           this.priceDiv = false;
         } else {
           this.errormessage = '「整数で入力してください」';
-          this.formPrice.value('');
+          // this.formPrice.value('1');
           this.priceDiv = true;
           this.errorFlg = true;
         }
@@ -627,22 +634,26 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.id = '0';
     this.title.setValue('');
     this.inputData.price = 0;
-    this.inputData.area1 = '0';
-    this.inputData.category = '0';
-    this.inputData.bidMethod = '1';
+    // this.inputData.area1 = '0';
+    // this.inputData.category = '0';
     this.inputData.explanation = '';
     this.inputData.preferredDate = 0;
     this.inputData.preferredTime = 0;
 
     this.selected = '1';
-    this.formPrice.setValue('');
+    this.formPrice.setValue('0');
     this.timeSelect = '';
     this.startDate = 0;
     /** カテゴリー選択状態初期値 */
-    this.areaSelect = ''
-    this.categorySelect = '';
+    // this.areaSelect = ''
+    // this.categorySelect = '';
     // 確定ボタン非活性
     this.invalid = true;
+    if (this.serviceType == '0') {
+      this.inputData.bidMethod = '1';
+    } else {
+      this.inputData.bidMethod = '41';
+    }
   }
 
 
@@ -668,10 +679,10 @@ export class ServiceCreateComponent implements OnInit {
     this.adminUserName = this.userInfo.userName;
     this.inputData.area1 = this.userInfo.areaNo1;
     this.areaSelect = this.userInfo.areaNo1;
-    if(this.areaSelect != '' ) {
+    if (this.areaSelect != '') {
       this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
     }
-    if(this.userInfo.areaNo2) [
+    if (this.userInfo.areaNo2) [
       this.citySelect = this.userInfo.areaNo2
     ]
     this.inputData.area2 = this.userInfo.areaNo2;
@@ -680,7 +691,9 @@ export class ServiceCreateComponent implements OnInit {
       if (data) {
         this.userVehicle = data;
       }
-    })
+    });
+    // 入札方式
+    this.inputData.bidMethod = '1';
     // ローディング解除
     this.overlayRef.detach();
   }
@@ -706,13 +719,15 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.targetService = '2';
     this.inputData.area1 = this.userInfo.areaNo1;
     this.areaSelect = this.userInfo.areaNo1;
-    if(this.areaSelect != '' ) {
+    if (this.areaSelect != '') {
       this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
     }
-    if(this.userInfo.areaNo2) [
+    if (this.userInfo.areaNo2) [
       this.citySelect = this.userInfo.areaNo2
     ]
     this.inputData.area2 = this.userInfo.areaNo2;
+    // 入札方式
+    this.inputData.bidMethod = '41';
 
     // ローディング解除
     this.overlayRef.detach();
@@ -738,9 +753,29 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.officeId = this.userInfo.officeId;
     this.inputData.targetService = '1';
     this.adminSelectDiv = true;
-    // this.inputData.area1 = this..areaNo1;
-    // this.areaSelect = this.userInfo.areaNo1;
-    // this.inputData.area2 = this.userInfo.areaNo2;
+    // 入札方式
+    this.inputData.bidMethod = '41';
+    // 工場情報取得
+    if (!this.userInfo.officeId) {
+      return;
+    }
+    const officeId = this.userInfo.officeId;
+    this.apiService.getOfficeInfo(officeId).subscribe(data => {
+      if (data) {
+        this.office = data[0];
+        this.inputData.area1 = data[0].officeArea1;
+        this.areaSelect = data[0].officeArea1;
+        if (this.areaSelect != '') {
+          this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+        }
+        if (this.userInfo.areaNo2) {
+          this.citySelect = data[0].officeArea;
+        }
+        this.inputData.area2 = data[0].officeArea;
+
+
+      }
+    });
 
 
     // ローディング解除

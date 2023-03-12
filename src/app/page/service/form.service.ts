@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
+import { TranStatus } from 'src/app/entity/transactionContents';
 import {
   find as _find,
   filter as _filter,
@@ -114,7 +115,36 @@ export class FormService {
     return ''
   }
 
-  
+  /**
+   * 取引ステータスをIDから取得する
+   */
+  public setTransactionStatus(statusCode: string): string {
+
+    switch (statusCode) {
+      case '1':
+        statusCode = TranStatus.ServiceManegement;
+        break;
+      case '2':
+        statusCode = TranStatus.ServiceTransaction;
+        break;
+      case '3':
+        statusCode = TranStatus.MessageFrom;
+        break;
+      case '4':
+        statusCode = TranStatus.MessageExchange;
+        break;
+      case '5':
+        statusCode = TranStatus.Answered;
+        break;
+      case '6':
+        statusCode = TranStatus.Question;
+        break;
+    }
+
+    return statusCode;
+  }
+
+
 
 
 }

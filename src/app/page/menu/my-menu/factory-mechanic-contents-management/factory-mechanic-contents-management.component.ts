@@ -8,6 +8,7 @@ import { mcfcItem } from 'src/app/entity/mcfcItem';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { FormService } from 'src/app/page/service/form.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
   constructor(
     private router: Router,
     private cognito: CognitoService,
+    private formService: FormService,
     private apiSerchService: ApiSerchService,
     private apiUniqService: ApiUniqueService,
     private activeRouter: ActivatedRoute,
@@ -78,7 +80,18 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
       return;
     }
     this.apiUniqService.getMcFcItemList(serchId, this.serviceType).subscribe(res => {
-      this.itemList = res[0];
+      const items: mcfcItem[] = []
+      if(res.length > 0) {
+        let mcfcItem: mcfcItem[] = res; 
+        mcfcItem.forEach(data => {
+          const status = this.formService.setTransactionStatus(data.transactionStatus)
+          data.transactionStatus = status;
+          items.push(data);
+        })
+      }
+      this.itemList = items;
+      // ステータス変換
+
       // ローディング解除
       this.overlayRef.detach();
     });

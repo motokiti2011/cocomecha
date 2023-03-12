@@ -63,7 +63,6 @@ import { FactoryRegisterComponent } from './page/auth/factory-register/factory-r
 import { VehicleRegisterComponent } from './page/auth/vehicle-register/vehicle-register.component';
 import { TransactionApprovalModalComponent } from './page/modal/transaction-approval-modal/transaction-approval-modal/transaction-approval-modal.component';
 import { FactoryMechanicFavoriteMenuComponent } from './page/menu/my-menu/factory-mechanic-favorite-menu/factory-mechanic-favorite-menu.component';
-import { FactoryMechanicContentsMenuComponent } from './page/menu/my-menu/factory-mechanic-contents-menu/factory-mechanic-contents-menu.component';
 import { FactoryMechanicContentsManagementComponent } from './page/menu/my-menu/factory-mechanic-contents-management/factory-mechanic-contents-management.component';
 import { FactoryMechanicImpletionComponent } from './page/menu/my-menu/factory-mechanic-impletion/factory-mechanic-impletion.component';
 import { ServiceEvaluationComponent } from './page/menu/service-contents/service-evaluation/service-evaluation.component';
@@ -163,7 +162,6 @@ const ROUTE_TABLE: Routes = [
     VehicleRegisterComponent,
     TransactionApprovalModalComponent,
     FactoryMechanicFavoriteMenuComponent,
-    FactoryMechanicContentsMenuComponent,
     FactoryMechanicContentsManagementComponent,
     FactoryMechanicImpletionComponent,
     ServiceEvaluationComponent,

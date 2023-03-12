@@ -164,7 +164,7 @@ export class VehicleRegisterComponent implements OnInit {
   vehicleList: userVehicle[] = [];
   /** 元号セレクト */
   eraData = selectEraName
-  eraSelect = '';
+  eraSelect = '2';
   /** カラーセレクト */
   coloerData = selectColoer
   coloerSelect = '';

@@ -59,7 +59,7 @@
         <div class="col-1"></div>
 
         <select id="coler_select" name="coler" [(ngModel)]="coloerSelect">
-          <option value="">カラーを選択してください。</option>
+          <option value="">カラーを選択してください</option>
           <option *ngFor="let coler of coloerData" [value]="coler.id" [selected]="coler.id === coloerSelect">
             {{coler.name}}</option>
         </select>
@@ -82,7 +82,7 @@
         <div class="col-1"></div>
 
         <select id="date_select" name="era" [(ngModel)]="eraSelect">
-          <option value="">元号を選択してください。</option>
+          <!-- <option value="">元号を選択してください</option> -->
           <option *ngFor="let era of eraData" [value]="era.id" [selected]="era.name === eraSelect">
             {{era.name}}</option>
         </select>
