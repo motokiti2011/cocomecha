@@ -142,6 +142,7 @@ export class ServiceDetailComponent implements OnInit {
     const authUser = this.cognito.initAuthenticated();
     if (authUser != null) {
       this.user = authUser;
+      this.adminCheck(this.user);
     }
     // ローディング解除
     this.overlayRef.detach();
@@ -230,6 +231,15 @@ export class ServiceDetailComponent implements OnInit {
       });
   }
 
+  /**
+   * 戻るボタン押下イベント
+   * @return void
+   */
+    goBack(): void {
+      this.location.back();
+    }
+
+  /******** 以下内部処理 **********/
 
   /**
    * サービス管理者情報を設定する
@@ -271,16 +281,18 @@ export class ServiceDetailComponent implements OnInit {
     this.overlayRef.detach();
   }
 
-
-
-
   /**
-   * 戻るボタン押下イベント
-   * @return void
+   * 伝票管理者かをチェックする
+   * @param userId
    */
-  goBack(): void {
-    this.location.back();
+  private adminCheck(userId: string) {
+
   }
+
+
+
+
+
 
 }
 

@@ -66,8 +66,26 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
   }
 
   /**
+   * サービス選択時イベント
+   * @param item 選択サービスコンテンツ
+   * @return void
+   */
+  onItemSelect(item: mcfcItem): void {
+
+    this.router.navigate(["service-detail-component"],
+      { queryParams: {
+        serviceId: item.serviceId,
+        searchTargetService: item.serviceType
+      } });
+    console.log(item);
+  }
+
+
+  /************ 以下内部処理 ***********/
+
+  /**
    * メカニック・工場商品一覧を取得する
-   * @returns 
+   * @returns
    */
   private getMcFcItemList() {
     let serchId = this.user?.mechanicId;
@@ -82,7 +100,7 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
     this.apiUniqService.getMcFcItemList(serchId, this.serviceType).subscribe(res => {
       const items: mcfcItem[] = []
       if(res.length > 0) {
-        let mcfcItem: mcfcItem[] = res; 
+        let mcfcItem: mcfcItem[] = res;
         mcfcItem.forEach(data => {
           const status = this.formService.setTransactionStatus(data.transactionStatus)
           data.transactionStatus = status;
@@ -95,14 +113,6 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
       // ローディング解除
       this.overlayRef.detach();
     });
-  }
-
-  /**
-   * 商品名押下イベント
-   * @param item 
-   */
-  onItemDisp(item: mcfcItem) {
-    console.log(item);
   }
 
 

@@ -10,7 +10,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let item of itemList">
-      <td><div class="item-title" (click)="onItemDisp(item)" >{{item.serviceName}}</div></td>
+      <td><div class="item_title" (click)="onItemSelect(item)" >{{item.serviceName}}</div></td>
       <td>{{item.transactionStatus}}</td>
       <td>{{item.browsingCount}}　件</td>
       <td>{{item.favoriteCount}}　件</td>
