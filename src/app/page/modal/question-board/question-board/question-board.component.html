@@ -7,8 +7,8 @@
 <div class="disp-area">
   <div *ngIf ="dispDiv; else elseContent">
     <div *ngFor="let list of questionList; index as i" >
-      <div class="question-contents">
-        <div class="index">No.{{list.id}}</div>
+      <div class="question_contents">
+        <div class="index">No.{{i +1}}</div>
         <div class="sender">質問者：{{list.senderName}}</div>
         <div class="question">質問内容</div>
         <div class="sender-text">{{list.senderText}}</div>

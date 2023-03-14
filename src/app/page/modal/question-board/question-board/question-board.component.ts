@@ -68,28 +68,10 @@ export class QuestionBoardComponent implements OnInit {
     console.log('初期データ：'+this.data);
     console.log(this.data);
     this.adminDiv = this.data.slipAdmin;
-    this.initGetSlipQa();
+    this.getDispData();
   }
 
-  /**
-   * 表示情報を取得する
-   */
-  private initGetSlipQa() {
-    // ローディング開始
-    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
 
-    // 表示情報取得
-    this.apiGsiService.serchSlipQuestion(this.data.serviceId).subscribe(data => {
-      if(data.length !== 0) {
-        this.questionList = this.service.anserCheck(data);
-        this.dispDiv = true;
-      } else {
-        this.dispDiv = false;
-      }
-      // ローディング解除
-      this.overlayRef.detach();
-    });
-  }
 
   /**
    * 質問入力フォームが編集された際の監視イベント
@@ -146,20 +128,18 @@ export class QuestionBoardComponent implements OnInit {
       // 空文字の場合登録しない
       return;
     }
-    // ローディング開始
-    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.service.sernderQuestion(
       this.data.userId, this.data.userName, this.data.serviceId ,this.data.serviceType, this.sernderMessage)
     .subscribe(result => {
       if(result.ResponseMetadata.HTTPStatusCode === 200) {
         // 質問情報のクリア
         this.sernderMessage = '';
-        this.initGetSlipQa()
       } else {
         alert('登録に失敗しました')
       }
       // ローディング解除
       this.overlayRef.detach();
+      this.getDispData()
     });
   }
 
@@ -182,9 +162,9 @@ export class QuestionBoardComponent implements OnInit {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.service.anserQuestion(this.questionList[index]).subscribe(result => {
-      if(result == 200) {
+      if(result.ResponseMetadata.HTTPStatusCode == 200) {
         this.onStopAnser();
-        this.initGetSlipQa();
+        this.getDispData();
       } else {
         alert('登録に失敗ました。申し訳ございませんがもう一度操作してください。');
       }
@@ -197,5 +177,29 @@ export class QuestionBoardComponent implements OnInit {
   closeModal() {
     this._dialogRef.close();
   }
+
+
+
+  /***************** 以下内部処理 ************************/
+
+  /**
+   * 表示情報を取得する
+   */
+  private getDispData() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    // 表示情報取得
+    this.apiGsiService.serchSlipQuestion(this.data.serviceId).subscribe(data => {
+      if(data.length !== 0) {
+        this.questionList = this.service.anserCheck(data);
+        this.dispDiv = true;
+      } else {
+        this.dispDiv = false;
+      }
+      // ローディング解除
+      this.overlayRef.detach();
+    });
+  }
+
 
 }

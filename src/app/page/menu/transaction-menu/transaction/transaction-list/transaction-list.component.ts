@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { serviceContents } from 'src/app/entity/serviceContents';
-import { detailList } from 'src/app/entity/detailList';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TransactionMenuService } from '../../transaction-menu.service';
@@ -13,18 +11,17 @@ import {
   difference as _difference,
   isNil as _isNil
 } from 'lodash';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
-// import { ServiceContents } from 'src/app/mock-test';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
-import { transactionContents, dispTransactionContents } from 'src/app/entity/transactionContents';
+import {dispTransactionContents } from 'src/app/entity/transactionContents';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-transaction-list',
@@ -102,7 +99,7 @@ export class TransactionListComponent implements OnInit {
       if (user == undefined || user == null || user.userId == '') {
         // ダイアログ表示（もう一度操作してください）し前画面へ戻る
         const dialogData: messageDialogData = {
-          massage: 'もう一度操作してください',
+          massage: messageDialogMsg.AgainOperation,
           closeFlg: false,
           closeTime: 0,
           btnDispDiv: true

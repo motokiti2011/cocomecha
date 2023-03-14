@@ -18,6 +18,14 @@ import {
   isNil as _isNil,
   cloneDeep as _cloneDeep,
 } from 'lodash'
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-factory-register',
@@ -108,8 +116,6 @@ export class FactoryRegisterComponent implements OnInit {
   groupForm = this.builder.group({
     officeName: this.officeName,
     officeMailAdress: this.officeMailAdress,
-    // officeArea1: this.officeArea1,
-    // officeArea: this.officeArea,
     officeAdress: this.officeAdress,
     postCode1: this.postCode1,
     postCode2: this.postCode2,
@@ -147,6 +153,12 @@ export class FactoryRegisterComponent implements OnInit {
   /** 地域２（市町村）選択 */
   citySelect = '';
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     private builder: FormBuilder,
     private apiService: ApiSerchService,
@@ -156,9 +168,13 @@ export class FactoryRegisterComponent implements OnInit {
     private location: Location,
     private s3: UploadService,
     private formService: FormService,
+    public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
@@ -167,8 +183,25 @@ export class FactoryRegisterComponent implements OnInit {
         this.initForm();
       });
     } else {
-      alert('ログインが必要です');
-      this.router.navigate(["/main_menu"]);
+      // ダイアログ表示（ログインしてください）し前画面へ戻る
+      const dialogData: messageDialogData = {
+        massage: messageDialogMsg.LoginRequest,
+        closeFlg: false,
+        closeTime: 0,
+        btnDispDiv: true
+      }
+      const dialogRef = this.modal.open(MessageDialogComponent, {
+        width: '300px',
+        height: '150px',
+        data: dialogData
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(result);
+        // ローディング解除
+        this.overlayRef.detach();
+        this.router.navigate(["/main_menu"]);
+        return;
+      });
     }
     this.initForm();
   }
@@ -181,6 +214,8 @@ export class FactoryRegisterComponent implements OnInit {
       // フォームを追加したり、削除したりするために、FormArrayを設定しています。
       options: this.builder.array([])
     });
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
   // 追加ボタンがおされたときに追加したいフォームを定義しています。returnでFormGroupを返しています。
@@ -288,7 +323,7 @@ export class FactoryRegisterComponent implements OnInit {
     // console.log(this.inputData.area2);
   }
 
-  
+
   /**
    * 郵便番号入力時イベント
    */

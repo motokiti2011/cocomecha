@@ -23,6 +23,7 @@ import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-browsing-history',
@@ -93,7 +94,7 @@ export class BrowsingHistoryComponent implements OnInit {
       if (user == undefined || user == null || user.userId == '') {
         // ダイアログ表示（もう一度操作してください）し前画面へ戻る
         const dialogData: messageDialogData = {
-          massage: 'もう一度操作してください',
+          massage: messageDialogMsg.AgainOperation,
           closeFlg: false,
           closeTime: 0,
           btnDispDiv: true

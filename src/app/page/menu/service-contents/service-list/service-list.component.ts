@@ -11,12 +11,8 @@ import {
   includes as _includes
 } from 'lodash';
 import { serviceContents } from 'src/app/entity/serviceContents';
-import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { ServiceListcomponentService } from './service-listcomponent.service';
-import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { userFavorite } from 'src/app/entity/userFavorite';
-import { serchSidAmount } from 'src/app/entity/serchSid';
-import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { serchInfo, serchParam } from 'src/app/entity/serchInfo';
@@ -118,10 +114,7 @@ export class ServiceListComponent implements OnInit {
     private activeRouter: ActivatedRoute,
     private location: Location,
     private service: ServiceListcomponentService,
-    // private loading: LoadingSpinnerService,
-    private auth: AuthUserService,
     private cognito: CognitoService,
-    private apiService: ApiSerchService,
     private apiGsiService: ApiGsiSerchService,
     private apiUniqueService: ApiUniqueService,
     private overlay: Overlay,
@@ -281,12 +274,10 @@ export class ServiceListComponent implements OnInit {
     // 画面表示のお気に入りFlgを制御する
     this.displayContentsList = this.contentsList;
     // 認証情報取得
-    this.auth.userInfo$.subscribe(user => {
-      if (user) {
-        // お気に入り登録有無を判定し更新する。
-        this.service.postFavorite(this.favoriteList, contents, user.userId);
-      }
-    });
+    if (this.authUser) {
+      // お気に入り登録有無を判定し更新する。
+      this.service.postFavorite(this.favoriteList, contents, this.authUser);
+    }
   }
 
   /******************* トップイベント **************************/

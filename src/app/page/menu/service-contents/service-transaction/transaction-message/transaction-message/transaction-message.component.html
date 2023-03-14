@@ -1,10 +1,9 @@
 
-<div class="disp-area">
+<div class="disp_area">
   <div *ngIf ="dispDiv; else elseContent">
-    <div *ngFor="let list of dispMessageList" >
-
+    <div *ngFor="let list of dispMessageList; index as i" >
       <div [ngClass]="list.position? 'to-msg':'from-msg'">
-        <div class="index">No.{{list.messageId}}　コメント者名：{{list.sendUserName}}</div>
+        <div class="index">No.{{i + 1}}　コメント者名：{{list.sendUserName}}</div>
         <div class="sender-text">{{list.comment}}</div>
       </div>
 
@@ -25,8 +24,8 @@
     [selected]="adress.sendId === adressSelect">
     {{adress.name}}</option>
   </select>
-  <!-- <div class="form-btn"> -->
-    <input class="form-question" type="text" [(ngModel)]="sernderMessage" (change)="sendMessage()" placeholder="質問はこちらに記入してください。" />
+  <div>
+    <input class="form-question" type="text" [(ngModel)]="sernderMessage" (change)="sendMessage()" placeholder="メッセージはこちらに記入してください。" />
     <input type="button" class="submit-button" value="投稿する" (click)="onSendMessage()" [disabled]="isDisabled" />
-  <!-- </div> -->
+  </div>
 </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { TransactionMenuService } from '../../../transaction-menu.service';
 import {
   find as _find,
   cloneDeep as _cloneDeep,
@@ -10,10 +9,10 @@ import {
   difference as _difference,
   isNil as _isNil
 } from 'lodash';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
-import { userMyList, dispUserMyList } from 'src/app/entity/userMyList';
+import { dispUserMyList } from 'src/app/entity/userMyList';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
@@ -21,7 +20,7 @@ import { MyListService } from './my-list.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-my-list',
@@ -95,7 +94,7 @@ export class MyListComponent implements OnInit {
       if (user == undefined || user == null || user.userId == '') {
         // ダイアログ表示(もう一度操作してください）し前画面へ戻る
         const dialogData: messageDialogData = {
-          massage: 'もう一度操作してください',
+          massage: messageDialogMsg.AgainOperation,
           closeFlg: false,
           closeTime: 0,
           btnDispDiv: true

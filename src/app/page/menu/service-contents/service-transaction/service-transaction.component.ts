@@ -3,8 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ServiceTransactionService } from './service-transaction.service';
-import { AuthUserService } from 'src/app/page/auth/authUser.service';
-import { messageOpenLevel, openLevel } from 'src/app/entity/messageOpenLevel';
 import { slipDetailInfo, defaultSlip } from 'src/app/entity/slipDetailInfo';
 import { QuestionBoardComponent } from 'src/app/page/modal/question-board/question-board/question-board.component';
 import { OpenLevelComponent } from 'src/app/page/modal/open-level/open-level/open-level.component';
@@ -18,7 +16,7 @@ import { serviceTransactionRequest } from 'src/app/entity/serviceTransactionRequ
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 
 @Component({
@@ -93,7 +91,7 @@ export class ServiceTransactionComponent implements OnInit {
         this.dispTitle = this.slip.title;
         this.dispYmd = String(this.slip.completionDate);
         if(this.slip.bidMethod == '1' || this.slip.bidMethod == '41' ) {
-          
+
           this.dispPrice = Number(this.slip.price);
         }
         this.dispArea = this.service.areaNameSetting(this.slip.areaNo1) + this.slip.areaNo2;
@@ -146,7 +144,7 @@ export class ServiceTransactionComponent implements OnInit {
     } else {
       // ダイアログ表示（ログインしてください）し前画面へ戻る
       const dialogData: messageDialogData = {
-        massage: 'ログインが必要になります。',
+        massage: messageDialogMsg.LoginRequest,
         closeFlg: false,
         closeTime: 0,
         btnDispDiv: true

@@ -3,7 +3,7 @@ import { serviceContents } from 'src/app/entity/serviceContents';
 import { detailList } from 'src/app/entity/detailList';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
@@ -22,7 +22,7 @@ import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-tansaction-complete',
@@ -100,7 +100,7 @@ export class TansactionCompleteComponent implements OnInit {
       if (user == undefined || user == null || user.userId == '') {
         // ダイアログ表示し前画面へ戻る
         const dialogData: messageDialogData = {
-          massage: '情報の取得に失敗しました。もう一度操作してください',
+          massage: messageDialogMsg.AnSerchAgainOperation,
           closeFlg: false,
           closeTime: 0,
           btnDispDiv: true

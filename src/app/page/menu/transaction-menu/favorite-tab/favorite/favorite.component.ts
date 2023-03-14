@@ -4,7 +4,6 @@ import { detailList } from 'src/app/entity/detailList';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-// import { TransactionMenuService } from 'src/app/page/transaction-menu/transaction-menu.service'
 import { TransactionMenuService } from '../../transaction-menu.service';
 import {
   find as _find,
@@ -24,7 +23,7 @@ import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-favorite',
@@ -95,7 +94,7 @@ export class FavoriteComponent implements OnInit {
     if (user == undefined || user == null || user == '') {
       // ダイアログ表示（もう一度操作してください）し前画面へ戻る
       const dialogData: messageDialogData = {
-        massage: 'もう一度操作してください',
+        massage: messageDialogMsg.AgainOperation,
         closeFlg: false,
         closeTime: 0,
         btnDispDiv: true
