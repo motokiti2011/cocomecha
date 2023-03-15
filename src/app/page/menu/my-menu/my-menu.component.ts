@@ -9,6 +9,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { FormService } from '../../service/form.service';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-my-menu',
@@ -24,6 +29,7 @@ export class MyMenuComponent implements OnInit {
     private auth: AuthUserService,
     private overlay: Overlay,
     private formService: FormService,
+    public modal: MatDialog,
   ) { }
 
   /** 表示情報 */
@@ -76,10 +82,7 @@ export class MyMenuComponent implements OnInit {
         this.overlayRef.detach();
       });
     } else {
-      alert('ログインが必要です');
-      // ローディング解除
-      this.overlayRef.detach();
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
 
   }
@@ -199,6 +202,37 @@ export class MyMenuComponent implements OnInit {
    */
   onFcMcFavoriteMenu() {
     this.router.navigate(["/fcmc-favorite-menu"]);
+  }
+
+    /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+    private openMsgDialog(msg:string, locationDiv: boolean) {
+      // ダイアログ表示（ログインしてください）し前画面へ戻る
+      const dialogData: messageDialogData = {
+        massage: msg,
+        closeFlg: false,
+        closeTime: 0,
+        btnDispDiv: true
+      }
+      const dialogRef = this.modal.open(MessageDialogComponent, {
+        width: '300px',
+        height: '150px',
+        data: dialogData
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(locationDiv) {
+          // ローディング解除
+          this.overlayRef.detach();
+          this.router.navigate(["/main_menu"]);
+        }
+        console.log(result);
+        // ローディング解除
+        this.overlayRef.detach();
+        return;
+      });
   }
 
 

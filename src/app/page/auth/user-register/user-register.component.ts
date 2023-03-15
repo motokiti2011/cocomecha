@@ -20,10 +20,12 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
 import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
 import { imgFile } from 'src/app/entity/imgFile';
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-user-register',
@@ -128,8 +130,7 @@ export class UserRegisterComponent implements OnInit {
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     const user = this.cognito.initAuthenticated();
     if (user == null) {
-      alert("ログインが必要です")
-      this.location.back();
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
       // ローディング解除
       this.overlayRef.detach();
       return;
@@ -270,7 +271,7 @@ export class UserRegisterComponent implements OnInit {
   private userResister() {
     console.log(this.inputData);
     if (_isNil(this.inputData.areaNo1) || this.inputData.areaNo1 == '') {
-      alert('必須項目です。');
+      this.openMsgDialog(messageDialogMsg.Required, false);
     } else {
       this.user.userId = this.user.userId;
       this.user.userValidDiv = '0';
@@ -287,12 +288,42 @@ export class UserRegisterComponent implements OnInit {
 
       this.apiService.postUser(this.user).subscribe(result => {
         if (result == undefined) {
-          // TODO
-          alert('失敗');
+          this.openMsgDialog(messageDialogMsg.AnResister, false);
+        } else {
+          this.router.navigate(["/main_menu"])
         }
-        this.router.navigate(["/main_menu"])
       });
     }
   }
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.location.back();
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+}
 
 }

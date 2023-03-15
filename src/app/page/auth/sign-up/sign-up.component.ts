@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
 import { CognitoService } from '../cognito.service';
 
 @Component({
@@ -35,6 +38,7 @@ export class SignUpComponent implements OnInit {
     private location: Location,
     private cognito: CognitoService,
     private router: Router,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -54,9 +58,9 @@ export class SignUpComponent implements OnInit {
 
   /**
    * 新規ユーザー登録を行う
-   * @param email 
-   * @param password 
-   * @param userId 
+   * @param email
+   * @param password
+   * @param userId
    */
   onSignup(email: string, password: string, userId: string) {
     this.cognito.signUp(userId, password, email)
@@ -78,8 +82,8 @@ export class SignUpComponent implements OnInit {
 
   /**
    * ユーザー登録後、確認コード入力を行いユーザー登録を完了させる。
-   * @param confirmationEmail 
-   * @param confirmationCode 
+   * @param confirmationEmail
+   * @param confirmationCode
    */
   onConfirmation(confirmationEmail: string, confirmationCode: string) {
     console.log(confirmationEmail);
@@ -88,16 +92,41 @@ export class SignUpComponent implements OnInit {
         this.dispMsg = '';
         console.log(result);
         if (result) {
-          alert('登録完了！！')
-          this.router.navigate(["main_menu"])
+          this.openMsgDialog(messageDialogMsg.Resister, true);
         } else {
-          alert('失敗')
+          this.openMsgDialog(messageDialogMsg.AnResister, false);
         }
       });
   }
 
 
 
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      return;
+    });
+}
 
 
 

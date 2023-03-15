@@ -13,9 +13,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
-import { user } from 'src/app/entity/user';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
-
+import { messageDialogMsg } from 'src/app/entity/msg';
 @Component({
   selector: 'app-service-detail',
   templateUrl: './service-detail.component.html',
@@ -176,9 +175,9 @@ export class ServiceDetailComponent implements OnInit {
         btnDispDiv: false
       };
       if (result === 200) {
-        modalData.massage = 'マイリストに追加しました'
+        modalData.massage = messageDialogMsg.AddMyList
       } else {
-        modalData.massage = '追加に失敗しました。'
+        modalData.massage = messageDialogMsg.AnAddMyList
       }
       const dialogRef = this.dialog.open(MessageDialogComponent, {
         width: '300px',

@@ -401,12 +401,11 @@ export class FactoryRegisterComponent implements OnInit {
 
     this.apiUniqueService.postFactory(this.officeInfo, this.user.userId, mechanicId).subscribe(result => {
       console.log(result);
+      let resultMsg = '';
       if(result == 200) {
-        alert('登録完了')
-        // this.router.navigate(["/main_menu"]);
-        this.location.back();
+        this.openMsgDialog(messageDialogMsg.Resister, true);
       } else {
-        alert('登録失敗しました：ステータス['+ result + ']');
+        this.openMsgDialog(messageDialogMsg.AnResister, false);
       }
     });
   }
@@ -436,6 +435,37 @@ export class FactoryRegisterComponent implements OnInit {
     }
     console.log(result)
     this.businessContentList = result;
+  }
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+      // ダイアログ表示（ログインしてください）し前画面へ戻る
+      const dialogData: messageDialogData = {
+        massage: msg,
+        closeFlg: false,
+        closeTime: 0,
+        btnDispDiv: true
+      }
+      const dialogRef = this.modal.open(MessageDialogComponent, {
+        width: '300px',
+        height: '150px',
+        data: dialogData
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(locationDiv) {
+          this.location.back();
+          // this.router.navigate(["/main_menu"]);
+        }
+        console.log(result);
+        // ローディング解除
+        this.overlayRef.detach();
+        return;
+      });
   }
 
 }

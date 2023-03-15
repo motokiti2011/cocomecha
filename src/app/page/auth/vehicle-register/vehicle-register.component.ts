@@ -17,6 +17,12 @@ import {
   abroadVehicleMakerData,
   vehicleFormData, bikeFormData
 } from 'src/app/entity/vehicleDataInfo';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
+
+
 
 @Component({
   selector: 'app-vehicle-register',
@@ -188,6 +194,7 @@ export class VehicleRegisterComponent implements OnInit {
     private cognito: CognitoService,
     private location: Location,
     private s3: UploadService,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -199,8 +206,7 @@ export class VehicleRegisterComponent implements OnInit {
         this.getVehicleList();
       });
     } else {
-      alert('ログインが必要です');
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
 
   }
@@ -271,10 +277,10 @@ export class VehicleRegisterComponent implements OnInit {
 
     this.apiService.postUserVehicle(userVehicle).subscribe(result => {
       if(result === 200) {
-        alert('登録OK')
+        this.openMsgDialog(messageDialogMsg.Resister, false);
         this.getVehicleList();
       } else {
-        alert('登録失敗しました。')
+        this.openMsgDialog(messageDialogMsg.AnResister, false);
       }
 
       console.log(result);
@@ -333,6 +339,35 @@ export class VehicleRegisterComponent implements OnInit {
     return this.designatedNo.value + '/'
       + this.classificationNo.value
   }
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      return;
+    });
+}
+
 
 
 }

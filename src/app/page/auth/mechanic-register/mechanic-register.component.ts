@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { mechanicInfo, initMechanicInfo } from 'src/app/entity/mechanicInfo';
@@ -18,6 +18,9 @@ import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../cognito.service';
 import { UploadService } from '../../service/upload.service';
 import { SingleImageModalComponent } from '../../modal/single-image-modal/single-image-modal.component';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 
 @Component({
@@ -120,8 +123,7 @@ export class MechanicRegisterComponent implements OnInit {
         this.initForm();
       });
     } else {
-      alert('ログインが必要です');
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }
 
@@ -267,10 +269,9 @@ export class MechanicRegisterComponent implements OnInit {
     console.log(this.mechanicInfo);
     this.apiUniqueService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
       if (result != 200) {
-        alert('失敗しました')
+        this.openMsgDialog(messageDialogMsg.AnResister, false)
       } else {
-        alert('登録成功')
-        this.router.navigate(["/main_menu"]);
+        this.openMsgDialog(messageDialogMsg.Resister, true)
       }
     });
   }
@@ -309,10 +310,6 @@ export class MechanicRegisterComponent implements OnInit {
     if (this.inputData.introduction == '' || this.inputData.introduction == null) {
       message.push('紹介文')
     }
-    if(!this.user) {
-      alert('ユーザー情報なし')
-    }
-
     this.mechanicInfo.mechanicId = '0'
     this.mechanicInfo.validDiv = '0'
     this.mechanicInfo.mechanicName = this.mechanicName.value;
@@ -327,6 +324,34 @@ export class MechanicRegisterComponent implements OnInit {
     this.mechanicInfo.specialtyWork = this.inputData.specialtyWork;
     this.mechanicInfo.profileImageUrl = this.inputData.profileImageUrl;
     this.mechanicInfo.introduction = this.inputData.introduction;
+  }
+
+  /**
+   * メッセージモーダルを展開する
+   * @param mgs
+   * @param locationDiv
+   */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+      // ダイアログ表示（ログインしてください）し前画面へ戻る
+      const dialogData: messageDialogData = {
+        massage: msg,
+        closeFlg: false,
+        closeTime: 0,
+        btnDispDiv: true
+      }
+      const dialogRef = this.modal.open(MessageDialogComponent, {
+        width: '300px',
+        height: '150px',
+        data: dialogData
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(result);
+        if(locationDiv) {
+          // this.location.back();
+          this.router.navigate(["/main_menu"]);
+        }
+        return;
+      });
   }
 
 
