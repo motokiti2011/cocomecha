@@ -21,6 +21,9 @@ import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1Sele
 import { ConnectionFactoryModalComponent } from 'src/app/page/modal/connection-factory-modal/connection-factory-modal.component';
 import { ConnectionMechanicModalComponent } from 'src/app/page/modal/connection-mechanic-modal/connection-mechanic-modal.component';
 import { FactoryAdminSettingModalComponent } from 'src/app/page/modal/factory-admin-setting-modal/factory-admin-setting-modal.component';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-factory-menu',
@@ -195,10 +198,7 @@ export class FactoryMenuComponent implements OnInit {
             this.overlayRef.detach();
           }
         } else {
-          alert('ログインが必要です');
-          // ローディング解除
-          this.overlayRef.detach();
-          this.router.navigate(["/main_menu"]);
+          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         }
       });
 
@@ -277,10 +277,9 @@ export class FactoryMenuComponent implements OnInit {
     this.dispInfo.officePR = this.officeName.value;
     this.apiService.postOffice(this.dispInfo).subscribe(res => {
       if (res == 200) {
-        alert('更新しました。')
+        this.openMsgDialog(messageDialogMsg.Resister, false);
       } else {
-        alert('更新に失敗しました。')
-        console.log(res);
+        this.openMsgDialog(messageDialogMsg.AnResister, false);
       }
     });
   }
@@ -397,10 +396,7 @@ export class FactoryMenuComponent implements OnInit {
     this.apiService.getOfficeInfo(this.user.officeId).subscribe(res => {
       console.log(res);
       if (!res[0]) {
-        alert('ログインが必要です');
-        // ローディング解除
-        this.overlayRef.detach();
-        this.router.navigate(["/main_menu"]);
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return
       }
       this.initSetting(res[0]);
@@ -601,7 +597,34 @@ export class FactoryMenuComponent implements OnInit {
     );
   }
 
-
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+}
 
 
 

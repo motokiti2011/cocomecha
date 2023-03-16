@@ -8,7 +8,10 @@ import { user } from 'src/app/entity/user';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-factory-mechanic-favorite-menu',
   templateUrl: './factory-mechanic-favorite-menu.component.html',
@@ -33,14 +36,14 @@ export class FactoryMechanicFavoriteMenuComponent implements OnInit {
     private apiSerchService: ApiSerchService,
     private apiGsiSerchService: ApiGsiSerchService,
     private overlay: Overlay,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
     // ログイン検証
     const authUser = this.cognito.initAuthenticated();
     if (authUser == null) {
-      alert('ログインが必要です');
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
       return;
     }
     // ローディング開始
@@ -84,5 +87,35 @@ export class FactoryMechanicFavoriteMenuComponent implements OnInit {
     console.log(e);
   }
 
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+}
 
 }

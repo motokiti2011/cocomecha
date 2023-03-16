@@ -19,6 +19,10 @@ import { FactoryMechanicContentsManagementComponent } from '../factory-mechanic-
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -70,6 +74,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     private router: Router,
     private cognito: CognitoService,
     private overlay: Overlay,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -82,8 +87,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
         this.currentTab = MechanicMenuComponent;
         this.getMechanicInfo(mechanicId);
       } else {
-        alert('メカニック・工場情報が取得できませんでした。');
-        this.router.navigate(["/main_menu"]);
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
       }
     });
 
@@ -100,10 +104,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
         this.overlayRef.detach();
       });
     } else {
-      alert('ログインが必要です');
-      // ローディング解除
-      this.overlayRef.detach();
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }
 
@@ -209,10 +210,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
         // ローディング解除
         this.overlayRef.detach();
       } else {
-        alert('メカニック情報が取得できませんでした。')
-        // ローディング解除
-        this.overlayRef.detach();
-        this.router.navigate(["/main_menu"]);
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
     })
@@ -240,7 +238,34 @@ export class FactoryMechanicMenuComponent implements OnInit {
     });
   }
 
-
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+}
 
 
 }

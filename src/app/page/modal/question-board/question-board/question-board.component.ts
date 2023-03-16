@@ -10,7 +10,10 @@ import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -54,6 +57,7 @@ export class QuestionBoardComponent implements OnInit {
     private service: QuestionBoardService,
     private apiGsiService: ApiGsiSerchService,
     private overlay: Overlay,
+    public modal: MatDialog,
     @Inject(MAT_DIALOG_DATA)
     public data:{
       serviceId: string,
@@ -135,7 +139,7 @@ export class QuestionBoardComponent implements OnInit {
         // 質問情報のクリア
         this.sernderMessage = '';
       } else {
-        alert('登録に失敗しました')
+        this.openMsgDialog(messageDialogMsg.AnResister, false);
       }
       // ローディング解除
       this.overlayRef.detach();
@@ -149,12 +153,12 @@ export class QuestionBoardComponent implements OnInit {
    */
   sendAnser() {
     if(this.anserIndex == '') {
-      alert('データが取得できませんでした。申し訳ございませんがもう一度操作してください。');
+      this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, false);
       this.onStopAnser();
       return;
     }
     if(this.sernderMessage == '') {
-      alert('入力は必要です。');
+      this.openMsgDialog(messageDialogMsg.TextReq, false);
       return
     }
     const index = Number(this.anserIndex);
@@ -166,7 +170,7 @@ export class QuestionBoardComponent implements OnInit {
         this.onStopAnser();
         this.getDispData();
       } else {
-        alert('登録に失敗ました。申し訳ございませんがもう一度操作してください。');
+        this.openMsgDialog(messageDialogMsg.AnResister, false);
       }
       // ローディング解除
       this.overlayRef.detach();
@@ -201,5 +205,35 @@ export class QuestionBoardComponent implements OnInit {
     });
   }
 
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        // this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+}
 
 }

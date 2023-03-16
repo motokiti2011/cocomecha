@@ -6,6 +6,10 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { FormService } from 'src/app/page/service/form.service';
 import { userVehicle, vehicleNumberPlate, selectEraName, selectColoer } from 'src/app/entity/userVehicle';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-vehicle-menu',
@@ -25,7 +29,8 @@ export class VehicleMenuComponent implements OnInit {
     private apiService: ApiSerchService,
     private apiGsiService: ApiGsiSerchService,
     private router: Router,
-    private formService: FormService
+    private formService: FormService,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -37,8 +42,7 @@ export class VehicleMenuComponent implements OnInit {
         this.getVehicleList();
       });
     } else {
-      alert('ログインが必要です');
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }
 
@@ -78,7 +82,7 @@ export class VehicleMenuComponent implements OnInit {
    */
   onDeleteVehicle(id: string) {
     // 削除前にダイアログ表示
-    alert('削除しますか？');
+    this.openMsgDialog(messageDialogMsg.ToDelete, false);
   }
 
 
@@ -120,6 +124,33 @@ export class VehicleMenuComponent implements OnInit {
     return result;
   }
 
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      return;
+    });
+}
 
 
 

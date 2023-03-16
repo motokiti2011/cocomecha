@@ -23,7 +23,9 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { imgFile } from 'src/app/entity/imgFile';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-mechanic-menu',
@@ -123,8 +125,7 @@ export class MechanicMenuComponent implements OnInit {
         const mechanicId = params['mechanicId'];
         this.getMechanicInfo(mechanicId);
       } else {
-        alert('メカニック・工場情報が取得できませんでした。');
-        this.router.navigate(["/main_menu"]);
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
       }
     });
 
@@ -143,10 +144,7 @@ export class MechanicMenuComponent implements OnInit {
         this.overlayRef.detach();
       });
     } else {
-      alert('ログインが必要です');
-      // ローディング解除
-      this.overlayRef.detach();
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }
 
@@ -315,10 +313,9 @@ export class MechanicMenuComponent implements OnInit {
     console.log(this.mechanicInfo);
     this.apiUniqeService.postMechanic(this.mechanicInfo, this.officeDiv).subscribe(result => {
       if (result != 200) {
-        alert('失敗しました')
+        this.openMsgDialog(messageDialogMsg.AnResister, false);
       } else {
-        alert('登録成功')
-        this.router.navigate(["/main_menu"]);
+        this.openMsgDialog(messageDialogMsg.Resister, true);
       }
     });
   }
@@ -392,10 +389,7 @@ export class MechanicMenuComponent implements OnInit {
         // ローディング解除
         this.overlayRef.detach();
       } else {
-        alert('メカニック情報が取得できませんでした。')
-        // ローディング解除
-        this.overlayRef.detach();
-        this.router.navigate(["/main_menu"]);
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
     })
@@ -471,5 +465,36 @@ export class MechanicMenuComponent implements OnInit {
     })
     this.setQualification();
   }
+
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+}
 
 }

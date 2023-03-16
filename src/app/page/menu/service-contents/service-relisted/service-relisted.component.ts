@@ -36,6 +36,11 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
 
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
+
 /**
  * 再出品コンポーネント
  */
@@ -142,6 +147,7 @@ export class ServiceRelistedComponent implements OnInit {
     private apiService: ApiSerchService,
     private apiUniqueService: ApiUniqueService,
     private apiSlipService: ApiSlipProsessService,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -150,16 +156,14 @@ export class ServiceRelistedComponent implements OnInit {
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
     if (authUser == null) {
-      alert("ログインが必要です");
-      this.location.back();
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     } else {
       // ユーザー情報を取得する
       this.apiService.getUser(authUser).subscribe(user => {
         if (user[0] == null) {
           // ローディング解除
           this.overlayRef.detach();
-          alert("ログインが必要です");
-          this.location.back();
+          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
           return;
         } else {
           this.userInfo = user[0];
@@ -184,7 +188,7 @@ export class ServiceRelistedComponent implements OnInit {
 
   /**
    * 伝票情報を取得し表示
-   * @param slipNo 
+   * @param slipNo
    */
   private getslipDetial(slipNo: string) {
     this.apiUniqueService.getSlip(slipNo).subscribe(result => {
@@ -196,7 +200,7 @@ export class ServiceRelistedComponent implements OnInit {
 
   /**
    * サービス商品情報を取得し表示
-   * @param slipNo 
+   * @param slipNo
    */
   private getserviceContents(slipNo: string) {
     this.apiUniqueService.getServiceContents(slipNo).subscribe(result => {
@@ -291,7 +295,7 @@ export class ServiceRelistedComponent implements OnInit {
 
   /**
    * 更新データ作成
-   * @returns 
+   * @returns
    */
   private createData(): salesServiceInfo {
     let mechanicId = '0';
@@ -342,10 +346,38 @@ export class ServiceRelistedComponent implements OnInit {
       created: this.relistedService.created, // 登録年月日
       updated: '' // 更新日時
     }
-
-
   }
 
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.location.back();
+        // this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+}
 
 
 }

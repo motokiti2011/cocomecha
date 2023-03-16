@@ -40,13 +40,14 @@ import {
   messageLevel,
   adminUserSelect,
 } from './service-create-option';
-
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-service-create',
@@ -194,16 +195,12 @@ export class ServiceCreateComponent implements OnInit {
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
     if (authUser == null) {
-      alert("ログインが必要です");
-      this.location.back();
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     } else {
       // ユーザー情報を取得する
       this.apiService.getUser(authUser).subscribe(user => {
         if (user[0] == null) {
-          // ローディング解除
-          this.overlayRef.detach();
-          alert("ログインが必要です");
-          this.location.back();
+          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
           return;
         } else {
           this.userInfo = user[0];
@@ -221,9 +218,7 @@ export class ServiceCreateComponent implements OnInit {
             } else {
               // ローディング解除
               this.overlayRef.detach();
-              // メカニック未登録の場合
-              alert("メカニック登録されていません");
-              this.location.back();
+              this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, false);
               return;
             }
           } else if (params['serviceType'] == '2') {
@@ -235,9 +230,7 @@ export class ServiceCreateComponent implements OnInit {
             } else {
               // ローディング解除
               this.overlayRef.detach();
-              // 工場未登録の場合
-              alert("工場が登録されていません");
-              this.location.back();
+              this.openMsgDialog(messageDialogMsg.AnFactoryResister, true);
               return;
             }
           } else {
@@ -512,12 +505,9 @@ export class ServiceCreateComponent implements OnInit {
       this.service.postSalesService(this.inputData).subscribe(result => {
         // 登録結果からメッセージを表示する
         if (result === 200) {
-          alert('POST:OK')
-          console.log('POST:OK')
-          this.next();
+          this.openMsgDialog(messageDialogMsg.Resister, false);
         } else {
-          console.log('POST:NG')
-          alert('POST:NG')
+          this.openMsgDialog(messageDialogMsg.AnResister, false);
         }
       });
     } else {
@@ -525,12 +515,9 @@ export class ServiceCreateComponent implements OnInit {
       this.service.postSlip(this.inputData).subscribe(result => {
         // 登録結果からメッセージを表示する
         if (result === 200) {
-          alert('POST:OK')
-          console.log('POST:OK')
-          this.next();
+          this.openMsgDialog(messageDialogMsg.Resister, false);
         } else {
-          console.log('POST:NG')
-          alert('POST:NG')
+          this.openMsgDialog(messageDialogMsg.AnResister, false);
         }
       });
     }
@@ -923,6 +910,37 @@ export class ServiceCreateComponent implements OnInit {
   }
 
 
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      if(msg == messageDialogMsg.Resister) {
+        this.next();
+      }
+      return;
+    });
+}
 
 
 }

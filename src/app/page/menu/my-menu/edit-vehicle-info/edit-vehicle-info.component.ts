@@ -6,6 +6,10 @@ import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { user, initUserInfo } from 'src/app/entity/user';
 import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { userVehicle, vehicleNumberPlate, selectEraName, selectColoer } from 'src/app/entity/userVehicle';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-vehicle-info',
@@ -173,6 +177,7 @@ export class EditVehicleInfoComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private cognito: CognitoService,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -187,8 +192,7 @@ export class EditVehicleInfoComponent implements OnInit {
         });
       });
     } else {
-      alert('ログインが必要です');
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }
 
@@ -282,6 +286,33 @@ export class EditVehicleInfoComponent implements OnInit {
       result = this.vehicleList?.inspectionExpirationDate.split('/');
     }
     return result;
+  }
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      return;
+    });
   }
 
 }

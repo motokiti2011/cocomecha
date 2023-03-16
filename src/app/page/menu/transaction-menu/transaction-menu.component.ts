@@ -14,7 +14,10 @@ import { user } from 'src/app/entity/user';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-transaction-menu',
@@ -60,6 +63,7 @@ export class TransactionMenuComponent implements OnInit {
     private cognito: CognitoService,
     private auth: AuthUserService,
     private overlay: Overlay,
+    public modal: MatDialog,
 
   ) { }
 
@@ -79,8 +83,7 @@ export class TransactionMenuComponent implements OnInit {
     // ログイン検証
     const authUser = this.cognito.initAuthenticated();
     if(authUser == null) {
-      alert('ログインが必要です');
-      this.router.navigate(["/main_menu"]);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
       return;
     }
     this.service.getUser(authUser).subscribe(result => {
@@ -97,16 +100,11 @@ export class TransactionMenuComponent implements OnInit {
         // ローディング解除
         this.overlayRef.detach();
       } else {
-        alert('情報が取得できませんでした。再度アクセスしてください');
-        // ローディング解除
-        this.overlayRef.detach();
-        this.router.navigate(["/main_menu"]);
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
     });
   }
-
-
 
 
   /**
@@ -183,5 +181,33 @@ export class TransactionMenuComponent implements OnInit {
   }
 
 
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+}
 
 }

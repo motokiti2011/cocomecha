@@ -19,7 +19,9 @@ import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
 import { imgFile } from 'src/app/entity/imgFile';
 import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
-
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 @Component({
   selector: 'app-edit-user-info',
@@ -113,8 +115,7 @@ export class EditUserInfoComponent implements OnInit {
   ngOnInit(): void {
     const user = this.cognito.initAuthenticated();
     if (user == null) {
-      alert("ログインが必要です")
-      this.location.back();
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
       return;
     }
     console.log(user);
@@ -271,8 +272,7 @@ export class EditUserInfoComponent implements OnInit {
         this.inputData.introduction = this.isSerParm(this.user.introduction, 'introduction');
         this.imageFile[0].url = this.user.profileImageUrl;
       } else {
-        alert('データが取得できませんでした。再度アクセスしてください')
-        this.location.back();
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
       }
     });
   }
@@ -299,7 +299,7 @@ export class EditUserInfoComponent implements OnInit {
     console.log(this.inputData);
     if (_isNil(this.inputData.areaNo1)
       || this.inputData.areaNo1 == '') {
-      alert('必須項目です。');
+      this.openMsgDialog(messageDialogMsg.Required, false);
     } else {
       this.user.userValidDiv = '0';
       this.user.corporationDiv = '0';
@@ -313,13 +313,44 @@ export class EditUserInfoComponent implements OnInit {
       this.user.postCode = this.form.setPostCode(this.postCode1.value, this.postCode2.value);
       this.user.introduction = this.inputData.introduction;
       this.apiService.postUser(this.user).subscribe(result => {
+        let msg = ''
         if (result == undefined) {
           // TODO
-          alert('失敗');
+          msg = messageDialogMsg.AnResister;
+
+        } else {
+          msg = messageDialogMsg.Changed;
         }
-        alert('変更しました。');
+        this.openMsgDialog(msg, false);
       });
     }
+  }
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      return;
+    });
   }
 
 

@@ -12,6 +12,10 @@ import { officeInfo, connectionOfficeInfo, connectionMechanicInfo, adminSettingI
 import { roleData, role } from 'src/app/entity/role';
 import { belongsData, belongs } from 'src/app/entity/belongs';
 import { ApiSerchService } from '../../service/api-serch.service';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { MatDialog } from '@angular/material/dialog';
 
 /**
  * 工場管理者設定モーダル
@@ -28,6 +32,7 @@ export class FactoryAdminSettingModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: officeInfo,
     private apiService: ApiSerchService,
+    public modal: MatDialog,
   ) { }
 
   /** タイトル */
@@ -76,7 +81,7 @@ export class FactoryAdminSettingModalComponent implements OnInit {
    */
   onResult() {
     if (this.adminDataCheck()) {
-      alert('すべての所属、役割を設定してください。');
+      this.openMsgDialog(messageDialogMsg.BelongsAndRoleSettingReq, false);
       return;
     }
     let updateData = this.data;
@@ -162,6 +167,36 @@ export class FactoryAdminSettingModalComponent implements OnInit {
     }
     return false;
   }
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg:string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(locationDiv) {
+        // this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // // ローディング解除
+      // this.overlayRef.detach();
+      return;
+    });
+}
 
 
 
