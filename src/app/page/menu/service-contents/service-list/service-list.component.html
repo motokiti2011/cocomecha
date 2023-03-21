@@ -1,12 +1,8 @@
 <div class="service_menu wrapper">
 
   <aside>
-    <app-service-list-side-menu
-      [serchArea1]="serchArea1"
-      [serchCategory]="serchCategory"
-      [favoriteList]="favoriteList"
-      [acseccUser]="acseccUser"
-      (serviceSerchValue)="onServiceSerch($event)">
+    <app-service-list-side-menu [serchArea1]="serchArea1" [serchCategory]="serchCategory" [favoriteList]="favoriteList"
+      [acseccUser]="acseccUser" (serviceSerchValue)="onServiceSerch($event)">
     </app-service-list-side-menu>
   </aside>
 
@@ -21,9 +17,10 @@
     </div>
 
     <div class="serch-area">
-      <input id="serch" name="serch" class="serch-form" type="serch" [(ngModel)]="serchKeyWord" placeholder="キーワードを入力してください。" />
+      <input id="serch" name="serch" class="serch-form" type="serch" [(ngModel)]="serchKeyWord"
+        placeholder="キーワードを入力してください。" />
       <div class="button-serch">
-        <input type="button" class="btn-serch" on-click="onSerch()" value={{serchBtnValue}} >
+        <input type="button" class="btn-serch" on-click="onSerch()" value={{serchBtnValue}}>
       </div>
     </div>
 
@@ -35,10 +32,12 @@
 
         <div *ngFor="let contents of displayContentsList | slice: begin: begin+maxLength">
 
-          <img [src]="contents.thumbnailUrl" alt="サムネイル" (click)="onContentsSelect(contents)" >
+          <img [src]="contents.thumbnailUrl" alt="サムネイル" (click)="onContentsSelect(contents)">
           <div class="title" (click)="onContentsSelect(contents)">{{contents.title}}</div>
           <div *ngIf="userCertificationDiv">
-            <div [ngClass]="contents.favoriteFlg? 'favorite':'anfavorite'" (click)="onContentFavorite(contents)"><p class="favori">お気に入りはこちら</p>　★</div>
+            <div [ngClass]="contents.favoriteFlg? 'favorite':'anfavorite'" (click)="onContentFavorite(contents)">
+              <p class="favori">お気に入りはこちら</p>　★
+            </div>
           </div>
         </div>
 
@@ -49,9 +48,7 @@
           <div class="buttom-base" (click)="onContentsForward()">前へ</div>
 
           <ng-container *ngFor="let page of pageIndex">
-            <div
-              [class.buttom-base]="page.index!=currentIndex"
-              [class.index]="page.index==currentIndex"
+            <div [class.buttom-base]="page.index!=currentIndex" [class.index]="page.index==currentIndex"
               (click)="onContentsIndex(page.index)">{{page.page}}</div>
           </ng-container>
 
@@ -68,5 +65,3 @@
   </div>
 
 </div>
-
-

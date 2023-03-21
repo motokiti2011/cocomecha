@@ -63,6 +63,20 @@ export class MyListComponent implements OnInit {
   messageAlert = '';
   /** ログインユーザー情報 */
   loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null };
+  // ページング表示開始位置
+  begin = 0;
+  // ページング最大件数
+  maxLength = 25;
+  /** インデックス*/
+  pageIndex: { page: string, index: number }[] = [];
+  /** 現在のページ*/
+  currentIndex: number = 0;
+  /** 総ページ数*/
+  totalPage: number = 1;
+  /** 最大フラグ */
+  maxPageDisp: boolean = false;
+  /** 最小フラグ */
+  minPageDisp: boolean = false;
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -118,10 +132,10 @@ export class MyListComponent implements OnInit {
       // データを取得
       this.mylistservice.getMyList(this.loginUser.userId, '0').subscribe(data => {
         console.log(data);
-        if (data.length === 0) {
-          // data.push(this.mock);
+        if (data.length !== 0) {
+          this.detailList = this.mylistservice.displayFormatdisplayFormat(data);
+          this.setServiceContents();
         }
-        this.detailList = this.mylistservice.displayFormatdisplayFormat(data);
         // ローディング解除
         this.overlayRef.detach();
       });
@@ -226,11 +240,88 @@ export class MyListComponent implements OnInit {
   }
 
 
+
+  /**
+   * 前へボタン押下イベント
+   * @return void
+   */
+  onContentsForward(): void {
+    // 1ページ目の場合何もしない
+    if (this.currentIndex == 0) {
+      return;
+    }
+    const beforIndex = this.currentIndex - 1;
+    this.onContentsIndex(beforIndex)
+  }
+  /**
+   * 次へボタン押下イベント
+   * @return void
+   */
+  onContentsNext(): void {
+    // 最終ページの場合何もしない
+    if (this.currentIndex == this.totalPage - 1) {
+      return;
+    }
+    const nextIndex = this.currentIndex + 1;
+
+    this.onContentsIndex(nextIndex)
+  }
+
+  /**
+   * Indexボタン押下イベント
+   * @return void
+   */
+  onContentsIndex(index: number): void {
+    this.currentIndex = index;
+    this.begin = this.maxLength * index;
+  }
+
+
   /**
    * 前画面に戻る
    */
   onReturn() {
     this.location.back();
+  }
+
+  /********************* 内部処理 ************************/
+
+  /**
+   * ページ数設定を行う
+   */
+  private setServiceContents(): void {
+    this.totalPage = Math.ceil(this.detailList.length / 25);
+    this.pageSetting();
+  }
+
+
+  /**
+ * 初回ページ設定を行う
+ * @return void
+ */
+  private pageSetting() {
+    // 初回のみ初期化
+    this.pageIndex = [];
+    let count = 1;
+    const maxIndex = this.totalPage;
+
+    // ページ数は最大6個表示のためそれ以上であれば6個までの表示を行う
+    if (this.totalPage > 25) {
+      // 1ページのみの場合次、前は非表示
+      this.maxPageDisp = true;
+      this.minPageDisp = true;
+    }
+    // ページ数は最大6表示
+    for (var i = 0; i < this.totalPage; i++) {
+      // if (count > 8) {
+      //   return;
+      // }
+      const pageData = { page: String(count), index: count - 1 }
+      this.pageIndex.push(pageData);
+      count++;
+    }
+    // ローディング解除
+    this.overlayRef.detach();
   }
 
 

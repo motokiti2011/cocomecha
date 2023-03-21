@@ -1,8 +1,6 @@
+<div class="disp_area">
 
-<div class="disp-area">
-
-
-  <p class="title">お知らせ一覧</p>
+  <!-- <p class="title">お知らせ一覧</p> -->
 
   <div class="transaction-count">
     <p>現在取引中のサービスは{{transactionCountMsg}}</p>
@@ -12,65 +10,68 @@
     <div class="alert-message">
       新着メッセージ・質問{{messageAlert}}
     </div>
-    
+
     <div>
-      <select class="select-btn" [(ngModel)]="selected" (change)="changeOrder()">
+      <select class="select_btn" [(ngModel)]="selected" (change)="changeOrder()">
         <option value="">並び順</option>
-        <option *ngFor="let item of orderMenu"
-        [value]="item.value"
-        [selected]="item.value === selected">{{item.value}}
-      </option>
+        <option *ngFor="let item of orderMenu" [value]="item.value" [selected]="item.value === selected">{{item.value}}
+        </option>
       </select>
     </div>
   </div>
 
 
-  <div class="service-contents">
+  <div class="service_contents">
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{HEAD.readDiv}}</th>
-          <th>{{HEAD.msgPage}}</th>
-          <th>{{HEAD.adlessMsg}}</th>
-          <th>{{HEAD.messageDate}}</th>
-
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of detailList">
-          <td>{{item.dispRead}}</td>
-          <td><div class="item-title" (click)="contentsDetail(item)" >{{item.serviceTitle}}</div></td>
-          <td>{{item.message}}</td>
-          <td>{{item.messageDate}}</td>
-        </tr>
-      </tbody>
-    </table>
-
-
-    <!-- <div class="item-list-heder">
-      <div class="heder-check" >
-        <input type="checkbox" 
-        [(ngModel)]="hedSelection"
-        (change)="bulkSelection()">
+    <div *ngIf="detailList.length > 0; ElseContents" class="table_area">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>{{HEAD.readDiv}}</th>
+            <th>{{HEAD.msgPage}}</th>
+            <th>{{HEAD.adlessMsg}}</th>
+            <th>{{HEAD.messageDate}}</th>
+        </thead>
+      </table>
+      <div class="table2">
+        <table class="table">
+          <tbody>
+            <tr *ngFor="let item of detailList | slice: begin: begin+maxLength">
+              <td>{{detailList.length}}</td>
+              <td>{{item.dispRead}}</td>
+              <td>
+                <div class="item-title" (click)="contentsDetail(item)">{{item.serviceTitle}}</div>
+              </td>
+              <td>{{item.message}}</td>
+              <td>{{item.messageDate}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="heder-read" >{{HEAD.readDiv}}</div>
-      <div class="heder-title" >{{HEAD.msgPage}}</div>
-      <div class="heder-message" >{{HEAD.adlessMsg}}</div>
-      <div class="heder-date" >{{HEAD.messageDate}}</div>
-    </div> -->
 
-    <!-- <div *ngFor="let content of detailList">
-      <div class="item-list">
-        <div class="item-read" >{{content.readDiv}}</div>
-        <div class="item-title" (click)="contentsDetail(content)" >{{content.serviceTitle}}</div>
-        <div class="item-message" >{{content.message}}</div>
-        <div class="item-date" >{{content.messageDate}}</div>
+    </div>
+    <ng-component #ElseContents>
+      <div>
+        お知らせはありません。
       </div>
-    </div> -->
+    </ng-component>
   </div>
 
-  <!-- <div class="delete-btn">
-    <button (click)="deleteCheck()" [disabled]="checkbutton">選択を削除する</button>
-  </div> -->
+  <div *ngIf="detailList.length > 0;" class="service_index">
+    <div class="buttom_area">
+      <div *ngIf="minPageDisp" class="buttom-base" (click)="onContentsForward()">前へ</div>
+
+      <ng-container *ngFor="let page of pageIndex">
+        <div [class.buttom-base]="page.index!=currentIndex" [class.index]="page.index==currentIndex"
+          (click)="onContentsIndex(page.index)">{{page.page}}</div>
+      </ng-container>
+
+      <div *ngIf="maxPageDisp" class="buttom-base" (click)="onContentsNext()">次へ</div>
+
+    </div>
+  </div>
+
+
 
 </div>

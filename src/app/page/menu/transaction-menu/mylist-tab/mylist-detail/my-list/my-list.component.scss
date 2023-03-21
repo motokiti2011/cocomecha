@@ -1,26 +1,42 @@
-.disp-area {
-  height: 600px;
-  // background-color: #97cdf3;
-  .service-contents {
-    margin-top: 2%;
-    margin-left: 5%;
+.disp_area {
+  height: 100%;
+
+  .service_contents {
+    // height: 450px;
+    // overflow: hidden;
+    // overflow-y: auto;
+    margin: 20px 10px 0px 40px;
+    padding: 0px 0px 60px 0px;
+  }
+}
+
+.table_area {
+  background-color: #fff;
+  th {
+    position: sticky;
+    background: #f2f2f2;
+    top: 0;
+    left: 0;
+  }
+  .table2 {
+    height: 450px;
+    overflow: hidden;
+    overflow-y: auto;
   }
 
+
 }
+
 
 .title {
   margin-top: 20px;
-
 }
-
 
 .transaction-count {
   height: 50px;
   margin-top: 50px;
   margin-left: 50px;
 }
-
-
 
 .alert-message {
   width: 400px;
@@ -86,7 +102,7 @@
     border: 1px solid #000;
     width: 200px;
     padding-top: 1.4em;
-    cursor:pointer;
+    cursor: pointer;
     color: blue;
   }
 
@@ -107,4 +123,44 @@
 .delete-btn {
   margin-top: 5vh;
   margin-left: 7vh;
+}
+
+
+.service_index {
+  justify-content: center;
+  display: flex;
+  width: 800px;
+  margin-top: 50px;
+
+  .buttom_area {
+    display: flex;
+
+    div.buttom-base {
+      text-align: center;
+      border: 2px solid #000;
+      border-radius: 2;
+      // background: #fff;
+      width: 3.5em;
+      height: 2.5em;
+      margin-left: 0.5em;
+      padding: 10px 5px 0px 5px;
+    }
+
+    .buttom-base:hover {
+      color: #fff;
+      background: #000;
+    }
+
+    div.index {
+      color: #fff;
+      background: #000;
+      text-align: center;
+      border: 2px solid #000;
+      border-radius: 2;
+      width: 3.5em;
+      height: 2.5em;
+      margin-left: 0.5em;
+      padding: 10px 5px 0px 5px;
+    }
+  }
 }
