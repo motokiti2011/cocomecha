@@ -56,8 +56,13 @@ ul.tab-menu-base li {
 
 ul.tab-menu-base li.current {
   // background: rgb(240, 240, 240);
-  background: #e3a44e;  
+  background: #e3a44e;
 }
+
+.tab_contents {
+  height: 500px;
+}
+
 
 .select-btn {
   margin-left: -75vh;

@@ -1,6 +1,11 @@
 .disp-area {
   height: 600px;
   // background-color: #97cdf3;
+  .service-contents {
+    margin-top: 2%;
+    margin-left: 5%;
+  }
+
 }
 
 .title {
@@ -15,10 +20,7 @@
   margin-left: 50px;
 }
 
-.service-contents {
-  margin-top: 2%;
-  margin-left: 5%;
-}
+
 
 .alert-message {
   width: 400px;

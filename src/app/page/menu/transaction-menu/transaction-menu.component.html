@@ -19,9 +19,10 @@
             <li [class.current]="tab.current" (click)="onClick($event)">{{tab.name}}</li>
           </ng-container>
         </ul>
-
-        <!-- ngComponentOutlet で動的にコンポーネントを読み込む -->
-        <ng-container *ngComponentOutlet="currentTab"></ng-container>
+        <div class="tab_contents">
+          <!-- ngComponentOutlet で動的にコンポーネントを読み込む -->
+          <ng-container *ngComponentOutlet="currentTab"></ng-container>
+        </div>
       </div>
     </div>
 
