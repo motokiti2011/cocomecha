@@ -230,13 +230,13 @@ export class MyListComponent implements OnInit {
    *
    */
   changeOrderSort() {
-      console.log(this.selected)
-      // const order = _find(this.orderMenu, order => order.value === this.selected)
+    console.log(this.selected)
+    // const order = _find(this.orderMenu, order => order.value === this.selected)
 
-      // if (!_isNil(order)) {
-      //   this.detailList = this.service.sortOrderList(this.detailList, order.id);
-      //   console.log(this.detailList);
-      // }
+    // if (!_isNil(order)) {
+    //   this.detailList = this.service.sortOrderList(this.detailList, order.id);
+    //   console.log(this.detailList);
+    // }
   }
 
 
@@ -296,9 +296,9 @@ export class MyListComponent implements OnInit {
 
 
   /**
- * 初回ページ設定を行う
- * @return void
- */
+   * 初回ページ設定を行う
+   * @return void
+   */
   private pageSetting() {
     // 初回のみ初期化
     this.pageIndex = [];

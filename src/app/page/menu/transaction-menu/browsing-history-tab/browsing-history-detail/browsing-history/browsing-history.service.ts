@@ -4,6 +4,7 @@ import { catchError, Observable, of, map} from 'rxjs';
 import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
+import { dispBrowsingHistory } from './browsing-history.component';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class BrowsingHistoryService {
    * 閲覧履歴情報を削除する
    * @param list
    */
-  public deleteMyBrosingHistory(list: browsingHistory[]): Observable<any> {
+  public deleteMyBrosingHistory(list: dispBrowsingHistory[]): Observable<any> {
     let idList:string[] = [];
     list.forEach(li => {
       idList.push(li.id);

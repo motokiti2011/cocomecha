@@ -25,6 +25,19 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { messageDialogMsg } from 'src/app/entity/msg';
 
+/**
+ * 表示用閲覧履歴情報
+ */
+export interface dispBrowsingHistory {
+  id: string;
+  check: boolean;
+  title: string;
+  price: string;
+  whet: string;
+  endDate: string;
+}
+
+
 @Component({
   selector: 'app-browsing-history',
   templateUrl: './browsing-history.component.html',
@@ -44,9 +57,9 @@ export class BrowsingHistoryComponent implements OnInit {
   };
 
   /** 表示用リスト */
-  detailList: any = [];
+  detailList: dispBrowsingHistory[] = [];
   /** チェックリスト */
-  selectionList: any = [];
+  selectionList: String[] = [];
   /** 一括選択チェック */
   hedSelection: boolean = false;
   /** 削除ボタン活性フラグ */
@@ -62,6 +75,21 @@ export class BrowsingHistoryComponent implements OnInit {
   ];
   /** ログインユーザー情報 */
   loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null };
+  // ページング表示開始位置
+  begin = 0;
+  // ページング最大件数
+  maxLength = 25;
+  /** インデックス*/
+  pageIndex: { page: string, index: number }[] = [];
+  /** 現在のページ*/
+  currentIndex: number = 0;
+  /** 総ページ数*/
+  totalPage: number = 1;
+  /** 最大フラグ */
+  maxPageDisp: boolean = false;
+  /** 最小フラグ */
+  minPageDisp: boolean = false;
+
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -118,7 +146,8 @@ export class BrowsingHistoryComponent implements OnInit {
       // データを取得
       this.browsingHistoryService.getMyBrosingHistory(this.loginUser.userId).subscribe(data => {
         console.log(data);
-        this.detailList = data;
+        this.detailList = this.settingDispBrowsing(data);
+        this.setServiceContents();
         // ローディング解除
         this.overlayRef.detach();
       });
@@ -131,28 +160,27 @@ export class BrowsingHistoryComponent implements OnInit {
    * @param content
    * @returns detailList
    */
-  private settingDetail(content: serviceContents): any {
+  private settingDispBrowsing(content: browsingHistory[]): dispBrowsingHistory[] {
 
-    const returnList: detailList = {
-      id: content.id,
-      // check
-      check: this.hedSelection,
-      // タイトル
-      title: content.title,
-      // 内容
-      contents: '',
-      // 地域
-      area: this.service.areaDisp(content.area1),
-      // カテゴリー
-      category: this.service.priceDisp(content),
-      // 価格
-      price: this.service.priceDisp(content),
-      // 期間
-      whet: this.service.getWhet(content),
-      // 終了日
-      endDate: this.service.getDispDate(content.preferredDate)
-    }
-    return returnList;
+    const resultList :dispBrowsingHistory[] = [];
+    content.forEach(data => {
+      const item: dispBrowsingHistory = {
+        id: data.id,
+        // check
+        check: this.hedSelection,
+        // タイトル
+        title: data.title,
+        // 価格
+        price: data.price,
+        // 期間
+        whet: data.whet,
+        // 終了日
+        endDate: this.service.getDispDate(Number(data.endDate))
+      }
+      resultList.push(item);
+    });
+
+    return resultList;
   }
 
   /**
@@ -184,7 +212,7 @@ export class BrowsingHistoryComponent implements OnInit {
    */
   bulkSelection() {
     console.log(this.hedSelection)
-    const dispList: detailList[] = _cloneDeep(this.detailList);
+    const dispList: dispBrowsingHistory[] = _cloneDeep(this.detailList);
 
     dispList.forEach((content) => {
       // check をすべてヘッダと同じ状態にする
@@ -209,13 +237,14 @@ export class BrowsingHistoryComponent implements OnInit {
 
   /** 削除ボタン押下時のイベント */
   deleteCheck() {
-    const List: [] = _cloneDeep(this.selectionList);
-    const deleteList: browsingHistory[] = []
+    const List: String[] = _cloneDeep(this.selectionList);
+    const deleteList: dispBrowsingHistory[] = []
 
     List.forEach((select) => {
+      const item = _find(this.detailList, disp => disp.id === select);
       // 削除対象を取得する
-      if (_find(this.detailList, disp => disp.id === select)) {
-        deleteList.push(_find(this.detailList, disp => disp.id === select));
+      if (item) {
+        deleteList.push(item);
       }
     });
 
@@ -247,13 +276,13 @@ export class BrowsingHistoryComponent implements OnInit {
     *
     */
   changeOrder() {
-    console.log(this.selected)
-    const order = _find(this.orderMenu, order => order.value === this.selected)
+    // console.log(this.selected)
+    // const order = _find(this.orderMenu, order => order.value === this.selected)
 
-    if (!_isNil(order)) {
-      this.detailList = this.service.sortOrderList(this.detailList, order.id);
-      console.log(this.detailList);
-    }
+    // if (!_isNil(order)) {
+    //   this.detailList = this.service.sortOrderList(this.detailList, order.id);
+    //   console.log(this.detailList);
+    // }
   }
 
   /**
@@ -262,5 +291,82 @@ export class BrowsingHistoryComponent implements OnInit {
   onReturn() {
     this.location.back();
   }
+
+
+  /**
+ * 前へボタン押下イベント
+ * @return void
+ */
+  onContentsForward(): void {
+    // 1ページ目の場合何もしない
+    if (this.currentIndex == 0) {
+      return;
+    }
+    const beforIndex = this.currentIndex - 1;
+    this.onContentsIndex(beforIndex)
+  }
+  /**
+   * 次へボタン押下イベント
+   * @return void
+   */
+  onContentsNext(): void {
+    // 最終ページの場合何もしない
+    if (this.currentIndex == this.totalPage - 1) {
+      return;
+    }
+    const nextIndex = this.currentIndex + 1;
+
+    this.onContentsIndex(nextIndex)
+  }
+
+  /**
+   * Indexボタン押下イベント
+   * @return void
+   */
+  onContentsIndex(index: number): void {
+    this.currentIndex = index;
+    this.begin = this.maxLength * index;
+  }
+
+  /********************* 内部処理 ************************/
+
+  /**
+   * ページ数設定を行う
+   */
+  private setServiceContents(): void {
+    this.totalPage = Math.ceil(this.detailList.length / 25);
+    this.pageSetting();
+  }
+
+
+  /**
+   * 初回ページ設定を行う
+   * @return void
+   */
+  private pageSetting() {
+    // 初回のみ初期化
+    this.pageIndex = [];
+    let count = 1;
+    const maxIndex = this.totalPage;
+
+    // ページ数は最大6個表示のためそれ以上であれば6個までの表示を行う
+    if (this.totalPage > 25) {
+      // 1ページのみの場合次、前は非表示
+      this.maxPageDisp = true;
+      this.minPageDisp = true;
+    }
+    // ページ数は最大6表示
+    for (var i = 0; i < this.totalPage; i++) {
+      // if (count > 8) {
+      //   return;
+      // }
+      const pageData = { page: String(count), index: count - 1 }
+      this.pageIndex.push(pageData);
+      count++;
+    }
+    // ローディング解除
+    this.overlayRef.detach();
+  }
+
 
 }
