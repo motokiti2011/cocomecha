@@ -51,10 +51,10 @@ export class MyListComponent implements OnInit {
   selected = '';
 
   orderMenu = [
-    { id: 1, value: '残り期間が短い順' },
-    { id: 2, value: '残り期間が長い順' },
-    { id: 3, value: '価格が安い順' },
-    { id: 4, value: '価格が高い順' },
+    { id: '1', value: '未読のみ' },
+    { id: '2', value: '既読のみ' },
+    { id: '3', value: '新しい順' },
+    { id: '4', value: '古い順' },
   ];
 
   /** 取引中件数 */
@@ -229,14 +229,14 @@ export class MyListComponent implements OnInit {
    *  並び順変更イベント
    *
    */
-  changeOrder() {
-    //   console.log(this.selected)
-    //   const order = _find(this.orderMenu, order => order.value === this.selected)
+  changeOrderSort() {
+      console.log(this.selected)
+      // const order = _find(this.orderMenu, order => order.value === this.selected)
 
-    //   if (!_isNil(order)) {
-    //     this.detailList = this.service.sortOrderList(this.detailList, order.id);
-    //     console.log(this.detailList);
-    //   }
+      // if (!_isNil(order)) {
+      //   this.detailList = this.service.sortOrderList(this.detailList, order.id);
+      //   console.log(this.detailList);
+      // }
   }
 
 

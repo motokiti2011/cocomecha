@@ -2,19 +2,15 @@
 
   <!-- <p class="title">お知らせ一覧</p> -->
 
-  <div class="transaction-count">
-    <p>現在取引中のサービスは{{transactionCountMsg}}</p>
-  </div>
-
   <div class="list-option">
     <div class="alert-message">
       新着メッセージ・質問{{messageAlert}}
     </div>
 
     <div>
-      <select class="select_btn" [(ngModel)]="selected" (change)="changeOrder()">
+      <select class="select_btn" [(ngModel)]="selected" (change)="changeOrderSort()">
         <option value="">並び順</option>
-        <option *ngFor="let item of orderMenu" [value]="item.value" [selected]="item.value === selected">{{item.value}}
+        <option *ngFor="let item of orderMenu" [value]="item.id" [selected]="item.id === selected">{{item.value}}
         </option>
       </select>
     </div>

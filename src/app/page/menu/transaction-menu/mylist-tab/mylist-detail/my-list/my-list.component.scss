@@ -12,6 +12,7 @@
 
 .table_area {
   background-color: #fff;
+  border: #000;
   th {
     position: sticky;
     background: #f2f2f2;
@@ -129,8 +130,8 @@
 .service_index {
   justify-content: center;
   display: flex;
-  width: 800px;
-  margin-top: 50px;
+  height: 80px;
+  align-items: center;
 
   .buttom_area {
     display: flex;
