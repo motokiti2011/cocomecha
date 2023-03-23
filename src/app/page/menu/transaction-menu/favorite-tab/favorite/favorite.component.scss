@@ -5,11 +5,29 @@
 }
 
 
+.table_area {
+  background-color: #fff;
+  border: #000;
+  th {
+    position: sticky;
+    background: #f2f2f2;
+    top: 0;
+    left: 0;
+  }
+  .table2 {
+    height: 450px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}
+
+
+
 .item-list-heder {
-  display: flex;
-  height: 2em;
-  text-align: center;
-  font-size: 1.5em;
+  // display: flex;
+  // height: 2em;
+  // text-align: center;
+  // font-size: 1.5em;
 
   .heder-check {
     border: 1px solid #000;

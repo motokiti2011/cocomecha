@@ -270,7 +270,7 @@ export class ServiceListComponent implements OnInit {
     console.log('お気に入り：' + contents.id);
 
     // サービス一覧のお気に入りFlgを制御する
-    this.contentsList = this.service.favoriteSetting(contents.id, this.contentsList);
+    this.contentsList = this.service.favoriteSetting(contents.id, this.displayContentsList);
     // 画面表示のお気に入りFlgを制御する
     this.displayContentsList = this.contentsList;
     // 認証情報取得
