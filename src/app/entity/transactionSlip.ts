@@ -30,3 +30,13 @@ export interface transactionSlip {
   // 更新日時
   updated: string;
 }
+
+
+/**
+ * 伝票関係性
+ */
+export const SlipRelation = {
+  Admin: "管理者",
+  RequestRelation: "依頼関係者",
+  ReceivedRelation: "受注関係者",
+} as const;

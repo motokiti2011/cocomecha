@@ -22,6 +22,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { transactionSlip } from 'src/app/entity/transactionSlip';
+
 
 @Component({
   selector: 'app-transaction-list',
@@ -33,17 +35,13 @@ export class TransactionListComponent implements OnInit {
   HEAD = {
     check: '',
     title: 'タイトル',
-    contents: '内容',
-    area: '地域',
-    category: 'カテゴリー',
-    price: '価格',
-    whet: '期間',
-    endDate: '終了日',
-    status: '取引ステータス',
+    relation: '関係性',
+    adminName: '管理者名',
+    completionScheduledDate: '完了予定日', 
   };
 
   /** 表示用リスト */
-  detailList: dispTransactionContents[] = [];
+  detailList: transactionSlip[] = [];
 
   /** チェックリスト */
   selectionList: any = [];
@@ -123,6 +121,7 @@ export class TransactionListComponent implements OnInit {
       // データを取得
       this.service.getTransactionSlip(this.loginUser.userId, '0').subscribe(data => {
         this.detailList = this.service.dispContentsSlip(data)
+        // this.detailList = data;
         // ローディング解除
         this.overlayRef.detach();
       });

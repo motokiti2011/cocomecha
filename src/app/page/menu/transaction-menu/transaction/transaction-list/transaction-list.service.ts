@@ -8,6 +8,8 @@ import {
   orderBy as _orderBy,
 } from 'lodash';
 import { transactionContents, dispTransactionContents, TranStatus } from 'src/app/entity/transactionContents';
+import { transactionSlip, SlipRelation } from 'src/app/entity/transactionSlip';
+
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { slipQuestion } from 'src/app/entity/slipQuestion';
@@ -29,7 +31,7 @@ export class TransactionListService {
    * 取引中、管理中の伝票情報を取得する
    * @returns
    */
-  public getTransactionSlip(id: string, serviceType: string ): Observable<transactionContents[]> {
+  public getTransactionSlip(id: string, serviceType: string): Observable<transactionSlip[]> {
     return this.apiGsiService.serchTransactionSlip(id, serviceType);
   }
 
@@ -38,34 +40,40 @@ export class TransactionListService {
    * 取引伝票情報を表示用に加工する。
    * @param slip
    */
-  public dispContentsSlip(transactionSlip: transactionContents[]): dispTransactionContents[] {
-    let result: dispTransactionContents[] = [];
+  public dispContentsSlip(transactionSlip: transactionSlip[]): transactionSlip[] {
+    let result: transactionSlip[] = [];
     let count = 1;
     transactionSlip.forEach(slip => {
-      const dispSlip: dispTransactionContents = {
-        id: count,
+      const dispSlip: transactionSlip = {
+        id: slip.id,
+        // ユーザーID
         userId: slip.userId,
-        userName: slip.userName,
+        // メカニックID
+        mechanicId: slip.mechanicId,
+        // 工場ID
+        officeId: slip.officeId,
+        // サービスタイプ
+        serviceType: slip.serviceType,
+        // 伝票番号
         slipNo: slip.slipNo,
-        title: slip.title,
-        price: slip.price,
-        imageUrl: slip.imageUrl,
-        category: slip.category,
-        area: slip.area,
-        bidMethod: slip.bidMethod,
+        // サービスタイトル
+        serviceTitle: slip.serviceTitle,
+        // 伝票関係性
+        slipRelation: this.setRelation(slip.slipRelation),
+        // 伝票管理者ID
+        slipAdminId: slip.slipAdminId,
+        // 伝票管理者名
+        slipAdminName: slip.slipAdminName,
+        // 入札者ID
         bidderId: slip.bidderId,
-        bidEndDate: slip.bidEndDate,
-        explanation: slip.explanation,
-        displayDiv: slip.deleteDiv,
-        preferredDate: slip.preferredDate,
-        preferredTime: slip.preferredTime,
-        completionDate: slip.completionDate,
-        whet: this.getWhet(Number(slip.preferredDate),Number(slip.preferredTime)),
-        endDate: this.getDispDate(Number(slip.preferredDate)),
+        // 削除区分
         deleteDiv: slip.deleteDiv,
-        completionScheduledDate: slip.completionScheduledDate,
-        transactionStatus: this.setSlipStatus(slip.transactionStatus),
-        message: ''
+        // 完了予定日
+        completionScheduledDate: this.getDispDate(Number(slip.completionScheduledDate)),
+        // 作成日時
+        created: slip.created,
+        // 更新日時
+        updated: slip.updated,
       }
       result.push(dispSlip)
     });
@@ -192,18 +200,21 @@ export class TransactionListService {
     return year + '年' + month + '月' + day + '日'
   }
 
+
+
   /**
-   * 伝票状態を確認し取引ステータスを設定する
-   * @param slip
-   * @param userId
+   * 伝票関係性を表示用に設定する
+   * @param relation 
+   * @returns 
    */
-  private slipStatusSet(slip: slipDetailInfo, userId: string): string {
-    // 伝票管理者とアクセス者が一致する場合
-    if (slip.slipAdminUserId === userId) {
-      return 'サービス管理中';
+  private setRelation(relation: string): string {
+    const result = SlipRelation.Admin;
+    if(relation == '1') {
+      return SlipRelation.RequestRelation;
+    } else if(relation == '1') {
+      return SlipRelation.ReceivedRelation;
     }
-    // 上記以外（落札者の場合）
-    return 'サービス取引中';
+    return result
   }
 
 

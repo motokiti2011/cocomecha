@@ -1,65 +1,45 @@
-
-<!-- <button (click)="goBack()">戻る</button> -->
-
 <div class="service-contents">
-  
+
   <div>
     <select class="select-btn" [(ngModel)]="selected" (change)="changeOrder()">
       <option value="">並び順</option>
-      <option *ngFor="let item of orderMenu"
-      [value]="item.value"
-      [selected]="item.value === selected">{{item.value}}
-    </option>
+      <option *ngFor="let item of orderMenu" [value]="item.value" [selected]="item.value === selected">{{item.value}}
+      </option>
     </select>
   </div>
 
   <div class="contants">
 
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{HEAD.title}}</th>
-          <th>{{HEAD.price}}</th>
-          <th>{{HEAD.whet}}</th>
-          <th>{{HEAD.endDate}}</th>
-          <th>{{HEAD.status}}</th>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of detailList">
-          <td>{{item.title}}</td>
-          <td>{{item.price}}</td>
-          <td>{{item.whet}}</td>
-          <td>{{item.endDate}}</td>
-          <td>{{item.transactionStatus}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div *ngIf="detailList.length > 0; ElseContents" class="table_area">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{HEAD.title}}</th>
+            <th>{{HEAD.relation}}</th>
+            <th>{{HEAD.adminName}}</th>
+            <th>{{HEAD.completionScheduledDate}}</th>
+        </thead>
+      </table>
+      <div class="table2">
+        <table class="table">
+          <tbody>
+            <tr *ngFor="let item of detailList">
+              <td>{{item.serviceTitle}}</td>
+              <td>{{item.slipRelation}}</td>
+              <td>{{item.slipAdminName}}</td>
+              <td>{{item.completionScheduledDate}}</td>
+            </tr>
+          </tbody>
+        </table>
 
-
-
-    <!-- <div class="item-list-heder">
-      <div class="heder-title" >{{HEAD.title}}</div>
-      <div class="heder-price" >{{HEAD.price}}</div>
-      <div class="heder-whet" >{{HEAD.whet}}</div>
-      <div class="heder-endDate" >{{HEAD.endDate}}</div>
-      <div class="heder-status" >{{HEAD.status}}</div>
-    </div>
-
-    <div *ngFor="let content of detailList">
-      <div class="item-list">
-        <div class="item-title" (click)="contentsDetail(content.slipNo)" >{{content.title}}</div>
-        <div class="item-price" >{{content.price}}</div>
-        <div class="item-whet" >{{content.whet}}</div>
-        <div class="item-endDate" >{{content.endDate}}</div>
-        <div class="item-status" >{{content.transactionStatus}}</div>
       </div>
-    </div> -->
-    
-  </div>
+    </div>
+    <ng-component #ElseContents>
+      <div>取引中のサービスはありません。</div>
+    </ng-component>
 
-</div>
 
-<div class="delete-btn">
-  <button (click)="deleteCheck()" [disabled]="checkbutton">選択を削除する</button>
-</div>
+    <div class="delete-btn">
+      <button (click)="deleteCheck()" [disabled]="checkbutton">選択を削除する</button>
+    </div>
