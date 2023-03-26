@@ -169,10 +169,10 @@ export class VehicleRegisterComponent implements OnInit {
   /** 車両リスト　*/
   vehicleList: userVehicle[] = [];
   /** 元号セレクト */
-  eraData = selectEraName
+  eraData = selectEraName;
   eraSelect = '2';
   /** カラーセレクト */
-  coloerData = selectColoer
+  coloerData = selectColoer;
   coloerSelect = '';
   /** メーカー */
   dispVehicleMaker: string = '';
@@ -276,7 +276,7 @@ export class VehicleRegisterComponent implements OnInit {
     console.log(userVehicle);
 
     this.apiService.postUserVehicle(userVehicle).subscribe(result => {
-      if(result === 200) {
+      if (result === 200) {
         this.openMsgDialog(messageDialogMsg.Resister, false);
         this.getVehicleList();
       } else {
@@ -346,7 +346,7 @@ export class VehicleRegisterComponent implements OnInit {
    * @param msg
    * @param locationDiv
    */
-  private openMsgDialog(msg:string, locationDiv: boolean) {
+  private openMsgDialog(msg: string, locationDiv: boolean) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
     const dialogData: messageDialogData = {
       massage: msg,
@@ -360,13 +360,13 @@ export class VehicleRegisterComponent implements OnInit {
       data: dialogData
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(locationDiv) {
+      if (locationDiv) {
         this.router.navigate(["/main_menu"]);
       }
       console.log(result);
       return;
     });
-}
+  }
 
 
 

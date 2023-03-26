@@ -45,6 +45,29 @@ export class ApiCheckService {
   }
 
   /**
+   * サービス管理者かどうかをチェックする
+   * @param userId
+   * @returns
+   */
+  public checkSalesPrm(slipNo: string, accessUser: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "CHECK",
+      "Keys": {
+        "slipNo": slipNo,
+        "accessUser": accessUser
+      }
+    };
+    return this.http.post<boolean>(this.apiEndPoint + '/salesprmuser', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: boolean) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+  /**
    * 伝票IDと管理者IDから対象伝票を取得する
    * @param slipNo
    * @param adminId

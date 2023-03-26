@@ -85,6 +85,7 @@ import { HelpComponent } from './page/menu/footer-menu/help/help.component';
 import { ConnectionFactoryModalComponent } from './page/modal/connection-factory-modal/connection-factory-modal.component';
 import { ConnectionMechanicModalComponent } from './page/modal/connection-mechanic-modal/connection-mechanic-modal.component';
 import { FactoryAdminSettingModalComponent } from './page/modal/factory-admin-setting-modal/factory-admin-setting-modal.component';
+import { ServiceEditComponent } from './page/menu/service-contents/service-edit/service-edit.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -114,7 +115,7 @@ const ROUTE_TABLE: Routes = [
   { path: 'edit-vehicle', component: EditVehicleInfoComponent, canActivate: [RoutingGuard] },
   { path: 'service-admin-reference', component: ServiceAdmininfoRelistedComponent},
   { path: 'past-transactions', component: PastTransactionsComponent},
-
+  { path: 'service-edit', component: ServiceEditComponent},
   { path: 'use-terms', component: UseTermsComponent },
   { path: 'personal-information-handling', component: PersonalInformationHandlingComponent },
   { path: 'inquiry', component: InquiryComponent },
@@ -184,6 +185,7 @@ const ROUTE_TABLE: Routes = [
     ConnectionFactoryModalComponent,
     ConnectionMechanicModalComponent,
     FactoryAdminSettingModalComponent,
+    ServiceEditComponent,
   ],
   entryComponents: [
     TransactionListComponent,

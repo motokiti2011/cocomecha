@@ -4,11 +4,13 @@ import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
+import { ApiCheckService } from 'src/app/page/service/api-check.service';
 import { image } from 'src/app/entity/image';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import {
   find as _find,
 } from 'lodash';
+import { userWorkArea, mechanicWorkArea } from '../service-create/service-create-option';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,7 @@ export class ServiceDetailService {
   constructor(
     private apiService: ApiSerchService,
     private apiUniqueService: ApiUniqueService,
+    private apiCheckService: ApiCheckService
   ) { }
 
   /**
@@ -157,8 +160,37 @@ export class ServiceDetailService {
     return '';
   }
 
+  /**
+   * 作業場所情報を設定する
+   * @param workAreaInfo 
+   * @param serviceType 
+   */
+  public setDispWorkArea(workAreaInfo: string, serviceType: string): string {
+    let result = '';
+    if(serviceType == '0') {
+      const workArea = _find(userWorkArea, data => data.id == workAreaInfo);
+      if(workArea) {
+        result = workArea.viewDisp;
+      }
+    } else {
+      const workArea = _find(mechanicWorkArea, data => data.id == workAreaInfo);
+      if(workArea) {
+        result = workArea.viewDisp;
+      }
+    }
+    return result;
+  }
 
 
+
+  /**
+   * アクセスユーザーが伝票管理者かをチェックする
+   * @param accessId 
+   */
+  public acsessUserAdminCheck(serviceId: string, accessId: string, serviceType: string): boolean {
+    // return this.apiCheckService.checkAdminUserSlip(serviceId, accessId, serviceType);
+    return true;
+  }
 
 
 

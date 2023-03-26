@@ -22,6 +22,13 @@
         <button type="button" class="btn btn-outline-primary" (click)="onTransactionStatus()">取引状況を確認する</button>
       </div>
 
+      <div *ngIf="adminDiv">
+        <div class="row button_item">
+          <button type="button" class="btn btn-outline-primary" (click)="onServiceEdit()">サービスを編集する</button>
+        </div>
+      </div>
+
+
       <div *ngIf="relistedDiv">
         <div class="row button_item">
           <button type="button" class="btn btn-outline-primary" (click)="onRelisted()">再出品</button>

@@ -1,5 +1,4 @@
 import { Component, OnInit, LOCALE_ID, Inject } from '@angular/core';
-import { formatDate } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
@@ -58,6 +57,8 @@ export class ServiceDetailComponent implements OnInit {
   serviceTypeName: string = '';
   /** サービス管理者情報 */
   serviceAdminInfo: { id: string, name: string| null } = { id: '', name: '' }
+  /** 管理者区分 */
+  adminDiv = false;
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -115,9 +116,12 @@ export class ServiceDetailComponent implements OnInit {
         // 地域
         this.dispArea = this.service.setDispArea(this.dispContents.areaNo1, this.dispContents.areaNo2);
         // 作業場所
-        this.dispWorkArea = this.dispContents.workAreaInfo;
+        this.dispWorkArea = this.service.setDispWorkArea(this.dispContents.workAreaInfo, this.dispContents.targetService);
         // 対象車両
         this.dispTargetVehicle = this.dispContents.targetVehicleName;
+        if(this.dispContents.targetVehicleName ||this.dispContents.targetVehicleName == '' ) {
+          this.dispTargetVehicle = '車両情報登録なし'
+        }
         // 説明
         this.dispExplanation = this.dispContents.explanation;
         // 画像
@@ -215,6 +219,21 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   /**
+   * サービス編集ボタン押下イベント
+   */
+  onServiceEdit() {
+    this.router.navigate(["service-edit"],
+    {
+      queryParams: {
+        slipNo: this.dispContents.slipNo,
+        serviceType: this.serviceType
+      }
+    });
+  }
+
+
+
+  /**
    * 管理者情報ページに遷移する
    * @param id
    */
@@ -285,7 +304,7 @@ export class ServiceDetailComponent implements OnInit {
    * @param userId
    */
   private adminCheck(userId: string) {
-
+    this.adminDiv = this.service.acsessUserAdminCheck(this.serviceId, userId, this.dispContents.targetService)    
   }
 
 

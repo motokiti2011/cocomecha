@@ -11,9 +11,11 @@
   justify-content: center;
 
   .button_item {
-    width: 180px;
     margin-top: 30px;
     height: 30px;
+    .btn {
+      width: 200px;
+    }
   }
 
   .btn_border {

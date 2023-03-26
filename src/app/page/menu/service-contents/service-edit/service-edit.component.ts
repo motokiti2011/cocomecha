@@ -15,7 +15,7 @@ import {
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { monthMap } from 'src/app/entity/month';
 import { nextActionButtonType, nextActionMessageType, nextActionTitleType } from 'src/app/entity/nextActionButtonType';
-import { ServiceCreateService } from './service-create.service';
+import { ServiceCreateService } from '../service-create/service-create.service';
 import { NextModalComponent } from 'src/app/page/modal/next-modal/next-modal/next-modal.component';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
@@ -39,7 +39,7 @@ import {
   mechanicPrice,
   messageLevel,
   adminUserSelect,
-} from './service-create-option';
+} from '../service-create/service-create-option';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
@@ -49,17 +49,17 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 
+
 @Component({
-  selector: 'app-service-create',
-  templateUrl: './service-create.component.html',
-  styleUrls: ['./service-create.component.scss']
+  selector: 'app-service-edit',
+  templateUrl: './service-edit.component.html',
+  styleUrls: ['./service-edit.component.scss']
 })
+export class ServiceEditComponent implements OnInit {
 
-
-export class ServiceCreateComponent implements OnInit {
 
   /** 画面タイトル */
-  dispTitle = '';
+  dispTitle = 'サービス編集';
 
   // タイトル
   title = new FormControl('', [
@@ -657,7 +657,6 @@ export class ServiceCreateComponent implements OnInit {
    */
   private userDisp() {
     // 画面表示設定
-    this.dispTitle = 'サービスを依頼する'
     this.workAreaData = userWorkArea;
     this.vehcleData = userTargetVehcle;
     this.priceSelectData = userPrice;
@@ -699,7 +698,6 @@ export class ServiceCreateComponent implements OnInit {
    */
   private mechenicDisp() {
     // 画面表示設定
-    this.dispTitle = 'メカニックとしてサービス・商品を出品する'
     this.workAreaData = mechanicWorkArea;
     this.vehcleData = mechanicTargetVehcle;
     this.priceSelectData = mechanicPrice;
@@ -735,7 +733,6 @@ export class ServiceCreateComponent implements OnInit {
    */
   private officeDisp() {
     // 画面表示設定
-    this.dispTitle = '工場としてサービス・商品を出品する'
     this.workAreaData = mechanicWorkArea;
     this.vehcleData = mechanicTargetVehcle;
     this.priceSelectData = mechanicPrice;

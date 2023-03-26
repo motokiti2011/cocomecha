@@ -158,6 +158,7 @@ export class HeaderMenuComponent implements OnInit {
     this.cognito.logout();
     this.authUserService.logout;
     this.loginUser.userName = 'ログイン';
+    this.router.navigate(["/main_menu"]);
     this.authenticated();
   }
 
