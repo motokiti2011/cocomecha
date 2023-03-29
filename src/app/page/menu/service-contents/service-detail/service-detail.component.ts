@@ -56,7 +56,7 @@ export class ServiceDetailComponent implements OnInit {
   /** サービスタイプ */
   serviceTypeName: string = '';
   /** サービス管理者情報 */
-  serviceAdminInfo: { id: string, name: string| null } = { id: '', name: '' }
+  serviceAdminInfo: { id: string, name: string | null } = { id: '', name: '' }
   /** 管理者区分 */
   adminDiv = false;
 
@@ -119,7 +119,7 @@ export class ServiceDetailComponent implements OnInit {
         this.dispWorkArea = this.service.setDispWorkArea(this.dispContents.workAreaInfo, this.dispContents.targetService);
         // 対象車両
         this.dispTargetVehicle = this.dispContents.targetVehicleName;
-        if(this.dispContents.targetVehicleName ||this.dispContents.targetVehicleName == '' ) {
+        if (this.dispContents.targetVehicleName || this.dispContents.targetVehicleName == '') {
           this.dispTargetVehicle = '車両情報登録なし'
         }
         // 説明
@@ -223,12 +223,12 @@ export class ServiceDetailComponent implements OnInit {
    */
   onServiceEdit() {
     this.router.navigate(["service-edit"],
-    {
-      queryParams: {
-        slipNo: this.dispContents.slipNo,
-        serviceType: this.serviceType
-      }
-    });
+      {
+        queryParams: {
+          slipNo: this.dispContents.slipNo,
+          serviceType: this.serviceType
+        }
+      });
   }
 
 
@@ -253,9 +253,9 @@ export class ServiceDetailComponent implements OnInit {
    * 戻るボタン押下イベント
    * @return void
    */
-    goBack(): void {
-      this.location.back();
-    }
+  goBack(): void {
+    this.location.back();
+  }
 
   /******** 以下内部処理 **********/
 
@@ -304,12 +304,16 @@ export class ServiceDetailComponent implements OnInit {
    * @param userId
    */
   private adminCheck(userId: string) {
-    this.adminDiv = this.service.acsessUserAdminCheck(this.serviceId, userId, this.dispContents.targetService)    
+    let adminId = this.dispContents.slipAdminUserId;
+    if (this.dispContents.targetService == '1' && this.dispContents.slipAdminMechanicId) {
+      adminId = this.dispContents.slipAdminMechanicId;
+    } else if (this.dispContents.targetService == '2' && this.dispContents.slipAdminOfficeId) {
+      adminId = this.dispContents.slipAdminOfficeId;
+    }
+    this.service.acsessUserAdminCheck(adminId, this.dispContents.targetService, userId).subscribe(result => {
+      this.adminDiv = result;
+    });
   }
-
-
-
-
 
 
 }

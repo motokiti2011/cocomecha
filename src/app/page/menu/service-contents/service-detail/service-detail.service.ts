@@ -187,9 +187,8 @@ export class ServiceDetailService {
    * アクセスユーザーが伝票管理者かをチェックする
    * @param accessId 
    */
-  public acsessUserAdminCheck(serviceId: string, accessId: string, serviceType: string): boolean {
-    // return this.apiCheckService.checkAdminUserSlip(serviceId, accessId, serviceType);
-    return true;
+  public acsessUserAdminCheck(adminId: string, serviceType: string, accessId: string): Observable<any>  {
+    return this.apiCheckService.checkAcceseAdmin(adminId, serviceType, accessId);
   }
 
 
