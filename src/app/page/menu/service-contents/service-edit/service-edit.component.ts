@@ -19,6 +19,7 @@ import { ServiceCreateService } from '../service-create/service-create.service';
 import { NextModalComponent } from 'src/app/page/modal/next-modal/next-modal/next-modal.component';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
+import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
 import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
 import { ImageModalComponent } from 'src/app/page/modal/image-modal/image-modal.component';
 import { VehicleModalComponent, vehicleModalInput } from 'src/app/page/modal/vehicle-modal/vehicle-modal.component';
@@ -48,7 +49,7 @@ import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1Sele
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
-
+import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
 
 @Component({
   selector: 'app-service-edit',
@@ -99,6 +100,8 @@ export class ServiceEditComponent implements OnInit {
   citySelect = '';
   /** カテゴリー */
   categoryData = serchCategoryData
+  /** 伝票番号 */
+  slipNo = '';
   /** 価格プレスホルダー */
   pricePlace = '価格'
   // submitボタン活性制御
@@ -186,6 +189,7 @@ export class ServiceEditComponent implements OnInit {
     private activeRouter: ActivatedRoute,
     private overlay: Overlay,
     private builder: FormBuilder,
+    private uniqueService: ApiUniqueService,
   ) { }
 
   ngOnInit(): void {
@@ -209,9 +213,14 @@ export class ServiceEditComponent implements OnInit {
           // ローディング解除
           this.overlayRef.detach();
         }
+        // リクエストParamから編集情報を取得
         this.activeRouter.queryParams.subscribe(params => {
           this.serviceType = params['serviceType'];
-          if (params['serviceType'] == '1') {
+          this.slipNo = params['slipNo'];
+          this.getService();
+
+
+          if (this.serviceType == '1') {
             if (this.userInfo.mechanicId !== '' && this.userInfo.mechanicId !== null) {
               // メカニックタイプの出品画面表示する
               this.mechenicDisp();
@@ -221,7 +230,7 @@ export class ServiceEditComponent implements OnInit {
               this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, false);
               return;
             }
-          } else if (params['serviceType'] == '2') {
+          } else if (this.serviceType == '2') {
             if (this.userInfo.officeId !== '' && this.userInfo.officeId !== null) {
               // 工場タイプの出品画面表示する
               this.officeDisp();
@@ -234,7 +243,8 @@ export class ServiceEditComponent implements OnInit {
               return;
             }
           } else {
-            this.serviceSelect();
+
+
           }
         });
       });
@@ -585,7 +595,6 @@ export class ServiceEditComponent implements OnInit {
   /************************ 以下内部処理 ************************************/
 
 
-
   /**
    * 伝票情報登録を行う
    */
@@ -652,6 +661,26 @@ export class ServiceEditComponent implements OnInit {
   }
 
 
+
+  /**
+   * サービス情報を取得する
+   */
+  private getService() {
+    if (this.serviceType == '0') {
+      this.userDisp();
+    } else if (this.serviceType == '2') {
+      this.mechenicDisp();
+    } else {
+      this.officeDisp();
+    }
+
+
+
+  }
+
+
+
+
   /**
    *　ユーザー用画面設定を行う
    */
@@ -660,37 +689,48 @@ export class ServiceEditComponent implements OnInit {
     this.workAreaData = userWorkArea;
     this.vehcleData = userTargetVehcle;
     this.priceSelectData = userPrice;
-    // セレクトボックス初期値設定
-    this.workAreaSelect = this.workAreaData[0].id;
-    this.categorySelect = this.categoryData[0].id;
-    this.inputData.category = this.categorySelect;
-    this.vehcleSelect = this.vehcleData[0].id;
-    this.priceSelect = this.priceSelectData[0].id;
-    this.msgLvSelect = this.msgLvData[0].id;
-    // データ設定
-    this.inputData.workArea = this.workAreaSelect;
-    this.inputData.targetService = '0';
-    this.adminSelectDiv = false;
-    this.adminUserName = this.userInfo.userName;
-    this.inputData.area1 = this.userInfo.areaNo1;
-    this.areaSelect = this.userInfo.areaNo1;
-    if (this.areaSelect != '') {
-      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
-    }
-    if (this.userInfo.areaNo2) [
-      this.citySelect = this.userInfo.areaNo2
-    ]
-    this.inputData.area2 = this.userInfo.areaNo2;
-    // 車両情報取得
-    this.service.getVehicleList(this.userInfo.userId).subscribe(data => {
-      if (data) {
-        this.userVehicle = data;
+
+
+    this.uniqueService.getSlip(this.slipNo).subscribe(data => {
+      if (!data[0]) {
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
+        return;
       }
-    });
-    // 入札方式
-    this.inputData.bidMethod = '1';
-    // ローディング解除
-    this.overlayRef.detach();
+      const slip: salesServiceInfo = data[0]
+      // セレクトボックス初期値設定
+      this.workAreaSelect = slip.areaNo1;
+      this.categorySelect = slip.category;
+
+      this.inputData.category = slip.category;
+      this.vehcleSelect = slip.targetVehicleId;
+      this.priceSelect = slip.bidMethod;
+      this.msgLvSelect = slip.messageOpenLebel;
+
+      // データ設定
+      this.inputData.workArea = this.workAreaSelect;
+      this.inputData.targetService = '0';
+      this.adminSelectDiv = false;
+      this.adminUserName = this.userInfo.userName;
+      this.inputData.area1 = this.userInfo.areaNo1;
+      this.areaSelect = this.userInfo.areaNo1;
+      if (this.areaSelect != '') {
+        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+      }
+      if (this.userInfo.areaNo2) [
+        this.citySelect = this.userInfo.areaNo2
+      ]
+      this.inputData.area2 = this.userInfo.areaNo2;
+      // 車両情報取得
+      this.service.getVehicleList(this.userInfo.userId).subscribe(data => {
+        if (data) {
+          this.userVehicle = data;
+        }
+      });
+      // 入札方式
+      this.inputData.bidMethod = '1';
+      // ローディング解除
+      this.overlayRef.detach();
+    })
   }
 
   /**
@@ -701,31 +741,37 @@ export class ServiceEditComponent implements OnInit {
     this.workAreaData = mechanicWorkArea;
     this.vehcleData = mechanicTargetVehcle;
     this.priceSelectData = mechanicPrice;
-    // セレクトボックス初期値設定
-    this.workAreaSelect = this.workAreaData[0].id;
-    this.categorySelect = this.categoryData[0].id;
-    this.inputData.category = this.categorySelect;
-    this.vehcleSelect = this.vehcleData[0].id;
-    this.priceSelect = this.priceSelectData[0].id;
-    this.msgLvSelect = this.msgLvData[0].id;
-    // データ設定
-    this.inputData.workArea = this.workAreaSelect;
-    this.inputData.mechanicId = this.userInfo.mechanicId;
-    this.inputData.targetService = '2';
-    this.inputData.area1 = this.userInfo.areaNo1;
-    this.areaSelect = this.userInfo.areaNo1;
-    if (this.areaSelect != '') {
-      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
-    }
-    if (this.userInfo.areaNo2) [
-      this.citySelect = this.userInfo.areaNo2
-    ]
-    this.inputData.area2 = this.userInfo.areaNo2;
-    // 入札方式
-    this.inputData.bidMethod = '41';
 
-    // ローディング解除
-    this.overlayRef.detach();
+    this.uniqueService.getServiceContents(this.slipNo).subscribe(data => {
+      if (!data[0]) {
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
+        return;
+      }
+      // セレクトボックス初期値設定
+      this.workAreaSelect = this.workAreaData[0].id;
+      this.categorySelect = this.categoryData[0].id;
+      this.inputData.category = this.categorySelect;
+      this.vehcleSelect = this.vehcleData[0].id;
+      this.priceSelect = this.priceSelectData[0].id;
+      this.msgLvSelect = this.msgLvData[0].id;
+      // データ設定
+      this.inputData.workArea = this.workAreaSelect;
+      this.inputData.mechanicId = this.userInfo.mechanicId;
+      this.inputData.targetService = '2';
+      this.inputData.area1 = this.userInfo.areaNo1;
+      this.areaSelect = this.userInfo.areaNo1;
+      if (this.areaSelect != '') {
+        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+      }
+      if (this.userInfo.areaNo2) [
+        this.citySelect = this.userInfo.areaNo2
+      ]
+      this.inputData.area2 = this.userInfo.areaNo2;
+      // 入札方式
+      this.inputData.bidMethod = '41';
+      // ローディング解除
+      this.overlayRef.detach();
+    });
   }
 
   /**
@@ -736,45 +782,49 @@ export class ServiceEditComponent implements OnInit {
     this.workAreaData = mechanicWorkArea;
     this.vehcleData = mechanicTargetVehcle;
     this.priceSelectData = mechanicPrice;
-    // セレクトボックス初期値設定
-    this.workAreaSelect = this.workAreaData[0].id;
-    this.categorySelect = this.categoryData[0].id;
-    this.vehcleSelect = this.vehcleData[0].id;
-    this.priceSelect = this.priceSelectData[0].id;
-    this.msgLvSelect = this.msgLvData[0].id;
-    // データ設定
-    this.inputData.workArea = this.workAreaSelect;
-    this.inputData.mechanicId = this.userInfo.mechanicId;
-    this.inputData.officeId = this.userInfo.officeId;
-    this.inputData.targetService = '1';
-    this.adminSelectDiv = true;
-    // 入札方式
-    this.inputData.bidMethod = '41';
-    // 工場情報取得
-    if (!this.userInfo.officeId) {
-      return;
-    }
-    const officeId = this.userInfo.officeId;
-    this.apiService.getOfficeInfo(officeId).subscribe(data => {
-      if (data) {
-        this.office = data[0];
-        this.inputData.area1 = data[0].officeArea1;
-        this.areaSelect = data[0].officeArea1;
-        if (this.areaSelect != '') {
-          this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
-        }
-        if (this.userInfo.areaNo2) {
-          this.citySelect = data[0].officeArea;
-        }
-        this.inputData.area2 = data[0].officeArea;
-
-
+    this.uniqueService.getServiceContents(this.slipNo).subscribe(data => {
+      if (!data[0]) {
+        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
+        return;
       }
+      // セレクトボックス初期値設定
+      this.workAreaSelect = this.workAreaData[0].id;
+      this.categorySelect = this.categoryData[0].id;
+      this.vehcleSelect = this.vehcleData[0].id;
+      this.priceSelect = this.priceSelectData[0].id;
+      this.msgLvSelect = this.msgLvData[0].id;
+      // データ設定
+      this.inputData.workArea = this.workAreaSelect;
+      this.inputData.mechanicId = this.userInfo.mechanicId;
+      this.inputData.officeId = this.userInfo.officeId;
+      this.inputData.targetService = '1';
+      this.adminSelectDiv = true;
+      // 入札方式
+      this.inputData.bidMethod = '41';
+      // 工場情報取得
+      if (!this.userInfo.officeId) {
+        return;
+      }
+      const officeId = this.userInfo.officeId;
+      this.apiService.getOfficeInfo(officeId).subscribe(data => {
+        if (data) {
+          this.office = data[0];
+          this.inputData.area1 = data[0].officeArea1;
+          this.areaSelect = data[0].officeArea1;
+          if (this.areaSelect != '') {
+            this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+          }
+          if (this.userInfo.areaNo2) {
+            this.citySelect = data[0].officeArea;
+          }
+          this.inputData.area2 = data[0].officeArea;
+
+
+        }
+      });
+      // ローディング解除
+      this.overlayRef.detach();
     });
-
-
-    // ローディング解除
-    this.overlayRef.detach();
   }
 
 
@@ -807,90 +857,6 @@ export class ServiceEditComponent implements OnInit {
   }
 
 
-  /**
-   * 次の作業を選択し選択画面へ遷移する
-   *
-   */
-  private next() {
-    const data: ModalData = {
-      title: nextActionTitleType.SUCSESSMESSAGE,
-      message: nextActionMessageType.NEXTMESSAGE,
-      nextActionList: [
-        { nextId: nextActionButtonType.TOP, nextAction: nextActionButtonTypeMap[0] },
-        { nextId: nextActionButtonType.MYMENU, nextAction: nextActionButtonTypeMap[1] },
-        { nextId: nextActionButtonType.SERVICECREATE, nextAction: nextActionButtonTypeMap[2] },
-        { nextId: nextActionButtonType.SERVICEDETAEL, nextAction: nextActionButtonTypeMap[3] }
-      ],
-      resultAction: ''
-    }
-
-    const dialogRef = this.modal.open(NextModalComponent, {
-      width: '500px',
-      height: '500px',
-      data: data
-    });
-    // 次の操作モーダルを表示
-    dialogRef.afterClosed().subscribe(nextAction => {
-      console.log(nextAction);
-      if (nextAction !== undefined) {
-        const linc = this.service.nextNav(nextAction.resultAction);
-        if (linc == '99') {
-          this.refreshForm();
-        } else {
-          // モーダル返却値から遷移先へ飛ぶ
-          this.router.navigate([linc]);
-        }
-      } else {
-        this.location.back();
-      }
-    });
-  }
-
-
-  /**
-   * 画面表示を判定し、選択の必要がある場合モーダルを展開する
-   */
-  private serviceSelect() {
-    if (this.userInfo.mechanicId == null || this.userInfo.mechanicId == '') {
-      // ユーザー依頼画面への表示
-      this.userDisp();
-    } else {
-      // ユーザー情報にメカニック情報が存在する場合モーダルを開く
-      const dialogRef = this.modal.open(ServiceCreateModalComponent, {
-        width: '400px',
-        height: '450px',
-        data: {
-          userId: this.userInfo.userId,
-          mechanicId: this.userInfo.mechanicId,
-          officeId: this.userInfo.officeId,
-        }
-      });
-      // モーダルクローズ後
-      dialogRef.afterClosed().subscribe(
-        result => {
-          console.log('クリエイトモーダル:' + result)
-          if (!(_isNil(result)) && result !== '') {
-            if (result == '0') {
-              this.userDisp();
-            } else if (result == '1') {
-              this.mechenicDisp();
-            } else {
-              this.officeDisp();
-            }
-            // ローディング解除
-            this.overlayRef.detach();
-          } else {
-            // ローディング解除
-            this.overlayRef.detach();
-            // 戻るボタン押下時の動き
-            this.location.back();
-            return;
-          }
-        }
-      );
-    }
-  }
-
 
   /**
    * メッセージダイアログ展開
@@ -918,7 +884,7 @@ export class ServiceEditComponent implements OnInit {
       // ローディング解除
       this.overlayRef.detach();
       if (msg == messageDialogMsg.Resister) {
-        this.next();
+
       }
       return;
     });
