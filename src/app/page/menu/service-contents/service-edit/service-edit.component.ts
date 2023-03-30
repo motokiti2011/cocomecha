@@ -707,19 +707,19 @@ export class ServiceEditComponent implements OnInit {
       this.msgLvSelect = slip.messageOpenLebel;
 
       // データ設定
-      this.inputData.workArea = this.workAreaSelect;
+      this.inputData.workArea = slip.workAreaInfo;
       this.inputData.targetService = '0';
       this.adminSelectDiv = false;
-      this.adminUserName = this.userInfo.userName;
-      this.inputData.area1 = this.userInfo.areaNo1;
-      this.areaSelect = this.userInfo.areaNo1;
+      this.adminUserName = slip.slipAdminUserName;
+      this.inputData.area1 = slip.areaNo1;
+      this.areaSelect = slip.areaNo1;
       if (this.areaSelect != '') {
         this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
       }
-      if (this.userInfo.areaNo2) [
-        this.citySelect = this.userInfo.areaNo2
+      if (slip.areaNo2) [
+        this.citySelect = slip.areaNo2
       ]
-      this.inputData.area2 = this.userInfo.areaNo2;
+      this.inputData.area2 = slip.areaNo2;
       // 車両情報取得
       this.service.getVehicleList(this.userInfo.userId).subscribe(data => {
         if (data) {
@@ -747,6 +747,7 @@ export class ServiceEditComponent implements OnInit {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
+      const slip: salesServiceInfo = data[0]
       // セレクトボックス初期値設定
       this.workAreaSelect = this.workAreaData[0].id;
       this.categorySelect = this.categoryData[0].id;
@@ -755,18 +756,18 @@ export class ServiceEditComponent implements OnInit {
       this.priceSelect = this.priceSelectData[0].id;
       this.msgLvSelect = this.msgLvData[0].id;
       // データ設定
-      this.inputData.workArea = this.workAreaSelect;
-      this.inputData.mechanicId = this.userInfo.mechanicId;
+      this.inputData.workArea = slip.workAreaInfo;
+      this.inputData.mechanicId = slip.slipAdminMechanicId;
       this.inputData.targetService = '2';
-      this.inputData.area1 = this.userInfo.areaNo1;
-      this.areaSelect = this.userInfo.areaNo1;
+      this.inputData.area1 = slip.areaNo1;
+      this.areaSelect = slip.areaNo1;
       if (this.areaSelect != '') {
         this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
       }
-      if (this.userInfo.areaNo2) [
-        this.citySelect = this.userInfo.areaNo2
+      if (slip.areaNo2) [
+        this.citySelect = slip.areaNo2
       ]
-      this.inputData.area2 = this.userInfo.areaNo2;
+      this.inputData.area2 = slip.areaNo2;
       // 入札方式
       this.inputData.bidMethod = '41';
       // ローディング解除
@@ -787,6 +788,7 @@ export class ServiceEditComponent implements OnInit {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
+      const slip: salesServiceInfo = data[0]
       // セレクトボックス初期値設定
       this.workAreaSelect = this.workAreaData[0].id;
       this.categorySelect = this.categoryData[0].id;
@@ -794,9 +796,9 @@ export class ServiceEditComponent implements OnInit {
       this.priceSelect = this.priceSelectData[0].id;
       this.msgLvSelect = this.msgLvData[0].id;
       // データ設定
-      this.inputData.workArea = this.workAreaSelect;
-      this.inputData.mechanicId = this.userInfo.mechanicId;
-      this.inputData.officeId = this.userInfo.officeId;
+      this.inputData.workArea = slip.workAreaInfo;
+      this.inputData.mechanicId = slip.slipAdminMechanicId;
+      this.inputData.officeId = slip.slipAdminOfficeId;
       this.inputData.targetService = '1';
       this.adminSelectDiv = true;
       // 入札方式
@@ -805,23 +807,17 @@ export class ServiceEditComponent implements OnInit {
       if (!this.userInfo.officeId) {
         return;
       }
-      const officeId = this.userInfo.officeId;
-      this.apiService.getOfficeInfo(officeId).subscribe(data => {
-        if (data) {
-          this.office = data[0];
-          this.inputData.area1 = data[0].officeArea1;
-          this.areaSelect = data[0].officeArea1;
-          if (this.areaSelect != '') {
-            this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
-          }
-          if (this.userInfo.areaNo2) {
-            this.citySelect = data[0].officeArea;
-          }
-          this.inputData.area2 = data[0].officeArea;
 
+      this.inputData.area1 = slip.areaNo1;
+      this.areaSelect = slip.areaNo1;
+      if (this.areaSelect != '') {
+        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+      }
+      if (slip.areaNo2) {
+        this.citySelect = slip.areaNo2;
+      }
+      this.inputData.area2 = slip.areaNo2;
 
-        }
-      });
       // ローディング解除
       this.overlayRef.detach();
     });
