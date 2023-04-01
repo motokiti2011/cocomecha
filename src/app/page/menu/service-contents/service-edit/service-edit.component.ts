@@ -692,7 +692,7 @@ export class ServiceEditComponent implements OnInit {
 
 
     this.uniqueService.getSlip(this.slipNo).subscribe(data => {
-      if (!data[0]) {
+      if (data[0]) {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
@@ -743,7 +743,7 @@ export class ServiceEditComponent implements OnInit {
     this.priceSelectData = mechanicPrice;
 
     this.uniqueService.getServiceContents(this.slipNo).subscribe(data => {
-      if (!data[0]) {
+      if (data[0]) {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
@@ -784,7 +784,7 @@ export class ServiceEditComponent implements OnInit {
     this.vehcleData = mechanicTargetVehcle;
     this.priceSelectData = mechanicPrice;
     this.uniqueService.getServiceContents(this.slipNo).subscribe(data => {
-      if (!data[0]) {
+      if (data[0]) {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
