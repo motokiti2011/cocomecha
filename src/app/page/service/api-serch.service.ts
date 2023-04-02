@@ -9,6 +9,8 @@ import { user } from 'src/app/entity/user';
 import { browsingHistory } from 'src/app/entity/browsingHistory';
 import { userFavorite } from 'src/app/entity/userFavorite';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
+import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
+
 import { slipQuestion } from 'src/app/entity/slipQuestion';
 import { mechanicInfo } from 'src/app/entity/mechanicInfo';
 import { officeInfo } from 'src/app/entity/officeInfo';
@@ -133,13 +135,72 @@ export class ApiSerchService {
         "imageUrlList": data.imageUrlList,
         "messageOpenLebel": data.messageOpenLebel,
         "updateUserId": data.updateUserId,
-        "created": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale)),
+        "created": data.created,
         "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
       }
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: slipDetailInfo) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+
+
+  /**
+   * 伝票番号をPKに伝票情報をDynamoDBに登録する
+   * @param user
+   * @returns
+   */
+  public postSalesServiceInfo(data: salesServiceInfo): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "PUT",
+      "Keys": {
+        "slipNo" : data.slipNo,
+        "deleteDiv" : data.deleteDiv,
+        "category" : data.category,
+        "slipAdminUserId" : data.slipAdminUserId,
+        "slipAdminUserName" : data.slipAdminUserName,
+        "slipAdminOfficeId" : data.slipAdminOfficeId,
+        "slipAdminOfficeName" : data.slipAdminOfficeName,
+        "slipAdminMechanicId" : data.slipAdminMechanicId,
+        "slipAdminMechanicName" : data.slipAdminMechanicName,
+        "adminDiv" : data.adminDiv,
+        "title" : data.title,
+        "areaNo1" : data.areaNo1,
+        "areaNo2" : data.areaNo2,
+        "price" : data.price,
+        "bidMethod" : data.bidMethod,
+        "bidderId" : data.bidderId,
+        "bidEndDate" : data.bidEndDate,
+        "explanation" : data.explanation,
+        "displayDiv" : data.displayDiv,
+        "processStatus" : data.processStatus,
+        "targetService" : data.targetService,
+        "targetVehicleId" : data.targetVehicleId,
+        "targetVehicleDiv" : data.targetVehicleDiv,
+        "targetVehicleName" : data.targetVehicleName,
+        "targetVehicleInfo" : data.targetVehicleInfo,
+        "workAreaInfo" : data.workAreaInfo,
+        "preferredDate" : data.preferredDate,
+        "preferredTime" : data.preferredTime,
+        "completionDate" : data.completionDate,
+        "transactionCompletionDate" : data.transactionCompletionDate,
+        "thumbnailUrl" : data.thumbnailUrl,
+        "imageUrlList" : data.imageUrlList,
+        "messageOpenLebel" : data.messageOpenLebel,
+        "updateUserId" : data.updateUserId,
+        "created" : data.created,
+        "updated": String(formatDate(new Date, "yy/MM/dd HH:mm", this.locale))
+      }
+    };
+    return this.http.post<salesServiceInfo>(this.apiEndPoint + '/salesServiceInfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: salesServiceInfo) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );

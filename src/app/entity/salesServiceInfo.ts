@@ -1,5 +1,8 @@
 import { slipVehicle } from "./slipVehicle";
 
+/**
+ * 販売サービス情報
+ */
 export interface salesServiceInfo {
   // 伝票番号
   slipNo: string;
@@ -34,7 +37,7 @@ export interface salesServiceInfo {
   // 入札者ID
   bidderId: string;
   // 入札終了日
-  bidEndDate: string;
+  bidEndDate: number;
   // 説明
   explanation: string;
   // 表示区分
@@ -58,9 +61,9 @@ export interface salesServiceInfo {
   // 希望時間
   preferredTime: string;
   // 完了日
-  completionDate: string;
+  completionDate: number;
   // 取引完了日
-  transactionCompletionDate: string;
+  transactionCompletionDate: number;
   // サムネイルURL
   thumbnailUrl: string;
   // 画像URLリスト
@@ -113,7 +116,7 @@ export const defaulsalesService: salesServiceInfo = {
   // 入札者ID
   bidderId: '',
   // 入札終了日
-  bidEndDate: '',
+  bidEndDate: 0,
   // 説明
   explanation: '',
   // 表示区分
@@ -137,9 +140,9 @@ export const defaulsalesService: salesServiceInfo = {
   // 希望時間
   preferredTime: '',
   // 完了日
-  completionDate: '',
+  completionDate: 0,
   // 取引完了日
-  transactionCompletionDate: '',
+  transactionCompletionDate: 0,
   // サムネイルURL
   thumbnailUrl: '',
   // 画像URLリスト

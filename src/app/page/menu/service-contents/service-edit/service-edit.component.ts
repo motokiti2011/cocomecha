@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { serchCategoryData } from 'src/app/entity/serchCategory';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
 import { serviceContents, initServiceContent } from 'src/app/entity/serviceContents';
-import { ModalData, nextActionButtonTypeMap } from 'src/app/entity/nextActionButtonType';
 import {
   find as _find,
   filter as _filter,
@@ -14,13 +13,10 @@ import {
 } from 'lodash';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { monthMap } from 'src/app/entity/month';
-import { nextActionButtonType, nextActionMessageType, nextActionTitleType } from 'src/app/entity/nextActionButtonType';
 import { ServiceCreateService } from '../service-create/service-create.service';
-import { NextModalComponent } from 'src/app/page/modal/next-modal/next-modal/next-modal.component';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
-import { ServiceCreateModalComponent } from 'src/app/page/modal/service-create-modal/service-create-modal.component';
 import { ImageModalComponent } from 'src/app/page/modal/image-modal/image-modal.component';
 import { VehicleModalComponent, vehicleModalInput } from 'src/app/page/modal/vehicle-modal/vehicle-modal.component';
 import { userVehicle } from 'src/app/entity/userVehicle';
@@ -49,8 +45,9 @@ import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1Sele
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
-import { salesServiceInfo } from 'src/app/entity/salesServiceInfo';
+import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
 import { ImageFile } from 'aws-sdk/clients/iotsitewise';
+import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 
 @Component({
   selector: 'app-service-edit',
@@ -87,6 +84,8 @@ export class ServiceEditComponent implements OnInit {
 
   /** 入力中データ情報 */
   inputData: serviceContents = initServiceContent;
+  /** 編集前データ */
+  beforData: salesServiceInfo = defaulsalesService;
   /** 入札方式選択状態初期値 */
   selected = '1';
   /** カテゴリー選択状態初期値 */
@@ -124,8 +123,8 @@ export class ServiceEditComponent implements OnInit {
   errormessage = '';
   /** エラーメッセージ日付 */
   errormessageDay = '';
-  /** エラーメッセージ日付 */
-  startDate = 0;
+  /** 日付 */
+  startDate = '0';
   /** 作成ユーザー情報 */
   userInfo: user = initUserInfo;
   /** 価格データ */
@@ -444,6 +443,7 @@ export class ServiceEditComponent implements OnInit {
    * 希望日入力イベント
    */
   inputPreferredDate(event: MatDatepickerInputEvent<any>) {
+    console.log(event);
     this.errorDayFlg = false;
     this.errormessage = ''
     // 入力不正値の場合は処理終了しデフォルト値のクリア
@@ -609,8 +609,9 @@ export class ServiceEditComponent implements OnInit {
 
     // 工場、メカニックとして依頼する場合
     if (this.inputData.targetService !== '0') {
+      const salesServiceData = this.setSalesService();
       // サービス商品として更新を行う
-      this.service.postSalesService(this.inputData).subscribe(result => {
+      this.apiService.postSalesServiceInfo(salesServiceData).subscribe(result => {
         // 登録結果からメッセージを表示する
         if (result === 200) {
           this.openMsgDialog(messageDialogMsg.Resister, false);
@@ -619,8 +620,9 @@ export class ServiceEditComponent implements OnInit {
         }
       });
     } else {
+      const slipDitail = this.setSlipDitail();
       // 伝票情報の更新を行う
-      this.service.postSlip(this.inputData).subscribe(result => {
+      this.apiService.postSlip(slipDitail).subscribe(result => {
         // 登録結果からメッセージを表示する
         if (result === 200) {
           this.openMsgDialog(messageDialogMsg.Resister, false);
@@ -632,6 +634,127 @@ export class ServiceEditComponent implements OnInit {
   }
 
   /**
+   * 入力情報を伝票情報にする
+   */
+  private setSlipDitail(): slipDetailInfo {
+
+    let vehicleId = '';
+    let vheicleName = '';
+
+    if (this.beforData.targetVehicleId) {
+      vehicleId = this.beforData.targetVehicleId;
+    }
+    if (this.beforData.targetVehicleName) {
+      vheicleName = this.beforData.targetVehicleName;
+    }
+
+    const slipDetail: slipDetailInfo = {
+      slipNo: this.beforData.slipNo,
+      deleteDiv: this.beforData.deleteDiv,
+      category: this.inputData.category,
+      slipAdminUserId: this.beforData.slipAdminUserId,
+      slipAdminUserName: this.beforData.slipAdminUserName,
+      adminDiv: this.beforData.adminDiv,
+      title: this.inputData.title,
+      areaNo1: this.inputData.area1,
+      areaNo2: this.inputData.area2,
+      price: this.inputData.price,
+      bidMethod: this.inputData.bidMethod,
+      bidderId: this.beforData.bidderId,
+      bidEndDate: this.beforData.bidEndDate,
+      explanation: this.inputData.explanation,
+      displayDiv: this.beforData.displayDiv,
+      processStatus: this.beforData.processStatus,
+      targetService: this.beforData.targetService,
+      targetVehicleId: vehicleId,
+      targetVehicleDiv: this.inputData.vehicleDiv,
+      targetVehicleName: vheicleName,
+      targetVehicleInfo: this.inputData.targetVehcle,
+      workAreaInfo: this.inputData.workArea,
+      preferredDate: this.inputData.preferredDate,
+      preferredTime: String(this.inputData.preferredTime),
+      completionDate: Number(this.beforData.completionDate),
+      transactionCompletionDate: this.beforData.transactionCompletionDate,
+      thumbnailUrl: this.inputData.thumbnailUrl,
+      imageUrlList: this.beforData.imageUrlList,
+      messageOpenLebel: this.msgLvSelect,
+      updateUserId: this.beforData.updateUserId,
+      created: this.beforData.created,
+      updated: ''
+    }
+    return slipDetail;
+  }
+
+  /**
+   * 入力情報を販売サービス情報にする
+   */
+  private setSalesService(): salesServiceInfo {
+
+    let vehicleId = '';
+    let vheicleName = '';
+
+    if (this.beforData.targetVehicleId) {
+      vehicleId = this.beforData.targetVehicleId;
+    }
+    if (this.beforData.targetVehicleName) {
+      vheicleName = this.beforData.targetVehicleName;
+    }
+
+
+    const salesService: salesServiceInfo = {
+      slipNo: this.beforData.slipNo,
+      deleteDiv: this.beforData.deleteDiv,
+      category: this.inputData.category,
+      slipAdminUserId: this.beforData.slipAdminUserId,
+      slipAdminUserName: this.beforData.slipAdminUserName,
+      slipAdminMechanicId: this.beforData.slipAdminMechanicId,
+      slipAdminMechanicName: this.beforData.slipAdminMechanicName,
+      slipAdminOfficeId: this.beforData.slipAdminOfficeId,
+      slipAdminOfficeName: this.beforData.slipAdminOfficeName,
+      adminDiv: this.beforData.adminDiv,
+      title: this.inputData.title,
+      areaNo1: this.inputData.area1,
+      areaNo2: this.inputData.area2,
+      price: this.inputData.price,
+      bidMethod: this.inputData.bidMethod,
+      bidderId: this.beforData.bidderId,
+      bidEndDate: this.beforData.bidEndDate,
+      explanation: this.inputData.explanation,
+      displayDiv: this.beforData.displayDiv,
+      processStatus: this.beforData.processStatus,
+      targetService: this.beforData.targetService,
+      targetVehicleId: vehicleId,
+      targetVehicleDiv: this.inputData.vehicleDiv,
+      targetVehicleName: vheicleName,
+      targetVehicleInfo: this.inputData.targetVehcle,
+      workAreaInfo: this.inputData.workArea,
+      preferredDate: this.inputData.preferredDate,
+      preferredTime: String(this.inputData.preferredTime),
+      completionDate: Number(this.beforData.completionDate),
+      transactionCompletionDate: this.beforData.transactionCompletionDate,
+      thumbnailUrl: this.inputData.thumbnailUrl,
+      imageUrlList: this.beforData.imageUrlList,
+      messageOpenLebel: this.msgLvSelect,
+      updateUserId: this.beforData.updateUserId,
+      created: this.beforData.created,
+      updated: ''
+    }
+    return salesService;
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
    * 入力内容をリセットする
    * @returns
    */
@@ -639,8 +762,6 @@ export class ServiceEditComponent implements OnInit {
     this.inputData.id = '0';
     this.title.setValue('');
     this.inputData.price = 0;
-    // this.inputData.area1 = '0';
-    // this.inputData.category = '0';
     this.inputData.explanation = '';
     this.inputData.preferredDate = 0;
     this.inputData.preferredTime = 0;
@@ -648,10 +769,7 @@ export class ServiceEditComponent implements OnInit {
     this.selected = '1';
     this.formPrice.setValue('0');
     this.timeSelect = '';
-    this.startDate = 0;
-    /** カテゴリー選択状態初期値 */
-    // this.areaSelect = ''
-    // this.categorySelect = '';
+    this.startDate = '0';
     // 確定ボタン非活性
     this.invalid = true;
     if (this.serviceType == '0') {
@@ -694,6 +812,7 @@ export class ServiceEditComponent implements OnInit {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
+      this.beforData = data;
       const slip: salesServiceInfo = data
       // セレクトボックス初期値設定
       this.workAreaSelect = slip.areaNo1;
@@ -716,12 +835,23 @@ export class ServiceEditComponent implements OnInit {
       this.explanation.setValue(slip.explanation);
       this.formPrice.setValue(slip.price);
       this.inputData.price = slip.price;
-      this.startDate =  slip.preferredDate;
+      console.log('日付' + slip.preferredDate);
+
       this.inputData.preferredDate = slip.preferredDate;
+      const stDate = String(slip.preferredDate);
+      const year = stDate.slice(0, 4)
+      const month = stDate.substring(4, 6)
+      const day = stDate.slice(6)
+      this.startDate = year + '-' + month + '-' + day;
       this.timeSelect = slip.preferredTime;
       this.inputData.preferredTime = Number(slip.preferredTime);
+      const ti = _find(this.timeData, data => data.id === String(this.timeSelect));
+      if (!_isNil(ti)) {
+        this.inputData.preferredTime = Number(ti.id);
+      }
+
       this.inputData.vehicleDiv = slip.targetVehicleDiv;
-      if(slip.targetVehicleInfo) {
+      if (slip.targetVehicleInfo) {
         this.inputData.targetVehcle = slip.targetVehicleInfo;
       }
 
@@ -761,6 +891,7 @@ export class ServiceEditComponent implements OnInit {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
+      this.beforData = data;
       const slip: salesServiceInfo = data;
       // セレクトボックス初期値設定
       this.workAreaSelect = this.workAreaData[0].id;
@@ -780,15 +911,25 @@ export class ServiceEditComponent implements OnInit {
       this.explanation.setValue(slip.explanation);
       this.formPrice.setValue(slip.price);
       this.inputData.price = slip.price;
-      this.startDate =  slip.preferredDate;
+
       this.inputData.preferredDate = slip.preferredDate;
+      const stDate = String(slip.preferredDate);
+      const year = stDate.slice(0, 4)
+      const month = stDate.substring(4, 6)
+      const day = stDate.slice(6)
+      this.startDate = year + '-' + month + '-' + day;
       this.timeSelect = slip.preferredTime;
+      const ti = _find(this.timeData, data => data.id === String(this.timeSelect));
+      if (!_isNil(ti)) {
+        this.inputData.preferredTime = Number(ti.id);
+      }
+
       this.inputData.preferredTime = Number(slip.preferredTime);
       this.inputData.vehicleDiv = slip.targetVehicleDiv;
-      if(slip.targetVehicleInfo) {
+      if (slip.targetVehicleInfo) {
         this.inputData.targetVehcle = slip.targetVehicleInfo;
       }
-      
+
       this.inputData.area1 = slip.areaNo1;
       this.areaSelect = slip.areaNo1;
       if (this.areaSelect != '') {
@@ -818,6 +959,7 @@ export class ServiceEditComponent implements OnInit {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
       }
+      this.beforData = data;
       const slip: salesServiceInfo = data;
       // セレクトボックス初期値設定
       this.workAreaSelect = this.workAreaData[0].id;
@@ -838,12 +980,24 @@ export class ServiceEditComponent implements OnInit {
       this.explanation.setValue(slip.explanation);
       this.formPrice.setValue(slip.price);
       this.inputData.price = slip.price;
-      this.startDate =  slip.preferredDate;
+
       this.inputData.preferredDate = slip.preferredDate;
-      this.timeSelect = slip.preferredTime;
+      const stDate = String(slip.preferredDate);
+      const year = stDate.slice(0, 4)
+      console.log('year:' + year);
+      const month = stDate.substring(4, 6)
+      console.log('month:' + month);
+      const day = stDate.slice(6)
+      console.log('day:' + day);
+      this.startDate = year + '-' + month + '-' + day;
+      const ti = _find(this.timeData, data => data.id === String(this.timeSelect));
+      if (!_isNil(ti)) {
+        this.inputData.preferredTime = Number(ti.id);
+      }
+
       this.inputData.preferredTime = Number(slip.preferredTime);
       this.inputData.vehicleDiv = slip.targetVehicleDiv;
-      if(slip.targetVehicleInfo) {
+      if (slip.targetVehicleInfo) {
         this.inputData.targetVehcle = slip.targetVehicleInfo;
       }
 
@@ -894,7 +1048,7 @@ export class ServiceEditComponent implements OnInit {
         });
       });
     } else {
-      console.log('不動！');
+      this.openMsgDialog(messageDialogMsg.ProblemOperation, false);
     }
   }
 

@@ -43,12 +43,12 @@ export class FooterMenuComponent implements OnInit {
     this.router.navigate(["inquiry"])
   }
 
-  /**
-   * サイトマップクリックイベント
-   */
-  onSitMap() {
-    this.router.navigate(["sit-map"])
-  }
+  // /**
+  //  * サイトマップクリックイベント
+  //  */
+  // onSitMap() {
+  //   this.router.navigate(["sit-map"])
+  // }
 
   /**
    * ヘルプクリックイベント

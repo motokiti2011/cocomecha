@@ -222,8 +222,8 @@
             <select class="category-select" name="category" [(ngModel)]="timeSelect" (change)="selectTime()">
               <option value="">希望時間を選択してください</option>
               <option *ngFor="let time of timeData"
-              [value]="time.label"
-              [selected]="time.label === timeSelect">{{time.label}}</option>
+              [value]="time.id"
+              [selected]="time.id === timeSelect">{{time.label}}</option>
             </select>
           </td>
         </tr>

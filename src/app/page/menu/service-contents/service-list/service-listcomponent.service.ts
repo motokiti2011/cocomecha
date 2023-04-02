@@ -472,7 +472,7 @@ export class ServiceListcomponentService {
       title: contents.title,
       price: contents.price,
       whet: this.getWhet(contents),
-      endDate: String(contents.preferredDate),
+      endDate: contents.preferredDate,
       imageUrl: contents.thumbnailUrl,
       serviceType: contents.targetService,
       created: '',

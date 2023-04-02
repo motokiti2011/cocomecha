@@ -20,13 +20,13 @@ export interface slipDetailInfo {
   // サービス地域2
   areaNo2: string | null;
   // 価格
-  price: string;
+  price: number;
   // 入札方式
   bidMethod: string;
   // 入札者ID
   bidderId: string;
   // 入札終了日
-  bidEndDate: string;
+  bidEndDate: number;
   // 説明
   explanation: string;
   // 表示区分
@@ -91,13 +91,13 @@ export const defaultSlip: slipDetailInfo = {
   // サービス地域2
   areaNo2: '',
   // 価格
-  price: '',
+  price: 0,
   // 入札方式
   bidMethod: '',
   // 入札者ID
   bidderId: '',
   // 入札終了日
-  bidEndDate: '',
+  bidEndDate: 0,
   // 説明
   explanation: '',
   // 表示区分

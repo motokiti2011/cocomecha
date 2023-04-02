@@ -15,7 +15,7 @@ export interface userFavorite {
   // サービスタイプ
   serviceType: string;
   // 終了日
-  endDate: string;
+  endDate: number;
   // 画像url
   imageUrl:string;
   // 作成日時

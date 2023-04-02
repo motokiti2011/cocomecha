@@ -124,9 +124,6 @@ export class VehicleModalComponent implements OnInit {
   getResult() {
     this.inputVehicleInfo();
 
-
-
-
     const data = {
       resultData: this.resultData,
       targetService: this.targetService,
