@@ -1,1 +1,41 @@
-<p>inquiry works!</p>
+<!-- お問い合わせ -->
+
+
+<div class="main">
+  <div class="container">
+    <div class="row">
+      <div class="col-4"></div>
+      <div class="col-6">
+        <div class="form_title">お問い合わせ</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <div>お問い合わせユーザー名</div>
+      </div>
+      <div class="col-2">
+        <div class="mandatory">必須</div>
+      </div>
+      <div class="col-6">
+        <input class="form-control" id="name" type="text" [formControl]="name" />
+      </div>
+      <div class="col-1"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <div>お問い合わせカテゴリー</div>
+      </div>
+      <div class="col-2">
+        <div class="mandatory">必須</div>
+      </div>
+      <div class="col-6">
+        <input class="form-control" id="email" type="text" [formControl]="mail" />
+      </div>
+      <div class="col-1"></div>
+    </div>
+
+  </div>
+
+</div>
