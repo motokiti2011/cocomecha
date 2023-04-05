@@ -28,16 +28,25 @@ export class InquiryComponent implements OnInit {
     Validators.required
   ]);
 
-    /** カテゴリーデータ */
-    adminUserData = adminUserSelect;
-    /** 管理ユーザーセレクト */
-    adminSelect = '';
+  mailAdless = new FormControl('メール', [
+    Validators.required
+  ]);
+
+  content = new FormControl('お問い合わせ内容', [
+    Validators.required
+  ]);
+
+  /** お問い合わせ送信先データ */
+  categoryData = { id: '', value: '' };
+  /** 管理ユーザーセレクト */
+  categorySelect = '';
 
 
   /** フォームグループオブジェクト */
   groupForm = this.builder.group({
     name: this.name,
     mail: this.mail,
+    content: this.content,
   })
 
 
@@ -61,7 +70,7 @@ export class InquiryComponent implements OnInit {
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
-    if(authUser) {
+    if (authUser) {
       this.setUserInfo(authUser);
     }
     else {
@@ -70,7 +79,13 @@ export class InquiryComponent implements OnInit {
   }
 
 
-  //** 以下内部処理 */
+  getResult() {
+
+  }
+
+
+
+  //******************************   以下内部処理 *******************************************/
 
   /**
    * ユーザー情報を取得する
@@ -78,10 +93,12 @@ export class InquiryComponent implements OnInit {
    */
   private setUserInfo(userId: string) {
     this.apiService.getUser(userId).subscribe(data => {
-      if(data) {
+      if (data) {
         this.user = data;
       }
       this.setContents;
+      // ローディング解除
+      this.overlayRef.detach();
     });
   }
 
@@ -89,7 +106,7 @@ export class InquiryComponent implements OnInit {
    * 画面表示データを設定する
    */
   private setContents() {
-    if(this.user) {
+    if (this.user) {
 
     } else {
 

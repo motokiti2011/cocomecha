@@ -6,6 +6,18 @@
   overflow: hidden;
   overflow-y: auto;
 
+  .table {
+    border: none;
+    tr {
+      border: none;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+
   .form_title {
     font-weight: bold;
   }
@@ -13,4 +25,20 @@
   .text_block {
     margin: 0px 0px 0px 25px;
   }
+
+  
+  .submit_button {
+    margin: 30px 40px 30px 0px;
+    height: 40px;
+    font-size: 16px;
+    text-align: center !important;
+    display: flex;
+    justify-content: center;
+    .btn {
+      width: 150px;
+    }
+  }
+
+
+
 }

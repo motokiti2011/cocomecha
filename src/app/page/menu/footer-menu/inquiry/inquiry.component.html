@@ -5,43 +5,33 @@
   <div>
     <div class="form_title">お問い合わせ</div>
     <table class="table">
-
       <tbody>
         <tr>
-          <td>お問い合わせユーザー名</td>
+          <td class="item">お問い合わせ者名</td>
           <td>
-            <input class="form-control" id="name" type="text" [formControl]="name" />
+            <input class="form-control" id="name" type="text" [formControl]="name" placeholder="名前"/>
           </td>
         </tr>
         <tr>
-          <td>お問い合わせカテゴリー</td>
+          <td class="item">お問い合わせメールアドレス</td>
           <td>
-            <input class="form-control" id="email" type="text" [formControl]="mail" />
+            <input class="form-control" id="email" type="text" [formControl]="mail" placeholder="メール" />
           </td>
         </tr>
         <tr>
-          <td>お問い合わせ内容</td>
+          <td class="item">お問い合わせ内容</td>
           <td>
-            <input class="form-control" id="email" type="text" [formControl]="mail" />
+            <textarea cols="40" rows="6" id="content" [formControl]="content" placeholder="お問い合わせ内容"></textarea>
           </td>
         </tr>
-        <tr>
-          <td>お問い合わせ送信先</td>
-          <td>
-            <input class="form-control" id="email" type="text" [formControl]="mail" />
-          </td>
-        </tr>
-        <tr>
-          <td>お問い合わせメールアドレス</td>
-          <td>
-            <input class="form-control" id="email" type="text" [formControl]="mail" />
-          </td>
-        </tr>
-
-
-
       </tbody>
     </table>
+
+    <div class="submit_button">
+      <button type="button" class="btn btn-outline-primary" (click)="getResult()"
+        [disabled]="groupForm.invalid">送信</button>
+    </div>
+
 
   </div>
 

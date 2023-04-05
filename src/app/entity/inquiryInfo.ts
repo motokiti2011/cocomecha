@@ -26,3 +26,4 @@ export interface inquiryInfo {
   // 作成日
   created: string;
 }
+
