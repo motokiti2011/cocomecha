@@ -13,3 +13,20 @@
   width: 55%;
   margin: 0px 30px 10px 0px;
 }
+
+
+.table_area {
+  background-color: #fff;
+  border: #000;
+  th {
+    position: sticky;
+    background: #f2f2f2;
+    top: 0;
+    left: 0;
+  }
+  .table2 {
+    height: 450px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}

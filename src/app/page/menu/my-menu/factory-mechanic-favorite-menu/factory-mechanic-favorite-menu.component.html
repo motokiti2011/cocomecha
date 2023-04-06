@@ -14,21 +14,24 @@
           <th>商品一覧へ</th>
           <th>種別</th>
           <th>登録解除はこちら</th>
-
       </thead>
-      <tbody>
-        <tr *ngFor="let item of favoriteList">
-          <td>{{item.favoriteName}}</td>
-          <td>
-            <div class="item-title" (click)="itemList(item)">商品一覧へ</div>
-          </td>
-          <td>{{item.serviceType}}</td>
-          <td>
-            <button type="submit" class="btn btn-primary" on-click="onLiftFavorite(item.favoriteId)">紐づけを解除する</button>
-          </td>
-        </tr>
-      </tbody>
     </table>
+    <div class="table2">
+      <table class="table">
+        <tbody>
+          <tr *ngFor="let item of favoriteList">
+            <td>{{item.favoriteName}}</td>
+            <td>
+              <div class="item-title" (click)="itemList(item)">商品一覧へ</div>
+            </td>
+            <td>{{item.serviceType}}</td>
+            <td>
+              <button type="submit" class="btn btn-primary" on-click="onLiftFavorite(item.favoriteId)">紐づけを解除する</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="advertisement_area">
