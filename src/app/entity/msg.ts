@@ -16,5 +16,6 @@ export const messageDialogMsg = {
   ToDelete: '削除しますか？',
   AnFactoryResister: '工場が登録されていません。',
   BelongsAndRoleSettingReq: 'すべての所属、役割を設定してください。',
-  TextReq: '入力が必要です。'
+  TextReq: '入力が必要です。',
+  ConfirmSendReq: 'この内容で送信しますがよろしいですか？',
 } as const;

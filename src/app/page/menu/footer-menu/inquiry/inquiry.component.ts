@@ -7,7 +7,11 @@ import { user } from 'src/app/entity/user';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ApiSerchService } from 'src/app/page/service/api-serch.service';
-
+import { MessageSelectDaialogComponent } from 'src/app/page/modal/message-select-daialog/message-select-daialog.component';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { inquiryInfo, initInquiryInfo } from 'src/app/entity/inquiryInfo';
 
 @Component({
   selector: 'app-inquiry',
@@ -19,16 +23,15 @@ export class InquiryComponent implements OnInit {
   // ユーザー情報
   user?: user;
 
+  // お問い合わせ情報
+  inquiryInfo :inquiryInfo = initInquiryInfo;
+
   /** フォームコントロール */
   name = new FormControl('名前', [
     Validators.required
   ]);
 
   mail = new FormControl('メール', [
-    Validators.required
-  ]);
-
-  mailAdless = new FormControl('メール', [
     Validators.required
   ]);
 
@@ -78,9 +81,32 @@ export class InquiryComponent implements OnInit {
     }
   }
 
-
+  /**
+   * 送信するボタン押下イベント
+   */
   getResult() {
-
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: messageDialogMsg.ConfirmSendReq,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageSelectDaialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      // OKの場合
+      if (result) {
+        this.postInquiry();
+      } else {
+        // キャンセルの場合
+        this.overlayRef.detach();
+      }
+      return;
+    });
   }
 
 
@@ -107,14 +133,35 @@ export class InquiryComponent implements OnInit {
    */
   private setContents() {
     if (this.user) {
+      this.inquiryInfo.inquiryUserId = this.user.userId;
+      this.inquiryInfo.inquiryUserName = this.user.userName;
+      this.inquiryInfo.inquiryMailAdless = this.user.mailAdress;
+      this.name.setValue(this.user.userName);
+      this.mail.setValue(this.user.mailAdress);
 
     } else {
-
+      this.inquiryInfo.inquiryUserId = '0';
+      this.inquiryInfo.inquiryUserId = '';
     }
-
     // ローディング解除
     this.overlayRef.detach();
   }
+
+  /**
+   * お問い合わせ情報を送信する
+   */
+  private postInquiry() {
+    this.inquiryInfo.inquiryUserName = this.name.value;
+    this.inquiryInfo.inquiryMailAdless = this.mail.value;
+    this.inquiryInfo.inquiryUserContents = this.content.value;
+    this.apiService.postInquiry(this.inquiryInfo).subscribe(data => {
+      if(data) {
+
+      }
+    });
+  }
+
+
 
 
 }

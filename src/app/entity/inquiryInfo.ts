@@ -27,3 +27,28 @@ export interface inquiryInfo {
   created: string;
 }
 
+export const initInquiryInfo: inquiryInfo = {
+    // 問い合わせID
+    inquiryId: '',
+    // 問い合わせユーザーID
+    inquiryUserId: '0',
+    // 問い合わせユーザー名
+    inquiryUserName: '',
+    // 問い合わせカテゴリー
+    inquiryUserCategory: '99',
+    // お問い合わせ内容
+    inquiryUserContents: '',
+    // お問い合わせ送信先
+    inquiryAdless: '',
+    // お問い合わせメールアドレス
+    inquiryMailAdless: '',
+    // お問い合わせ日付
+    inquiryDate: 0,
+    // 回答区分
+    anserDiv: '0',
+    // 回答日付
+    anserDate: 0,
+    // 作成日
+    created: '',
+}
+

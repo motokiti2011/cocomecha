@@ -19,6 +19,7 @@ import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { userVehicle } from 'src/app/entity/userVehicle';
 import { userMyList } from 'src/app/entity/userMyList';
 import { factoryMechanicFavorite } from 'src/app/entity/factoryMechanicFavorite';
+import { inquiryInfo } from 'src/app/entity/inquiryInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -543,6 +544,40 @@ export class ApiSerchService {
     return this.http.post<factoryMechanicFavorite>(this.apiEndPoint + '/factorymechanicfavorite', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: factoryMechanicFavorite) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+
+  /**
+   * お問い合わせを登録する
+   * @param data
+   * @returns
+   */
+  public postInquiry(data: inquiryInfo): Observable<any> {
+
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "POST",
+      "Keys": {
+        "inquiryId": data.inquiryId,
+        "inquiryUserId": data.inquiryUserId,
+        "inquiryUserName": data.inquiryUserName,
+        "inquiryUserCategory": data.inquiryUserCategory,
+        "inquiryUserContents": data.inquiryUserContents,
+        "inquiryAdless": data.inquiryAdless,
+        "inquiryMailAdless": data.inquiryMailAdless,
+        "inquiryDate": data.inquiryDate,
+        "anserDiv": data.anserDiv,
+        "anserDate": data.anserDate,
+        "created": data.created
+      }
+    };
+    return this.http.post<inquiryInfo>(this.apiEndPoint + '/factorymechanicfavorite', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: inquiryInfo) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
     );

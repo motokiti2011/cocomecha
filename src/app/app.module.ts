@@ -86,6 +86,7 @@ import { ConnectionFactoryModalComponent } from './page/modal/connection-factory
 import { ConnectionMechanicModalComponent } from './page/modal/connection-mechanic-modal/connection-mechanic-modal.component';
 import { FactoryAdminSettingModalComponent } from './page/modal/factory-admin-setting-modal/factory-admin-setting-modal.component';
 import { ServiceEditComponent } from './page/menu/service-contents/service-edit/service-edit.component';
+import { MessageSelectDaialogComponent } from './page/modal/message-select-daialog/message-select-daialog.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -186,6 +187,7 @@ const ROUTE_TABLE: Routes = [
     ConnectionMechanicModalComponent,
     FactoryAdminSettingModalComponent,
     ServiceEditComponent,
+    MessageSelectDaialogComponent,
   ],
   entryComponents: [
     TransactionListComponent,
