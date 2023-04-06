@@ -575,7 +575,7 @@ export class ApiSerchService {
         "created": data.created
       }
     };
-    return this.http.post<inquiryInfo>(this.apiEndPoint + '/factorymechanicfavorite', body).pipe(
+    return this.http.post<inquiryInfo>(this.apiEndPoint + '/inquiryinfo ', body).pipe(
       // 取得できた場合ユーザー情報を返却
       map((res: inquiryInfo) => res),
       // エラー時HTTPステータスコードを戻す

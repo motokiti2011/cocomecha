@@ -39,7 +39,7 @@ export const initInquiryInfo: inquiryInfo = {
     // お問い合わせ内容
     inquiryUserContents: '',
     // お問い合わせ送信先
-    inquiryAdless: '',
+    inquiryAdless: '0',
     // お問い合わせメールアドレス
     inquiryMailAdless: '',
     // お問い合わせ日付

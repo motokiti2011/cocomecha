@@ -38,9 +38,8 @@ export class MessageSelectDaialogComponent implements OnInit {
   /**
    * OKボタン押下時
    */
-  btnAction() {
-    this.closeModal();
-
+  btnAction(btnSelect: boolean) {
+    this._dialogRef.close(btnSelect);
   }
 
   // ダイアログを閉じる

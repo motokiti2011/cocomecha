@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormBuilder, Validators } from '@angular/forms';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
@@ -24,18 +25,18 @@ export class InquiryComponent implements OnInit {
   user?: user;
 
   // お問い合わせ情報
-  inquiryInfo :inquiryInfo = initInquiryInfo;
+  inquiryInfo: inquiryInfo = initInquiryInfo;
 
   /** フォームコントロール */
-  name = new FormControl('名前', [
+  name = new FormControl('', [
     Validators.required
   ]);
 
-  mail = new FormControl('メール', [
+  mail = new FormControl('', [
     Validators.required
   ]);
 
-  content = new FormControl('お問い合わせ内容', [
+  content = new FormControl('', [
     Validators.required
   ]);
 
@@ -63,6 +64,7 @@ export class InquiryComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private cognito: CognitoService,
+    private router: Router,
     public modal: MatDialog,
     private overlay: Overlay,
     private apiService: ApiSerchService,
@@ -93,8 +95,8 @@ export class InquiryComponent implements OnInit {
       btnDispDiv: true
     }
     const dialogRef = this.modal.open(MessageSelectDaialogComponent, {
-      width: '300px',
-      height: '150px',
+      width: '380px',
+      height: '180px',
       data: dialogData
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -119,10 +121,10 @@ export class InquiryComponent implements OnInit {
    */
   private setUserInfo(userId: string) {
     this.apiService.getUser(userId).subscribe(data => {
-      if (data) {
-        this.user = data;
+      if (data[0]) {
+        this.user = data[0];
       }
-      this.setContents;
+      this.setContents();
       // ローディング解除
       this.overlayRef.detach();
     });
@@ -138,7 +140,6 @@ export class InquiryComponent implements OnInit {
       this.inquiryInfo.inquiryMailAdless = this.user.mailAdress;
       this.name.setValue(this.user.userName);
       this.mail.setValue(this.user.mailAdress);
-
     } else {
       this.inquiryInfo.inquiryUserId = '0';
       this.inquiryInfo.inquiryUserId = '';
@@ -155,11 +156,44 @@ export class InquiryComponent implements OnInit {
     this.inquiryInfo.inquiryMailAdless = this.mail.value;
     this.inquiryInfo.inquiryUserContents = this.content.value;
     this.apiService.postInquiry(this.inquiryInfo).subscribe(data => {
-      if(data) {
-
+      if (data === 200) {
+        this.openMsgDialog(messageDialogMsg.Sender, true);
+      } else {
+        this.openMsgDialog(messageDialogMsg.AnSender, false);
       }
     });
   }
+
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
+  }
+
 
 
 

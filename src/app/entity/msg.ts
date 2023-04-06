@@ -4,6 +4,8 @@
 export const messageDialogMsg = {
   Resister: "登録しました",
   AnResister: "登録に失敗しました",
+  Sender: "送信しました。",
+  AnSender: "送信に失敗しました。",
   LoginRequest: "ログインが必要になります",
   AddMyList: "マイリストに追加しました",
   AnAddMyList: "マイリストに追加に失敗しました",
