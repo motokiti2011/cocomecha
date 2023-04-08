@@ -16,7 +16,7 @@ import { ApiSerchService } from '../../service/api-serch.service';
 })
 export class HeaderMenuComponent implements OnInit {
 
-  loginUser: loginUser =  { userId: '', userName: 'ログイン',mechanicId:null, officeId:null };
+  loginUser: loginUser = { userId: '', userName: 'ログイン', mechanicId: null, officeId: null };
 
   temporaryUserDiv = false;
 
@@ -82,7 +82,7 @@ export class HeaderMenuComponent implements OnInit {
         this.loginUser.userName = data[0].userName;
 
         this.authUserService.login(this.loginUser);
-        if(data[0].userName == undefined
+        if (data[0].userName == undefined
           || data[0].userName == '') {
           // 仮登録ユーザーのためユーザー登録メッセージを表示
           this.temporaryUserDiv = true;
@@ -125,7 +125,7 @@ export class HeaderMenuComponent implements OnInit {
             this.router.navigate(["sign-up-component"])
             return;
           }
-          if(this.login.userName) {
+          if (this.login.userName) {
             // ユーザー情報を取得
             // ログイン状態を保持する。
             this.authenticated();

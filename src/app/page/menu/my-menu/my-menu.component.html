@@ -1,71 +1,71 @@
 <div class="main-content">
 
   <div class="side_menu">
-    <app-side-menu
-      [acceseUser]="user"
-    ></app-side-menu>
+    <app-side-menu [acceseUser]="user"></app-side-menu>
   </div>
 
-<div class="main_area">
-  <div class="container">
-    <p class="title">マイメニュー</p>
+  <div class="main_area">
+    <div class="container">
+      <p class="title">マイメニュー</p>
 
-    <div class="row">
+      <div class="row">
         <p class="discript">現在のご登録情報</p>
-    </div>
-
-    <div class="row">
-      <div class="left_menu">お名前：{{dispInfo.name}}</div>
-      <div class="col-1"></div>
-      <div>メールアドレス：{{dispInfo.mailadress}}</div>
-    </div>
-
-    <div class="row">
-      <div class="left_menu">
-        <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide">
       </div>
 
-      <div class="col-1"></div>
-
-      <div>
-        <div class="right_menu">〒：{{dispInfo.postNo}}</div>
-        <div class="right_menu">住所：{{dispInfo.adress}}</div>
-        <div class="right_menu">TEL：{{dispInfo.tel1}}</div>
-        <!-- <div class="right_menu">TEL2:{{dispInfo.tel2}}</div> -->
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="left_menu introduction">
-        紹介文:{{dispInfo.introduction}}
+      <div class="row">
+        <div class="left_menu">お名前：{{dispInfo.name}}</div>
+        <div class="col-1"></div>
+        <div>メールアドレス：{{dispInfo.mailadress}}</div>
       </div>
 
-      <div class="col-1"></div>
+      <div class="row">
+        <div class="left_menu">
+          <img class="img" [src]="dispInfo.imageUrl" alt="Random first slide">
+        </div>
 
-      <div>
+        <div class="col-1"></div>
+
         <div>
-          <button type="button" class="btn btn-outline-primary" (click)="onEditUserInfo()">登録情報変更はこちら</button>
+          <div class="right_menu">〒：{{dispInfo.postNo}}</div>
+          <div class="right_menu">住所：{{dispInfo.adress}}</div>
+          <div class="right_menu">TEL：{{dispInfo.tel1}}</div>
+          <!-- <div class="right_menu">TEL2:{{dispInfo.tel2}}</div> -->
         </div>
-        <div>
-          <button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">ご登録の車両情報はこちら</button>
+      </div>
+
+      <div class="row">
+        <div class="left_menu introduction">
+          紹介文:{{dispInfo.introduction}}
         </div>
+
+        <div class="col-1"></div>
+
         <div>
-          <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引情報はこちら</button>
-        </div>
-        <div>
-          <button type="button" class="btn btn-outline-primary" (click)="onFactoryMecanic()">{{mechanicButonTitle}}</button>
-        </div>
-        <div>
-          <button type="button" class="btn btn-outline-primary" (click)="onFcMcFavoriteMenu()">工場・メカニックお気に入り情報</button>
+          <div>
+            <button type="button" class="btn btn-outline-primary" (click)="onEditUserInfo()">登録情報変更はこちら</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-primary" (click)="onVehcleInfo()">ご登録の車両情報はこちら</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引情報はこちら</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-primary"
+              (click)="onFactoryMecanic()">{{mechanicButonTitle}}</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-primary"
+              (click)="onFcMcFavoriteMenu()">工場・メカニックお気に入り情報</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="advertisement_area">
-  <app-advertisement-sid-menu></app-advertisement-sid-menu>
-</div>
+  <div class="advertisement_area">
+    <app-advertisement-sid-menu></app-advertisement-sid-menu>
+  </div>
 
 
 </div>

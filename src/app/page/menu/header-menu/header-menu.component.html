@@ -6,7 +6,7 @@
     <div *ngIf="!authUserDiv; else elseContent">
     <!-- ログイン前 -->
 
-      <!-- <input type="button" class="btn-border" on-click="onSinup()" value="新規登録"> -->
+      <input type="button" class="btn-border" on-click="onSinup()" value="新規登録">
 
       <input type="button" class="btn-border" on-click="onLogin()" value="ログイン" >
 
@@ -14,13 +14,13 @@
 
     <ng-template #elseContent>
     <!-- ログイン後 -->
-      <!-- <div *ngIf="temporaryUserDiv; else elseContent">
+      <div *ngIf="temporaryUserDiv; else elseContent">
         <input type="button" class="btn-border" on-click="onUserResister()" value="ユーザー登録{{loginUser.userName}}" >
         <p>ユーザー登録が未完了です。登録をしてください。</p>
       </div>
       <ng-template #elseContent>
         <input type="button" class="btn-border" on-click="onMypage()" value="マイページ" >
-      </ng-template> -->
+      </ng-template>
 
       <input type="button" class="btn-border" on-click="onLogout()" value="ログアウト">
 
