@@ -109,7 +109,7 @@ export class CognitoService {
     return rslt;
   }
 
-  /**
+/**
  * パスワード変更
  * @param oldPasswd 
  * @param newPasswd
@@ -128,6 +128,47 @@ export class CognitoService {
       });
     });
   }
+
+
+  /**
+   * パスワードリセット
+   * @param email 
+   * @returns 
+   */
+  forgotPassword(userId:string, email: string):any {
+    const data = {
+      UserPoolId: this.userPool.getUserPoolId,
+      ClientId: this.userPool.getClientId
+    }
+    const cognitoUser = new CognitoUser({
+      Username: userId,
+      Pool: this.userPool,
+      Storage: localStorage
+    });
+
+    cognitoUser.forgotPassword({
+      onSuccess: function (result) {
+        alert('Mail送信')
+      },
+      onFailure: function (err) {
+        console.log(err)
+      },
+      inputVerificationCode()
+      {
+        
+      }
+
+
+
+    })
+
+
+  }
+
+
+
+
+
 
   /**
    * ログアウト
