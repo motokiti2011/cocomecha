@@ -7,6 +7,8 @@ export const messageDialogMsg = {
   Sender: "送信しました。",
   AnSender: "送信に失敗しました。",
   LoginRequest: "ログインが必要になります",
+  Login: "ログインしました。",
+  Logout: "ログアウトしました。",
   AddMyList: "マイリストに追加しました",
   AnAddMyList: "マイリストに追加に失敗しました",
   AgainOperation: 'もう一度操作してください',

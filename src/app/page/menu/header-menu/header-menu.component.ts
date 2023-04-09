@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Overlay } from '@angular/cdk/overlay';
 import { LoginComponent } from '../../modal/login/login.component';
 import { HeaderMenuService } from './header-menu.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { AuthUserService } from '../../auth/authUser.service';
 import { CognitoService } from '../../auth/cognito.service';
 import { ApiSerchService } from '../../service/api-serch.service';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogMsg } from 'src/app/entity/msg';
 
 
 @Component({
@@ -31,13 +35,21 @@ export class HeaderMenuComponent implements OnInit {
   // 認証有無フラグ
   authUserDiv = false;
 
+  /** ローディングオーバーレイ */
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
   constructor(
     private router: Router,
     private service: HeaderMenuService,
-    public loginModal: MatDialog,
+    public modal: MatDialog,
     private cognito: CognitoService,
     private authUserService: AuthUserService,
     private apiService: ApiSerchService,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
@@ -102,7 +114,7 @@ export class HeaderMenuComponent implements OnInit {
   onLogin() {
     console.log('user-login');
 
-    const dialogRef = this.loginModal.open(LoginComponent, {
+    const dialogRef = this.modal.open(LoginComponent, {
       width: '400px',
       height: '450px',
       data: this.login
@@ -158,8 +170,9 @@ export class HeaderMenuComponent implements OnInit {
     this.cognito.logout();
     this.authUserService.logout;
     this.loginUser.userName = 'ログイン';
-    this.router.navigate(["/main_menu"]);
-    this.authenticated();
+    // ログアウトメッセージを表示
+    this.openMsgDialog(messageDialogMsg.Logout, true)
+    // this.authenticated();
   }
 
   /**
@@ -182,6 +195,40 @@ export class HeaderMenuComponent implements OnInit {
   onMypage() {
     console.log("マイページ")
     this.router.navigate(["my-menu-component"]);
+  }
+
+
+
+
+
+  /**
+ * メッセージダイアログ展開
+ * @param msg
+ * @param locationDiv
+ */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    // ダイアログ表示
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+
+      return;
+    });
   }
 
 

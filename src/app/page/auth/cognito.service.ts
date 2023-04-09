@@ -42,7 +42,7 @@ export class CognitoService {
     return new Promise((resolve, reject) => {
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: (result) => {
-          alert('ログインしました。');
+          // alert('ログインしました。');
           let msg = `Id token: ${result.getIdToken().getJwtToken()}\n`;
           msg += `Access token: ${result.getAccessToken().getJwtToken()}\n`;
           msg += `Refresh token: ${result.getRefreshToken().getToken()}`;
@@ -133,7 +133,6 @@ export class CognitoService {
    * ログアウト
    */
   logout() {
-    alert('Logout');
     const currentUser = this.userPool.getCurrentUser();
     currentUser && currentUser.signOut();
   }

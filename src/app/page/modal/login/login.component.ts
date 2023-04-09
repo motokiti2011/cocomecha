@@ -1,17 +1,22 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CognitoService } from '../../auth/cognito.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { user } from 'src/app/entity/user';
 
+import { MessageDialogComponent } from '../message-dialog/message-dialog.component';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
+import { messageDialogMsg } from 'src/app/entity/msg';
+
+
 export interface DialogData {
   userName: string,
   passwd: string,
-  selected:boolean;
-  reissuePasswd:boolean;
-  newResister:boolean;
+  selected: boolean;
+  reissuePasswd: boolean;
+  newResister: boolean;
 }
 
 
@@ -42,6 +47,7 @@ export class LoginComponent implements OnInit {
     public data: DialogData,
     private cognito: CognitoService,
     private overlay: Overlay,
+    public modal: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -102,7 +108,8 @@ export class LoginComponent implements OnInit {
       const isLogin = await this.cognito.isAuthenticated();
       if (isLogin === null) {
         await this.cognito.login(username, password);
-        this.closeModal();
+        this.openMsgDialog(messageDialogMsg.Login, true);
+        
       } else {
         this.cognito.logout();
       }
@@ -111,6 +118,37 @@ export class LoginComponent implements OnInit {
         this.cognito.logout();
       }
     }
+  }
+
+
+  /**
+ * メッセージダイアログ展開
+ * @param msg
+ * @param locationDiv
+ */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
+        this.closeModal();
+        // this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
   }
 
 
