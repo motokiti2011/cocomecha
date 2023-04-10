@@ -121,7 +121,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  /**
+/**
  * メッセージダイアログ展開
  * @param msg
  * @param locationDiv

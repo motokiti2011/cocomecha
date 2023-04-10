@@ -109,12 +109,12 @@ export class CognitoService {
     return rslt;
   }
 
-/**
- * パスワード変更
- * @param oldPasswd 
- * @param newPasswd
- * @returns 
- */
+  /**
+   * パスワード変更
+   * @param oldPasswd 
+   * @param newPasswd
+   * @returns 
+   */
   changePassword(oldPasswd: string, newPasswd: string): any {
     const cognitoUser = this.userPool.getCurrentUser();
     if (cognitoUser == null) {
@@ -135,7 +135,7 @@ export class CognitoService {
    * @param email 
    * @returns 
    */
-  forgotPassword(userId:string, email: string):any {
+  forgotPassword(userId: string, email: string): any {
     const data = {
       UserPoolId: this.userPool.getUserPoolId,
       ClientId: this.userPool.getClientId
@@ -145,7 +145,6 @@ export class CognitoService {
       Pool: this.userPool,
       Storage: localStorage
     });
-
     cognitoUser.forgotPassword({
       onSuccess: function (result) {
         alert('Mail送信')
@@ -153,20 +152,35 @@ export class CognitoService {
       onFailure: function (err) {
         console.log(err)
       },
-      inputVerificationCode()
-      {
-        
-      }
-
-
-
-    })
-
-
+      inputVerificationCode() { }
+    });
   }
 
-
-
+  /**
+   * パスワードリセット（確認コード、新パスワード設定）
+   * @param verificationCode 
+   * @param newPassword 
+   */
+  confirmPassword(userId: string, verificationCode: string, newPassword: string): any {
+    const data = {
+      UserPoolId: this.userPool.getUserPoolId,
+      ClientId: this.userPool.getClientId
+    }
+    const cognitoUser = new CognitoUser({
+      Username: userId,
+      Pool: this.userPool,
+      Storage: localStorage
+    });
+    cognitoUser.confirmPassword(
+      verificationCode, newPassword, {
+      onSuccess: function (result) {
+        alert(result)
+      },
+      onFailure: function (err) {
+        console.log(err)
+      },
+    });
+  }
 
 
 

@@ -22,4 +22,6 @@ export const messageDialogMsg = {
   BelongsAndRoleSettingReq: 'すべての所属、役割を設定してください。',
   TextReq: '入力が必要です。',
   ConfirmSendReq: 'この内容で送信しますがよろしいですか？',
+  SendForgotPassword: 'このメールアドレスに確認コードを送信しました。',
+  ProblemOperationRedirect: '問題が発生しました。内容を確認の上もう一度操作してください。',
 } as const;
