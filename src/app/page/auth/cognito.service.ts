@@ -25,9 +25,9 @@ export class CognitoService {
 
   /**
    * ログイン
-   * @param username 
-   * @param password 
-   * @returns 
+   * @param username
+   * @param password
+   * @returns
    */
   login(username: string, password: string): Promise<any> {
     const cognitoUser = new CognitoUser({
@@ -63,7 +63,7 @@ export class CognitoService {
 
   /**
    * 認証状態確認
-   * @returns 
+   * @returns
    */
   isAuthenticated(): Promise<any> {
     const cognitoUser = this.userPool.getCurrentUser();
@@ -80,7 +80,7 @@ export class CognitoService {
 
   /**
    * 認証者情報を確認し取得できた場合その情報を取得する
-   * @returns 
+   * @returns
    */
   initAuthenticated(): string | null {
     const cognitoUser = this.userPool.getCurrentUser();
@@ -94,7 +94,7 @@ export class CognitoService {
 
   /**
    * IDトークン取得
-   * @returns 
+   * @returns
    */
   getCurrentUserIdToken(): any {
     const cognitoUser = this.userPool.getCurrentUser();
@@ -111,9 +111,9 @@ export class CognitoService {
 
   /**
    * パスワード変更
-   * @param oldPasswd 
+   * @param oldPasswd
    * @param newPasswd
-   * @returns 
+   * @returns
    */
   changePassword(oldPasswd: string, newPasswd: string): any {
     const cognitoUser = this.userPool.getCurrentUser();
@@ -132,8 +132,8 @@ export class CognitoService {
 
   /**
    * パスワードリセット
-   * @param email 
-   * @returns 
+   * @param email
+   * @returns
    */
   forgotPassword(userId: string, email: string): any {
     const data = {
@@ -158,26 +158,22 @@ export class CognitoService {
 
   /**
    * パスワードリセット（確認コード、新パスワード設定）
-   * @param verificationCode 
-   * @param newPassword 
+   * @param verificationCode
+   * @param newPassword
    */
   confirmPassword(userId: string, verificationCode: string, newPassword: string): any {
-    const data = {
-      UserPoolId: this.userPool.getUserPoolId,
-      ClientId: this.userPool.getClientId
-    }
+
     const cognitoUser = new CognitoUser({
       Username: userId,
       Pool: this.userPool,
       Storage: localStorage
     });
-    cognitoUser.confirmPassword(
-      verificationCode, newPassword, {
-      onSuccess: function (result) {
-        alert(result)
+    cognitoUser.confirmPassword(verificationCode, newPassword, {
+      onFailure: (err) => {
+        console.log("onFailure:" + err);
       },
-      onFailure: function (err) {
-        console.log(err)
+      onSuccess: (res) =>  {
+        console.log("onSuccess:");
       },
     });
   }
@@ -194,10 +190,10 @@ export class CognitoService {
 
   /**
    * 新規ユーザー登録
-   * @param username 
-   * @param password 
-   * @param mail 
-   * @returns 
+   * @param username
+   * @param password
+   * @param mail
+   * @returns
    */
   signUp(username: string, password: string, mail: string): Promise<any> {
     const dataEmail = { Name: 'email', Value: mail };
@@ -217,9 +213,9 @@ export class CognitoService {
 
   /**
    * 確認コード入力
-   * @param username 
-   * @param confirmation_code 
-   * @returns 
+   * @param username
+   * @param confirmation_code
+   * @returns
    */
   confirmation(username: string, confirmation_code: string): Promise<any> {
     const userData = { Username: username, Pool: this.userPool };
