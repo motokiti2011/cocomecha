@@ -87,6 +87,7 @@ import { ConnectionMechanicModalComponent } from './page/modal/connection-mechan
 import { FactoryAdminSettingModalComponent } from './page/modal/factory-admin-setting-modal/factory-admin-setting-modal.component';
 import { ServiceEditComponent } from './page/menu/service-contents/service-edit/service-edit.component';
 import { MessageSelectDaialogComponent } from './page/modal/message-select-daialog/message-select-daialog.component';
+import { ChangePasswdComponent } from './page/auth/change-passwd/change-passwd.component';
 
 
 const ROUTE_TABLE: Routes = [
@@ -188,6 +189,7 @@ const ROUTE_TABLE: Routes = [
     FactoryAdminSettingModalComponent,
     ServiceEditComponent,
     MessageSelectDaialogComponent,
+    ChangePasswdComponent,
   ],
   entryComponents: [
     TransactionListComponent,

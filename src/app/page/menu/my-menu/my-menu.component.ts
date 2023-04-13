@@ -204,6 +204,13 @@ export class MyMenuComponent implements OnInit {
     this.router.navigate(["/fcmc-favorite-menu"]);
   }
 
+  /**パスワード変更画面
+   *
+   */
+  onEditPasswd() {
+    this.router.navigate(["/change-passwd"]);
+  }
+
     /**
    * メッセージダイアログ展開
    * @param msg
