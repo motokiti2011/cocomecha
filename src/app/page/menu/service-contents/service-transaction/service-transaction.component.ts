@@ -139,6 +139,7 @@ export class ServiceTransactionComponent implements OnInit {
               this.overlayRef.detach();
             })
           }
+          this.overlayRef.detach();
         });
       });
     } else {

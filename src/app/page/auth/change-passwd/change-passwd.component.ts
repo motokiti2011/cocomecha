@@ -23,12 +23,9 @@ export class ChangePasswdComponent implements OnInit {
   newPasswd = '';
   /** 確認用パスワード */
   confirmationPasswd = '';
-
-
-  /** 表示切替区分 */
-  confirmationDiv = false;
   /** エラーメッセージ */
-  dispMsg: any = '';
+  errorMsg = '';
+
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -45,6 +42,20 @@ export class ChangePasswdComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  /**
+   * パスワード入力イベント
+   */
+  onPasswd() {
+    if(!this.newPasswd || !this.oldPasswd || !this.confirmationPasswd ) {
+      this.errorMsg = '旧、新、確認用パスワードの入力が必要です。';
+    } else if(this.newPasswd != this.confirmationPasswd) {
+      this.errorMsg = '新パスワードと確認用パスワードが異なっています。';
+    } else {
+      this.errorMsg = '';
+    }
+  }
+
 
   /**
    * パスワードを送信するボタン押下イベント
@@ -65,27 +76,8 @@ export class ChangePasswdComponent implements OnInit {
       });
   }
 
-  /**
-   * 確認コード、新パスワード入力イベント
-   * @param verificationCode
-   * @param newPassword
-   */
-  onConfirmation() {
-    // this.onConfirmation()
-  }
 
 
-  // closeModal() {
-
-  // }
-
-  onTest() {
-    if(this.confirmationDiv) {
-      this.confirmationDiv = false;
-    } else {
-      this.confirmationDiv = true;
-    }
-  }
 
 
 
@@ -96,34 +88,15 @@ export class ChangePasswdComponent implements OnInit {
    * @param password
    */
   async chengePasswd(): Promise<any> {
-    // try {
-    //   await this.cognito.forgotPassword(this.userName, this.email);
-    //   this.openMsgDialog(messageDialogMsg.SendForgotPassword, false);
-    //   this.confirmationDiv = true;
-    // } catch (e) {
-    //   if (e === null) {
-    //     this.openMsgDialog(messageDialogMsg.ProblemOperationRedirect, false);
-    //   }
-    // }
+    try {
+      await this.cognito.changePassword(this.oldPasswd, this.newPasswd);
+      this.openMsgDialog(messageDialogMsg.ChengePassWd, true);
+    } catch (e) {
+      if (e === null) {
+        this.openMsgDialog(messageDialogMsg.ProblemOperationRedirect, true);
+      }
+    }
   }
-
-  // /**
-  //  * 確認コード、新パスワード送信イベント
-  //  * @param username
-  //  * @param password
-  //  */
-  // async confirmPassword(verificationCode: string, newPassword: string): Promise<any> {
-  //   try {
-  //     await this.cognito.confirmPassword(this.userName, verificationCode, newPassword);
-  //     this.openMsgDialog(messageDialogMsg.SendForgotPassword, false);
-  //     this.confirmationDiv = true;
-  //   } catch (e) {
-  //     if (e === null) {
-  //       this.openMsgDialog(messageDialogMsg.ProblemOperationRedirect, false);
-  //     }
-  //   }
-  // }
-
 
   /**
    * メッセージダイアログ展開

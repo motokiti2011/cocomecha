@@ -89,7 +89,6 @@ import { ServiceEditComponent } from './page/menu/service-contents/service-edit/
 import { MessageSelectDaialogComponent } from './page/modal/message-select-daialog/message-select-daialog.component';
 import { ChangePasswdComponent } from './page/auth/change-passwd/change-passwd.component';
 
-
 const ROUTE_TABLE: Routes = [
   { path: '', redirectTo: '/main_menu', pathMatch: 'full' },
   { path: 'main_menu', component: MainMenuComponent },
@@ -122,7 +121,8 @@ const ROUTE_TABLE: Routes = [
   { path: 'personal-information-handling', component: PersonalInformationHandlingComponent },
   { path: 'inquiry', component: InquiryComponent },
   { path: 'sit-map', component: SiteMapComponent },
-  { path: 'help', component: HelpComponent }
+  { path: 'help', component: HelpComponent },
+  { path: 'change-passwd', component: ChangePasswdComponent },
 ]
 
 @NgModule({

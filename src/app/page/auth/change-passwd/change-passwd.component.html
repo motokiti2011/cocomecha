@@ -1,15 +1,11 @@
 <!-- <p>reissue-passwd works!</p> -->
 
-<div>
-  <input type="button" (click)="onTest()" value="ボタン">
-</div>
-
 
 <div class="confirmation">
 
-  <div class="container" *ngIf="!confirmationDiv; else elseContent">
+  <div class="container">
     <div class="row">
-      <div id="modal-title">パスワード変更画面</div>
+      <div id="title">パスワード変更</div>
       <div class="col-1"></div>
     </div>
 
@@ -21,7 +17,9 @@
 
       <div class="row">
         <div class="col-1"></div>
-        <input type="password" class="form-control" id="password" name="password" [(ngModel)]="oldPasswd" />
+        <div class="col-4">
+          <input type="password" class="form-control" id="password" name="password" [(ngModel)]="oldPasswd" />
+        </div>
       </div>
 
       <div class="row">
@@ -32,86 +30,37 @@
 
       <div class="row">
         <div class="col-1"></div>
-        <input type="password" class="form-control" id="password" name="password" [(ngModel)]="newPasswd" />
+        <div class="col-4">
+          <input type="password" class="form-control" id="password" name="password" [(ngModel)]="newPasswd"
+            (change)="onPasswd()" />
+        </div>
       </div>
 
       <div class="row">
         <div class="col-1"></div>
-        <label>新パスワード</label>
+        <label>確認用パスワード</label>
       </div>
 
 
       <div class="row">
         <div class="col-1"></div>
-        <input type="password" class="form-control" id="password" name="password" [(ngModel)]="confirmationPasswd" />
+        <div class="col-4">
+          <input type="password" class="form-control" id="password" name="password" [(ngModel)]="confirmationPasswd"
+            (change)="onPasswd()" />
+        </div>
+      </div>
+
+      <div class="row" *ngIf="errorMsg">
+        <div class="col-1"></div>
+        <div class="errorMsg">{{errorMsg}}</div>
       </div>
 
       <div class="row">
         <div class="col-1"></div>
-        <button type="submit" class="btn btn-primary" on-click="btnAction()">送信する</button>
+        <button type="submit" class="btn btn-primary" on-click="btnAction()" [disabled]="errorMsg">送信する</button>
       </div>
     </div>
   </div>
-
-  <ng-template #elseContent>
-    <div class="container">
-      <div class="confirmation">
-        <div class="row">
-          <div class="col-1"></div>
-          <div class="col">
-            <div class="infomsg">登録した「ユーザー名」と登録メールアドレスに届いた「登録コード」を入力してください。</div>
-            <!-- <p>登録した「ユーザー名」と登録メールアドレスに届いた「登録コード」を入力してください。</p> -->
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-3"></div>
-          <div class="col-4">
-            <label>新パスワード</label>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-3"></div>
-          <div class="col-4">
-            <input type="name" class="form-control" placeholder="name" id="name" name="name" #name>
-          </div>
-        </div>
-
-
-        <div class="row">
-          <div class="col-3"></div>
-          <div class="col-4">
-            <label>確認コード</label>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-3"></div>
-          <div class="col-4">
-            <input type="text" class="form-control" placeholder="confirmationCode" id="confirmationCode"
-              name="confirmationCode" #confirmationCode>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-1"></div>
-          <p class="error">{{dispMsg}}</p>
-        </div>
-
-
-        <div class="row">
-          <div class="col-3"></div>
-          <div class="col-4">
-            <p class="error">{{dispMsg}}</p>
-            <button class="btn btn-primary" type="submit"
-              (click)="onConfirmation()">送信</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </ng-template>
 
 
 </div>
