@@ -3,13 +3,18 @@
 }
 
 .sid_menu {
-  width: 300px;
+  // width: 300px;
+  // width: 15%;
   margin: 10px 0px 0px 40px;
 }
 
 
 .main {
-  width: 850px;
+  // width: 850px;
+  // width: 70%;
+  height: 800px;
+  overflow: hidden;
+  overflow-y: auto;
   margin: 5px 0px 0px 40px;
 
   .row_item {

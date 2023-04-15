@@ -39,6 +39,7 @@ export class VehicleMenuComponent implements OnInit {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
         this.user = user[0];
+        this.user.userId = authUser;
         this.getVehicleList();
       });
     } else {

@@ -2,10 +2,16 @@
   display: flex;
 }
 
-
 .main {
-  width: 850px;
+  // width: 70%;
+  // width: 900px;
   margin: 5px 0px 0px 40px;
+
+  .contents_area {
+    height: 800px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
 
   .row_item {
     margin: 20px 0px 0px 0px;

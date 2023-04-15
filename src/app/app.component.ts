@@ -9,7 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'haco-mecha';
 
-  footerDiv = false;
+  heightDiv = false;
 
   constructor(
     private router: Router,
@@ -32,9 +32,9 @@ export class AppComponent implements OnInit {
     if (hoge2[0] != '/transaction_menu'
       && hoge2[0] != '/factory-mechanic-menu'
       && hoge2[0] != '/service-transaction') {
-      this.footerDiv = true;
+      this.heightDiv = true;
     } else {
-      this.footerDiv = false;
+      this.heightDiv = false;
     }
   }
 

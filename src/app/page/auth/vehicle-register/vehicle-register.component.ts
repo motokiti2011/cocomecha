@@ -203,6 +203,7 @@ export class VehicleRegisterComponent implements OnInit {
       this.apiService.getUser(authUser).subscribe(user => {
         console.log(user);
         this.user = user[0];
+        this.user.userId = authUser;
         this.getVehicleList();
       });
     } else {
@@ -277,7 +278,7 @@ export class VehicleRegisterComponent implements OnInit {
 
     this.apiService.postUserVehicle(userVehicle).subscribe(result => {
       if (result === 200) {
-        this.openMsgDialog(messageDialogMsg.Resister, false);
+        this.openMsgDialog(messageDialogMsg.Resister, true);
         this.getVehicleList();
       } else {
         this.openMsgDialog(messageDialogMsg.AnResister, false);
