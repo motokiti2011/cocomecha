@@ -22,7 +22,12 @@
       <app-header-menu></app-header-menu>
     </header>
     <main>
-      <router-outlet (activate)="onActivate()"></router-outlet>
+      <div class="main_disp">
+        <router-outlet (activate)="onActivate()"></router-outlet>
+      </div>
+      <div class="advertisement_area">
+        <app-advertisement-sid-menu></app-advertisement-sid-menu>
+      </div>
     </main>
   </div>
   <!-- <footer *ngIf="footerDiv"> -->

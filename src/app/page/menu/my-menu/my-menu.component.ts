@@ -52,7 +52,7 @@ export class MyMenuComponent implements OnInit {
   // メカニックID
   mechanicId = '';
   // ユーザー
-  user? : user;
+  user?: user;
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -60,14 +60,17 @@ export class MyMenuComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
-      // ローディング開始
-      this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
       this.apiservice.getUser(authUser).subscribe(user => {
         console.log(user);
-        const acceseUser:loginUser = {
+        const acceseUser: loginUser = {
           userId: authUser,
           userName: user[0].userName,
           mechanicId: user[0].mechanicId,
@@ -79,6 +82,7 @@ export class MyMenuComponent implements OnInit {
         this.setDispInfo(user[0]);
         this.isMechanic(user[0]);
         // ローディング解除
+        this.loading = false;
         this.overlayRef.detach();
       });
     } else {
@@ -98,17 +102,17 @@ export class MyMenuComponent implements OnInit {
     let adless = '';
     let tel = '';
     let introduction = '';
-    if(user.postCode) {
+    if (user.postCode) {
       post = user.postCode;
     }
-    if(user.areaNo1) {
+    if (user.areaNo1) {
       adless = this.formService.setAreaName(user.areaNo1)
-      + user.areaNo2 + user.adress;
+        + user.areaNo2 + user.adress;
     }
-    if(user.TelNo1) {
+    if (user.TelNo1) {
       tel = user.TelNo1;
     }
-    if(user.introduction) {
+    if (user.introduction) {
       introduction = user.introduction;
     }
     this.dispInfo = {
@@ -211,35 +215,37 @@ export class MyMenuComponent implements OnInit {
     this.router.navigate(["/change-passwd"]);
   }
 
-    /**
-   * メッセージダイアログ展開
-   * @param msg
-   * @param locationDiv
-   */
-    private openMsgDialog(msg:string, locationDiv: boolean) {
-      // ダイアログ表示（ログインしてください）し前画面へ戻る
-      const dialogData: messageDialogData = {
-        massage: msg,
-        closeFlg: false,
-        closeTime: 0,
-        btnDispDiv: true
-      }
-      const dialogRef = this.modal.open(MessageDialogComponent, {
-        width: '300px',
-        height: '150px',
-        data: dialogData
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if(locationDiv) {
-          // ローディング解除
-          this.overlayRef.detach();
-          this.router.navigate(["/main_menu"]);
-        }
-        console.log(result);
+  /**
+ * メッセージダイアログ展開
+ * @param msg
+ * @param locationDiv
+ */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
         // ローディング解除
+        this.loading = false;
         this.overlayRef.detach();
-        return;
-      });
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.loading = false;
+      this.overlayRef.detach();
+      return;
+    });
   }
 
 

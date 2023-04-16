@@ -44,6 +44,16 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
+  main {
+    display: flex;
+    .main_disp {
+      width: 85%;
+    }
+    .advertisement_area {
+      width: 15%;
+    }
+  }
+
 }
 
 .defaltHeight {

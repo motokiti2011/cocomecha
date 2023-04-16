@@ -10,6 +10,10 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MessageSelectDaialogComponent } from 'src/app/page/modal/message-select-daialog/message-select-daialog.component';
 
 @Component({
   selector: 'app-edit-vehicle-info',
@@ -20,6 +24,8 @@ export class EditVehicleInfoComponent implements OnInit {
 
   /** ユーザー情報　*/
   user: user = initUserInfo;
+  /** アクセス者ID */
+  authUser = '';
   /** 車両リスト　*/
   vehicleList?: userVehicle;
 
@@ -171,6 +177,14 @@ export class EditVehicleInfoComponent implements OnInit {
   coloerData = selectColoer
   coloerSelect = '';
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  loading = false;
+
   constructor(
     private apiService: ApiSerchService,
     private builder: FormBuilder,
@@ -178,21 +192,26 @@ export class EditVehicleInfoComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private cognito: CognitoService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
-        console.log(user);
-        this.user = user[0];
+        this.authUser = authUser;
+        // console.log(user);
+        // this.user = user[0];
         this.activatedRoute.queryParams.subscribe(params => {
           const vehicleId = params['vehicleId'];
-        this.getVehicleInfo(vehicleId);
+          this.getVehicleInfo(vehicleId);
         });
       });
     } else {
-      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true, '/main-menu');
     }
   }
 
@@ -202,13 +221,14 @@ export class EditVehicleInfoComponent implements OnInit {
    */
   onRegister() {
     console.log(this.vehicleList)
+    this.vehicleResister();
   }
 
 
   /**
    * 車両情報を取得する
    */
-  private getVehicleInfo(vehicleId: string ) {
+  private getVehicleInfo(vehicleId: string) {
     this.apiService.getUserVehicle(vehicleId).subscribe(result => {
       this.vehicleList = result[0];
       this.setDispData();
@@ -228,38 +248,40 @@ export class EditVehicleInfoComponent implements OnInit {
     this.vehicleNoSerialNum.setValue(this.vehicleList?.vehicleNoSerialNum);
 
     // 車台番号
-    if(this.vehicleList?.chassisNo) {
+    if (this.vehicleList?.chassisNo) {
       this.modelNo.setValue(this.vehicleList?.chassisNo[0]);
       this.chassisNo.setValue(this.vehicleList?.chassisNo[1]);
     }
     // 指定類別
-    if(this.vehicleList?.designatedClassification) {
+    if (this.vehicleList?.designatedClassification) {
       const designated = this.vehicleList.designatedClassification.split('/');
       this.designatedNo.setValue(designated[0]);
       this.classificationNo.setValue(designated[1]);
     }
 
     // カラー
-    if(this.vehicleList?.coler) {
+    if (this.vehicleList?.coler) {
       this.coloerSelect = this.vehicleList?.coler;
     }
     // 走行距離
     this.mileage.setValue(this.vehicleList?.mileage);
     // 初年度登録日
     const firstRegistration = this.setFirstRegistration();
-    if(firstRegistration.length != 0) {
+    if (firstRegistration.length != 0) {
       this.eraSelect = firstRegistration[0];
       this.firstRegistrationYear.setValue(firstRegistration[1]);
       this.firstRegistrationMonth.setValue(firstRegistration[2]);
     }
     // 車検満了日
     const inspectionExpiration = this.setInspectionExpiration();
-    if(inspectionExpiration.length != 0) {
+    if (inspectionExpiration.length != 0) {
       this.inspectionExpirationYear.setValue(inspectionExpiration[0]);
       this.inspectionExpirationMonth.setValue(inspectionExpiration[1]);
       this.inspectionExpirationDay.setValue(inspectionExpiration[2]);
     }
-
+    // ローディング解除
+    this.loading = false;
+    this.overlayRef.detach();
 
   }
 
@@ -269,8 +291,8 @@ export class EditVehicleInfoComponent implements OnInit {
    * @returns
    */
   private setFirstRegistration(): string[] {
-    let result:string[] = [];
-    if(this.vehicleList?.firstRegistrationDate) {
+    let result: string[] = [];
+    if (this.vehicleList?.firstRegistrationDate) {
       result = this.vehicleList?.firstRegistrationDate.split('/');
     }
     return result;
@@ -281,19 +303,126 @@ export class EditVehicleInfoComponent implements OnInit {
    * @returns
    */
   private setInspectionExpiration(): string[] {
-    let result:string[] = [];
-    if(this.vehicleList?.inspectionExpirationDate) {
+    let result: string[] = [];
+    if (this.vehicleList?.inspectionExpirationDate) {
       result = this.vehicleList?.inspectionExpirationDate.split('/');
     }
     return result;
   }
 
+
+  /**
+   * 車両登録登録
+   */
+  private vehicleResister() {
+    console.log(this.inputData);
+    if (!this.vehicleList) {
+      return;
+    }
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
+    const userVehicle: userVehicle = {
+      vehicleId: this.vehicleList.vehicleId,
+      userId: this.authUser,
+      vehicleName: this.vehicleName.value,
+      // TODO
+      vehicleDiv: '',
+      vehicleNo: this.setVehicleNo(),
+      vehicleNoAreaName: this.vehicleNoAreaName.value,
+      vehicleNoClassificationNum: this.vehicleNoClassificationNum.value,
+      vehicleNoKana: this.vehicleNoKana.value,
+      vehicleNoSerialNum: this.vehicleNoSerialNum.value,
+      chassisNo: this.serChassisNo(),
+      designatedClassification: this.designatedClassification(),
+      maker: '', // TODO 後日
+      form: '', // TODO  後日
+      coler: this.coloerSelect,
+      colerNo: this.inputData.colerNo,
+      mileage: Number(this.mileage.value),
+      firstRegistrationDate: this.setFirstRegistrationData(),
+      inspectionExpirationDate: this.setInspectionExpirationData(),
+      updateUserId: this.authUser,
+      created: this.vehicleList.created,
+      updated: ''
+    }
+
+    console.log(userVehicle);
+
+    this.apiService.putUserVehicle(userVehicle).subscribe(result => {
+      if (result === 200) {
+        this.openMsgDialog(messageDialogMsg.Resister, true, '/vehicle-menu');
+      } else {
+        this.openMsgDialog(messageDialogMsg.AnResister, false, '');
+      }
+      this.loading = false;
+      this.overlayRef.detach();
+      console.log(result);
+    });
+  }
+
+
+
+  /**
+   * ナンバーを合体させる
+   * @returns
+   */
+  private setVehicleNo(): string {
+    return this.vehicleNoAreaName.value + '-'
+      + this.vehicleNoClassificationNum.value + '-'
+      + this.vehicleNoKana.value + '-'
+      + this.vehicleNoSerialNum.value;
+  }
+
+  /**
+   * 初年度年月を合体させる
+   * @returns
+   */
+  private setFirstRegistrationData(): string {
+    return this.eraSelect + '/'
+      + this.firstRegistrationYear.value + '/'
+      + this.firstRegistrationMonth.value;
+  }
+
+  /**
+   * 車検満了日を合体させる
+   * @returns
+   */
+  private setInspectionExpirationData(): string {
+    return this.inspectionExpirationYear.value + '/'
+      + this.inspectionExpirationMonth.value + '/'
+      + this.inspectionExpirationDay.value;
+  }
+
+
+  /**
+   * 車台番号を設定する
+   * @returns
+   */
+  private serChassisNo(): string[] {
+    let result = []
+    result[0] = this.modelNo.value;
+    result[1] = this.chassisNo.value;
+    return result;
+  }
+
+  /**
+   * 指定類別を設定する
+   * @returns
+   */
+  private designatedClassification(): string {
+    return this.designatedNo.value + '/'
+      + this.classificationNo.value
+  }
+
+
   /**
    * メッセージダイアログ展開
    * @param msg
    * @param locationDiv
+   * @param root
    */
-  private openMsgDialog(msg:string, locationDiv: boolean) {
+  private openMsgDialog(msg: string, locationDiv: boolean, root: string) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
     const dialogData: messageDialogData = {
       massage: msg,
@@ -307,12 +436,17 @@ export class EditVehicleInfoComponent implements OnInit {
       data: dialogData
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(locationDiv) {
-        this.router.navigate(["/main_menu"]);
+      if (locationDiv) {
+        this.router.navigate([root]);
       }
       console.log(result);
+      // ローディング解除
+      this.loading = false;
+      this.overlayRef.detach();
       return;
     });
   }
+
+
 
 }

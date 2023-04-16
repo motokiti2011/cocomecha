@@ -18,6 +18,7 @@ export const messageDialogMsg = {
   Required: '必須項目を入力してください。',
   Changed: '変更しました。',
   ToDelete: '削除しますか？',
+  DeleteSucsess: '削除しました。',
   AnFactoryResister: '工場が登録されていません。',
   BelongsAndRoleSettingReq: 'すべての所属、役割を設定してください。',
   TextReq: '入力が必要です。',

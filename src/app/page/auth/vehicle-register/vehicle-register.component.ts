@@ -21,8 +21,9 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
-
-
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-vehicle-register',
@@ -184,6 +185,13 @@ export class VehicleRegisterComponent implements OnInit {
   /** 車両形状 */
   dispVehicleForm: string = '';
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  loading = false;
 
   constructor(
     private apiService: ApiSerchService,
@@ -195,9 +203,13 @@ export class VehicleRegisterComponent implements OnInit {
     private location: Location,
     private s3: UploadService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
@@ -207,18 +219,9 @@ export class VehicleRegisterComponent implements OnInit {
         this.getVehicleList();
       });
     } else {
-      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true, '/main-menu');
     }
 
-  }
-
-
-  /**
-   * ユーザー登録情報と合わせるボタン押下時イベント
-   * @param e
-   */
-  onSomeUserInfo(e: string) {
-    console.log(e);
   }
 
   /**
@@ -226,10 +229,6 @@ export class VehicleRegisterComponent implements OnInit {
    */
   onRegister() {
     this.vehicleResister();
-  }
-
-  goBack() {
-    this.location.back();
   }
 
 
@@ -241,6 +240,9 @@ export class VehicleRegisterComponent implements OnInit {
   private getVehicleList() {
     this.apiGsiService.serchVehicle(this.user.userId, '0').subscribe(result => {
       this.vehicleList = result;
+      // ローディング解除
+      this.loading = false;
+      this.overlayRef.detach();
     });
   }
 
@@ -248,6 +250,9 @@ export class VehicleRegisterComponent implements OnInit {
    * 車両登録登録
    */
   private vehicleResister() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     console.log(this.inputData);
     const userVehicle: userVehicle = {
       vehicleId: '',
@@ -278,12 +283,13 @@ export class VehicleRegisterComponent implements OnInit {
 
     this.apiService.postUserVehicle(userVehicle).subscribe(result => {
       if (result === 200) {
-        this.openMsgDialog(messageDialogMsg.Resister, true);
+        this.openMsgDialog(messageDialogMsg.Resister, true, '/vehicle-menu');
         this.getVehicleList();
       } else {
-        this.openMsgDialog(messageDialogMsg.AnResister, false);
+        this.openMsgDialog(messageDialogMsg.AnResister, false, '');
       }
-
+      this.loading = false;
+      this.overlayRef.detach();
       console.log(result);
     });
   }
@@ -346,8 +352,9 @@ export class VehicleRegisterComponent implements OnInit {
    * メッセージダイアログ展開
    * @param msg
    * @param locationDiv
+   * @param root
    */
-  private openMsgDialog(msg: string, locationDiv: boolean) {
+  private openMsgDialog(msg: string, locationDiv: boolean, root: string) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
     const dialogData: messageDialogData = {
       massage: msg,
@@ -362,9 +369,12 @@ export class VehicleRegisterComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (locationDiv) {
-        this.router.navigate(["/main_menu"]);
+        this.router.navigate([root]);
       }
       console.log(result);
+      // ローディング解除
+      this.loading = false;
+      this.overlayRef.detach();
       return;
     });
   }

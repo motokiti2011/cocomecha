@@ -441,6 +441,27 @@ export class ApiSerchService {
   }
 
 
+  /**
+   * ユーザー車両情報を取得
+   * @param mechanicId
+   * @returns
+   */
+  public deleteUserVehicle(vehicleId: string, userId: string): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "DELETE",
+      "Keys": {
+        "vehicleId": vehicleId,
+        "userId": userId
+      }
+    };
+    return this.http.post<userVehicle>(this.apiEndPoint + '/uservehicleinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: userVehicle) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
 
   /**
    * ユーザー車両情報を登録する
@@ -480,6 +501,47 @@ export class ApiSerchService {
       catchError((err: HttpErrorResponse) => of(undefined))
     );
   }
+
+  /**
+   * ユーザー車両情報を更新する
+   * @param mechanicId
+   * @returns
+   */
+  public putUserVehicle(data: userVehicle): Observable<any> {
+    // リクエストボディ生成
+    const body = {
+      "OperationType": "PUT",
+      "Keys": {
+        "vehicleId": data.vehicleId,
+        "userId": data.userId,
+        "vehicleName": data.vehicleName,
+        "vehicleDiv": data.vehicleDiv,
+        "vehicleNo": data.vehicleNo,
+        "vehicleNoAreaName": data.vehicleNoAreaName,
+        "vehicleNoClassificationNum": data.vehicleNoClassificationNum,
+        "vehicleNoKana": data.vehicleNoKana,
+        "vehicleNoSerialNum": data.vehicleNoSerialNum,
+        "chassisNo": data.chassisNo,
+        "designatedClassification": data.designatedClassification,
+        "coler": data.coler,
+        "maker": data.maker,
+        "form": data.form,
+        "colerNo": data.colerNo,
+        "mileage": data.mileage,
+        "firstRegistrationDate": data.firstRegistrationDate,
+        "InspectionExpirationDate": data.inspectionExpirationDate,
+        "updateUserId": data.userId,
+        "created": data.created
+      }
+    };
+    return this.http.post<userVehicle>(this.apiEndPoint + '/uservehicleinfo', body).pipe(
+      // 取得できた場合ユーザー情報を返却
+      map((res: userVehicle) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
 
   /**
    * 工場情報を登録する

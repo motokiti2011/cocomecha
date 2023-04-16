@@ -10,6 +10,11 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MessageSelectDaialogComponent } from 'src/app/page/modal/message-select-daialog/message-select-daialog.component';
+
 
 @Component({
   selector: 'app-vehicle-menu',
@@ -23,17 +28,27 @@ export class VehicleMenuComponent implements OnInit {
   /** 車両リスト　*/
   vehicleList: userVehicle[] = [];
 
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  loading = false;
 
   constructor(
     private cognito: CognitoService,
     private apiService: ApiSerchService,
     private apiGsiService: ApiGsiSerchService,
     private router: Router,
-    private formService: FormService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
@@ -83,10 +98,11 @@ export class VehicleMenuComponent implements OnInit {
    */
   onDeleteVehicle(id: string) {
     // 削除前にダイアログ表示
-    this.openMsgDialog(messageDialogMsg.ToDelete, false);
+    this.vheicleDeleteSelect(messageDialogMsg.ToDelete, id);
+
   }
 
-
+  /****************** 以下内部処理 *************************/
   /**
    * 車両情報を取得する
    */
@@ -96,6 +112,9 @@ export class VehicleMenuComponent implements OnInit {
         this.vehicleList = result;
         this.setDispData();
       }
+      // ローディング解除
+      this.loading = false;
+      this.overlayRef.detach();
     });
   }
 
@@ -131,7 +150,7 @@ export class VehicleMenuComponent implements OnInit {
    * @param msg
    * @param locationDiv
    */
-  private openMsgDialog(msg:string, locationDiv: boolean) {
+  private openMsgDialog(msg: string, locationDiv: boolean) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
     const dialogData: messageDialogData = {
       massage: msg,
@@ -145,14 +164,61 @@ export class VehicleMenuComponent implements OnInit {
       data: dialogData
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(locationDiv) {
+      this.loading = false;
+      this.overlayRef.detach();
+      if (locationDiv) {
         this.router.navigate(["/main_menu"]);
+      } else {
+        // データ再取得
+        this.getVehicleList();
       }
       console.log(result);
       return;
     });
-}
+  }
 
+  /**
+   * 車両削除のダイアログ表示
+   * @param msg 
+   * @param id 
+   */
+  private vheicleDeleteSelect(msg: string, id: string) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageSelectDaialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.vheicleDelete(id);
+      }
+      this.overlayRef.detach();
+      return;
+    });
+  }
 
-
+  /**
+   * 車両情報削除
+   * @param id 
+   */
+  private vheicleDelete(id: string) {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
+    this.apiService.deleteUserVehicle(id, this.user.userId).subscribe(result => {
+      console.log(result);
+      if (result === 200) {
+        this.openMsgDialog(messageDialogMsg.DeleteSucsess, false);
+      } else {
+        this.openMsgDialog(messageDialogMsg.ProblemOperation, false);
+      }
+    })
+  }
 }
