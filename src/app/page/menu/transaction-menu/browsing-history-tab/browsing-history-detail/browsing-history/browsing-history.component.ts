@@ -97,6 +97,8 @@ export class BrowsingHistoryComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private location: Location,
     private router: Router,
@@ -117,6 +119,7 @@ export class BrowsingHistoryComponent implements OnInit {
   private setListSetting() {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.auth.userInfo$.subscribe(user => {
       // ユーザー情報取得できない場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
@@ -136,6 +139,7 @@ export class BrowsingHistoryComponent implements OnInit {
           console.log(result);
           // ローディング解除
           this.overlayRef.detach();
+          this.loading = false;
           this.onReturn();
           return;
         });
@@ -150,6 +154,7 @@ export class BrowsingHistoryComponent implements OnInit {
         this.setServiceContents();
         // ローディング解除
         this.overlayRef.detach();
+        this.loading = false;
       });
     });
 
@@ -366,6 +371,7 @@ export class BrowsingHistoryComponent implements OnInit {
     }
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
 

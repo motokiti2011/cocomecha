@@ -16,6 +16,9 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 /**
  * 工場管理者設定モーダル
@@ -33,6 +36,7 @@ export class FactoryAdminSettingModalComponent implements OnInit {
     public data: officeInfo,
     private apiService: ApiSerchService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
   /** タイトル */
@@ -51,6 +55,15 @@ export class FactoryAdminSettingModalComponent implements OnInit {
   roleSelectData = roleData;
   /** 所属セレクトデータ */
   belongsSelectData = belongsData;
+
+  /** ローディングオーバーレイ */
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  loading = false;
 
   ngOnInit(): void {
     // 管理者表示情報に管理者情報を設定
@@ -84,12 +97,18 @@ export class FactoryAdminSettingModalComponent implements OnInit {
       this.openMsgDialog(messageDialogMsg.BelongsAndRoleSettingReq, false);
       return;
     }
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     let updateData = this.data;
     updateData.adminSettingInfo = this.dispAdminData;
     this.apiService.postOffice(updateData).subscribe(result => {
       if(result) {
         console.log(result);
       }
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     });
 
   }

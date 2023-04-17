@@ -167,6 +167,8 @@ export class FactoryMenuComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private s3: UploadService,
     private router: Router,
@@ -181,6 +183,7 @@ export class FactoryMenuComponent implements OnInit {
   ngOnInit(): void {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
@@ -196,6 +199,7 @@ export class FactoryMenuComponent implements OnInit {
             this.fcRegisDiv = true;
             // ローディング解除
             this.overlayRef.detach();
+            this.loading = false;
           }
         } else {
           this.openMsgDialog(messageDialogMsg.LoginRequest, true);
@@ -405,6 +409,7 @@ export class FactoryMenuComponent implements OnInit {
 
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
   /**
@@ -622,6 +627,7 @@ export class FactoryMenuComponent implements OnInit {
       console.log(result);
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
       return;
     });
 }

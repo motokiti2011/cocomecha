@@ -14,6 +14,9 @@ import {
 import { officeInfo, connectionOfficeInfo } from 'src/app/entity/officeInfo';
 import { ApiGsiSerchService } from '../../service/api-gsi-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 /**
  * 関連工場コンポーネント
@@ -32,6 +35,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
     private builder: FormBuilder,
     private gsiService: ApiGsiSerchService,
     private uniqueService: ApiUniqueService,
+    private overlay: Overlay,
   ) { }
 
   /** タイトル */
@@ -78,7 +82,16 @@ export class ConnectionFactoryModalComponent implements OnInit {
     formArea1: this.formArea1,
     formArea2: this.formArea2,
     telNo: this.telNo,
-  })
+  });
+
+  /** ローディングオーバーレイ */
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  loading = false;
 
 
   ngOnInit(): void {
@@ -97,7 +110,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
     // 地域2選択中のものをクリア
     if(this.citySelect != '') {
       this.citySelect = '';
-      this.formArea2.setValue(this.citySelect);      
+      this.formArea2.setValue(this.citySelect);
     }
     console.log(this.areaSelect)
     this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
@@ -141,7 +154,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
 
   /**
    * 検索対象選択
-   * @param office 
+   * @param office
    */
   onSerchOffice(office: fcmcSerchResult) {
     console.log(office);
@@ -154,7 +167,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
 
   /**
    * 工場選択イベント
-   * @param office 
+   * @param office
    */
   onSelectOffice(office: connectionOfficeInfo) {
     console.log(office);
@@ -169,19 +182,19 @@ export class ConnectionFactoryModalComponent implements OnInit {
     // this.statusEditConnection(connectionOffice).subscribe(data => {
     //   this.updateDiv = true;
     //   // 更新結果を最新化したデータとして返却データにセット
-    //   this.data.connectionMechanicInfo = 
+    //   this.data.connectionMechanicInfo =
     // })
   }
 
 
-  /** 
+  /**
    * 決定ボタン押下イベント
    */
   onResister() {
     // this.statusEditConnection(connectionOffice).subscribe(data => {
     //   this.updateDiv = true;
     //   // 更新結果を最新化したデータとして返却データにセット
-    //   this.data.connectionMechanicInfo = 
+    //   this.data.connectionMechanicInfo =
     // })
   }
 
@@ -199,7 +212,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
 
   /**
    * 工場情報検索
-   * @param serchInfo 
+   * @param serchInfo
    */
   private serchFcMcInfo(): Observable<fcmcSerchResult[]> {
     this.serchInfo.telNo = this.telNo.value;

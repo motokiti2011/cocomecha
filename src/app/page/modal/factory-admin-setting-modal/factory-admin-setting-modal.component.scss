@@ -83,18 +83,17 @@
   }
 }
 
-
-
 #close {
   margin-left: 40px;
 }
 
-
-
-
-
-
-
 #serch_form_title {
   width: 300px;
+}
+
+.loading {
+  height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -31,7 +31,7 @@
     .discript {
       font-size: larger;
     }
-  
+
 
     .left_menu {
       width: 350px;
@@ -52,8 +52,13 @@
       margin: 10px 0px 0px 0px;
       width: 283px;
     }
-
-
-
   }
 }
+
+.loading {
+  height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

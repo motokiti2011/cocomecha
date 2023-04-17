@@ -22,6 +22,9 @@ import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1Sele
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-edit-user-info',
@@ -99,6 +102,14 @@ export class EditUserInfoComponent implements OnInit {
   /** イメージ */
   imageFile: imgFile[] = []
 
+  /** ローディングオーバーレイ */
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  loading = false;
 
   constructor(
     private location: Location,
@@ -109,10 +120,14 @@ export class EditUserInfoComponent implements OnInit {
     private builder: FormBuilder,
     private form: FormService,
     public modal: MatDialog,
+    private overlay: Overlay,
   ) { }
 
 
   ngOnInit(): void {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     const user = this.cognito.initAuthenticated();
     if (user == null) {
       this.openMsgDialog(messageDialogMsg.LoginRequest, true);
@@ -274,6 +289,9 @@ export class EditUserInfoComponent implements OnInit {
       } else {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
       }
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
@@ -346,6 +364,9 @@ export class EditUserInfoComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if(locationDiv) {
+        // ローディング解除
+        this.overlayRef.detach();
+        this.loading = false;
         this.router.navigate(["/main_menu"]);
       }
       console.log(result);

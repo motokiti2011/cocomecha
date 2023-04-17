@@ -177,6 +177,7 @@ export class ServiceEditComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
 
   constructor(
     private location: Location,
@@ -196,6 +197,7 @@ export class ServiceEditComponent implements OnInit {
     this.refreshForm();
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
     if (authUser == null) {
@@ -227,6 +229,7 @@ export class ServiceEditComponent implements OnInit {
             } else {
               // ローディング解除
               this.overlayRef.detach();
+              this.loading = false;
               this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, false);
               return;
             }
@@ -236,9 +239,11 @@ export class ServiceEditComponent implements OnInit {
               this.officeDisp();
               // ローディング解除
               this.overlayRef.detach();
+              this.loading = false;
             } else {
               // ローディング解除
               this.overlayRef.detach();
+              this.loading = false;
               this.openMsgDialog(messageDialogMsg.AnFactoryResister, true);
               return;
             }
@@ -874,7 +879,8 @@ export class ServiceEditComponent implements OnInit {
       this.inputData.bidMethod = '1';
       // ローディング解除
       this.overlayRef.detach();
-    })
+      this.loading = false;
+    });
   }
 
   /**
@@ -943,6 +949,7 @@ export class ServiceEditComponent implements OnInit {
       this.inputData.bidMethod = '41';
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
@@ -1020,6 +1027,7 @@ export class ServiceEditComponent implements OnInit {
 
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
@@ -1080,6 +1088,7 @@ export class ServiceEditComponent implements OnInit {
       console.log(result);
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
       if (msg == messageDialogMsg.Resister) {
 
       }

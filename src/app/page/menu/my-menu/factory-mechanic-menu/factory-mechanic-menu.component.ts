@@ -67,6 +67,8 @@ export class FactoryMechanicMenuComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private activeRouter: ActivatedRoute,
     private location: Location,
@@ -80,6 +82,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
   ngOnInit(): void {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.activeRouter.queryParams.subscribe(params => {
       if (params['mechanicId'] != '') {
         const mechanicId = params['mechanicId'];
@@ -102,6 +105,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
         }
         // ローディング解除
         this.overlayRef.detach();
+        this.loading = false;
       });
     } else {
       this.openMsgDialog(messageDialogMsg.LoginRequest, true);
@@ -209,6 +213,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
         }
         // ローディング解除
         this.overlayRef.detach();
+        this.loading = false;
       } else {
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
         return;
@@ -235,6 +240,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
       }
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
@@ -263,6 +269,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
       console.log(result);
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
       return;
     });
 }

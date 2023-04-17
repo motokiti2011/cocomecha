@@ -35,7 +35,7 @@
     width: 280px;
   }
 
-  
+
   #email {
     width: 280px;
   }
@@ -64,17 +64,17 @@
   .btn_area {
     margin-left: 20px;
     width: 150px;
-  
+
     .btn {
       font-size: small;
     }
   }
-  
+
   .add_form {
     display: flex;
     // margin-left: 15px;
   }
-  
+
   .qualification {
     // display: flex;
     .btn_area {
@@ -83,9 +83,9 @@
       // margin-left: 15px;
     }
   }
-  
-  
-  
+
+
+
   .add_qualification {
     display: flex;
     .add_btn_area {
@@ -93,15 +93,15 @@
       margin: 15px 15px 15px 15px;
       // margin-left: 15px;
     }
-  
+
     .del_btn {
       font-size: small;
       margin: 0px 0px 15px 20px;
       width: 50px;
     }
   }
-  
-  
+
+
   .mandatory {
     width: 50px;
     color: #ffff;
@@ -111,17 +111,17 @@
     font-size: 14px;
     text-align: center;
   }
-  
+
   .office_msg {
     font-size: small;
   }
-  
-  
-  
+
+
+
   .bt_area {
     margin: 20px 0px 10px 20px;
     text-align: center;
-  
+
     .btn {
       width: 200px;
       height: 40px;
@@ -134,7 +134,7 @@
     width: 100%;
     margin: auto;
   }
-  
+
   ul.tab-menu-base {
     overflow: hidden;
     list-style: none;
@@ -143,7 +143,7 @@
     // border-bottom: 5px solid rgb(240, 240, 240);
     height: 100%;
   }
-  
+
   ul.tab-menu-base li {
     float: left;
     margin: 10px 8px 0 0 ;
@@ -158,22 +158,22 @@
     text-align: center;
     padding-top: 2vh;
   }
-  
+
   ul.tab-menu-base li.current {
     // background: rgb(240, 240, 240);
-    background: #e3a44e;  
+    background: #e3a44e;
   }
-  
+
   .select-btn {
     margin-left: -75vh;
     margin-top: 6vh;
     width: 10vh;
   }
-  
-
-
-
 }
 
-
-
+.loading {
+  height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

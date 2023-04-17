@@ -37,7 +37,7 @@ export class TransactionListComponent implements OnInit {
     title: 'タイトル',
     relation: '関係性',
     adminName: '管理者名',
-    completionScheduledDate: '完了予定日', 
+    completionScheduledDate: '完了予定日',
   };
 
   /** 表示用リスト */
@@ -72,6 +72,8 @@ export class TransactionListComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private location: Location,
     private router: Router,
@@ -92,6 +94,7 @@ export class TransactionListComponent implements OnInit {
   private setListSetting() {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.auth.userInfo$.subscribe(user => {
       // ユーザー情報取得できない場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
@@ -112,6 +115,7 @@ export class TransactionListComponent implements OnInit {
           this.onReturn();
           // ローディング解除
           this.overlayRef.detach();
+          this.loading = false;
           return;
         });
       } else {
@@ -124,6 +128,7 @@ export class TransactionListComponent implements OnInit {
         // this.detailList = data;
         // ローディング解除
         this.overlayRef.detach();
+        this.loading = false;
       });
     });
   }

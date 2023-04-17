@@ -68,10 +68,12 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
 
   ngOnInit(): void {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.route.queryParams.subscribe(params => {
       console.log(params['serviceId']);
       const serviceId: string = params['serviceId'];
@@ -89,10 +91,12 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
           this.user = user[0];
           // ローディング解除
           this.overlayRef.detach();
+          this.loading = false;
         });
       }
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
   }
 

@@ -57,6 +57,8 @@ export class TransactionMenuComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private router: Router,
     private service: TransactionMenuService,

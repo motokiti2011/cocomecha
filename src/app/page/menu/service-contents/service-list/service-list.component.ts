@@ -22,6 +22,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { serchServiceCombination } from 'src/app/entity/serchCondition';
 
+
 @Component({
   selector: 'app-service-list',
   templateUrl: './service-list.component.html',
@@ -109,6 +110,8 @@ export class ServiceListComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private router: Router,
     private activeRouter: ActivatedRoute,
@@ -124,6 +127,7 @@ export class ServiceListComponent implements OnInit {
   ngOnInit() {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     // 検索条件画面からの条件から展開するサービス内容を抽出する
     this.activeRouter.queryParams.subscribe(params => {
       // this.loading.show();
@@ -172,6 +176,7 @@ export class ServiceListComponent implements OnInit {
       this.initSetServiceContents();
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
@@ -184,7 +189,7 @@ export class ServiceListComponent implements OnInit {
       this.initSetServiceContents();
       // ローディング解除
       this.overlayRef.detach();
-
+      this.loading = false;
     });
   }
 
@@ -386,6 +391,7 @@ export class ServiceListComponent implements OnInit {
     }
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
   /**
@@ -396,6 +402,7 @@ export class ServiceListComponent implements OnInit {
     this.displayContentsList = this.service.setFavorite(dList, this.favoriteList);
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
 
@@ -411,6 +418,7 @@ export class ServiceListComponent implements OnInit {
       // this.initSetServiceContents();
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
@@ -426,6 +434,7 @@ export class ServiceListComponent implements OnInit {
       // this.initSetServiceContents();
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
   }
 

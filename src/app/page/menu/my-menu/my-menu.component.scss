@@ -34,7 +34,7 @@
     .discript {
       font-size: larger;
     }
-  
+
     .left_menu {
       width: 350px;
       img {
@@ -55,5 +55,11 @@
       width: 283px;
     }
   }
-  
+}
+
+.loading {
+  height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

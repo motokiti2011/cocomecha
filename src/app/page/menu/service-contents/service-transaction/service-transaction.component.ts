@@ -66,6 +66,8 @@ export class ServiceTransactionComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -80,7 +82,7 @@ export class ServiceTransactionComponent implements OnInit {
   ngOnInit(): void {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
-
+    this.loading = true;
     // 伝票表示情報取得反映
     this.route.queryParams.subscribe(params => {
       this.dispSlipId = params['slipNo'];
@@ -137,9 +139,11 @@ export class ServiceTransactionComponent implements OnInit {
               this.tranReq = re;
               // ローディング解除
               this.overlayRef.detach();
+              this.loading = false;
             })
           }
           this.overlayRef.detach();
+          this.loading = false;
         });
       });
     } else {
@@ -160,6 +164,7 @@ export class ServiceTransactionComponent implements OnInit {
         this.onReturn();
         // ローディング解除
         this.overlayRef.detach();
+        this.loading = false;
         return;
       });
     }
@@ -183,6 +188,7 @@ export class ServiceTransactionComponent implements OnInit {
           // チャット未許可表示を行う
           // ローディング解除
           this.overlayRef.detach();
+          this.loading = false;
         }
       });
     } else if (slip.messageOpenLebel == '3') {
@@ -190,6 +196,7 @@ export class ServiceTransactionComponent implements OnInit {
       this.privateDiv = true;
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     }
   }
 

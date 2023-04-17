@@ -5,6 +5,10 @@ import { dispSlipComment } from 'src/app/entity/slipMessageInfo';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { isNil as _isNil, find as _find } from 'lodash';
 import { ApiCheckService } from 'src/app/page/service/api-check.service';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+
 @Component({
   selector: 'app-transaction-message',
   templateUrl: './transaction-message.component.html',
@@ -35,6 +39,16 @@ export class TransactionMessageComponent implements OnInit {
   /** アクセスユーザー */
   acceseUser = '';
 
+
+  /** ローディングオーバーレイ */
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  loading = false;
+
   /** 伝票番号 */
   @Input() dispSlipId: string = '';
   /** 管理者ユーザーフラグ */
@@ -45,6 +59,7 @@ export class TransactionMessageComponent implements OnInit {
   constructor(
     private auth: AuthUserService,
     private service: TransactionMessageService,
+    private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
@@ -59,6 +74,9 @@ export class TransactionMessageComponent implements OnInit {
     this.dispDiv = true;
     this.serviceId = serviceId;
     this.acceseUser = acceseUser;
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     // 伝票メッセージ情報を取得
     this.service.getSlipMessage(serviceId).subscribe(data => {
       console.log(data);
@@ -81,6 +99,9 @@ export class TransactionMessageComponent implements OnInit {
           this.dispMessageList = this.service.gestDispSetting(data, this.acceseUser)
         }
         console.log(this.dispMessageList);
+        // ローディング解除
+        this.overlayRef.detach();
+        this.loading = false;
     });
   }
 
@@ -98,11 +119,20 @@ export class TransactionMessageComponent implements OnInit {
   private setAdress() {
     if (!this.adminUserDiv) {
       this.adressData = this.service.sendAdressSetting();
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
       return;
     }
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.service.getSendAdress(this.dispSlipId).subscribe(data => {
       this.adressData = this.service.setAdminAdress(this.acsessUser.userId, data[0]);
-    })
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
+    });
   }
 
   /**

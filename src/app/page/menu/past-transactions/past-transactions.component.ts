@@ -51,12 +51,17 @@ export class PastTransactionsComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
 
   ngOnInit(): void {
     // urlパラメータ取得
     this.route.queryParams.subscribe(params => {
       this.adminId = params['adminId'];
       this.serviceType = params['serviceType'];
+      // ローディング開始
+      this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+      this.loading = true;
       // ログインユーザー情報取得
       const authUser = this.cognito.initAuthenticated();
       let accessUser = '';
@@ -78,6 +83,7 @@ export class PastTransactionsComponent implements OnInit {
       });
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
 
   }

@@ -174,6 +174,7 @@ export class ServiceCreateComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
 
   constructor(
     private location: Location,
@@ -192,6 +193,7 @@ export class ServiceCreateComponent implements OnInit {
     this.refreshForm();
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
     if (authUser == null) {
@@ -208,6 +210,7 @@ export class ServiceCreateComponent implements OnInit {
           this.inputData.userName = this.userInfo.userName;
           // ローディング解除
           this.overlayRef.detach();
+          this.loading = false;
         }
         this.activeRouter.queryParams.subscribe(params => {
           this.serviceType = params['serviceType'];
@@ -218,6 +221,7 @@ export class ServiceCreateComponent implements OnInit {
             } else {
               // ローディング解除
               this.overlayRef.detach();
+              this.loading = false;
               this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, false);
               return;
             }
@@ -227,9 +231,11 @@ export class ServiceCreateComponent implements OnInit {
               this.officeDisp();
               // ローディング解除
               this.overlayRef.detach();
+              this.loading = false;
             } else {
               // ローディング解除
               this.overlayRef.detach();
+              this.loading = false;
               this.openMsgDialog(messageDialogMsg.AnFactoryResister, true);
               return;
             }
@@ -692,6 +698,7 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.bidMethod = '1';
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
   /**
@@ -728,6 +735,7 @@ export class ServiceCreateComponent implements OnInit {
 
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
   /**
@@ -778,6 +786,7 @@ export class ServiceCreateComponent implements OnInit {
 
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
 
@@ -882,9 +891,11 @@ export class ServiceCreateComponent implements OnInit {
             }
             // ローディング解除
             this.overlayRef.detach();
+            this.loading = false;
           } else {
             // ローディング解除
             this.overlayRef.detach();
+            this.loading = false;
             // 戻るボタン押下時の動き
             this.location.back();
             return;
@@ -920,6 +931,7 @@ export class ServiceCreateComponent implements OnInit {
       console.log(result);
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
       if (msg == messageDialogMsg.Resister) {
         this.next();
       }

@@ -75,6 +75,8 @@ export class TansactionCompleteComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private location: Location,
     private router: Router,
@@ -95,6 +97,7 @@ export class TansactionCompleteComponent implements OnInit {
   private setListSetting() {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.auth.userInfo$.subscribe(user => {
       // 未認証の場合前画面へ戻る
       if (user == undefined || user == null || user.userId == '') {
@@ -114,6 +117,7 @@ export class TansactionCompleteComponent implements OnInit {
           console.log(result);
           // ローディング解除
           this.overlayRef.detach();
+          this.loading = false;
           this.onReturn();
           return;
         });
@@ -126,6 +130,7 @@ export class TansactionCompleteComponent implements OnInit {
         this.detailList = this.compService.dispContentsSlip(data)
         // ローディング解除
         this.overlayRef.detach();
+        this.loading = false;
       });
     });
 

@@ -21,7 +21,7 @@
     height: 40px;
     margin-top: 20px;
   }
-  
+
   .private_message {
     margin-top: 60px;
   }
@@ -68,5 +68,12 @@
     font-size: 18px;
   }
 
+}
+
+.loading {
+  height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 

@@ -7,6 +7,9 @@ import { ApiSerchService } from '../../service/api-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { userMyList, requestInfo } from 'src/app/entity/userMyList';
 import { belongsData, belongs } from 'src/app/entity/belongs';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 import {
   filter as _filter,
@@ -31,6 +34,7 @@ export class ConnectionMechanicModalComponent implements OnInit {
     public data: officeInfo,
     private apiService: ApiSerchService,
     private uniqueService: ApiUniqueService,
+    private overlay: Overlay,
   ) { }
 
   /** モーダルタイトル */
@@ -43,6 +47,14 @@ export class ConnectionMechanicModalComponent implements OnInit {
   belongsSelectData = belongsData;
   /** 事業所名 */
   officeName = '';
+  /** ローディングオーバーレイ */
+  overlayRef = this.overlay.create({
+    hasBackdrop: true,
+    positionStrategy: this.overlay
+      .position().global().centerHorizontally().centerVertically()
+  });
+
+  loading = false;
 
 
   ngOnInit(): void {
@@ -66,7 +78,7 @@ export class ConnectionMechanicModalComponent implements OnInit {
 
   /**
    * 紐づけ追加ボタン押下イベント
-   * @param data 
+   * @param data
    */
   onAddConnection(data: requestInfo) {
     const addData: connectionMechanicInfo = {
@@ -113,14 +125,23 @@ export class ConnectionMechanicModalComponent implements OnInit {
    * 申請中のリクエストメカニック情報を取得する
    */
   private getRequestMechanic() {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.uniqueService.getRequestMechanicInfo(this.data.officeId).subscribe(data => {
       if (data) {
         this.unauthorizedMechanicList = data;
       }
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
   private updateOfficeInfo(officeData: officeInfo) {
+    // ローディング開始
+    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.apiService.postOffice(officeData).subscribe(result => {
       if (result) {
         // 無事に更新できた場合データ更新
@@ -129,8 +150,10 @@ export class ConnectionMechanicModalComponent implements OnInit {
           this.dispMechanicList = this.data.connectionMechanicInfo;
         }
       }
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     });
-
   }
 
 

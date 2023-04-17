@@ -66,6 +66,8 @@ export class ServiceDetailComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   dlocale = this.locale;
 
   constructor(
@@ -87,6 +89,7 @@ export class ServiceDetailComponent implements OnInit {
   ngOnInit(): void {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.route.queryParams.subscribe(params => {
       console.log(params['serviceId']);
       const serviceId: string = params['serviceId'];
@@ -132,7 +135,8 @@ export class ServiceDetailComponent implements OnInit {
         this.getLoginUser();
         // ローディング解除
         this.overlayRef.detach();
-      })
+        this.loading = false;
+      });
     });
   }
 
@@ -149,6 +153,7 @@ export class ServiceDetailComponent implements OnInit {
     }
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
 
@@ -297,6 +302,7 @@ export class ServiceDetailComponent implements OnInit {
     }
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
   /**

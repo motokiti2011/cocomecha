@@ -68,6 +68,7 @@ export class FavoriteComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
 
   constructor(
     private location: Location,
@@ -89,6 +90,7 @@ export class FavoriteComponent implements OnInit {
   private setListSetting() {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     const user = this.cognito.initAuthenticated();
     // ユーザー情報取得できない場合前画面へ戻る
     if (user == undefined || user == null || user == '') {
@@ -108,6 +110,7 @@ export class FavoriteComponent implements OnInit {
         console.log(result);
         // ローディング解除
         this.overlayRef.detach();
+        this.loading = false;
         this.onReturn();
         return;
       });
@@ -121,6 +124,7 @@ export class FavoriteComponent implements OnInit {
       this.detailList = data;
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
     });
 
   }

@@ -9,26 +9,29 @@
   </aside>
 
   <article>
-
-    <div class="transaction-menu">
-
-      <div class="tab-area-base">
-
-        <ul class="tab-menu-base">
-          <ng-container *ngFor="let tab of tabs">
-            <li [class.current]="tab.current" (click)="onClick($event)">{{tab.name}}</li>
-          </ng-container>
-        </ul>
-
-        <div class="tab_contents">
-          <!-- ngComponentOutlet で動的にコンポーネントを読み込む -->
-          <ng-container *ngComponentOutlet="currentTab"></ng-container>
-          <!-- <div *ngComponentOutlet="currentTab"></div> -->
-        </div>
-
-      </div>
+    <div *ngIf="loading; else mainContent" class="loading">
+      <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
     </div>
+    <ng-template #mainContent>
+      <div class="transaction-menu">
 
+        <div class="tab-area-base">
+
+          <ul class="tab-menu-base">
+            <ng-container *ngFor="let tab of tabs">
+              <li [class.current]="tab.current" (click)="onClick($event)">{{tab.name}}</li>
+            </ng-container>
+          </ul>
+
+          <div class="tab_contents">
+            <!-- ngComponentOutlet で動的にコンポーネントを読み込む -->
+            <ng-container *ngComponentOutlet="currentTab"></ng-container>
+            <!-- <div *ngComponentOutlet="currentTab"></div> -->
+          </div>
+
+        </div>
+      </div>
+    </ng-template>
   </article>
 
 </div>

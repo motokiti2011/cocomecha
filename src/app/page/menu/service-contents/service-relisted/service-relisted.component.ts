@@ -139,6 +139,8 @@ export class ServiceRelistedComponent implements OnInit {
       .position().global().centerHorizontally().centerVertically()
   });
 
+  loading = false;
+
   constructor(
     private overlay: Overlay,
     private location: Location,
@@ -153,6 +155,7 @@ export class ServiceRelistedComponent implements OnInit {
   ngOnInit(): void {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     // ログイン状態確認
     const authUser = this.cognito.initAuthenticated();
     if (authUser == null) {
@@ -163,6 +166,7 @@ export class ServiceRelistedComponent implements OnInit {
         if (user[0] == null) {
           // ローディング解除
           this.overlayRef.detach();
+          this.loading = false;
           this.openMsgDialog(messageDialogMsg.LoginRequest, true);
           return;
         } else {
@@ -184,6 +188,7 @@ export class ServiceRelistedComponent implements OnInit {
     }
     // ローディング解除
     this.overlayRef.detach();
+    this.loading = false;
   }
 
   /**
@@ -375,6 +380,7 @@ export class ServiceRelistedComponent implements OnInit {
       console.log(result);
       // ローディング解除
       this.overlayRef.detach();
+      this.loading = false;
       return;
     });
 }
