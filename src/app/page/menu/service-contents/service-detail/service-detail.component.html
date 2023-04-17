@@ -1,48 +1,44 @@
 <div class="main-content">
-
-  <div class="sid_menu">
-    <div class="container">
-
-
-      <div *ngIf="user">
-        <div class="row button_item">
-          <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引する</button>
-        </div>
-
-        <div class="row button_item">
-          <button type="button" class="btn btn-outline-primary" (click)="onFavorite()">お気に入りに追加</button>
-        </div>
-      </div>
-
-      <div class="row button_item">
-        <button type="button" class="btn btn-outline-primary" (click)="goBack()">一覧に戻る</button>
-      </div>
-
-      <div class="row button_item">
-        <button type="button" class="btn btn-outline-primary" (click)="onTransactionStatus()">取引状況を確認する</button>
-      </div>
-
-      <div *ngIf="adminDiv">
-        <div class="row button_item">
-          <button type="button" class="btn btn-outline-primary" (click)="onServiceEdit()">サービスを編集する</button>
-        </div>
-      </div>
-
-
-      <div *ngIf="relistedDiv">
-        <div class="row button_item">
-          <button type="button" class="btn btn-outline-primary" (click)="onRelisted()">再出品</button>
-        </div>
-      </div>
-
-    </div>
+  <div *ngIf="loading; else elseContent" class="loading">
+    <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
   </div>
+  <ng-template #elseContent>
+    <div class="sid_menu">
+      <div class="container">
+        <div *ngIf="user">
+          <div class="row button_item">
+            <button type="button" class="btn btn-outline-primary" (click)="onTransaction()">取引する</button>
+          </div>
 
-  <div class="main">
-    <div *ngIf="loading; else elseContent" class="loading">
-      <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
+          <div class="row button_item">
+            <button type="button" class="btn btn-outline-primary" (click)="onFavorite()">お気に入りに追加</button>
+          </div>
+        </div>
+
+        <div class="row button_item">
+          <button type="button" class="btn btn-outline-primary" (click)="goBack()">一覧に戻る</button>
+        </div>
+
+        <div class="row button_item">
+          <button type="button" class="btn btn-outline-primary" (click)="onTransactionStatus()">取引状況を確認する</button>
+        </div>
+
+        <div *ngIf="adminDiv">
+          <div class="row button_item">
+            <button type="button" class="btn btn-outline-primary" (click)="onServiceEdit()">サービスを編集する</button>
+          </div>
+        </div>
+
+        <div *ngIf="relistedDiv">
+          <div class="row button_item">
+            <button type="button" class="btn btn-outline-primary" (click)="onRelisted()">再出品</button>
+          </div>
+        </div>
+
+      </div>
     </div>
-    <ng-template #elseContent>
+
+    <div class="main">
       <div class="contents-area">
         <div class="title">{{serviceTitle}}</div>
 
@@ -103,7 +99,6 @@
           <div>　{{dispTargetVehicle}}</div>
         </div>
       </div>
-    </ng-template>
-  </div>
-
+    </div>
+  </ng-template>
 </div>

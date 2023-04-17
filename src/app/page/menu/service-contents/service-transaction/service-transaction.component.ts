@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -56,7 +56,7 @@ export class ServiceTransactionComponent implements OnInit {
   /** 伝票タイプ */
   serviceType = '';
   /** 取引依頼 */
-  tranReq : serviceTransactionRequest[] = [];
+  tranReq: serviceTransactionRequest[] = [];
   /** 管理者ID */
   slipAdminCheckId = '';
 
@@ -92,7 +92,7 @@ export class ServiceTransactionComponent implements OnInit {
         this.slip = data;
         this.dispTitle = this.slip.title;
         this.dispYmd = String(this.slip.completionDate);
-        if(this.slip.bidMethod == '1' || this.slip.bidMethod == '41' ) {
+        if (this.slip.bidMethod == '1' || this.slip.bidMethod == '41') {
 
           this.dispPrice = Number(this.slip.price);
         }
@@ -102,6 +102,11 @@ export class ServiceTransactionComponent implements OnInit {
         this.initChatArea(this.slip);
       });
     });
+  }
+
+  AfterViewChecked() {
+    // メッセージメニュー画面の初期化
+    this.child.onShow(this.dispSlipId, this.acsessUser.userId);
   }
 
   /**
@@ -117,16 +122,14 @@ export class ServiceTransactionComponent implements OnInit {
         this.acsessUser.userName = user[0].userName;
         this.acsessUser.mechanicId = user[0].mechanicId;
         this.acsessUser.officeId = user[0].officeId;
-        // メッセージメニュー画面の初期化
-        this.child.onShow(this.dispSlipId, this.acsessUser.userId);
         // 管理者判定
         this.slipAdminCheckId = this.acsessUser.userId;
-        if(this.serviceType == '1') {
+        if (this.serviceType == '1') {
           this.slipAdminCheckId = this.acsessUser.officeId;
-        } else if(this.serviceType == '2') {
+        } else if (this.serviceType == '2') {
           this.slipAdminCheckId = this.acsessUser.mechanicId;
         }
-        this.service.slipAuthCheck(this.dispSlipId, this.slipAdminCheckId,this.serviceType ).subscribe(result => {
+        this.service.slipAuthCheck(this.dispSlipId, this.slipAdminCheckId, this.serviceType).subscribe(result => {
           // 取得できない場合
           if (result.length === 0) {
             // 閲覧者設定を行う
@@ -140,10 +143,10 @@ export class ServiceTransactionComponent implements OnInit {
               // ローディング解除
               this.overlayRef.detach();
               this.loading = false;
-            })
+              // // メッセージメニュー画面の初期化
+              // this.child.onShow(this.dispSlipId, this.acsessUser.userId);
+            });
           }
-          this.overlayRef.detach();
-          this.loading = false;
         });
       });
     } else {
@@ -186,10 +189,12 @@ export class ServiceTransactionComponent implements OnInit {
           // 未許可の場合　一時許可ボタンを表示
           this.openDiv = true;
           // チャット未許可表示を行う
-          // ローディング解除
-          this.overlayRef.detach();
-          this.loading = false;
         }
+        // ローディング解除
+        this.overlayRef.detach();
+        this.loading = false;
+        // // メッセージメニュー画面の初期化
+        // this.child.onShow(this.dispSlipId, this.acsessUser.userId);
       });
     } else if (slip.messageOpenLebel == '3') {
       // 非公開の場合　非公開表示をする
@@ -197,6 +202,8 @@ export class ServiceTransactionComponent implements OnInit {
       // ローディング解除
       this.overlayRef.detach();
       this.loading = false;
+      // // メッセージメニュー画面の初期化
+      // this.child.onShow(this.dispSlipId, this.acsessUser.userId);
     }
   }
 
@@ -300,7 +307,7 @@ export class ServiceTransactionComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result !== null && result !== '') {
-          if(result == undefined) {
+          if (result == undefined) {
             // TODO
             return;
           } else {

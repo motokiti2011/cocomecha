@@ -2,6 +2,7 @@ import { Injectable, Inject, LOCALE_ID } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { slipMessageInfo, dispSlipComment, defaltDispSlipComment } from 'src/app/entity/slipMessageInfo';
+import { user } from 'src/app/entity/user';
 import { sortBy as _sortBy } from 'lodash';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
 import { formatDate } from '@angular/common';
@@ -9,6 +10,7 @@ import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 import { ApiGsiSerchService } from 'src/app/page/service/api-gsi-serch.service';
 import { ApiCheckService } from 'src/app/page/service/api-check.service';
 import { ApiUniqueService } from 'src/app/page/service/api-unique.service';
+import { slipManegement } from 'src/app/entity/slipManegement';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +32,27 @@ export class TransactionMessageService {
   public getSlipMessage(slipNo: string): Observable<slipMessageInfo[]> {
     return this.apiGsiSerchService.serchSlipMessage(slipNo);
   }
+
+  /**
+   * ユーザー情報を取得する
+   * @param acsessId 
+   * @returns 
+   */
+  public getUser(acsessId: string): Observable<user[]> {
+    return this.apiSerchService.getUser(acsessId);
+  }
+
+    /**
+   * 伝票の管理者判定を行う
+   * @param slipId
+   * @param userId
+   * @param serviceType
+   */
+    public slipAuthCheck(slipId: string, adminId: string, serviceType: string): Observable<slipManegement[]> {
+      return this.apiCheckService.checkAdminUserSlip(slipId, adminId, serviceType);
+    }
+  
+
 
   /**
    *

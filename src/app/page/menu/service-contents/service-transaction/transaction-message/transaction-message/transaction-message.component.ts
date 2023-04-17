@@ -1,13 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { slipMessageInfo } from 'src/app/entity/slipMessageInfo';
 import { TransactionMessageService } from './transaction-message.service';
 import { dispSlipComment } from 'src/app/entity/slipMessageInfo';
 import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { isNil as _isNil, find as _find } from 'lodash';
 import { ApiCheckService } from 'src/app/page/service/api-check.service';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+
 
 @Component({
   selector: 'app-transaction-message',
@@ -38,7 +41,8 @@ export class TransactionMessageComponent implements OnInit {
   serviceId = '';
   /** アクセスユーザー */
   acceseUser = '';
-
+  /** アクセスユーザー */
+  acceseUserInfo = { userId: '', userName: '' };
 
   /** ローディングオーバーレイ */
   overlayRef = this.overlay.create({
@@ -49,20 +53,57 @@ export class TransactionMessageComponent implements OnInit {
 
   loading = false;
 
-  /** 伝票番号 */
-  @Input() dispSlipId: string = '';
+  // /** 伝票番号 */
+  // @Input() dispSlipId: string = '';
   /** 管理者ユーザーフラグ */
-  @Input() adminUserDiv: boolean = false;
-  /** アクセスユーザー情報 */
-  @Input() acsessUser = { userId: '', userName: '' };
+  // @Input() adminUserDiv: boolean = false;
+  // /** アクセスユーザー情報 */
+  // @Input() acsessUser = { userId: '', userName: '' };
 
   constructor(
     private auth: AuthUserService,
+    private cognito: CognitoService,
+    private route: ActivatedRoute,
     private service: TransactionMessageService,
     private overlay: Overlay,
   ) { }
 
   ngOnInit(): void {
+    // 認証ユーザー情報取得
+    const acsessUser = this.cognito.initAuthenticated();
+    if (acsessUser !== null) {
+      this.acceseUser = acsessUser;
+      this.service.getUser(acsessUser).subscribe(data => {
+        if (data.length == 0) {
+          // ユーザーが取得できない場合処理を停止
+          return;
+        }
+        this.acceseUserInfo.userId = data[0].userId;
+        this.acceseUserInfo.userName = data[0].userName;
+        // 伝票表示情報取得反映
+        this.route.queryParams.subscribe(params => {
+          this.serviceId = params['slipNo'];
+          const serviceType = params['serviceType'];
+          // 管理者判定
+          let slipAdminCheckId = data[0].userId;
+          if (serviceType == '1' && data[0].officeId) {
+            slipAdminCheckId = data[0].officeId;
+          } else if (serviceType == '2' && data[0].mechanicId) {
+            slipAdminCheckId = data[0].mechanicId;
+          }
+          this.service.slipAuthCheck(this.serviceId, slipAdminCheckId, serviceType).subscribe(result => {
+            // ローディング開始
+            this.loading = true;
+            this.dispDiv = true;
+            this.service.checkAdminSlip(this.serviceId, this.acceseUser).subscribe(check => {
+              this.adminDiv = check
+              // 伝票メッセージ情報を取得
+              this.setDispMessage();
+            });
+          });
+        });
+      });
+    }
   }
 
   /**
@@ -70,21 +111,21 @@ export class TransactionMessageComponent implements OnInit {
    * @param serviceId
    * @param acceseUser
    */
-  onShow(serviceId:string, acceseUser: string) {
+  onShow(serviceId: string, acceseUser: string) {
+    // ローディング開始
+    // this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.dispDiv = true;
     this.serviceId = serviceId;
     this.acceseUser = acceseUser;
-    // ローディング開始
-    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
-    this.loading = true;
-    // 伝票メッセージ情報を取得
-    this.service.getSlipMessage(serviceId).subscribe(data => {
-      console.log(data);
-      this.service.checkAdminSlip(serviceId, acceseUser).subscribe(check => {
-        this.adminDiv = check
-        this.setDispMessage();
-      });
+    // this.service.getSlipMessage(serviceId).subscribe(data => {
+    //   console.log(data);
+    this.service.checkAdminSlip(serviceId, acceseUser).subscribe(check => {
+      this.adminDiv = check
+      // 伝票メッセージ情報を取得
+      this.setDispMessage();
     });
+    // });
     this.setAdress();
   }
 
@@ -92,16 +133,17 @@ export class TransactionMessageComponent implements OnInit {
    * 表示メッセージを作成する
    */
   private setDispMessage() {
+    // ローディング開始
+    this.loading = true;
     this.service.getSlipMessage(this.serviceId).subscribe(data => {
-        if(this.acceseUser) {
-          this.dispMessageList = this.service.adminDispSetting(data, this.acceseUser)
-        } else {
-          this.dispMessageList = this.service.gestDispSetting(data, this.acceseUser)
-        }
-        console.log(this.dispMessageList);
-        // ローディング解除
-        this.overlayRef.detach();
-        this.loading = false;
+      if (this.acceseUser) {
+        this.dispMessageList = this.service.adminDispSetting(data, this.acceseUserInfo.userId)
+      } else {
+        this.dispMessageList = this.service.gestDispSetting(data, this.acceseUserInfo.userId)
+      }
+      console.log(this.dispMessageList);
+      // ローディング解除
+      this.loading = false;
     });
   }
 
@@ -117,20 +159,20 @@ export class TransactionMessageComponent implements OnInit {
    * 宛先情報を設定する
    */
   private setAdress() {
-    if (!this.adminUserDiv) {
+    if (!this.adminDiv) {
       this.adressData = this.service.sendAdressSetting();
       // ローディング解除
-      this.overlayRef.detach();
+      // this.overlayRef.detach();
       this.loading = false;
       return;
     }
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.loading = true;
-    this.service.getSendAdress(this.dispSlipId).subscribe(data => {
-      this.adressData = this.service.setAdminAdress(this.acsessUser.userId, data[0]);
+    this.service.getSendAdress(this.serviceId).subscribe(data => {
+      this.adressData = this.service.setAdminAdress(this.acceseUser, data[0]);
       // ローディング解除
-      this.overlayRef.detach();
+      // this.overlayRef.detach();
       this.loading = false;
     });
   }
@@ -165,14 +207,14 @@ export class TransactionMessageComponent implements OnInit {
       // 空文字の場合登録しない
       return;
     }
-    if (this.acsessUser.userId == '') {
+    if (this.acceseUserInfo.userId == '') {
       return;
     }
-    if (!_isNil(this.acsessUser.userId)) {
+    if (!_isNil(this.acceseUserInfo.userId)) {
       this.service.sernderMessage(
-        this.acsessUser.userId,
-        this.acsessUser.userName,
-        this.dispSlipId,
+        this.acceseUserInfo.userId,
+        this.acceseUserInfo.userName,
+        this.serviceId,
         this.adressId,
         this.sernderMessage)
         .subscribe(data => {

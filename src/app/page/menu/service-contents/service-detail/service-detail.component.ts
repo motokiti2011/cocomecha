@@ -133,9 +133,7 @@ export class ServiceDetailComponent implements OnInit {
           this.relistedDiv = true;
         }
         this.getLoginUser();
-        // ローディング解除
-        this.overlayRef.detach();
-        this.loading = false;
+
       });
     });
   }
@@ -150,10 +148,11 @@ export class ServiceDetailComponent implements OnInit {
     if (authUser != null) {
       this.user = authUser;
       this.adminCheck(this.user);
+    } else {
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     }
-    // ローディング解除
-    this.overlayRef.detach();
-    this.loading = false;
   }
 
 
@@ -300,9 +299,7 @@ export class ServiceDetailComponent implements OnInit {
     } else {
       this.serviceTypeName = 'サービス';
     }
-    // ローディング解除
-    this.overlayRef.detach();
-    this.loading = false;
+
   }
 
   /**
@@ -318,6 +315,9 @@ export class ServiceDetailComponent implements OnInit {
     }
     this.service.acsessUserAdminCheck(adminId, this.dispContents.targetService, userId).subscribe(result => {
       this.adminDiv = result;
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
