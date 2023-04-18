@@ -8,9 +8,9 @@
       <input type="button" class="btn_item" on-click="onServiceList()" value="一覧に戻る">
       <input type="button" class="btn_item" on-click="onQuestion()" value="質問">
 
-      <input type="button" class="btn_item" on-click="onOpenLevelSet()" value="メッセージ公開レベル設定">
-
-      <p class="private_message">このサービスのメッセージは<br>非公開です。</p>
+      <div *ngIf="privateDiv">
+        <p class="private_message">このサービスのメッセージは<br>非公開です。</p>
+      </div>
 
       <div *ngIf="adminUserDiv">
         <input type="button" class="btn_item" on-click="onOpenLevelSet()" value="メッセージ公開レベル設定">
@@ -19,11 +19,16 @@
       <div *ngIf="openDiv">
         <input type="button" class="btn_item" on-click="onMsgPrmReq()" value="メッセージ許可申請">
       </div>
+      
+      <div *ngIf="!adminUserDiv && !transactionTarget">
+        <input type="button" class="btn_item" on-click="onTransactionRequest()" value="取引を依頼する">
+      </div>
 
-      <input type="button" class="btn_item" on-click="onTransactionRequest()" value="取引を依頼する">
 
-      <input type="button" class="btn_item" on-click="onTransactionApproval()" value="取引依頼を承認する">
 
+      <div *ngIf="adminUserDiv">
+        <input type="button" class="btn_item" on-click="onTransactionApproval()" value="取引依頼を承認する">
+      </div>
       <div *ngIf="privateDiv">
         <p class="private_message">このサービスのメッセージは<br>非公開です。</p>
       </div>

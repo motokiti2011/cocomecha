@@ -59,6 +59,8 @@ export class ServiceTransactionComponent implements OnInit {
   tranReq: serviceTransactionRequest[] = [];
   /** 管理者ID */
   slipAdminCheckId = '';
+  /** 取引対象 */
+  transactionTarget = false;
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -190,22 +192,29 @@ export class ServiceTransactionComponent implements OnInit {
           this.openDiv = true;
           // チャット未許可表示を行う
         }
+        this.transactionReqUserCheck();
         // ローディング解除
         this.overlayRef.detach();
         this.loading = false;
-        // // メッセージメニュー画面の初期化
-        // this.child.onShow(this.dispSlipId, this.acsessUser.userId);
       });
     } else if (slip.messageOpenLebel == '3') {
       // 非公開の場合　非公開表示をする
       this.privateDiv = true;
+      this.transactionReqUserCheck();
       // ローディング解除
       this.overlayRef.detach();
       this.loading = false;
-      // // メッセージメニュー画面の初期化
-      // this.child.onShow(this.dispSlipId, this.acsessUser.userId);
     }
   }
+
+  /**
+   * 取引者かを確認する
+   */
+  private transactionReqUserCheck() {
+    this.transactionTarget = false;
+  }
+
+
 
   /**
    * 質問モーダルを展開する
