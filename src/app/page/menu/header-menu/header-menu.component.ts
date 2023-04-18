@@ -11,7 +11,7 @@ import { ApiSerchService } from '../../service/api-serch.service';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogMsg } from 'src/app/entity/msg';
-
+import { ApiAuthService } from '../../service/api-auth.service';
 
 @Component({
   selector: 'app-header-menu',
@@ -49,6 +49,7 @@ export class HeaderMenuComponent implements OnInit {
     private cognito: CognitoService,
     private authUserService: AuthUserService,
     private apiService: ApiSerchService,
+    private apiAuth: ApiAuthService,
     private overlay: Overlay,
   ) { }
 
@@ -167,11 +168,12 @@ export class HeaderMenuComponent implements OnInit {
    */
   onLogout() {
     this.authUserDiv = false;
-    this.cognito.logout();
+    this.apiAuth.authenticationExpired();
+    // this.cognito.logout();
     this.authUserService.logout;
     this.loginUser.userName = 'ログイン';
     // ログアウトメッセージを表示
-    this.openMsgDialog(messageDialogMsg.Logout, true)
+    this.openMsgDialog(messageDialogMsg.Logout, true);
     // this.authenticated();
   }
 
