@@ -30,7 +30,7 @@ export class QuestionBoardComponent implements OnInit {
   /** 表示区分 */
   dispDiv: boolean = false;
   /** 表示区分 */
-  noneMessage: string = 'このサービスへの質問は0件です。';
+  emptyMessage: string = 'このサービスへの質問はありません。';
   /** フォーム内容 */
   sernderMessage: string = '';
   /** 質問投稿ボタンdisible制御フラグ */
@@ -45,12 +45,14 @@ export class QuestionBoardComponent implements OnInit {
   formPlaceholder = '質問はこちらに記入してください。'
   /** ボタンメッセージ */
   buttonMessage = '投稿する'
-
+  
   overlayRef = this.overlay.create({
     hasBackdrop: true,
     positionStrategy: this.overlay
-      .position().global().centerHorizontally().centerVertically()
+    .position().global().centerHorizontally().centerVertically()
   });
+  loading = false;
+  
 
   constructor(
     public _dialogRef: MatDialogRef<QuestionBoardComponent>,
@@ -142,7 +144,8 @@ export class QuestionBoardComponent implements OnInit {
         this.openMsgDialog(messageDialogMsg.AnResister, false);
       }
       // ローディング解除
-      this.overlayRef.detach();
+      // this.overlayRef.detach();
+      this.loading = false;
       this.getDispData()
     });
   }
@@ -164,7 +167,8 @@ export class QuestionBoardComponent implements OnInit {
     const index = Number(this.anserIndex);
     this.questionList[index].anserText = this.sernderMessage;
     // ローディング開始
-    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    // this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     this.service.anserQuestion(this.questionList[index]).subscribe(result => {
       if(result.ResponseMetadata.HTTPStatusCode == 200) {
         this.onStopAnser();
@@ -173,7 +177,8 @@ export class QuestionBoardComponent implements OnInit {
         this.openMsgDialog(messageDialogMsg.AnResister, false);
       }
       // ローディング解除
-      this.overlayRef.detach();
+      // this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
@@ -191,7 +196,8 @@ export class QuestionBoardComponent implements OnInit {
    */
   private getDispData() {
     // ローディング開始
-    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    // this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
+    this.loading = true;
     // 表示情報取得
     this.apiGsiService.serchSlipQuestion(this.data.serviceId).subscribe(data => {
       if(data.length !== 0) {
@@ -201,7 +207,8 @@ export class QuestionBoardComponent implements OnInit {
         this.dispDiv = false;
       }
       // ローディング解除
-      this.overlayRef.detach();
+      // this.overlayRef.detach();
+      this.loading = false;
     });
   }
 
@@ -231,7 +238,8 @@ export class QuestionBoardComponent implements OnInit {
       }
       console.log(result);
       // ローディング解除
-      this.overlayRef.detach();
+      // this.overlayRef.detach();
+      this.loading = false;
       return;
     });
 }
