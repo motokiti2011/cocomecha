@@ -4,18 +4,26 @@
 <ng-template #mainContent>
   <div class="disp_area">
     <div *ngIf="dispDiv; else elseContent">
-      <div *ngFor="let list of dispMessageList; index as i">
-        <div [ngClass]="list.position? 'to-msg':'from-msg'">
-          <div class="index">No.{{i + 1}}　コメント者名：{{list.sendUserName}}</div>
-          <div class="sender-text">{{list.comment}}</div>
-        </div>
 
+      <div *ngIf="dispMessageList.length > 0; else emptyMsg">
+
+        <div *ngFor="let list of dispMessageList; index as i">
+          <div [ngClass]="list.position? 'to-msg':'from-msg'">
+            <div class="index">No.{{i + 1}}　コメント者名：{{list.sendUserName}}</div>
+            <div class="sender-text">{{list.comment}}</div>
+          </div>
+        </div>
       </div>
+      <ng-template #emptyMsg>
+        <div class="none">現在メッセージはありません。</div>
+      </ng-template>
+
+
+
     </div>
     <ng-template #elseContent>
       <div class="none">{{privateMessage}}</div>
     </ng-template>
-
   </div>
 
 

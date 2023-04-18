@@ -69,12 +69,16 @@ export class TransactionMessageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // ローディング開始
+    this.loading = true;
     // 認証ユーザー情報取得
     const acsessUser = this.cognito.initAuthenticated();
     if (acsessUser !== null) {
       this.acceseUser = acsessUser;
       this.service.getUser(acsessUser).subscribe(data => {
         if (data.length == 0) {
+          // ローディング開始
+          this.loading = false;
           // ユーザーが取得できない場合処理を停止
           return;
         }
@@ -92,13 +96,12 @@ export class TransactionMessageComponent implements OnInit {
             slipAdminCheckId = data[0].mechanicId;
           }
           this.service.slipAuthCheck(this.serviceId, slipAdminCheckId, serviceType).subscribe(result => {
-            // ローディング開始
-            this.loading = true;
             this.dispDiv = true;
             this.service.checkAdminSlip(this.serviceId, this.acceseUser).subscribe(check => {
               this.adminDiv = check
               // 伝票メッセージ情報を取得
               this.setDispMessage();
+              this.setAdress();
             });
           });
         });
@@ -167,7 +170,6 @@ export class TransactionMessageComponent implements OnInit {
       return;
     }
     // ローディング開始
-    this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.loading = true;
     this.service.getSendAdress(this.serviceId).subscribe(data => {
       this.adressData = this.service.setAdminAdress(this.acceseUser, data[0]);

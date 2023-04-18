@@ -1,13 +1,15 @@
 
 .maincontent {
   // margin-top: 70px;
+  width: 70%;
   display: flex;
   // justify-content: center;
   margin: 70px 0px 0px 30px;
 }
 
 .sidmanu {
-  width: 150px;
+  // width: 150px;
+  width: 15%;
   margin-right: 30px;
   margin-left: 30px;
 }
@@ -29,7 +31,8 @@
 
 
 .main_area {
-  width: 45%;
+  width: 50%;
+  // width: 45%;
   max-width: 50%;
   height: 750px;
   display: flex;
@@ -52,6 +55,7 @@
 }
 
 .sb-area {
+  width: 20%;
   width: 250px;
   margin: 0px 0px 0px 30px;
 
