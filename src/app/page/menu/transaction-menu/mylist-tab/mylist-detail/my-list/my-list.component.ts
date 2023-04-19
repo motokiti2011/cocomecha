@@ -21,6 +21,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
 
 @Component({
   selector: 'app-my-list',
@@ -62,7 +64,7 @@ export class MyListComponent implements OnInit {
   /** メッセージ通知 */
   messageAlert = '';
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null };
+  loginUser = '';
   // ページング表示開始位置
   begin = 0;
   // ページング最大件数
@@ -93,6 +95,8 @@ export class MyListComponent implements OnInit {
     private auth: AuthUserService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private cognito: CognitoService,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -106,46 +110,26 @@ export class MyListComponent implements OnInit {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.loading = true;
-    this.auth.userInfo$.subscribe(user => {
-      // ユーザー情報取得できない場合前画面へ戻る
-      if (user == undefined || user == null || user.userId == '') {
-        // ダイアログ表示(もう一度操作してください）し前画面へ戻る
-        const dialogData: messageDialogData = {
-          massage: messageDialogMsg.AgainOperation,
-          closeFlg: false,
-          closeTime: 0,
-          btnDispDiv: true
-        }
-        const dialogRef = this.modal.open(MessageDialogComponent, {
-          width: '300px',
-          height: '150px',
-          data: dialogData
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(result);
-          // ローディング解除
-          this.overlayRef.detach();
-          this.loading = false;
-          this.onReturn();
-          return;
-        });
-      } else {
-        // ユーザー情報を設定する
-        this.loginUser = user;
+    const user = this.cognito.initAuthenticated();
+    // ユーザー情報取得できない場合前画面へ戻る
+    if (user == null) {
+      this.apiAuth.authenticationExpired();
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      return;
+    }
+    // ユーザー情報を設定する
+    this.loginUser = user;
+    // データを取得
+    this.mylistservice.getMyList(this.loginUser,'0').subscribe(data => {
+      console.log(data);
+      if (data.length !== 0) {
+        this.detailList = this.mylistservice.displayFormatdisplayFormat(data);
+        this.setServiceContents();
       }
-      // データを取得
-      this.mylistservice.getMyList(this.loginUser.userId, '0').subscribe(data => {
-        console.log(data);
-        if (data.length !== 0) {
-          this.detailList = this.mylistservice.displayFormatdisplayFormat(data);
-          this.setServiceContents();
-        }
-        // ローディング解除
-        this.overlayRef.detach();
-        this.loading = false;
-      });
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     });
-
   }
 
   // /**
@@ -329,6 +313,38 @@ export class MyListComponent implements OnInit {
     this.overlayRef.detach();
     this.loading = false;
   }
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
+      return;
+    });
+  }
+
 
 
 }

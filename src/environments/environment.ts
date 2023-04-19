@@ -23,6 +23,7 @@ export const environment = {
     apiVersion: '/v1',
     apiGsiVersion: '/v1',
     apiCheckVersion: '/v1',
+    apiAuthVersion: '/v1',
     /** APIエンドポイント */
     apiEmdPoint: 'https://p7kq7bqjpb.execute-api.us-east-1.amazonaws.com/dev',
     /** GsiAPIエンドポイント */

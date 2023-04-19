@@ -23,6 +23,9 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
+
 
 @Component({
   selector: 'app-tansaction-complete',
@@ -65,7 +68,7 @@ export class TansactionCompleteComponent implements OnInit {
   ];
 
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '',mechanicId:null, officeId:null };
+  loginUser = '';
 
   selectType = '0';
 
@@ -85,6 +88,8 @@ export class TansactionCompleteComponent implements OnInit {
     private auth: AuthUserService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private cognito: CognitoService,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -98,43 +103,22 @@ export class TansactionCompleteComponent implements OnInit {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.loading = true;
-    this.auth.userInfo$.subscribe(user => {
-      // 未認証の場合前画面へ戻る
-      if (user == undefined || user == null || user.userId == '') {
-        // ダイアログ表示し前画面へ戻る
-        const dialogData: messageDialogData = {
-          massage: messageDialogMsg.AnSerchAgainOperation,
-          closeFlg: false,
-          closeTime: 0,
-          btnDispDiv: true
-        }
-        const dialogRef = this.modal.open(MessageDialogComponent, {
-          width: '300px',
-          height: '150px',
-          data: dialogData
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(result);
-          // ローディング解除
-          this.overlayRef.detach();
-          this.loading = false;
-          this.onReturn();
-          return;
-        });
-      } else {
-        // ユーザー情報を設定する
-        this.loginUser = user;
-      }
-      // データを取得
-      this.compService.getTransactionCompSlip(this.loginUser.userId, this.selectType).subscribe(data => {
-        this.detailList = this.compService.dispContentsSlip(data)
-        // ローディング解除
-        this.overlayRef.detach();
-        this.loading = false;
-      });
+    const user = this.cognito.initAuthenticated();
+    // 未認証の場合前画面へ戻る
+    if (user == null) {
+      this.apiAuth.authenticationExpired();
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      return;
+    }
+    // ユーザー情報を設定する
+    this.loginUser = user;
+    // データを取得
+    this.compService.getTransactionCompSlip(this.loginUser, this.selectType).subscribe(data => {
+      this.detailList = this.compService.dispContentsSlip(data)
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     });
-
-
   }
 
   /**
@@ -244,8 +228,39 @@ export class TansactionCompleteComponent implements OnInit {
    * 評価を行う
    * @param item
    */
-  onEvo(item: serviceContents ) {
+  onEvo(item: serviceContents) {
     this.router.navigate(["service-evaluation"], { queryParams: { serviceId: item.id } });
+  }
+
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
+      return;
+    });
   }
 
 

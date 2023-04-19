@@ -18,6 +18,7 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-transaction-menu',
@@ -66,6 +67,7 @@ export class TransactionMenuComponent implements OnInit {
     private auth: AuthUserService,
     private overlay: Overlay,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
 
   ) { }
 
@@ -85,6 +87,7 @@ export class TransactionMenuComponent implements OnInit {
     // ログイン検証
     const authUser = this.cognito.initAuthenticated();
     if(authUser == null) {
+      this.apiAuth.authenticationExpired();
       this.openMsgDialog(messageDialogMsg.LoginRequest, true);
       return;
     }
@@ -102,7 +105,8 @@ export class TransactionMenuComponent implements OnInit {
         // ローディング解除
         this.overlayRef.detach();
       } else {
-        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
+        this.apiAuth.authenticationExpired();
+        this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         return;
       }
     });

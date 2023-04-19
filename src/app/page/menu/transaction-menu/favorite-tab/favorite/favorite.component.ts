@@ -24,6 +24,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
+
 
 @Component({
   selector: 'app-favorite',
@@ -78,6 +80,7 @@ export class FavoriteComponent implements OnInit {
     private cognito: CognitoService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -94,30 +97,12 @@ export class FavoriteComponent implements OnInit {
     const user = this.cognito.initAuthenticated();
     // ユーザー情報取得できない場合前画面へ戻る
     if (user == undefined || user == null || user == '') {
-      // ダイアログ表示（もう一度操作してください）し前画面へ戻る
-      const dialogData: messageDialogData = {
-        massage: messageDialogMsg.AgainOperation,
-        closeFlg: false,
-        closeTime: 0,
-        btnDispDiv: true
-      }
-      const dialogRef = this.modal.open(MessageDialogComponent, {
-        width: '300px',
-        height: '150px',
-        data: dialogData
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        console.log(result);
-        // ローディング解除
-        this.overlayRef.detach();
-        this.loading = false;
-        this.onReturn();
-        return;
-      });
-    } else {
-      // ユーザー情報を設定する
-      this.acceseUser = user;
+      this.apiAuth.authenticationExpired();
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      return;
     }
+    // ユーザー情報を設定する
+    this.acceseUser = user;
     // データを取得
     this.favoriteService.getFavoriteList(this.acceseUser).subscribe(data => {
       console.log(data);
@@ -233,6 +218,36 @@ export class FavoriteComponent implements OnInit {
    */
   onReturn() {
     this.location.back();
+  }
+
+  /**
+   * メッセージダイアログ展開
+   * @param msg
+   * @param locationDiv
+   */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
+      return;
+    });
   }
 
 

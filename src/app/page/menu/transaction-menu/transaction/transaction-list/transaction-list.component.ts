@@ -17,13 +17,14 @@ import { AuthUserService } from 'src/app/page/auth/authUser.service';
 import { loginUser } from 'src/app/entity/loginUser';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
-import {dispTransactionContents } from 'src/app/entity/transactionContents';
+import { dispTransactionContents } from 'src/app/entity/transactionContents';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { transactionSlip } from 'src/app/entity/transactionSlip';
-
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
+import { CognitoService } from 'src/app/page/auth/cognito.service';
 
 @Component({
   selector: 'app-transaction-list',
@@ -64,7 +65,7 @@ export class TransactionListComponent implements OnInit {
   ];
 
   /** ログインユーザー情報 */
-  loginUser: loginUser = { userId: '', userName: '', mechanicId: null, officeId: null };
+  loginUser = '';
 
   overlayRef = this.overlay.create({
     hasBackdrop: true,
@@ -82,6 +83,8 @@ export class TransactionListComponent implements OnInit {
     private auth: AuthUserService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private cognito: CognitoService,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -95,42 +98,25 @@ export class TransactionListComponent implements OnInit {
     // ローディング開始
     this.overlayRef.attach(new ComponentPortal(MatProgressSpinner));
     this.loading = true;
-    this.auth.userInfo$.subscribe(user => {
-      // ユーザー情報取得できない場合前画面へ戻る
-      if (user == undefined || user == null || user.userId == '') {
-        // ダイアログ表示（もう一度操作してください）し前画面へ戻る
-        const dialogData: messageDialogData = {
-          massage: messageDialogMsg.AgainOperation,
-          closeFlg: false,
-          closeTime: 0,
-          btnDispDiv: true
-        }
-        const dialogRef = this.modal.open(MessageDialogComponent, {
-          width: '300px',
-          height: '150px',
-          data: dialogData
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(result);
-          this.onReturn();
-          // ローディング解除
-          this.overlayRef.detach();
-          this.loading = false;
-          return;
-        });
-      } else {
-        // ユーザー情報を設定する
-        this.loginUser = user;
-      }
-      // データを取得
-      this.service.getTransactionSlip(this.loginUser.userId, '0').subscribe(data => {
-        this.detailList = this.service.dispContentsSlip(data)
-        // this.detailList = data;
-        // ローディング解除
-        this.overlayRef.detach();
-        this.loading = false;
-      });
+    const user = this.cognito.initAuthenticated();
+    // ユーザー情報取得できない場合前画面へ戻る
+    if (user == null) {
+      this.apiAuth.authenticationExpired();
+      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      return;
+    }
+    // ユーザー情報を設定する
+    this.loginUser = user;
+
+    // データを取得
+    this.service.getTransactionSlip(this.loginUser, '0').subscribe(data => {
+      this.detailList = this.service.dispContentsSlip(data)
+      // this.detailList = data;
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
     });
+
   }
 
 
@@ -235,6 +221,36 @@ export class TransactionListComponent implements OnInit {
    */
   onReturn() {
     this.location.back();
+  }
+
+  /**
+ * メッセージダイアログ展開
+ * @param msg
+ * @param locationDiv
+ */
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
+        this.router.navigate(["/main_menu"]);
+      }
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      this.loading = false;
+      return;
+    });
   }
 
 

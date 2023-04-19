@@ -16,7 +16,7 @@ export class ApiAuthService {
     private cognito: CognitoService,
   ) { }
 
-  private apiEndPoint: string = environment.EndPoint.apiEmdPointCheck + environment.EndPoint.apiEmdAuth + '/auth';
+  private apiEndPoint: string =  environment.EndPoint.apiEmdAuth + environment.EndPoint.apiAuthVersion + '/auth';
 
   /**
    * 認証切れ処理
@@ -25,6 +25,7 @@ export class ApiAuthService {
   public authenticationExpired() {
     const authUser = this.cognito.initAuthenticated();
     if(authUser == null) {
+      console.log('認証解除済')
       // 重複で処理が行われる可能性もありその場合処理終了
       return;
     }
@@ -32,8 +33,10 @@ export class ApiAuthService {
     const body = {
       "userId": authUser
     };
-    this.http.post<boolean>(this.apiEndPoint + '/logout', body)
-    this.cognito.logout();
+    this.http.post<boolean>(this.apiEndPoint + '/logout', body).subscribe(data => {
+      console.log(data+':認証解除済')
+      this.cognito.logout();
+    })
   }
 
 }
