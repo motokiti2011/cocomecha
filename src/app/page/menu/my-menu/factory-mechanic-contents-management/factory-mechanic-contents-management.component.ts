@@ -13,6 +13,7 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-factory-mechanic-contents-management',
@@ -43,6 +44,7 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
     private activeRouter: ActivatedRoute,
     private overlay: Overlay,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -63,6 +65,9 @@ export class FactoryMechanicContentsManagementComponent implements OnInit {
           // ユーザー情報を設定
           this.user = res[0];
           this.getMcFcItemList();
+        } else {
+          this.apiAuth.authenticationExpired();
+          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         }
       });
     });

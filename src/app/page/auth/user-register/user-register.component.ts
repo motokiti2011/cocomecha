@@ -26,6 +26,8 @@ import { imgFile } from 'src/app/entity/imgFile';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { ApiAuthService } from '../../service/api-auth.service';
+
 
 @Component({
   selector: 'app-user-register',
@@ -123,6 +125,7 @@ export class UserRegisterComponent implements OnInit {
     private cognito: CognitoService,
     private overlay: Overlay,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -317,6 +320,9 @@ export class UserRegisterComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if(locationDiv) {
+        // ローディング解除
+        this.overlayRef.detach();
+        this.apiAuth.authenticationExpired();
         this.location.back();
       }
       console.log(result);

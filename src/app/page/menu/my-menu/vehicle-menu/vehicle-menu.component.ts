@@ -14,7 +14,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MessageSelectDaialogComponent } from 'src/app/page/modal/message-select-daialog/message-select-daialog.component';
-
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-vehicle-menu',
@@ -43,6 +43,7 @@ export class VehicleMenuComponent implements OnInit {
     private router: Router,
     public modal: MatDialog,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -52,10 +53,15 @@ export class VehicleMenuComponent implements OnInit {
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
-        console.log(user);
-        this.user = user[0];
-        this.user.userId = authUser;
-        this.getVehicleList();
+        if(user.length > 0) {
+          console.log(user);
+          this.user = user[0];
+          this.user.userId = authUser;
+          this.getVehicleList();
+        } else {
+          this.apiAuth.authenticationExpired();
+          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+        }
       });
     } else {
       this.openMsgDialog(messageDialogMsg.LoginRequest, true);
@@ -179,8 +185,8 @@ export class VehicleMenuComponent implements OnInit {
 
   /**
    * 車両削除のダイアログ表示
-   * @param msg 
-   * @param id 
+   * @param msg
+   * @param id
    */
   private vheicleDeleteSelect(msg: string, id: string) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
@@ -206,7 +212,7 @@ export class VehicleMenuComponent implements OnInit {
 
   /**
    * 車両情報削除
-   * @param id 
+   * @param id
    */
   private vheicleDelete(id: string) {
     // ローディング開始

@@ -25,7 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-
+import { ApiAuthService } from '../../service/api-auth.service';
 
 @Component({
   selector: 'app-factory-register',
@@ -170,6 +170,7 @@ export class FactoryRegisterComponent implements OnInit {
     private formService: FormService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -196,6 +197,7 @@ export class FactoryRegisterComponent implements OnInit {
         data: dialogData
       });
       dialogRef.afterClosed().subscribe(result => {
+        this.apiAuth.authenticationExpired();
         console.log(result);
         // ローディング解除
         this.overlayRef.detach();

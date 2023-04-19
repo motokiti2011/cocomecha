@@ -25,7 +25,7 @@ import { messageDialogMsg } from 'src/app/entity/msg';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 @Component({
   selector: 'app-edit-user-info',
   templateUrl: './edit-user-info.component.html',
@@ -121,6 +121,7 @@ export class EditUserInfoComponent implements OnInit {
     private form: FormService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
 
@@ -130,7 +131,7 @@ export class EditUserInfoComponent implements OnInit {
     this.loading = true;
     const user = this.cognito.initAuthenticated();
     if (user == null) {
-      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      this.apiAuth.authenticationExpired();
       return;
     }
     console.log(user);
@@ -287,6 +288,7 @@ export class EditUserInfoComponent implements OnInit {
         this.inputData.introduction = this.isSerParm(this.user.introduction, 'introduction');
         this.imageFile[0].url = this.user.profileImageUrl;
       } else {
+        this.apiAuth.authenticationExpired();
         this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
       }
       // ローディング解除

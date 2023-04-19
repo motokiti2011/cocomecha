@@ -48,6 +48,7 @@ import { messageDialogMsg } from 'src/app/entity/msg';
 import { salesServiceInfo, defaulsalesService } from 'src/app/entity/salesServiceInfo';
 import { ImageFile } from 'aws-sdk/clients/iotsitewise';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-service-edit',
@@ -191,6 +192,7 @@ export class ServiceEditComponent implements OnInit {
     private overlay: Overlay,
     private builder: FormBuilder,
     private uniqueService: ApiUniqueService,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -206,6 +208,7 @@ export class ServiceEditComponent implements OnInit {
       // ユーザー情報を取得する
       this.apiService.getUser(authUser).subscribe(user => {
         if (user[0] == null) {
+          this.apiAuth.authenticationExpired();
           this.openMsgDialog(messageDialogMsg.LoginRequest, true);
           return;
         } else {

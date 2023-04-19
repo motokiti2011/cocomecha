@@ -13,6 +13,10 @@ import { FormService } from '../../service/form.service';
 import { CognitoService } from '../../auth/cognito.service';
 import { factoryMechanicFavorite } from 'src/app/entity/factoryMechanicFavorite';
 import { result } from 'lodash';
+import { ApiAuthService } from '../../service/api-auth.service';
+import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
+import { messageDialogMsg } from 'src/app/entity/msg';
+import { messageDialogData } from 'src/app/entity/messageDialogData';
 
 @Component({
   selector: 'app-service-admininfo-relisted',
@@ -30,6 +34,7 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
     private apiservice: ApiSerchService,
     private uniqueService: ApiUniqueService,
     private formService: FormService,
+    private apiAuth: ApiAuthService,
   ) { }
 
   /** ID */
@@ -87,11 +92,19 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
       // 認証済みユーザーの場合
       if (authUser !== null) {
         this.apiservice.getUser(authUser).subscribe(user => {
-          console.log(user);
-          this.user = user[0];
-          // ローディング解除
-          this.overlayRef.detach();
-          this.loading = false;
+          if(user.length > 0) {
+            console.log(user);
+            this.user = user[0];
+            // ローディング解除
+            this.overlayRef.detach();
+            this.loading = false;
+          } else {
+            // ローディング解除
+            this.overlayRef.detach();
+            this.loading = false;
+            this.apiAuth.authenticationExpired();
+            this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+          }
         });
       }
       // ローディング解除
@@ -99,8 +112,6 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
       this.loading = false;
     });
   }
-
-
 
 
   /**
@@ -218,4 +229,36 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
     }
     return imageUrl;
   }
+
+/**
+ * メッセージダイアログ展開
+ * @param msg
+ * @param locationDiv
+ */
+private openMsgDialog(msg: string, locationDiv: boolean) {
+  // ダイアログ表示
+  const dialogData: messageDialogData = {
+    massage: msg,
+    closeFlg: false,
+    closeTime: 0,
+    btnDispDiv: true
+  }
+  const dialogRef = this.dialog.open(MessageDialogComponent, {
+    width: '300px',
+    height: '150px',
+    data: dialogData
+  });
+  dialogRef.afterClosed().subscribe(result => {
+    if (locationDiv) {
+      this.router.navigate(["/main_menu"]);
+    }
+    console.log(result);
+    // ローディング解除
+    this.overlayRef.detach();
+
+    return;
+  });
+}
+
+
 }

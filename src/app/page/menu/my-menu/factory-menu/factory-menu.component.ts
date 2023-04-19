@@ -24,7 +24,7 @@ import { FactoryAdminSettingModalComponent } from 'src/app/page/modal/factory-ad
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
-
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 @Component({
   selector: 'app-factory-menu',
   templateUrl: './factory-menu.component.html',
@@ -178,6 +178,7 @@ export class FactoryMenuComponent implements OnInit {
     private apiService: ApiSerchService,
     private formService: FormService,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -202,6 +203,7 @@ export class FactoryMenuComponent implements OnInit {
             this.loading = false;
           }
         } else {
+          this.apiAuth.authenticationExpired();
           this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         }
       });

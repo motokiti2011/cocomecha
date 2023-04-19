@@ -13,7 +13,7 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
-
+import { ApiAuthService } from '../../service/api-auth.service';
 
 @Component({
   selector: 'app-my-menu',
@@ -30,6 +30,7 @@ export class MyMenuComponent implements OnInit {
     private overlay: Overlay,
     private formService: FormService,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
   ) { }
 
   /** 表示情報 */
@@ -69,21 +70,26 @@ export class MyMenuComponent implements OnInit {
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiservice.getUser(authUser).subscribe(user => {
-        console.log(user);
-        const acceseUser: loginUser = {
-          userId: authUser,
-          userName: user[0].userName,
-          mechanicId: user[0].mechanicId,
-          officeId: user[0].officeId
+        if(user.length > 0) {
+          console.log(user);
+          const acceseUser: loginUser = {
+            userId: authUser,
+            userName: user[0].userName,
+            mechanicId: user[0].mechanicId,
+            officeId: user[0].officeId
+          }
+          // Subjectにユーザー情報をセットする。
+          this.auth.login(acceseUser);
+          this.user = user[0];
+          this.setDispInfo(user[0]);
+          this.isMechanic(user[0]);
+          // ローディング解除
+          this.loading = false;
+          this.overlayRef.detach();
+        } else {
+          this.apiAuth.authenticationExpired();
+          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         }
-        // Subjectにユーザー情報をセットする。
-        this.auth.login(acceseUser);
-        this.user = user[0];
-        this.setDispInfo(user[0]);
-        this.isMechanic(user[0]);
-        // ローディング解除
-        this.loading = false;
-        this.overlayRef.detach();
       });
     } else {
       this.openMsgDialog(messageDialogMsg.LoginRequest, true);

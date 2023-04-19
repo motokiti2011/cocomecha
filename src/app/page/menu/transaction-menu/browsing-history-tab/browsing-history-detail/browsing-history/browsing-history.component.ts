@@ -24,6 +24,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 /**
  * 表示用閲覧履歴情報
@@ -107,6 +108,7 @@ export class BrowsingHistoryComponent implements OnInit {
     private auth: AuthUserService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {

@@ -26,6 +26,7 @@ import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-mechanic-menu',
@@ -115,6 +116,7 @@ export class MechanicMenuComponent implements OnInit {
     private s3: UploadService,
     private overlay: Overlay,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -132,16 +134,21 @@ export class MechanicMenuComponent implements OnInit {
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
-        console.log(user);
-        this.user = user[0];
-        if (this.user.officeId != '0' && this.user.officeId != null) {
-          // // 工場登録ある場合表示
-          // this.factoryResistDiv = true;
+        if(user.length > 0) {
+          console.log(user);
+          this.user = user[0];
+          if (this.user.officeId != '0' && this.user.officeId != null) {
+            // // 工場登録ある場合表示
+            // this.factoryResistDiv = true;
+          }
+          this.inputData.adminUserId = user[0].userId;
+          this.initForm();
+          // ローディング解除
+          this.overlayRef.detach();
+        } else {
+          this.apiAuth.authenticationExpired();
+          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         }
-        this.inputData.adminUserId = user[0].userId;
-        this.initForm();
-        // ローディング解除
-        this.overlayRef.detach();
       });
     } else {
       this.openMsgDialog(messageDialogMsg.LoginRequest, true);

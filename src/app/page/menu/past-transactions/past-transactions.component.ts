@@ -11,7 +11,7 @@ import { ApiCheckService } from '../../service/api-check.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { CognitoService } from '../../auth/cognito.service';
 import { user } from 'src/app/entity/user';
-
+import { ApiAuthService } from '../../service/api-auth.service';
 
 /**
  * 過去取引コンポーネント
@@ -30,6 +30,7 @@ export class PastTransactionsComponent implements OnInit {
     private uniqueService: ApiUniqueService,
     private cognito: CognitoService,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   /** 表示情報 */

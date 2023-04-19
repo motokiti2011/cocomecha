@@ -17,7 +17,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { messageDialogMsg } from 'src/app/entity/msg';
-
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-service-transaction',
@@ -79,6 +79,7 @@ export class ServiceTransactionComponent implements OnInit {
     public modal: MatDialog,
     private cognito: CognitoService,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -167,6 +168,7 @@ export class ServiceTransactionComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         console.log(result);
         this.onReturn();
+        this.apiAuth.authenticationExpired();
         // ローディング解除
         this.overlayRef.detach();
         this.loading = false;
@@ -174,9 +176,6 @@ export class ServiceTransactionComponent implements OnInit {
       });
     }
   }
-
-
-
 
   /**
    * 閲覧者設定

@@ -23,7 +23,7 @@ import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/messag
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
-
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-factory-mechanic-menu',
@@ -77,6 +77,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
     private cognito: CognitoService,
     private overlay: Overlay,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -108,6 +109,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
         this.loading = false;
       });
     } else {
+      this.apiAuth.authenticationExpired();
       this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }

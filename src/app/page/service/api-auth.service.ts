@@ -24,6 +24,10 @@ export class ApiAuthService {
    */
   public authenticationExpired() {
     const authUser = this.cognito.initAuthenticated();
+    if(authUser == null) {
+      // 重複で処理が行われる可能性もありその場合処理終了
+      return;
+    }
     // リクエストボディ生成
     const body = {
       "userId": authUser

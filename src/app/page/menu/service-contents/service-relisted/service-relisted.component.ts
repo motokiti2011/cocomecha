@@ -41,6 +41,8 @@ import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
 import { MatDialog } from '@angular/material/dialog';
 
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
+
 /**
  * 再出品コンポーネント
  */
@@ -150,6 +152,7 @@ export class ServiceRelistedComponent implements OnInit {
     private apiUniqueService: ApiUniqueService,
     private apiSlipService: ApiSlipProsessService,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -163,10 +166,11 @@ export class ServiceRelistedComponent implements OnInit {
     } else {
       // ユーザー情報を取得する
       this.apiService.getUser(authUser).subscribe(user => {
-        if (user[0] == null) {
+        if (user.length == 0) {
           // ローディング解除
           this.overlayRef.detach();
           this.loading = false;
+          this.apiAuth.authenticationExpired();
           this.openMsgDialog(messageDialogMsg.LoginRequest, true);
           return;
         } else {

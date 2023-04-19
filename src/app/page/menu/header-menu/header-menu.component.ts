@@ -203,7 +203,7 @@ export class HeaderMenuComponent implements OnInit {
 
 
 
-  /**
+/**
  * メッセージダイアログ展開
  * @param msg
  * @param locationDiv

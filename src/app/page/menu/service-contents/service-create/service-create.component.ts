@@ -48,6 +48,7 @@ import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1Sele
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-service-create',
@@ -187,6 +188,7 @@ export class ServiceCreateComponent implements OnInit {
     private activeRouter: ActivatedRoute,
     private overlay: Overlay,
     private builder: FormBuilder,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -202,6 +204,7 @@ export class ServiceCreateComponent implements OnInit {
       // ユーザー情報を取得する
       this.apiService.getUser(authUser).subscribe(user => {
         if (user[0] == null) {
+          this.apiAuth.authenticationExpired();
           this.openMsgDialog(messageDialogMsg.LoginRequest, true);
           return;
         } else {

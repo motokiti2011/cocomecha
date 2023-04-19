@@ -24,7 +24,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-
+import { ApiAuthService } from '../../service/api-auth.service';
 @Component({
   selector: 'app-vehicle-register',
   templateUrl: './vehicle-register.component.html',
@@ -204,6 +204,7 @@ export class VehicleRegisterComponent implements OnInit {
     private s3: UploadService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -369,6 +370,10 @@ export class VehicleRegisterComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (locationDiv) {
+        this.apiAuth.authenticationExpired();
+        // ローディング解除
+        this.loading = false;
+        this.overlayRef.detach();
         this.router.navigate([root]);
       }
       console.log(result);

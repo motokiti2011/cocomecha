@@ -10,7 +10,7 @@ import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-transaction-message',
@@ -66,6 +66,7 @@ export class TransactionMessageComponent implements OnInit {
     private route: ActivatedRoute,
     private service: TransactionMessageService,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -79,7 +80,8 @@ export class TransactionMessageComponent implements OnInit {
         if (data.length == 0) {
           // ローディング開始
           this.loading = false;
-          // ユーザーが取得できない場合処理を停止
+          this.apiAuth.authenticationExpired();
+          // ユーザーが取得できない場合処理を停止(親compornentで戻る)
           return;
         }
         this.acceseUserInfo.userId = data[0].userId;

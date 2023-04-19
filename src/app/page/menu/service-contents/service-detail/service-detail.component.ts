@@ -14,6 +14,8 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { CognitoService } from 'src/app/page/auth/cognito.service';
 import { messageDialogMsg } from 'src/app/entity/msg';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
+
 @Component({
   selector: 'app-service-detail',
   templateUrl: './service-detail.component.html',
@@ -79,6 +81,7 @@ export class ServiceDetailComponent implements OnInit {
     private config: NgbCarouselConfig,
     private overlay: Overlay,
     private cognito: CognitoService,
+    private apiAuth: ApiAuthService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     config.interval = 0;

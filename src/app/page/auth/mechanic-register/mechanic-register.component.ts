@@ -21,7 +21,7 @@ import { SingleImageModalComponent } from '../../modal/single-image-modal/single
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
-
+import { ApiAuthService } from '../../service/api-auth.service';
 
 @Component({
   selector: 'app-mechanic-register',
@@ -111,6 +111,7 @@ export class MechanicRegisterComponent implements OnInit {
     private cognito: CognitoService,
     private s3: UploadService,
     public modal: MatDialog,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -348,6 +349,7 @@ export class MechanicRegisterComponent implements OnInit {
         console.log(result);
         if(locationDiv) {
           // this.location.back();
+          this.apiAuth.authenticationExpired();
           this.router.navigate(["/main_menu"]);
         }
         return;

@@ -14,6 +14,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MessageSelectDaialogComponent } from 'src/app/page/modal/message-select-daialog/message-select-daialog.component';
+import { ApiAuthService } from 'src/app/page/service/api-auth.service';
 
 @Component({
   selector: 'app-edit-vehicle-info',
@@ -193,6 +194,7 @@ export class EditVehicleInfoComponent implements OnInit {
     private cognito: CognitoService,
     public modal: MatDialog,
     private overlay: Overlay,
+    private apiAuth: ApiAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -202,13 +204,19 @@ export class EditVehicleInfoComponent implements OnInit {
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
-        this.authUser = authUser;
-        // console.log(user);
-        // this.user = user[0];
-        this.activatedRoute.queryParams.subscribe(params => {
-          const vehicleId = params['vehicleId'];
-          this.getVehicleInfo(vehicleId);
-        });
+        if(user.length > 0) {
+          this.authUser = authUser;
+          // console.log(user);
+          // this.user = user[0];
+          this.activatedRoute.queryParams.subscribe(params => {
+            const vehicleId = params['vehicleId'];
+            this.getVehicleInfo(vehicleId);
+          });
+        } else {
+          // 取得できない場合
+          this.apiAuth.authenticationExpired();
+          this.openMsgDialog(messageDialogMsg.LoginRequest, true, '/main-menu');
+        }
       });
     } else {
       this.openMsgDialog(messageDialogMsg.LoginRequest, true, '/main-menu');
