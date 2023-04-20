@@ -157,10 +157,9 @@ export class HeaderMenuComponent implements OnInit {
    */
   onClickHelp() {
     console.log('help');
-    this.authUserService.userInfo$.subscribe(hoge => {
-      console.log(hoge);
-    });
+    this.router.navigate(["help"])
   }
+
 
   /**
    * ログアウト押下時

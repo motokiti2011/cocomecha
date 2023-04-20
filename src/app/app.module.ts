@@ -114,15 +114,15 @@ const ROUTE_TABLE: Routes = [
   { path: 'service-relisted', component: ServiceRelistedComponent, canActivate: [RoutingGuard] },
   { path: 'vehicle-menu', component: VehicleMenuComponent, canActivate: [RoutingGuard] },
   { path: 'edit-vehicle', component: EditVehicleInfoComponent, canActivate: [RoutingGuard] },
-  { path: 'service-admin-reference', component: ServiceAdmininfoRelistedComponent},
-  { path: 'past-transactions', component: PastTransactionsComponent},
-  { path: 'service-edit', component: ServiceEditComponent},
+  { path: 'service-admin-reference', component: ServiceAdmininfoRelistedComponent,  canActivate: [RoutingGuard]},
+  { path: 'past-transactions', component: PastTransactionsComponent, canActivate: [RoutingGuard]},
+  { path: 'service-edit', component: ServiceEditComponent, canActivate: [RoutingGuard]},
   { path: 'use-terms', component: UseTermsComponent },
   { path: 'personal-information-handling', component: PersonalInformationHandlingComponent },
   { path: 'inquiry', component: InquiryComponent },
   { path: 'sit-map', component: SiteMapComponent },
   { path: 'help', component: HelpComponent },
-  { path: 'change-passwd', component: ChangePasswdComponent },
+  { path: 'change-passwd', component: ChangePasswdComponent, canActivate: [RoutingGuard] },
 ]
 
 @NgModule({
