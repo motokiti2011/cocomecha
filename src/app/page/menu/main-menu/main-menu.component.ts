@@ -55,6 +55,7 @@ export class MainMenuComponent implements OnInit {
   ngOnInit(): void {
     this.authenticated();
     this.onmenu();
+    this.child.ngOnInit();
   }
 
   /**

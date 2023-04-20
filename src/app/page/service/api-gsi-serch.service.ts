@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpResponse, } from '@angular/common/http';
 import { Observable, of, tap } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, timeout, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { slipDetailInfo } from 'src/app/entity/slipDetailInfo';
 import { serviceContents } from 'src/app/entity/serviceContents';
@@ -55,6 +55,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -79,6 +81,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -101,6 +105,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<userFavorite>(this.apiEndPoint + '/userfavorite', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: userFavorite) => res),
       // エラー時HTTPステータスコードを戻す
@@ -123,6 +129,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/browsinghistory', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -146,6 +154,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/slipdetailinfo', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -169,6 +179,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<slipQuestion>(this.apiEndPoint + '/slipquestion', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: slipQuestion) => res),
       // エラー時HTTPステータスコードを戻す
@@ -191,6 +203,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<slipMessageInfo>(this.apiEndPoint + '/slipmessage', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: slipMessageInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -223,6 +237,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<completionSlip>(this.apiEndPoint + '/completionslip', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: completionSlip) => res),
       // エラー時HTTPステータスコードを戻す
@@ -255,6 +271,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<transactionSlip>(this.apiEndPoint + '/transactionslip', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: transactionSlip) => res),
       // エラー時HTTPステータスコードを戻す
@@ -286,6 +304,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<userMyList>(this.apiEndPoint + '/usermylist', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: userMyList) => res),
       // エラー時HTTPステータスコードを戻す
@@ -311,6 +331,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<userVehicle>(this.apiEndPoint + '/uservehicleinfo', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: userVehicle) => res),
       // エラー時HTTPステータスコードを戻す
@@ -333,6 +355,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<serviceTransactionRequest>(this.apiEndPoint + '/servicetransactionrequest', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: serviceTransactionRequest) => res),
       // エラー時HTTPステータスコードを戻す
@@ -354,6 +378,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<factoryMechanicFavorite>(this.apiEndPoint + '/factorymechanicfavorite', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: factoryMechanicFavorite) => res),
       // エラー時HTTPステータスコードを戻す
@@ -386,6 +412,8 @@ export class ApiGsiSerchService {
         }
       };
       return this.http.post<slipDetailInfo>(this.apiEndPoint + '/serchslipcontents', body).pipe(
+        timeout(2500), // タイムアウト処理
+        retry(3), // リトライ処理
         // 取得できた場合ユーザー情報を返却
         map((res: slipDetailInfo) => res),
         // エラー時HTTPステータスコードを戻す
@@ -418,6 +446,8 @@ export class ApiGsiSerchService {
       }
     };
     return this.http.post<salesServiceInfo>(this.apiEndPoint + '/serchservicecontents', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: salesServiceInfo) => res),
       // エラー時HTTPステータスコードを戻す

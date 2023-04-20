@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HeaderMenuComponent } from './page/menu/header-menu/header-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,9 @@ export class AppComponent implements OnInit {
   title = 'haco-mecha';
 
   heightDiv = false;
+
+  /** 子コンポーネントを読み込む */
+  @ViewChild(HeaderMenuComponent) child!: HeaderMenuComponent;
 
   constructor(
     private router: Router,
@@ -24,6 +28,7 @@ export class AppComponent implements OnInit {
    * 遷移先
    */
   onActivate() {
+    this.child.ngOnInit();
     const route = this.activatedRoute;
     const routeAny: any = route.snapshot;
     console.log(routeAny._routerState.url);

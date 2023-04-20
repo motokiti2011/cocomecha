@@ -1,7 +1,7 @@
 import { Injectable, Inject, LOCALE_ID } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, timeout, retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { formatDate } from '@angular/common';
 import { slipMegPrmUser } from 'src/app/entity/slipMegPrmUser';
@@ -52,6 +52,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<slipMegPrmUser>(this.apiEndPoint + '/messageparmrequest', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: slipMegPrmUser) => res),
       // エラー時HTTPステータスコードを戻す
@@ -99,6 +101,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<HttpErrorResponse>(this.apiEndPoint + '/initmechanicup', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: HttpErrorResponse) => res),
       // エラー時HTTPステータスコードを戻す
@@ -145,6 +149,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<officeInfo>(this.apiEndPoint + '/initofficeup', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: officeInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -198,6 +204,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<HttpErrorResponse>(this.apiEndPoint + '/initpostslip', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       map((res: HttpErrorResponse) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
@@ -253,6 +261,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<HttpErrorResponse>(this.apiEndPoint + '/initsalesservice', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       map((res: HttpErrorResponse) => res),
       // エラー時HTTPステータスコードを戻す
       catchError((err: HttpErrorResponse) => of(undefined))
@@ -285,6 +295,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<slipDetailInfo>(this.apiEndPoint + '/serchslipcontents', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: slipDetailInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -319,6 +331,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<salesServiceInfo>(this.apiEndPoint + '/serchsalesservicecontents', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: salesServiceInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -340,6 +354,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<any>(this.apiEndPoint + '/getslip', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -361,6 +377,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<any>(this.apiEndPoint + '/getsalesservice', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -392,6 +410,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<slipMessageInfo>(this.apiEndPoint + '/sendmessage', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: slipMessageInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -428,6 +448,8 @@ export class ApiUniqueService {
     };
     console.log(body)
     return this.http.post<slipQuestion>(this.apiEndPoint + '/sendquestion', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: slipQuestion) => res),
       // エラー時HTTPステータスコードを戻す
@@ -450,6 +472,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<any>(this.apiEndPoint + '/multiplefavorite', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -471,6 +495,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<any>(this.apiEndPoint + '/multiplebrosing', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: any) => res),
       // エラー時HTTPステータスコードを戻す
@@ -496,6 +522,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<mcfcItem>(this.apiEndPoint + '/serchfcmcitem', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: mcfcItem) => res),
       // エラー時HTTPステータスコードを戻す
@@ -519,6 +547,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<serviceAdminInfo>(this.apiEndPoint + '/salesadmininfo', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: serviceAdminInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -540,6 +570,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<serviceAdminInfo>(this.apiEndPoint + '/slipadmininfo', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: serviceAdminInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -565,6 +597,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<completionSlip>(this.apiEndPoint + '/pasttransaction', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: completionSlip) => res),
       // エラー時HTTPステータスコードを戻す
@@ -590,6 +624,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<fcmcSerchResult>(this.apiEndPoint + '/serchfcmcdata', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: fcmcSerchResult) => res),
       // エラー時HTTPステータスコードを戻す
@@ -613,6 +649,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<connectionOfficeInfo>(this.apiEndPoint + '/connectionofficestatus', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: connectionOfficeInfo) => res),
       // エラー時HTTPステータスコードを戻す
@@ -634,6 +672,8 @@ export class ApiUniqueService {
       }
     };
     return this.http.post<requestInfo>(this.apiEndPoint + '/getrequestmechanicinfo', body).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: requestInfo) => res),
       // エラー時HTTPステータスコードを戻す

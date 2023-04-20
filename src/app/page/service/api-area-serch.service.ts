@@ -1,7 +1,7 @@
 import { Injectable, Inject, LOCALE_ID } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpResponse, } from '@angular/common/http';
 import { Observable, of, tap } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, timeout, retry } from 'rxjs/operators';
 import { cityApiDate } from 'src/app/entity/prefectures';
 
 
@@ -28,6 +28,8 @@ export class ApiAreaSerchService {
   public serchCityData(areaCode: string): Observable<any> {
 
     return this.http.get<cityApiDate>(this.citySerchApiEndPoint + areaCode).pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
       // 取得できた場合ユーザー情報を返却
       map((res: cityApiDate) => res),
       // エラー時HTTPステータスコードを戻す

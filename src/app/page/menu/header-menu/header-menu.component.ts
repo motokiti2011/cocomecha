@@ -90,7 +90,6 @@ export class HeaderMenuComponent implements OnInit {
     this.apiService.getUser(userid).subscribe(data => {
       console.log(data[0]);
       if (data[0]) {
-
         this.loginUser.userId = data[0].userId;
         this.loginUser.userName = data[0].userName;
 
