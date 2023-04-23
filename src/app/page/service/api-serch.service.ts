@@ -683,4 +683,42 @@ export class ApiSerchService {
     );
   }
 
+
+  /**
+   * 市町村情報取得
+   * @param area
+   */
+  public serchArea(area: string): Observable<any> {
+    const url = 'http://geoapi.heartrails.com/api/json?method=getCities&prefecture=';
+    return this.http.get<any>(url + area)
+    .pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+
+  }
+
+  /**
+   * 郵便番号検索
+   * @param postCode
+   */
+  public serchPostCode(postCode: string): Observable<any> {
+    const url = 'http://geoapi.heartrails.com/api/json?method=searchByPostal&postal=';
+    return this.http.get<any>(url + postCode)
+    .pipe(
+      timeout(2500), // タイムアウト処理
+      retry(3), // リトライ処理
+      // 取得できた場合ユーザー情報を返却
+      map((res: any) => res),
+      // エラー時HTTPステータスコードを戻す
+      catchError((err: HttpErrorResponse) => of(undefined))
+    );
+  }
+
+
+
 }

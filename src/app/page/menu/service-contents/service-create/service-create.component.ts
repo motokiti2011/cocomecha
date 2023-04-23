@@ -44,7 +44,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { cityData } from 'src/app/entity/area1SelectArea2';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
@@ -95,7 +95,7 @@ export class ServiceCreateComponent implements OnInit {
   /** 地域情報選択状態初期値 */
   areaSelect = ''
   /** 地域２（市町村）データ */
-  areaCityData: area1SelectArea2[] = []
+  areaCityData: cityData[] = []
   /** 地域２（市町村）選択 */
   citySelect = '';
   /** カテゴリー */
@@ -314,7 +314,7 @@ export class ServiceCreateComponent implements OnInit {
         this.inputData.area1 = this.userInfo.areaNo1;
         this.areaSelect = this.userInfo.areaNo1;
         if (this.areaSelect != '') {
-          this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+          this.getCityInfo();
         }
         if (this.userInfo.areaNo2) [
           this.citySelect = this.userInfo.areaNo2
@@ -325,7 +325,7 @@ export class ServiceCreateComponent implements OnInit {
           this.inputData.area1 = this.office.officeArea1;
           this.areaSelect = this.office.officeArea1;
           if (this.areaSelect != '') {
-            this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+            this.getCityInfo();
           }
           if (this.userInfo.areaNo2) [
             this.citySelect = this.office.officeArea
@@ -424,10 +424,10 @@ export class ServiceCreateComponent implements OnInit {
    * 地域選択イベント
    */
   onSelectArea() {
+
     this.inputData.area1 = this.areaSelect;
     console.log(this.areaSelect)
-    this.cangeMonitoring();
-    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+    this.getCityInfo();
   }
 
   /**
@@ -685,7 +685,7 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.area1 = this.userInfo.areaNo1;
     this.areaSelect = this.userInfo.areaNo1;
     if (this.areaSelect != '') {
-      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+      this.getCityInfo();
     }
     if (this.userInfo.areaNo2) [
       this.citySelect = this.userInfo.areaNo2
@@ -727,7 +727,7 @@ export class ServiceCreateComponent implements OnInit {
     this.inputData.area1 = this.userInfo.areaNo1;
     this.areaSelect = this.userInfo.areaNo1;
     if (this.areaSelect != '') {
-      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+      this.getCityInfo();
     }
     if (this.userInfo.areaNo2) [
       this.citySelect = this.userInfo.areaNo2
@@ -775,7 +775,7 @@ export class ServiceCreateComponent implements OnInit {
         this.inputData.area1 = data[0].officeArea1;
         this.areaSelect = data[0].officeArea1;
         if (this.areaSelect != '') {
-          this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+          this.getCityInfo();
         }
         if (this.userInfo.areaNo2) {
           this.citySelect = data[0].officeArea;
@@ -908,6 +908,24 @@ export class ServiceCreateComponent implements OnInit {
     }
   }
 
+  /**
+   * 都道府県から市町村データを取得し設定する
+   */
+  private getCityInfo() {
+    const areaa = _find(this.areaData, data => data.code === this.areaSelect);
+    console.log(areaa)
+    if (areaa) {
+      this.apiService.serchArea(areaa.prefectures)
+        .subscribe(data => {
+          // console.log(data);
+          // console.log(data.response);
+          console.log(data.response.location);
+          if (data.response.location.length > 0) {
+            this.areaCityData = data.response.location;
+          }
+        });
+    }
+  }
 
   /**
    * メッセージダイアログ展開

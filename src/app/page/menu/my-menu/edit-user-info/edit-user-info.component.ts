@@ -15,10 +15,10 @@ import {
   cloneDeep as _cloneDeep,
 } from 'lodash'
 import { UploadService } from 'src/app/page/service/upload.service';
-import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
+import { postSerchInfo } from 'src/app/entity/postCodeInfo';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
 import { imgFile } from 'src/app/entity/imgFile';
-import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { cityData } from 'src/app/entity/area1SelectArea2';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
@@ -94,7 +94,7 @@ export class EditUserInfoComponent implements OnInit {
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
   /** 地域２（市町村）データ */
-  areaCityData: area1SelectArea2[] = []
+  areaCityData: cityData[] = []
   /** 地域２（市町村）選択 */
   citySelect = '';
   /** ユーザー情報 */
@@ -155,7 +155,7 @@ export class EditUserInfoComponent implements OnInit {
    */
   selectArea() {
     this.areaSelect = this.inputData.areaNo1;
-    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.inputData.areaNo1);
+    this.getCityInfo();
   }
 
   /**
@@ -167,19 +167,19 @@ export class EditUserInfoComponent implements OnInit {
     const post = post1 + post2;
     // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
     if (post1 != '' && post2 != '') {
-      const postCodeConectData = _find(postCodeInfoData, data => data.postCode == post)
-      if (postCodeConectData) {
-        // 地域1(都道府県名)
-        this.areaSelect = postCodeConectData.prefecturesCode;
-        this.inputData.areaNo1 = postCodeConectData.prefecturesCode;
-        // 地域2(市町村)
-        this.inputData.areaNo2 = postCodeConectData.municipality;
-        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.inputData.areaNo1);
+      this.getPostCode(post)
+      // if (postCodeConectData) {
+      //   // 地域1(都道府県名)
+      //   this.areaSelect = postCodeConectData.prefecturesCode;
+      //   this.inputData.areaNo1 = postCodeConectData.prefecturesCode;
+      //   // 地域2(市町村)
+      //   this.inputData.areaNo2 = postCodeConectData.municipality;
+      //   this.getCityInfo();
 
-        this.citySelect =  postCodeConectData.municipality;
-        // 地域3(その他)
-        this.inputData.adress = postCodeConectData.townArea;
-      }
+      //   this.citySelect = postCodeConectData.municipality;
+      //   // 地域3(その他)
+      //   this.inputData.adress = postCodeConectData.townArea;
+      // }
     }
   }
 
@@ -279,7 +279,7 @@ export class EditUserInfoComponent implements OnInit {
         this.telNo3.setValue(telNo.tel3);
         this.inputData.areaNo1 = this.isSerParm(this.user.areaNo1, 'area1');
         this.areaSelect = this.inputData.areaNo1;
-        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.inputData.areaNo1)
+        this.getCityInfo();
         this.inputData.areaNo2 = this.isSerParm(this.user.areaNo2, 'area2');
         this.citySelect = this.inputData.areaNo2;
         this.inputData.adress = this.isSerParm(this.user.adress, 'adress');
@@ -346,12 +346,62 @@ export class EditUserInfoComponent implements OnInit {
     }
   }
 
+
+  /**
+   * 都道府県から市町村データを取得し設定する
+   */
+  private getCityInfo() {
+    const areaa = _find(this.areaData, data => data.code === this.areaSelect);
+    console.log(areaa)
+    if (areaa) {
+      this.apiService.serchArea(areaa.prefectures)
+        .subscribe(data => {
+          // console.log(data);
+          // console.log(data.response);
+          console.log(data.response.location);
+          if (data.response.location.length > 0) {
+            this.areaCityData = data.response.location;
+          }
+        });
+    }
+  }
+
+
+  /**
+   * 都道府県から市町村データを取得し設定する
+   */
+  private getPostCode(postCode: string) {
+    this.apiService.serchPostCode(postCode)
+      .subscribe(data => {
+        console.log(data.response.location);
+        if (data.response.location.length > 0) {
+          const postCodeConectData = data.response.location;
+          const areaCode = _find(this.areaData, area => area.prefectures === postCodeConectData.prefecture);
+          if (!areaCode) {
+            console.log('no-area');
+            return;
+          }
+          // 地域1(都道府県名)
+          this.areaSelect = areaCode.code;
+          this.inputData.areaNo1 = areaCode.code;
+          // 地域2(市町村)
+          this.inputData.areaNo2 = postCodeConectData.city;
+          this.citySelect = postCodeConectData.city;
+          this.getCityInfo();
+          // 地域3(その他)
+          this.inputData.adress = postCodeConectData.townArea;
+        }
+      });
+  }
+
+
+
   /**
    * メッセージダイアログ展開
    * @param msg
    * @param locationDiv
    */
-  private openMsgDialog(msg:string, locationDiv: boolean) {
+  private openMsgDialog(msg: string, locationDiv: boolean) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
     const dialogData: messageDialogData = {
       massage: msg,
@@ -365,7 +415,7 @@ export class EditUserInfoComponent implements OnInit {
       data: dialogData
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(locationDiv) {
+      if (locationDiv) {
         // ローディング解除
         this.overlayRef.detach();
         this.loading = false;

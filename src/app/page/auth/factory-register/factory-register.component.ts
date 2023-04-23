@@ -10,14 +10,14 @@ import { officeInfo, employee, baseInfo, initOfficeInfo } from 'src/app/entity/o
 import { user, initUserInfo } from 'src/app/entity/user';
 import { UploadService } from '../../service/upload.service';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
-import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
-import { postCodeInfoData } from 'src/app/entity/postCodeInfo';
+import { postSerchInfo } from 'src/app/entity/postCodeInfo';
 import {
   find as _find,
   filter as _filter,
   isNil as _isNil,
   cloneDeep as _cloneDeep,
 } from 'lodash'
+import { cityData } from 'src/app/entity/area1SelectArea2';
 import { MessageDialogComponent } from 'src/app/page/modal/message-dialog/message-dialog.component';
 import { messageDialogData } from 'src/app/entity/messageDialogData';
 import { messageDialogMsg } from 'src/app/entity/msg';
@@ -149,7 +149,7 @@ export class FactoryRegisterComponent implements OnInit {
   // テンプレートで使用するフォームを宣言
   public form!: FormGroup;
   /** 地域２（市町村）データ */
-  areaCityData: area1SelectArea2[] = []
+  areaCityData: cityData[] = []
   /** 地域２（市町村）選択 */
   citySelect = '';
 
@@ -279,7 +279,7 @@ export class FactoryRegisterComponent implements OnInit {
       // 所在地情報を設定
       this.officeArea1 = this.user.areaNo1;
       this.areaSelect = this.officeArea1;
-      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+      this.getCityInfo();
       if (this.user.areaNo2) {
         this.officeArea = this.user.areaNo2;
         this.citySelect = this.officeArea;
@@ -314,7 +314,7 @@ export class FactoryRegisterComponent implements OnInit {
     console.log('地域')
     console.log(this.areaSelect)
     this.officeArea1 = this.areaSelect;
-    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+    this.getCityInfo();
   }
 
   /**
@@ -335,19 +335,19 @@ export class FactoryRegisterComponent implements OnInit {
     const post = post1 + post2;
     // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
     if (post1 != '' && post2 != '') {
-      const postCodeConectData = _find(postCodeInfoData, data => data.postCode == post)
-      if (postCodeConectData) {
-        // 地域1(都道府県名)
-        this.areaSelect = postCodeConectData.prefecturesCode;
-        this.officeArea1 = postCodeConectData.prefecturesCode;
-        // 地域2(市町村)
-        this.officeArea = postCodeConectData.municipality;
-        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.officeArea1);
+      this.getPostCode(post)
 
-        this.citySelect =  postCodeConectData.municipality;
-        // 地域3(その他)
-        this.officeAdress.setValue(postCodeConectData.townArea);
-      }
+      // if (postCodeConectData) {
+      //   // 地域1(都道府県名)
+      //   this.areaSelect = postCodeConectData.prefecturesCode;
+      //   this.officeArea1 = postCodeConectData.prefecturesCode;
+      //   // 地域2(市町村)
+      //   this.officeArea = postCodeConectData.municipality;
+      //   this.getCityInfo();
+      //   this.citySelect = postCodeConectData.municipality;
+      //   // 地域3(その他)
+      //   this.officeAdress.setValue(postCodeConectData.townArea);
+      // }
     }
   }
 
@@ -397,14 +397,14 @@ export class FactoryRegisterComponent implements OnInit {
     this.officeInfo.officePR = this.inputData.officePR;
     this.officeInfo.officePRimageURL = this.inputData.officePRimageURL;
     let mechanicId = '';
-    if(this.user.mechanicId) {
+    if (this.user.mechanicId) {
       mechanicId = this.user.mechanicId;
     }
 
     this.apiUniqueService.postFactory(this.officeInfo, this.user.userId, mechanicId).subscribe(result => {
       console.log(result);
       let resultMsg = '';
-      if(result == 200) {
+      if (result == 200) {
         this.openMsgDialog(messageDialogMsg.Resister, true);
       } else {
         this.openMsgDialog(messageDialogMsg.AnResister, false);
@@ -441,33 +441,84 @@ export class FactoryRegisterComponent implements OnInit {
 
 
   /**
+   * 都道府県から市町村データを取得し設定する
+   */
+  private getCityInfo() {
+    const areaa = _find(this.areaData, data => data.code === this.areaSelect);
+    console.log(areaa)
+    if (areaa) {
+      this.apiService.serchArea(areaa.prefectures)
+        .subscribe(data => {
+          // console.log(data);
+          // console.log(data.response);
+          console.log(data.response.location);
+          if (data.response.location.length > 0) {
+            this.areaCityData = data.response.location;
+          }
+        });
+    }
+  }
+
+
+  /**
+   * 都道府県から市町村データを取得し設定する
+   */
+  private getPostCode(postCode: string) {
+    this.apiService.serchPostCode(postCode)
+      .subscribe(data => {
+        console.log(data.response.location);
+        if (data.response.location.length > 0) {
+          const postCodeConectData = data.response.location;
+          const areaCode = _find(this.areaData, area => area.prefectures === postCodeConectData.prefecture);
+          if (!areaCode) {
+            console.log('no-area');
+            return;
+          }
+          // 地域1(都道府県名)
+          this.areaSelect = areaCode.code;
+          this.officeArea1 = areaCode.code;
+          // 地域2(市町村)
+          this.officeArea = postCodeConectData.city;
+          this.citySelect = postCodeConectData.city;
+          this.getCityInfo();
+          // 地域3(その他)
+          this.officeAdress.setValue(postCodeConectData.town);
+        }
+      });
+
+  }
+
+
+
+
+  /**
    * メッセージダイアログ展開
    * @param msg
    * @param locationDiv
    */
-  private openMsgDialog(msg:string, locationDiv: boolean) {
-      // ダイアログ表示（ログインしてください）し前画面へ戻る
-      const dialogData: messageDialogData = {
-        massage: msg,
-        closeFlg: false,
-        closeTime: 0,
-        btnDispDiv: true
+  private openMsgDialog(msg: string, locationDiv: boolean) {
+    // ダイアログ表示（ログインしてください）し前画面へ戻る
+    const dialogData: messageDialogData = {
+      massage: msg,
+      closeFlg: false,
+      closeTime: 0,
+      btnDispDiv: true
+    }
+    const dialogRef = this.modal.open(MessageDialogComponent, {
+      width: '300px',
+      height: '150px',
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (locationDiv) {
+        this.location.back();
+        // this.router.navigate(["/main_menu"]);
       }
-      const dialogRef = this.modal.open(MessageDialogComponent, {
-        width: '300px',
-        height: '150px',
-        data: dialogData
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if(locationDiv) {
-          this.location.back();
-          // this.router.navigate(["/main_menu"]);
-        }
-        console.log(result);
-        // ローディング解除
-        this.overlayRef.detach();
-        return;
-      });
+      console.log(result);
+      // ローディング解除
+      this.overlayRef.detach();
+      return;
+    });
   }
 
 }

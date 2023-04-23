@@ -12,12 +12,12 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
-import { filter as _filter} from 'lodash'
+import { filter as _filter } from 'lodash'
 import { find as _find } from 'lodash'
-import { postCodeInfo, postCodeInfoData } from 'src/app/entity/postCodeInfo';
+import { postSerchInfo } from 'src/app/entity/postCodeInfo';
 import { imgFile } from 'src/app/entity/imgFile';
 import { SingleImageModalComponent } from 'src/app/page/modal/single-image-modal/single-image-modal.component';
-import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { cityData } from 'src/app/entity/area1SelectArea2';
 import { ConnectionFactoryModalComponent } from 'src/app/page/modal/connection-factory-modal/connection-factory-modal.component';
 import { ConnectionMechanicModalComponent } from 'src/app/page/modal/connection-mechanic-modal/connection-mechanic-modal.component';
 import { FactoryAdminSettingModalComponent } from 'src/app/page/modal/factory-admin-setting-modal/factory-admin-setting-modal.component';
@@ -48,7 +48,7 @@ export class FactoryMenuComponent implements OnInit {
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   areaSelect = '';
   /** 地域２（市町村）データ */
-  areaCityData: area1SelectArea2[] = []
+  areaCityData: cityData[] = []
   /** 地域２（市町村）選択 */
   citySelect = '';
 
@@ -306,19 +306,19 @@ export class FactoryMenuComponent implements OnInit {
     const post2 = this.postCode2.value.replace(/\s+/g, '');
     const post = post1 + post2;
     // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
-    if(post1 != '' && post2 != '' ) {
-      const postCodeConectData = _find(postCodeInfoData, data => data.postCode == post)
-      if(postCodeConectData) {
-        // 地域1(都道府県名)
-        this.areaSelect = postCodeConectData.prefecturesCode;
-        this.officeArea1.setValue(postCodeConectData.prefecturesCode);
-        // 地域2(市町村)
-        this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
-        this.dispInfo.officeArea = postCodeConectData.municipality;
-        this.citySelect =  postCodeConectData.municipality;
-        // 地域3(その他)
-        this.dispInfo.officeAdress = postCodeConectData.townArea;
-      }
+    if (post1 != '' && post2 != '') {
+      this.getPostCode(post);
+      // if (postCodeConectData) {
+      //   // 地域1(都道府県名)
+      //   this.areaSelect = postCodeConectData.prefecturesCode;
+      //   this.officeArea1.setValue(postCodeConectData.prefecturesCode);
+      //   // 地域2(市町村)
+      //   this.getCityInfo();
+      //   this.dispInfo.officeArea = postCodeConectData.municipality;
+      //   this.citySelect = postCodeConectData.municipality;
+      //   // 地域3(その他)
+      //   this.dispInfo.officeAdress = postCodeConectData.townArea;
+      // }
     }
   }
 
@@ -340,7 +340,7 @@ export class FactoryMenuComponent implements OnInit {
         // 返却値　無理に閉じたらundifind
         console.log('画像モーダル結果:' + result)
         if (result != undefined && result != null) {
-          if(result.length != 0) {
+          if (result.length != 0) {
             this.imageFile = result;
           }
         }
@@ -354,7 +354,7 @@ export class FactoryMenuComponent implements OnInit {
    */
   onSelectArea1() {
     this.areaSelect = this.dispInfo.officeArea1;
-    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+    this.getCityInfo();
   }
 
 
@@ -373,13 +373,13 @@ export class FactoryMenuComponent implements OnInit {
    * @param e
    */
   onButtonAction(e: string) {
-    if(e == '0') {
+    if (e == '0') {
       // 関連工場設定
       this.factoryConnect();
-    } else if(e == '1') {
+    } else if (e == '1') {
       // 関連メカニック設定
       this.mechanicConnect();
-    } else if(e == '2') {
+    } else if (e == '2') {
       // 工場管理設定
       this.factoryAdmiSetting();
     }
@@ -605,11 +605,59 @@ export class FactoryMenuComponent implements OnInit {
   }
 
   /**
+   * 都道府県から市町村データを取得し設定する
+   */
+  private getCityInfo() {
+    const areaa = _find(this.areaData, data => data.code === this.areaSelect);
+    console.log(areaa)
+    if (areaa) {
+      this.apiService.serchArea(areaa.prefectures)
+        .subscribe(data => {
+          // console.log(data);
+          // console.log(data.response);
+          console.log(data.response.location);
+          if (data.response.location.length > 0) {
+            this.areaCityData = data.response.location;
+          }
+        });
+    }
+  }
+
+
+  /**
+   * 都道府県から市町村データを取得し設定する
+   */
+  private getPostCode(postCode: string) {
+    this.apiService.serchPostCode(postCode)
+      .subscribe(data => {
+        console.log(data.response.location);
+        if (data.response.location.length > 0) {
+          const postCodeConectData = data.response.location;
+          const areaCode = _find(this.areaData, area => area.prefectures === postCodeConectData.prefecture);
+          if (!areaCode) {
+            console.log('no-area');
+            return;
+          }
+          // 地域1(都道府県名)
+          this.areaSelect = areaCode.code;
+          this.officeArea1.setValue(areaCode.code);
+          // 地域2(市町村)
+          this.dispInfo.officeArea = postCodeConectData.city;;
+          this.citySelect = postCodeConectData.city;
+          this.getCityInfo();
+          // 地域3(その他)
+          this.dispInfo.officeAdress = postCodeConectData.town;
+        }
+      });
+  }
+
+
+  /**
    * メッセージダイアログ展開
    * @param msg
    * @param locationDiv
    */
-  private openMsgDialog(msg:string, locationDiv: boolean) {
+  private openMsgDialog(msg: string, locationDiv: boolean) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
     const dialogData: messageDialogData = {
       massage: msg,
@@ -623,7 +671,7 @@ export class FactoryMenuComponent implements OnInit {
       data: dialogData
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(locationDiv) {
+      if (locationDiv) {
         this.router.navigate(["/main_menu"]);
       }
       console.log(result);
@@ -632,7 +680,7 @@ export class FactoryMenuComponent implements OnInit {
       this.loading = false;
       return;
     });
-}
+  }
 
 
 

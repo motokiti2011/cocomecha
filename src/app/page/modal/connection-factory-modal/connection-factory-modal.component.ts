@@ -4,14 +4,16 @@ import { Observable } from 'rxjs';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { prefecturesCoordinateData } from 'src/app/entity/prefectures';
-import { area1SelectArea2, area1SelectArea2Data } from 'src/app/entity/area1SelectArea2';
+import { cityData } from 'src/app/entity/area1SelectArea2';
 import { fcmcSerchResult, fcmcSerchData, initSerchData } from 'src/app/entity/fcmcSerchResult';
 import { officeAssociation, officeAssociationData } from 'src/app/entity/officeAssociation';
 
 import {
   filter as _filter,
+  find as _find,
 } from 'lodash';
 import { officeInfo, connectionOfficeInfo } from 'src/app/entity/officeInfo';
+import { ApiSerchService } from '../../service/api-serch.service';
 import { ApiGsiSerchService } from '../../service/api-gsi-serch.service';
 import { ApiUniqueService } from '../../service/api-unique.service';
 import { Overlay } from '@angular/cdk/overlay';
@@ -36,6 +38,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
     private gsiService: ApiGsiSerchService,
     private uniqueService: ApiUniqueService,
     private overlay: Overlay,
+    private apiService: ApiSerchService,
   ) { }
 
   /** タイトル */
@@ -47,7 +50,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
   /** 地域情報選択状態初期値 */
   areaSelect = ''
   /** 地域２（市町村）データ */
-  areaCityData: area1SelectArea2[] = []
+  areaCityData: cityData[] = []
   /** 地域２（市町村）選択 */
   citySelect = '';
   /** 表示情報リスト */
@@ -59,7 +62,7 @@ export class ConnectionFactoryModalComponent implements OnInit {
   /** 検索切替フラグ */
   serchAreaSwitchDiv = true;
   /** 事業所関係性セレクトデータ */
-  officeAssociationData :officeAssociation[] = officeAssociationData;
+  officeAssociationData: officeAssociation[] = officeAssociationData;
   /** 事業所関係性セレクト */
   officeAssociationSelect = '';
   /** 更新区分 */
@@ -108,12 +111,12 @@ export class ConnectionFactoryModalComponent implements OnInit {
     this.serchInfo.area1 = this.areaSelect;
     this.formArea1.setValue(this.areaSelect);
     // 地域2選択中のものをクリア
-    if(this.citySelect != '') {
+    if (this.citySelect != '') {
       this.citySelect = '';
       this.formArea2.setValue(this.citySelect);
     }
     console.log(this.areaSelect)
-    this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect);
+    this.getCityInfo();
   }
 
   /**
@@ -224,7 +227,26 @@ export class ConnectionFactoryModalComponent implements OnInit {
    * 関連工場ステータス編集を行う
    */
   private statusEditConnection(connectionOffice: connectionOfficeInfo[]): Observable<connectionOfficeInfo> {
-    return this.uniqueService.editConnectionOfficeStatus(this.data.officeId,connectionOffice);
+    return this.uniqueService.editConnectionOfficeStatus(this.data.officeId, connectionOffice);
+  }
+
+  /**
+   * 都道府県から市町村データを取得し設定する
+   */
+  private getCityInfo() {
+    const areaa = _find(this.areaData, data => data.code === this.areaSelect);
+    console.log(areaa)
+    if (areaa) {
+      this.apiService.serchArea(areaa.prefectures)
+        .subscribe(data => {
+          // console.log(data);
+          // console.log(data.response);
+          console.log(data.response.location);
+          if (data.response.location.length > 0) {
+            this.areaCityData = data.response.location;
+          }
+        });
+    }
   }
 
 

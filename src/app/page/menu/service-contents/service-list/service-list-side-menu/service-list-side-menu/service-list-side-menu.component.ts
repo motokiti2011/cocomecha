@@ -25,9 +25,10 @@ import { ServiceListcomponentService } from '../../service-listcomponent.service
 import { Router } from '@angular/router';
 import { serchSidAmount } from 'src/app/entity/serchSid';
 import { noUndefined } from '@angular/compiler/src/util';
-import { area1SelectArea2Data, area1SelectArea2 } from 'src/app/entity/area1SelectArea2';
+import { cityData } from 'src/app/entity/area1SelectArea2';
 import { serchServiceCombination } from 'src/app/entity/serchCondition';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { ApiSerchService } from 'src/app/page/service/api-serch.service';
 
 @Component({
   selector: 'app-service-list-side-menu',
@@ -72,7 +73,7 @@ export class ServiceListSideMenuComponent implements OnInit {
   /** 地域情報データ一覧 */
   areaData = _filter(prefecturesCoordinateData, detail => detail.data === 1);
   /** 地域２（市町村）データ */
-  areaCityData: area1SelectArea2[] = []
+  areaCityData: cityData[] = []
   /** 地域２（市町村）選択 */
   citySelect = '';
   /** カテゴリーデータ一覧 */
@@ -99,6 +100,7 @@ export class ServiceListSideMenuComponent implements OnInit {
     private auth: AuthUserService,
     private service: ServiceListcomponentService,
     private router: Router,
+    private apiService: ApiSerchService,
   ) { }
 
   ngOnInit(): void {
@@ -151,8 +153,7 @@ export class ServiceListSideMenuComponent implements OnInit {
       this.areaCityData = [];
     } else {
       this.serchValue.area1 = this.areaSelect;
-      // 詳細エリア選択のセレクト対象を設定する
-      this.areaCityData = _filter(area1SelectArea2Data, data => data.prefecturesCode == this.areaSelect)
+      this.getCityInfo();
     }
   }
 
@@ -213,6 +214,25 @@ export class ServiceListSideMenuComponent implements OnInit {
   onSerch() {
     console.log(this.serchValue);
     this.serviceSerchValue.emit(this.serchValue);
+  }
+
+  /**
+ * 都道府県から市町村データを取得し設定する
+ */
+  private getCityInfo() {
+    const areaa = _find(this.areaData, data => data.code === this.areaSelect);
+    console.log(areaa)
+    if (areaa) {
+      this.apiService.serchArea(areaa.prefectures)
+        .subscribe(data => {
+          // console.log(data);
+          // console.log(data.response);
+          console.log(data.response.location);
+          if (data.response.location.length > 0) {
+            this.areaCityData = data.response.location;
+          }
+        });
+    }
   }
 
 

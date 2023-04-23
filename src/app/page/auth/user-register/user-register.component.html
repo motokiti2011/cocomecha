@@ -108,9 +108,9 @@
           <select id="area_select" name="area" [(ngModel)]="citySelect" (change)="onSelectCity()"
             [disabled]="inputData.areaNo1 == ''">
             <option value="">地域を選択してください。</option>
-            <option *ngFor="let city of areaCityData" [value]="city.Municipality"
-              [selected]="city.prefectures === citySelect">
-              {{city.Municipality}}</option>
+            <option *ngFor="let city of areaCityData" [value]="city.city"
+              [selected]="city.city === citySelect">
+              {{city.city}}</option>
           </select>
         </div>
         <div class="col-1"></div>
