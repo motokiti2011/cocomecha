@@ -204,7 +204,9 @@ export class FactoryMenuComponent implements OnInit {
           }
         } else {
           this.apiAuth.authenticationExpired();
-          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+          // ローディング解除
+          this.overlayRef.detach();
+          // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         }
       });
 

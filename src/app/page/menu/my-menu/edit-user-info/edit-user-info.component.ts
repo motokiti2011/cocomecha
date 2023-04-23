@@ -168,18 +168,6 @@ export class EditUserInfoComponent implements OnInit {
     // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
     if (post1 != '' && post2 != '') {
       this.getPostCode(post)
-      // if (postCodeConectData) {
-      //   // 地域1(都道府県名)
-      //   this.areaSelect = postCodeConectData.prefecturesCode;
-      //   this.inputData.areaNo1 = postCodeConectData.prefecturesCode;
-      //   // 地域2(市町村)
-      //   this.inputData.areaNo2 = postCodeConectData.municipality;
-      //   this.getCityInfo();
-
-      //   this.citySelect = postCodeConectData.municipality;
-      //   // 地域3(その他)
-      //   this.inputData.adress = postCodeConectData.townArea;
-      // }
     }
   }
 
@@ -289,7 +277,10 @@ export class EditUserInfoComponent implements OnInit {
         this.imageFile[0].url = this.user.profileImageUrl;
       } else {
         this.apiAuth.authenticationExpired();
-        this.openMsgDialog(messageDialogMsg.AnSerchAgainOperation, true);
+        this.apiAuth.authenticationExpired();
+        // ローディング解除
+        this.overlayRef.detach();
+        // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
       }
       // ローディング解除
       this.overlayRef.detach();

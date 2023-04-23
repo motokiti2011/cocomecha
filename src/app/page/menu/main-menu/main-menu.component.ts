@@ -119,6 +119,8 @@ export class MainMenuComponent implements OnInit {
     this.router.navigate(["sign-up-component"]);
   }
 
+  
+
   onmenu() {
     console.log('マイメニュー画面区分値チェック')
     console.log('authUserDiv:' + this.authUserDiv)
@@ -131,6 +133,7 @@ export class MainMenuComponent implements OnInit {
    * ログイン状態確認
    */
   private authenticated() {
+    console.log('main動く')
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.authUserDiv = true;

@@ -106,10 +106,11 @@ export class ServiceAdmininfoRelistedComponent implements OnInit {
             this.openMsgDialog(messageDialogMsg.LoginRequest, true);
           }
         });
+      } else {
+        // ローディング解除
+        this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+        this.apiAuth.authenticationExpired();
       }
-      // ローディング解除
-      this.overlayRef.detach();
-      this.loading = false;
     });
   }
 
@@ -250,12 +251,12 @@ private openMsgDialog(msg: string, locationDiv: boolean) {
   });
   dialogRef.afterClosed().subscribe(result => {
     if (locationDiv) {
+      this.overlayRef.detach();
       this.router.navigate(["/main_menu"]);
     }
     console.log(result);
     // ローディング解除
     this.overlayRef.detach();
-
     return;
   });
 }

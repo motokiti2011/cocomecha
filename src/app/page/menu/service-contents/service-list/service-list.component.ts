@@ -40,7 +40,7 @@ export class ServiceListComponent implements OnInit {
   /** 総ページ数*/
   totalPage: number = 1;
   /** インデックス*/
-  pageIndex: {page:string , index:number}[] = [];
+  pageIndex: { page: string, index: number }[] = [];
   // NoImageURL
   noImage = "assets/images/noimage.png";
 
@@ -87,8 +87,8 @@ export class ServiceListComponent implements OnInit {
   serchKeyWord = '';
 
   displayData = [
-    { label: '表示順', value: 'defult',  order: 'asc', disabled: false },
-    { label: '日付が新しいものから表示', value: 'registeredDate', order: 'asc' ,disabled: false },
+    { label: '表示順', value: 'defult', order: 'asc', disabled: false },
+    { label: '日付が新しいものから表示', value: 'registeredDate', order: 'asc', disabled: false },
     { label: '日付が古いものから表示', value: 'registeredDate', order: 'desc', disabled: false },
     { label: '残り日付が長いものから表示', value: 'preferredDate', order: 'asc', disabled: false },
     { label: '残り日付が短いものから表示', value: 'preferredDate', order: 'desc', disabled: false },
@@ -150,6 +150,9 @@ export class ServiceListComponent implements OnInit {
       if (authUser === null) {
         // 認証情報がない場合、お気に入り、閲覧履歴は非表示
         this.userCertificationDiv = false;
+        // ローディング解除
+        this.overlayRef.detach();
+        this.loading = false;
       } else {
         // ユーザー情報を基にお気に入り情報を取得
         this.userCertificationDiv = true;
@@ -229,7 +232,7 @@ export class ServiceListComponent implements OnInit {
    */
   onContentsNext(): void {
     // 最終ページの場合何もしない
-    if (this.currentIndex == this.totalPage -1) {
+    if (this.currentIndex == this.totalPage - 1) {
       return;
     }
     const nextIndex = this.currentIndex + 1;
@@ -260,10 +263,12 @@ export class ServiceListComponent implements OnInit {
     }
 
     this.router.navigate(["service-detail-component"],
-      { queryParams: {
-        serviceId: content.id,
-        searchTargetService: this.searchTargetService
-      } });
+      {
+        queryParams: {
+          serviceId: content.id,
+          searchTargetService: this.searchTargetService
+        }
+      });
     console.log(content);
   }
 
@@ -292,16 +297,16 @@ export class ServiceListComponent implements OnInit {
    */
   onDisplayList() {
     console.log(this.selected);
-    if(this.selected == 'defult') {
+    if (this.selected == 'defult') {
       return;
     }
 
     const selectData = _find(this.displayData, disp => disp.value == this.selected)
-    if(selectData == undefined) {
+    if (selectData == undefined) {
       this.selected = 'defult';
       return;
     }
-    if(selectData.order == 'asc') {
+    if (selectData.order == 'asc') {
       const sortData = _orderBy(this.displayContentsList, selectData.value, 'asc')
       this.displayContentsList = _cloneDeep(sortData);
     } else {
@@ -333,7 +338,7 @@ export class ServiceListComponent implements OnInit {
    * 絞り込みボタン押下時
    */
   onSerch() {
-    if(this.serchBtnDiv) {
+    if (this.serchBtnDiv) {
       // リセットボタン押下時
       this.serchBtnDiv = false;
       this.serchBtnValue = '絞り込む'
@@ -343,7 +348,7 @@ export class ServiceListComponent implements OnInit {
       this.serchSbDisplayContentsList = [];
       this.initSetServiceContents();
     } else {
-      if(_isNil(this.serchKeyWord)) {
+      if (_isNil(this.serchKeyWord)) {
         return;
       }
       // 絞り込みボタン押下時
@@ -385,7 +390,7 @@ export class ServiceListComponent implements OnInit {
       // if (count > 8) {
       //   return;
       // }
-      const pageData = {page:String(count),index: count-1 }
+      const pageData = { page: String(count), index: count - 1 }
       this.pageIndex.push(pageData);
       count++;
     }
@@ -442,10 +447,10 @@ export class ServiceListComponent implements OnInit {
    * 検索キーワードに応じた表示リストを抽出する。
    */
   private serchKeyWordInc() {
-    const serchResult :serviceContents[] = [];
+    const serchResult: serviceContents[] = [];
     this.displayContentsList.forEach(listData => {
       // 部分一致or完全一致の場合
-      if(_includes(listData.title,this.serchKeyWord)
+      if (_includes(listData.title, this.serchKeyWord)
         || _includes([listData.title], this.serchKeyWord)) {
         serchResult.push(listData);
       }

@@ -134,7 +134,7 @@ export class MechanicMenuComponent implements OnInit {
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
-        if(user.length > 0) {
+        if (user.length > 0) {
           console.log(user);
           this.user = user[0];
           if (this.user.officeId != '0' && this.user.officeId != null) {
@@ -147,11 +147,16 @@ export class MechanicMenuComponent implements OnInit {
           this.overlayRef.detach();
         } else {
           this.apiAuth.authenticationExpired();
-          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+          // ローディング解除
+          this.overlayRef.detach();
+          // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         }
       });
     } else {
-      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      // ローディング解除
+      this.overlayRef.detach();
+      // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+
     }
   }
 
@@ -282,7 +287,7 @@ export class MechanicMenuComponent implements OnInit {
         // 返却値　無理に閉じたらundifind
         console.log('画像モーダル結果:' + result)
         if (result != undefined && result != null) {
-          if(result.length != 0) {
+          if (result.length != 0) {
             this.imageFile = result;
           }
         }
@@ -480,7 +485,7 @@ export class MechanicMenuComponent implements OnInit {
    * @param msg
    * @param locationDiv
    */
-  private openMsgDialog(msg:string, locationDiv: boolean) {
+  private openMsgDialog(msg: string, locationDiv: boolean) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
     const dialogData: messageDialogData = {
       massage: msg,
@@ -494,7 +499,7 @@ export class MechanicMenuComponent implements OnInit {
       data: dialogData
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(locationDiv) {
+      if (locationDiv) {
         this.router.navigate(["/main_menu"]);
       }
       console.log(result);
@@ -502,6 +507,6 @@ export class MechanicMenuComponent implements OnInit {
       this.overlayRef.detach();
       return;
     });
-}
+  }
 
 }

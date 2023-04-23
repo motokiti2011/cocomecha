@@ -219,7 +219,10 @@ export class EditVehicleInfoComponent implements OnInit {
         }
       });
     } else {
-      this.openMsgDialog(messageDialogMsg.LoginRequest, true, '/main-menu');
+      this.apiAuth.authenticationExpired();
+      // ローディング解除
+      this.overlayRef.detach();
+      // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }
 

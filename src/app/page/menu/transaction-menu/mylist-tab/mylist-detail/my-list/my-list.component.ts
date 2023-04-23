@@ -114,13 +114,15 @@ export class MyListComponent implements OnInit {
     // ユーザー情報取得できない場合前画面へ戻る
     if (user == null) {
       this.apiAuth.authenticationExpired();
-      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      // ローディング解除
+      this.overlayRef.detach();
+      // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
       return;
     }
     // ユーザー情報を設定する
     this.loginUser = user;
     // データを取得
-    this.mylistservice.getMyList(this.loginUser,'0').subscribe(data => {
+    this.mylistservice.getMyList(this.loginUser, '0').subscribe(data => {
       console.log(data);
       if (data.length !== 0) {
         this.detailList = this.mylistservice.displayFormatdisplayFormat(data);

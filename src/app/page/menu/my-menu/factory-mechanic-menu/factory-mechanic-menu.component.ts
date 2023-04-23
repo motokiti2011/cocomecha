@@ -110,7 +110,10 @@ export class FactoryMechanicMenuComponent implements OnInit {
       });
     } else {
       this.apiAuth.authenticationExpired();
-      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      // ローディング解除
+      this.overlayRef.detach();
+      // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }
 
@@ -251,7 +254,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
    * @param msg
    * @param locationDiv
    */
-  private openMsgDialog(msg:string, locationDiv: boolean) {
+  private openMsgDialog(msg: string, locationDiv: boolean) {
     // ダイアログ表示（ログインしてください）し前画面へ戻る
     const dialogData: messageDialogData = {
       massage: msg,
@@ -265,7 +268,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
       data: dialogData
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(locationDiv) {
+      if (locationDiv) {
         this.router.navigate(["/main_menu"]);
       }
       console.log(result);
@@ -274,7 +277,7 @@ export class FactoryMechanicMenuComponent implements OnInit {
       this.loading = false;
       return;
     });
-}
+  }
 
 
 }

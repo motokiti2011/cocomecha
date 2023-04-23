@@ -20,7 +20,13 @@
         </div>
 
         <div class="row button_item">
-          <button type="button" class="btn btn-outline-primary" (click)="onTransactionStatus()">取引状況を確認する</button>
+          <div *ngIf="user; else loginRequest">
+            <button type="button" class="btn btn-outline-primary" (click)="onTransactionStatus()">取引状況を確認する</button>
+          </div>
+          <ng-template #loginRequest>
+            <p>取引情報は<br>ログイン後に確認できます。</p>
+          </ng-template>
+
         </div>
 
         <div *ngIf="adminDiv">
@@ -65,8 +71,15 @@
       <div class="detail_area">
 
         <div class="service_info">
-          <p>この{{serviceTypeName}}の管理者</p>
-          <div class="service_admin" (click)="onServiceAdmin(serviceAdminInfo.id)">　{{serviceAdminInfo.name}}</div>
+          <div *ngIf="user; else NoneUser">
+            <p>この{{serviceTypeName}}の管理者</p>
+            <div class="service_admin" (click)="onServiceAdmin(serviceAdminInfo.id)">　{{serviceAdminInfo.name}}</div>
+          </div>
+          <ng-template #NoneUser>
+            <p>この{{serviceTypeName}}の管理者</p>
+            <div class="service_admin_none">　{{serviceAdminInfo.name}}</div>
+          </ng-template>
+
         </div>
 
         <div class="ymd">

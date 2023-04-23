@@ -53,18 +53,22 @@ export class VehicleMenuComponent implements OnInit {
     const authUser = this.cognito.initAuthenticated();
     if (authUser !== null) {
       this.apiService.getUser(authUser).subscribe(user => {
-        if(user.length > 0) {
+        if (user.length > 0) {
           console.log(user);
           this.user = user[0];
           this.user.userId = authUser;
           this.getVehicleList();
         } else {
           this.apiAuth.authenticationExpired();
-          this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+          // ローディング解除
+          this.overlayRef.detach();
+          // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
         }
       });
     } else {
-      this.openMsgDialog(messageDialogMsg.LoginRequest, true);
+      // ローディング解除
+      this.overlayRef.detach();
+      // this.openMsgDialog(messageDialogMsg.LoginRequest, true);
     }
   }
 
