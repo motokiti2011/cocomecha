@@ -362,6 +362,9 @@ export class EditUserInfoComponent implements OnInit {
           if (data.response.location.length > 0) {
             this.areaCityData = data.response.location;
           }
+          // ローディング解除
+          this.overlayRef.detach();
+          this.loading = false;
         });
     }
   }
@@ -375,7 +378,7 @@ export class EditUserInfoComponent implements OnInit {
       .subscribe(data => {
         console.log(data.response.location);
         if (data.response.location.length > 0) {
-          const postCodeConectData = data.response.location;
+          const postCodeConectData = data.response.location[0];
           const areaCode = _find(this.areaData, area => area.prefectures === postCodeConectData.prefecture);
           if (!areaCode) {
             console.log('no-area');
@@ -389,7 +392,7 @@ export class EditUserInfoComponent implements OnInit {
           this.citySelect = postCodeConectData.city;
           this.getCityInfo();
           // 地域3(その他)
-          this.inputData.adress = postCodeConectData.townArea;
+          this.inputData.adress = postCodeConectData.town;
         }
       });
   }

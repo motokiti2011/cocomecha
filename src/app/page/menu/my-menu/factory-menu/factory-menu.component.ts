@@ -308,17 +308,6 @@ export class FactoryMenuComponent implements OnInit {
     // 郵便番号1,2の入力が行われた場合に郵便番号から地域検索を行う
     if (post1 != '' && post2 != '') {
       this.getPostCode(post);
-      // if (postCodeConectData) {
-      //   // 地域1(都道府県名)
-      //   this.areaSelect = postCodeConectData.prefecturesCode;
-      //   this.officeArea1.setValue(postCodeConectData.prefecturesCode);
-      //   // 地域2(市町村)
-      //   this.getCityInfo();
-      //   this.dispInfo.officeArea = postCodeConectData.municipality;
-      //   this.citySelect = postCodeConectData.municipality;
-      //   // 地域3(その他)
-      //   this.dispInfo.officeAdress = postCodeConectData.townArea;
-      // }
     }
   }
 
@@ -426,6 +415,7 @@ export class FactoryMenuComponent implements OnInit {
     console.log(this.areaSelect);
     this.dispInfo.officeArea = info.officeArea;
     this.dispInfo.officeAdress = info.officeAdress;
+    this.citySelect = this.dispInfo.officeArea;
     this.dispInfo.officePR = info.officePR;
     this.dispInfo.created = info.created;
     this.officeName.setValue(info.officeName);
@@ -454,6 +444,7 @@ export class FactoryMenuComponent implements OnInit {
     if (info.workContentList.length > 0) {
       this.setWorkContents(info.workContentList);
     }
+    this.getCityInfo();
   }
 
   /**
@@ -613,8 +604,6 @@ export class FactoryMenuComponent implements OnInit {
     if (areaa) {
       this.apiService.serchArea(areaa.prefectures)
         .subscribe(data => {
-          // console.log(data);
-          // console.log(data.response);
           console.log(data.response.location);
           if (data.response.location.length > 0) {
             this.areaCityData = data.response.location;
@@ -632,7 +621,7 @@ export class FactoryMenuComponent implements OnInit {
       .subscribe(data => {
         console.log(data.response.location);
         if (data.response.location.length > 0) {
-          const postCodeConectData = data.response.location;
+          const postCodeConectData = data.response.location[0];
           const areaCode = _find(this.areaData, area => area.prefectures === postCodeConectData.prefecture);
           if (!areaCode) {
             console.log('no-area');
